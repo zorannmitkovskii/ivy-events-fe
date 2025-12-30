@@ -3,7 +3,7 @@ FROM node:20-alpine AS build
 WORKDIR /frontend
 
 # Copy the correct package manifests from the Vue project
-COPY ivy-events-fe/vue-project/package*.json ./
+COPY vue-project/package*.json ./
 RUN npm install
 
 # Explicitly install keycloak-js
