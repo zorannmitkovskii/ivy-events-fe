@@ -31,4 +31,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.DOCKER_USERNAME }}/my-frontend:${{ env.TAG }}
+          tags: ${{ env.DOCKER_USERNAME }}/ivy-events-fe:${{ env.TAG }}
