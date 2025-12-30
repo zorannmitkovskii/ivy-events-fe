@@ -1,28 +1,33 @@
+# ==============================
 # Stage 1: Build Vue.js app
+# ==============================
 FROM node:20-alpine AS build
+
+# Set working directory
 WORKDIR /frontend
 
-# Copy the correct package manifests from the Vue project
+# Copy package files and install dependencies
 COPY vue-project/package*.json ./
 RUN npm install
 
-# Explicitly install keycloak-js
-RUN npm install keycloak-js --save
+# Copy the rest of the Vue project
+COPY vue-project/ ./
 
-# Copy the rest of the Vue project sources
-COPY vue-project .
-
+# Build the Vue app
 RUN npm run build
 
+# ==============================
 # Stage 2: Serve with Nginx
+# ==============================
 FROM nginx:alpine
 
-# Copy built files from build stage
-COPY --from=build /app/vue-project/dist /usr/share/nginx/html
+# Copy built files from the build stage
+COPY --from=build /frontend/dist /usr/share/nginx/html
 
-# Optional: Custom Nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Optional: copy custom nginx config
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
 
+# Expose port 80
 EXPOSE 80
 
 # Start Nginx
