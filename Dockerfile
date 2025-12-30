@@ -1,14 +1,15 @@
 # Stage 1: Build Vue.js app
 FROM node:20-alpine AS build
 
-WORKDIR /app
+# Work inside the vue-project directory where package.json and build scripts live
+WORKDIR /app/vue-project
 
 # Copy package files and install dependencies
-COPY package*.json ./
+COPY vue-project/package*.json ./
 RUN npm install
 
 # Copy the rest of the source code
-COPY . .
+COPY vue-project .
 
 # Build the app
 RUN npm run build
@@ -17,7 +18,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy built files from build stage
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/vue-project/dist /usr/share/nginx/html
 
 # Optional: Custom Nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
