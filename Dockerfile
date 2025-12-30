@@ -10,7 +10,7 @@ RUN npm install
 RUN npm install keycloak-js --save
 
 # Copy the rest of the Vue project sources
-COPY ivy-events-fe/vue-project .
+COPY vue-project .
 
 RUN npm run build
 
