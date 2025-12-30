@@ -1,0 +1,42 @@
+name: Build & Deploy Frontend Docker
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build-and-push-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Frontend Code
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build Frontend Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    needs: build-and-push-frontend
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Deploy Frontend via SSH
+        uses: appleboy/ssh-action@v0.1.9
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            cd /path/to/project/on/server
+            docker-compose pull frontend
+            docker-compose up -d frontend

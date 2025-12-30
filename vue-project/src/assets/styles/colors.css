@@ -1,0 +1,105 @@
+:root {
+  /* Primary — lavender theme */
+  --primary-main: #8B7CF6;       /* Lavender / soft purple (brand color) */
+  --primary-light: #D6D1FE;    /* Hover, subtle fills */
+  --primary-dark: #6A5AE0;       /* Active, pressed */
+
+  /* Secondary — complementary accents */
+  --secondary-pink: #F28BCB;     /* Soft rose accent */
+  --secondary-gold: #E6C46A;     /* Warm contrast for CTAs */
+  --secondary-teal: #3FA7B2;     /* Fresh contrast against lavender */
+
+  /* Neutrals — optimized for readability */
+  --neutral-900: #1C1B29;        /* Deep purple-tinted charcoal */
+  --neutral-700: #3E3C5A;
+  --neutral-500: #7B7894;
+  --neutral-300: #DAD8E6;
+  --neutral-100: #F4F3FA;
+  --white: #FFFFFF;
+
+  /* Backgrounds — subtle lavender-tinted base */
+  --bg-main: #F6F5FC;            /* Very light lavender background */
+  --bg-card: #FFFFFF;
+
+  /* Status — aligned with lavender palette */
+  --success: #4FB286;            /* Calm green (balanced, not aggressive) */
+  --warning: #F2C94C;            /* Soft amber */
+  --error: #E36B6B;              /* Muted red, not harsh */
+
+  /* Effects */
+  --shadow-light: 0px 4px 14px rgba(60, 55, 120, 0.12);
+  --radius-card: 14px;
+  --radius-button: 10px;
+
+  /* Legacy aliases (mapped to lavender) */
+  --logo-brown: var(--primary-main);
+  --logo-brown-light: var(--primary-light);
+  --logo-beige: var(--bg-main);
+  --brand-dark: var(--primary-dark);
+  --brand-light: var(--bg-main);
+}
+
+
+
+/* Text color utility classes */
+.text-primary-main { color: var(--primary-main) !important; }
+.text-primary-light { color: var(--primary-light) !important; }
+.text-primary-dark { color: var(--primary-dark) !important; }
+
+.text-secondary-pink { color: var(--secondary-pink) !important; }
+.text-secondary-gold { color: var(--secondary-gold) !important; }
+.text-secondary-green { color: var(--secondary-green) !important; }
+
+.text-neutral-900 { color: var(--neutral-900) !important; }
+.text-neutral-700 { color: var(--neutral-700) !important; }
+.text-neutral-500 { color: var(--neutral-500) !important; }
+.text-neutral-300 { color: var(--neutral-300) !important; }
+.text-neutral-100 { color: var(--neutral-100) !important; }
+.text-white { color: var(--white) !important; }
+
+/* Backward-compatible text helpers */
+.text-brand-dark { color: var(--brand-dark) !important; }
+.text-brand-light { color: var(--brand-light) !important; }
+
+/* Background color utility classes */
+.bg-primary-main { background-color: var(--primary-main) !important; }
+.bg-primary-light { background-color: var(--primary-light) !important; }
+.bg-primary-dark { background-color: var(--primary-dark) !important; }
+
+.bg-secondary-pink { background-color: var(--secondary-pink) !important; }
+.bg-secondary-gold { background-color: var(--secondary-gold) !important; }
+.bg-secondary-green { background-color: var(--secondary-green) !important; }
+
+.bg-neutral-900 { background-color: var(--neutral-900) !important; }
+.bg-neutral-700 { background-color: var(--neutral-700) !important; }
+.bg-neutral-500 { background-color: var(--neutral-500) !important; }
+.bg-neutral-300 { background-color: var(--neutral-300) !important; }
+.bg-neutral-100 { background-color: var(--neutral-100) !important; }
+.bg-white { background-color: var(--white) !important; }
+
+.bg-bg-main { background-color: var(--bg-main) !important; }
+.bg-card { background-color: var(--bg-card) !important; }
+
+/* Backward-compatible background helpers */
+.bg-brand-dark { background-color: var(--brand-dark) !important; }
+.bg-brand-light { background-color: var(--brand-light) !important; }
+
+/* Generic utilities using new tokens */
+.shadow-light { box-shadow: var(--shadow-light); }
+.radius-card { border-radius: var(--radius-card); }
+.radius-button { border-radius: var(--radius-button); }
+
+/* Optional layout helpers preserved (kept minimal here) */
+.app-shell { min-height: 100vh; }
+.sidebar { min-height: 100vh; position: sticky; top: 0; }
+.card-rounded { border-radius: 12px; }
+.stats-number { font-weight: 700; font-size: 1.8rem; }
+.vendor-card img { border-radius: 12px; height: 150px; object-fit: cover; }
+.countdown-box { padding: 18px 28px; border-radius: 10px; }
+
+/* small utilities */
+.sidebar-link { padding: 10px 12px; display: block; color: rgba(0,0,0,0.8); }
+.sidebar-link.active { background: rgba(0,0,0,0.05); border-radius: 8px; }
+
+/* Ensure content area has comfortable padding */
+.main-content { padding: 24px; }
