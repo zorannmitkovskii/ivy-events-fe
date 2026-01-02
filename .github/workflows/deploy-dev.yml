@@ -1,42 +1,33 @@
-name: Build & Deploy Frontend Docker
+name: Deploy FE to DigitalOcean
 
 on:
   push:
     branches:
-      - develop
+      - main
 
 jobs:
-  build-and-push-frontend:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Frontend Code
-        uses: actions/checkout@v3
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - name: Build Frontend Docker Image
-        run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
-
-  deploy-frontend:
-    runs-on: ubuntu-latest
-    needs: build-and-push-frontend
-    if: github.ref == 'refs/heads/main'
-
-    steps:
-      - name: Deploy Frontend via SSH
+      - name: Deploy Frontend
         uses: appleboy/ssh-action@v0.1.9
         with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
+          host: ${{ secrets.DROPLET_IP }}
+          username: root
+          key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
-            cd /path/to/project/on/server
-            docker-compose pull frontend
-            docker-compose up -d frontend
+            set -e
+
+            docker pull zmtechlabs/ivy-events-fe:latest
+
+            docker stop ivy-events-fe || true
+            docker rm ivy-events-fe || true
+
+            docker run -d \
+              --name ivy-events-fe \
+              --network ivy-net \
+              -p 80:80 \
+              zmtechlabs/ivy-events-fe:latest
+
+            echo "✅ Frontend deployed"
