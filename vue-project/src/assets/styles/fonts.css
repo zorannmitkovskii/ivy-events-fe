@@ -1,0 +1,38 @@
+/* Import fonts from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=DM+Sans:wght@400;600&family=Montserrat:wght@600;700&family=Raleway:wght@600;700&display=swap');
+
+/* Base styles */
+body {
+  font-family: 'Inter', 'DM Sans', sans-serif;
+  font-size: 15px;
+  color: #1a1a1a;
+  background-color: #fdfdfd;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+  font-family: 'Montserrat', 'Raleway', sans-serif;
+  font-weight: 600;
+  color: #2c2c2c;
+  margin-bottom: 12px;
+}
+
+/* Optional: lighter heading style */
+h1 {
+  font-size: 32px;
+}
+h2 {
+  font-size: 24px;
+}
+h3 {
+  font-size: 18px;
+}
+
+/* Buttons and inputs */
+button, input, textarea {
+  font-family: 'Inter', 'DM Sans', sans-serif;
+}
+

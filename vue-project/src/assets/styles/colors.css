@@ -1,43 +1,36 @@
 :root {
-  /* Primary — lavender theme */
-  --primary-main: #8B7CF6;       /* Lavender / soft purple (brand color) */
-  --primary-light: #D6D1FE;    /* Hover, subtle fills */
-  --primary-dark: #6A5AE0;       /* Active, pressed */
+  /* Primary — Ivy Green theme */
+  --primary-main: #1F3D2B;
+  --primary-light: #BFC8AF;
+  --primary-dark: #15291E;
 
-  /* Secondary — complementary accents */
-  --secondary-pink: #F28BCB;     /* Soft rose accent */
-  --secondary-gold: #E6C46A;     /* Warm contrast for CTAs */
-  --secondary-teal: #3FA7B2;     /* Fresh contrast against lavender */
+  /* Soft Light — slightly darker cream */
+  --soft-light: #FAFAFA;        /* Потемен крем, многу природен */
 
-  /* Neutrals — optimized for readability */
-  --neutral-900: #1C1B29;        /* Deep purple-tinted charcoal */
-  --neutral-700: #3E3C5A;
-  --neutral-500: #7B7894;
-  --neutral-300: #DAD8E6;
-  --neutral-100: #F4F3FA;
+  /* Secondary */
+  --secondary-sage: #9FB8A0;
+  --secondary-gold: #C9A24D;
+  --secondary-cream: #F2EEE6;
+
+  /* Neutrals */
+  --neutral-900: #2C2C2C;
+  --neutral-700: #4A4A4A;
+  --neutral-500: #7B7B7B;
+  --neutral-300: #D6D3CB;
+  --neutral-100: #F4F2ED;
   --white: #FFFFFF;
 
-  /* Backgrounds — subtle lavender-tinted base */
-  --bg-main: #F6F5FC;            /* Very light lavender background */
+  /* Backgrounds */
+  --bg-main: #F2EEE6;
   --bg-card: #FFFFFF;
 
-  /* Status — aligned with lavender palette */
-  --success: #4FB286;            /* Calm green (balanced, not aggressive) */
-  --warning: #F2C94C;            /* Soft amber */
-  --error: #E36B6B;              /* Muted red, not harsh */
-
-  /* Effects */
-  --shadow-light: 0px 4px 14px rgba(60, 55, 120, 0.12);
-  --radius-card: 14px;
-  --radius-button: 10px;
-
-  /* Legacy aliases (mapped to lavender) */
-  --logo-brown: var(--primary-main);
-  --logo-brown-light: var(--primary-light);
-  --logo-beige: var(--bg-main);
-  --brand-dark: var(--primary-dark);
-  --brand-light: var(--bg-main);
+  /* Status */
+  --success: #3FBF9C;
+  --warning: #E6C56E;
+  --error: #D96C6C;
 }
+
+
 
 
 
@@ -65,7 +58,7 @@
 .bg-primary-main { background-color: var(--primary-main) !important; }
 .bg-primary-light { background-color: var(--primary-light) !important; }
 .bg-primary-dark { background-color: var(--primary-dark) !important; }
-
+.bg-soft-green { background-color: var(--soft-light) !important; }
 .bg-secondary-pink { background-color: var(--secondary-pink) !important; }
 .bg-secondary-gold { background-color: var(--secondary-gold) !important; }
 .bg-secondary-green { background-color: var(--secondary-green) !important; }
