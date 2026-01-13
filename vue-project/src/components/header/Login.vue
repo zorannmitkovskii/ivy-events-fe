@@ -68,6 +68,8 @@
 import {ref} from "vue";
 import keycloak from "@/keycloak/keycloak.js";
 import {useRouter} from "vue-router";
+import axios from "axios";
+import { baseUrl } from "@/services/baseUrl";
 
 const username = ref("");
 const password = ref("");
@@ -77,28 +79,28 @@ const router = useRouter();
 async function loginWithCredentials() {
   try {
     const res = await axios.post(
-      'http://localhost:8081/api/auth/login',
+      `${baseUrl}/public/users/login`,
       {
-        username: this.username,
-        password: this.password
+        username: username.value,
+        password: password.value
       }
     );
 
     localStorage.setItem('access_token', res.data.access_token);
 
-    const roles = res.data.realm_access.roles;
+    const roles = res.data.realm_access?.roles || [];
 
     if (roles.includes('ADMIN')) {
-      this.$router.push('/admin');
+      router.push('/admin');
     } else if (roles.includes('VENDOR')) {
-      this.$router.push('/vendor');
+      router.push('/vendor');
     } else if (roles.includes('ORGANIZER')) {
-      this.$router.push('/organizer');
+      router.push('/organizer');
     } else {
-      this.$router.push('/user');
+      router.push('/user');
     }
   } catch (e) {
-    this.error = 'Invalid credentials';
+    console.error(e);
   }
 }
 

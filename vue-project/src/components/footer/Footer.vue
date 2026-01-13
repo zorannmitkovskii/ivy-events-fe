@@ -93,24 +93,3 @@ const socials = [
   "fab fa-linkedin-in"
 ]
 </script>
-
-<style scoped>
-.footer-logo {
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg,var(--primary-main),var(--primary-light));
-  border-radius: 12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.social-icon {
-  width:40px;
-  height:40px;
-  padding:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-</style>

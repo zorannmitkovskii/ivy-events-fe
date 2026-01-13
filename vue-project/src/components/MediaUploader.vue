@@ -69,6 +69,7 @@
 <script setup>
 import axios from "axios";
 import { ref } from "vue";
+import { baseUrl } from "../services/baseUrl";
 
 const emit = defineEmits(["uploaded"]);
 
@@ -107,7 +108,7 @@ const uploadFiles = async () => {
 
   try {
     const response = await axios.post(
-      "http://localhost:8081/api/media/upload",
+      `${baseUrl}/api/media/upload`,
       formData,
       {
         headers: {

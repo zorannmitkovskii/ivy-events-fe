@@ -57,6 +57,7 @@
 
 <script>
 import axios from "axios";
+import { baseUrl } from "@/services/baseUrl";
 
 export default {
   name: "SweetLoveSection",
@@ -69,7 +70,7 @@ export default {
 
   async mounted() {
     try {
-      const response = await axios.get("http://localhost:8080/gallery/images");
+      const response = await axios.get(`${baseUrl}/gallery/images`);
 
       // Expecting [{ id: 1, url: "..." }, ...]
       this.images = response.data;

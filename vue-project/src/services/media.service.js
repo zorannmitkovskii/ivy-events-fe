@@ -1,6 +1,7 @@
 import axios from 'axios'
+import { baseUrl } from './baseUrl'
 
-const API = '/api/events'
+const API = `${baseUrl}/v1/api/events`
 
 export default {
   upload(eventId, formData) {

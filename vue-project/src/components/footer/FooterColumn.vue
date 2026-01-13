@@ -13,8 +13,3 @@ defineProps({
 })
 </script>
 
-<style scoped>
-.text-logo-brown {
-  color: var(--logo-brown);
-}
-</style>

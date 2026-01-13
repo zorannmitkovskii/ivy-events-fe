@@ -1,0 +1,169 @@
+.coming-soon-wrapper {
+  position: relative;
+  min-height: 100vh;
+  background: var(--soft-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Background text */
+.coming-soon-wrapper .coming-soon-bg {
+  position: absolute;
+  inset: -50%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 48px;
+  transform: rotate(-45deg);
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+.coming-soon-wrapper .coming-soon-bg span {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--primary-dark);
+  white-space: nowrap;
+}
+
+/* Hero */
+.coming-soon-wrapper .title {
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+/* Card */
+.coming-soon-wrapper .coming-soon-card {
+  z-index: 2;
+  max-width: 520px;
+  width: 100%;
+  padding: 42px 36px;
+  background: #fff;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.12);
+}
+
+.coming-soon-wrapper .subtitle {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.coming-soon-wrapper .description {
+  font-size: 15px;
+  line-height: 1.65;
+  margin-bottom: 28px;
+}
+
+/* Form */
+.coming-soon-wrapper .notify-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.coming-soon-wrapper .email-input {
+  height: 48px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.coming-soon-wrapper .email-input:focus {
+  outline: none;
+  border-color: var(--primary-main);
+}
+
+.coming-soon-wrapper .notify-button {
+  height: 48px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #C9A24D;
+  transition: background-color 0.2s ease;
+}
+
+.coming-soon-wrapper .privacy-note {
+  font-size: 12px;
+  color: #6b6b6b;
+}
+
+.coming-soon-wrapper .notify-button:hover {
+  background: #e2bf6f!important;
+}
+
+/* Benefits */
+.coming-soon-wrapper .benefits-row {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(21, 41, 30, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px; /* spacing between benefits */
+  font-size: 10px;
+  max-width: 520px;
+}
+
+.coming-soon-wrapper .benefit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.coming-soon-wrapper .dot {
+  width: 8px;
+  height: 8px;
+  background: #c9a24d;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(201, 162, 77, 0.5);
+}
+
+.coming-soon-wrapper .divider {
+  color: #bfc8af;
+}
+
+.coming-soon-wrapper .social {
+  display: flex;
+  justify-content: center;
+  gap: 24px; /* зголеми ако сакаш повеќе простор */
+}
+
+/* Social */
+.coming-soon-wrapper .social a {
+  font-size: 18px;
+  color: #1F3D2B!important;
+  gap: 24px; /* зголеми ако сакаш повеќе простор */
+}
+.coming-soon-wrapper .social a:hover {
+  color: #e2bf6f!important;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.coming-soon-wrapper .footer {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: rgba(21, 41, 30, 0.75);
+  font-size: 13px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .coming-soon-wrapper .title {
+    font-size: 42px;
+  }
+  .coming-soon-wrapper .coming-soon-card {
+    padding: 28px 20px;
+  }
+  .coming-soon-wrapper .notify-button {
+    height: 46px;
+  }
+}

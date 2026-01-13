@@ -1,0 +1,32 @@
+.brand-logo {
+  font-weight: 700;
+  font-size: 1.75rem; /* fs-3 equivalent */
+  color: var(--primary-main);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.brand-logo:hover {
+  opacity: 0.8;
+}
+
+/* Header buttons (Login, Get Started) */
+.navbar .login-btn {
+  background-color: var(--logo-brown);
+  color: var(--logo-beige);
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 0.35rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-block;
+  transition: opacity 0.25s ease, transform 0.15s ease;
+}
+
+.navbar .login-btn:hover {
+  opacity: 0.85;
+}
+
+.navbar .login-btn:active {
+  transform: scale(0.96);
+}

@@ -8,6 +8,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import './assets/styles/colors.css'
 import './assets/styles/styles.css'
 import './assets/styles/fonts.css'
+import './assets/styles/components/index.css'
 import "bootstrap-icons/font/bootstrap-icons.css";
 const app = createApp(App)
 app.use(router)

@@ -63,6 +63,7 @@
 import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import keycloak from "@/keycloak/keycloak.js";
+import { baseUrl } from "@/services/baseUrl";
 
 const username = ref('');
 const email = ref('');
@@ -88,7 +89,7 @@ const register = async () => {
       roles: ["USER"]
     };
 
-    const response = await fetch("http://localhost:8081/public/users/register", {
+    const response = await fetch(`${baseUrl}/public/users/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body)
