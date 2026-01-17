@@ -1,34 +1,21 @@
-# ==============================
-# Stage 1: Build Vue.js app
-# ==============================
 FROM node:20-alpine AS build
-
-# Set working directory
 WORKDIR /frontend
 
-# Copy package files and install dependencies
 COPY vue-project/package*.json ./
-RUN npm install
+RUN npm ci
 
-# Copy the rest of the Vue project
 COPY vue-project/ ./
-
-# Build the Vue app
 RUN npm run build
 
-# ==============================
-# Stage 2: Serve with Nginx
-# ==============================
 FROM nginx:alpine
+# Install envsubst for runtime env injection
+RUN apk add --no-cache gettext
 
-# Copy built files from the build stage
 COPY --from=build /frontend/dist /usr/share/nginx/html
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+# Copy runtime entrypoint to generate env.js from environment variables
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Optional: copy custom nginx config
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expose port 80
 EXPOSE 80
-
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/entrypoint.sh"]

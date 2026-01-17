@@ -1,10 +1,9 @@
 import axios from 'axios';
+import { baseUrl } from './baseUrl';
 
-// Determine API base URL from Vite env (set via docker-compose) with sensible fallback
-const base = (import.meta?.env?.VITE_API_BASE_URL || 'http://localhost:8081').replace(/\/$/, '');
-
+// Axios client using runtime baseUrl from window.__ENV__
 const apiClient = axios.create({
-  baseURL: `${base}/v1/api`,
+  baseURL: `${baseUrl}/v1/api`,
   headers: {
     'Content-Type': 'application/json',
   },
