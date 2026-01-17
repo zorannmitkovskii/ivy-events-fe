@@ -57,7 +57,7 @@ jobs:
             docker run -d \
               --name ivy-events-fe \
               --network ivy-net \
-              --env-file /root/vue-project/.env.prod \
+              -e VITE_API_BASE_URL=${{ secrets.PROD_API_BASE_URL }} \
               -p 80:80 \
               ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
 

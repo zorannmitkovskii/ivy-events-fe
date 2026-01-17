@@ -7,7 +7,7 @@ on:
 
 env:
   IMAGE_NAME: ivy-events-fe
-  TAG: test
+  TAG: latest
   DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
 
@@ -65,7 +65,7 @@ jobs:
             docker run -d \
               --name ivy-events-fe \
               --network ivy-net \
-              -p 8082:80 \
+              -p 80:80 \
               ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
             echo "✅ Frontend TEST deployed"
