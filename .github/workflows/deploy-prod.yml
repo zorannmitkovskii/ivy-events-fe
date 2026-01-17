@@ -58,7 +58,7 @@ jobs:
               --name ivy-events-fe \
               --network ivy-net \
               -e VITE_API_BASE_URL=${{ secrets.PROD_API_BASE_URL }} \
-              -p 5173:5173 \
+              -p 80:80 \
               ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
             echo "✅ Frontend PROD deployed"
