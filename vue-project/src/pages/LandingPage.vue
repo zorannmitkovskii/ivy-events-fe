@@ -1,17 +1,23 @@
 <template>
-  <ComingSoon />
-  <Header />
-  <HeroSection />
-  <div class="container mt-5">
-    <CategoriesCarousel />
-    <HowItWorks />
-    <ShareAnywhere />
-    <PackageSection />
-<!--    <FeaturedOrganizers />-->
-<!--    <TestimonialsCarousel />-->
-    <Faq/>
-  </div>
-  <Footer />
+  <!-- Show ComingSoon on prod, and also on local where we show everything -->
+  <ComingSoon v-if="isProd || isLocal" />
+
+  <!-- Show the rest of landing sections on test, and also on local -->
+  <template v-if="isTest || isLocal">
+    <Header />
+    <HeroSection />
+    <div class="container mt-5">
+      <CategoriesCarousel />
+      <HowItWorks />
+      <ShareAnywhere />
+      <PackageSection />
+      <!--    <FeaturedOrganizers />-->
+      <!--    <TestimonialsCarousel />-->
+      <Faq/>
+    </div>
+    <Footer />
+  </template>
+
   <router-view />
 </template>
 
@@ -27,6 +33,22 @@ import TestimonialsCarousel from "@/components/landingPage/TestimonialsCarousel.
 import Faq from "@/components/landingPage/Faq.vue";
 import ShareAnywhere from "@/components/landingPage/ShareAnywhere.vue";
 import PackageSection from "@/components/landingPage/PackageSection.vue";
+
+// Read APP_ENV injected at runtime via window.__ENV__ (default to 'local')
+const env = (typeof window !== 'undefined' && window.__ENV__) || {};
+
+function isUnresolvedTemplate(val) {
+  return typeof val === 'string' && /\$\{[^}]+\}/.test(val);
+}
+
+const rawAppEnv = env.APP_ENV;
+const appEnv = isUnresolvedTemplate(rawAppEnv)
+  ? 'local'
+  : String(rawAppEnv || 'local').toLowerCase();
+
+const isProd = appEnv === 'prod' || appEnv === 'production';
+const isTest = appEnv === 'test' || appEnv === 'testing' || appEnv === 'dev' || appEnv === 'development';
+const isLocal = appEnv === 'local';
 </script>
 
 <style scoped>

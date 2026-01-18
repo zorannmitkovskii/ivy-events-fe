@@ -54,9 +54,12 @@ jobs:
             docker stop ivy-events-fe || true
             docker rm ivy-events-fe || true
 
+            docker network create ivy-net || true
+
             docker run -d \
               --name ivy-events-fe \
               --network ivy-net \
+              -e APP_ENV=prod \
               -e VITE_API_BASE_URL=${{ secrets.PROD_API_BASE_URL }} \
               -p 81:80 \
               ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
