@@ -33,8 +33,9 @@ import TestimonialsCarousel from "@/components/landingPage/TestimonialsCarousel.
 import Faq from "@/components/landingPage/Faq.vue";
 import ShareAnywhere from "@/components/landingPage/ShareAnywhere.vue";
 import PackageSection from "@/components/landingPage/PackageSection.vue";
+import { detectDefaultEnvFromLocation } from '@/services/env'
 
-// Read APP_ENV injected at runtime via window.__ENV__ (default to 'local')
+// Read APP_ENV injected at runtime via window.__ENV__ (default intelligently based on host)
 const env = (typeof window !== 'undefined' && window.__ENV__) || {};
 
 function isUnresolvedTemplate(val) {
@@ -43,8 +44,8 @@ function isUnresolvedTemplate(val) {
 
 const rawAppEnv = env.APP_ENV;
 const appEnv = isUnresolvedTemplate(rawAppEnv)
-  ? 'local'
-  : String(rawAppEnv || 'local').toLowerCase();
+  ? detectDefaultEnvFromLocation()
+  : String(rawAppEnv || detectDefaultEnvFromLocation()).toLowerCase();
 
 const isProd = appEnv === 'prod' || appEnv === 'production';
 const isTest = appEnv === 'test' || appEnv === 'testing' || appEnv === 'dev' || appEnv === 'development';
