@@ -5,7 +5,7 @@ HTML_DIR=/usr/share/nginx/html
 ENV_FILE="$HTML_DIR/env.js"
 
 # Default values if not provided
-: "${VITE_API_BASE_URL:=http://localhost:8081}"
+: "${VITE_API_BASE_URL:=http://localhost:8084}"
 : "${APP_ENV:=local}"
 
 # If env.js exists (from Vite public folder), replace placeholders; otherwise generate a minimal one
