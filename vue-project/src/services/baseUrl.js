@@ -15,9 +15,9 @@ function computeDefaultApiBaseUrl(env) {
   if (env === 'local') return 'http://localhost:8081';
   if (typeof window === 'undefined') return 'http://localhost:8081';
   const host = ((window.location && window.location.hostname) || '').toLowerCase();
-  // Prefer dedicated API domains to avoid hitting the FE Nginx and to keep HTTPS
-  if (host === 'ivyevents.mk') return 'http://ivy-events-be:8080"';
-  if (host === 'test.ivyevents.mk') return 'http://ivy-events-be:8080"';
+  // Prefer dedicated public API domains to avoid hitting the FE Nginx and to keep HTTPS
+  if (host === 'ivyevents.mk') return 'https://api.ivyevents.mk';
+  if (host === 'test.ivyevents.mk') return 'https://api.test.ivyevents.mk';
   // Fallback: use same origin with backend port 8081 (may require CORS/SSL on that port)
   const { protocol, hostname } = window.location || {};
   const usedProtocol = protocol || 'https:';
