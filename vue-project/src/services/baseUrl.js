@@ -1,7 +1,7 @@
 // Central place to get the backend base URL (host + port), configured at RUNTIME via window.__ENV__
 // Fallbacks:
 // - local: default to http://localhost:8081
-// - test/prod: default to window.location.origin (same host serving FE)
+// - test/prod: default to same host but BE port 8081 (e.g., https://ivyevents.mk:8081) to avoid hitting FE Nginx
 import { detectDefaultEnvFromLocation } from './env'
 const runtimeEnv = (typeof window !== 'undefined' && window.__ENV__) || {};
 
@@ -10,7 +10,21 @@ function isUnresolvedTemplate(val) {
   return typeof val === 'string' && /\$\{[^}]+\}/.test(val);
 }
 
-// Determine app environment (default intelligently based on host)
+// Compute a safe default API base URL for non-local envs when not explicitly provided
+function computeDefaultApiBaseUrl(env) {
+  if (env === 'local') return 'http://localhost:8081';
+  if (typeof window === 'undefined') return 'http://localhost:8081';
+  const host = ((window.location && window.location.hostname) || '').toLowerCase();
+  // Prefer dedicated API domains to avoid hitting the FE Nginx and to keep HTTPS
+  if (host === 'ivyevents.mk') return 'http://ivy-events-be:8080"';
+  if (host === 'test.ivyevents.mk') return 'http://ivy-events-be:8080"';
+  // Fallback: use same origin with backend port 8081 (may require CORS/SSL on that port)
+  const { protocol, hostname } = window.location || {};
+  const usedProtocol = protocol || 'https:';
+  const usedHost = hostname || 'localhost';
+  return `${usedProtocol}//${usedHost}:8081`;
+}
+
 const rawAppEnv = runtimeEnv.APP_ENV;
 const appEnv = isUnresolvedTemplate(rawAppEnv)
   ? detectDefaultEnvFromLocation()
@@ -20,13 +34,7 @@ const isLocal = appEnv === 'local';
 const runtimeUrl = runtimeEnv.VITE_API_BASE_URL;
 let effectiveUrl;
 if (!runtimeUrl || isUnresolvedTemplate(runtimeUrl)) {
-  if (isLocal) {
-    effectiveUrl = 'http://localhost:8081';
-  } else {
-    // In test/prod, fall back to same origin serving the FE to avoid localhost calls
-    const origin = (typeof window !== 'undefined' && window.location && window.location.origin) || '';
-    effectiveUrl = origin || 'http://localhost:8081'; // last resort
-  }
+  effectiveUrl = computeDefaultApiBaseUrl(appEnv);
 } else {
   effectiveUrl = runtimeUrl;
 }
