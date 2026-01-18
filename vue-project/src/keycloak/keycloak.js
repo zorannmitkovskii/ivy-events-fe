@@ -6,7 +6,7 @@ import Keycloak from "keycloak-js";
 const host = window.location.hostname || "localhost";
 const defaultPort = window.location.port === "8180" ? "8080" : "8080"; // if app is on 8180, use 8181 for Keycloak
 const keycloakBase = `http://${host}:${defaultPort}`;
-
+console.log(`Keycloak base URL: ${keycloakBase}`);
 const keycloak = new Keycloak({
   url: keycloakBase,
   realm: "event-app",
