@@ -58,7 +58,7 @@ jobs:
             docker run -d \
               --name ivy-events-fe \
               --network ivy-net \
-              --env-file /opt/ivy-events-fe/env/fe.env \
+              --env-file /opt/ivy-events/env/fe.env \
               ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
   
             echo "✅ Frontend PROD deployed"
