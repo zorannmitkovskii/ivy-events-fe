@@ -5,8 +5,8 @@ HTML_DIR=/usr/share/nginx/html
 ENV_FILE="$HTML_DIR/env.js"
 
 # Defaults
-: "${APP_ENV:=local}"
-: "${VITE_API_BASE_URL:=http://localhost:8081}"
+: "${APP_ENV:=prod}"
+: "${VITE_API_BASE_URL:=https://api.ivyevents.mk}"
 : "${VITE_KEYCLOAK_REALM:=event-app}"
 : "${VITE_KEYCLOAK_CLIENT_ID:=eventFE}"
 
@@ -24,6 +24,25 @@ if [ -z "${VITE_KEYCLOAK_URL}" ] || printf '%s' "${VITE_KEYCLOAK_URL}" | grep -q
       ;;
   esac
 fi
+
+# Normalize API base URL for non-local environments if it's pointing to localhost
+case "$(printf '%s' "$APP_ENV" | tr '[:upper:]' '[:lower:]')" in
+  test)
+    if printf '%s' "$VITE_API_BASE_URL" | grep -qiE '^https?://(localhost|127\.0\.0\.1)(:|/|$)'; then
+      echo "[entrypoint] Overriding VITE_API_BASE_URL localhost -> https://api.test.ivyevents.mk for test env"
+      VITE_API_BASE_URL="https://api.test.ivyevents.mk"
+    fi
+    ;;
+  prod|production)
+    if printf '%s' "$VITE_API_BASE_URL" | grep -qiE '^https?://(localhost|127\.0\.0\.1)(:|/|$)'; then
+      echo "[entrypoint] Overriding VITE_API_BASE_URL localhost -> https://api.ivyevents.mk for prod env"
+      VITE_API_BASE_URL="https://api.ivyevents.mk"
+    fi
+    ;;
+  *)
+    # local or other: keep as provided/default
+    ;;
+ esac
 
 # If env.js exists (from Vite public folder), replace placeholders; otherwise generate a full one
 if [ -f "$ENV_FILE" ]; then
