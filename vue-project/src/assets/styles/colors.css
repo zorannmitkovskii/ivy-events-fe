@@ -1,47 +1,43 @@
 :root {
-  /* Primary — Ivy Green theme */
-  --primary-main: #1F3D2B;
-  --primary-light: #BFC8AF;
-  --primary-dark: #15291E;
+  /* Primary — based on palette */
+  --brand-main: #334338;   /* Forest Green */
+  --brand-light: #BFD2A4;  /* Sage Green */
+  --brand-dark: #5D6A57;   /* Moss Green (deepest available in palette) */
 
-  /* Soft Light — slightly darker cream */
-  --soft-light: #FAFAFA;        /* Потемен крем, многу природен */
+  /* Soft Light */
+  --soft-light: #E7E7E7;     /* Light Grey */
 
   /* Secondary */
-  --secondary-sage: #9FB8A0;
-  --secondary-gold: #C9A24D;
-  --secondary-cream: #F2EEE6;
+  --secondary-sage: #BFD2A4; /* Sage Green */
+  --secondary-salmon: #ED6E69; /* Salmon Pink */
+  --secondary-moss: #5D6A57; /* Moss Green */
 
-  /* Neutrals */
-  --neutral-900: #2C2C2C;
-  --neutral-700: #4A4A4A;
-  --neutral-500: #7B7B7B;
-  --neutral-300: #D6D3CB;
-  --neutral-100: #F4F2ED;
+  /* Neutrals (tinted to palette) */
+  --neutral-900: #334338;    /* Forest Green (as “near-black”) */
+  --neutral-700: #5D6A57;    /* Moss Green */
+  --neutral-500: #7A8773;    /* Optional mid (derived from palette feel) */
+  --neutral-300: #E7E7E7;    /* Light Grey */
+  --neutral-100: #FFFFFF;    /* Base White */
   --white: #FFFFFF;
 
   /* Backgrounds */
-  --bg-main: #F2EEE6;
-  --bg-card: #FFFFFF;
+  --bg-main: #E7E7E7;        /* Light Grey */
+  --bg-card: #FFFFFF;        /* Base White */
 
-  /* Status */
-  --success: #3FBF9C;
-  --warning: #E6C56E;
-  --error: #D96C6C;
+  /* Status (mapped to palette) */
+  --success: #BFD2A4;        /* Sage Green */
+  --warning: #5D6A57;        /* Moss Green (calm warning) */
+  --error: #ED6E69;          /* Salmon Pink */
 }
 
-
-
-
-
 /* Text color utility classes */
-.text-primary-main { color: var(--primary-main) !important; }
-.text-primary-light { color: var(--primary-light) !important; }
-.text-primary-dark { color: var(--primary-dark) !important; }
+.text-primary-main { color: var(--brand-main) !important; }
+.text-primary-light { color: var(--brand-light) !important; }
+.text-primary-dark { color: var(--brand-dark) !important; }
 
-.text-secondary-pink { color: var(--secondary-pink) !important; }
-.text-secondary-gold { color: var(--secondary-gold) !important; }
-.text-secondary-green { color: var(--secondary-green) !important; }
+.text-secondary-pink { color: var(--secondary-sage) !important; }
+.text-secondary-gold { color: var(--secondary-salmon) !important; }
+.text-secondary-green { color: var(--secondary-moss) !important; }
 
 .text-neutral-900 { color: var(--neutral-900) !important; }
 .text-neutral-700 { color: var(--neutral-700) !important; }
@@ -55,13 +51,13 @@
 .text-brand-light { color: var(--brand-light) !important; }
 
 /* Background color utility classes */
-.bg-primary-main { background-color: var(--primary-main) !important; }
-.bg-primary-light { background-color: var(--primary-light) !important; }
-.bg-primary-dark { background-color: var(--primary-dark) !important; }
+.bg-primary-main { background-color: var(--brand-main) !important; }
+.bg-primary-light { background-color: var(--brand-light) !important; }
+.bg-primary-dark { background-color: var(--brand-dark) !important; }
 .bg-soft-green { background-color: var(--soft-light) !important; }
-.bg-secondary-pink { background-color: var(--secondary-pink) !important; }
-.bg-secondary-gold { background-color: var(--secondary-gold) !important; }
-.bg-secondary-green { background-color: var(--secondary-green) !important; }
+.bg-secondary-pink { background-color: var(--secondary-sage) !important; }
+.bg-secondary-gold { background-color: var(--secondary-salmon) !important; }
+.bg-secondary-green { background-color: var(--secondary-moss) !important; }
 
 .bg-neutral-900 { background-color: var(--neutral-900) !important; }
 .bg-neutral-700 { background-color: var(--neutral-700) !important; }

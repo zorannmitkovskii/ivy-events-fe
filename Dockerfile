@@ -22,6 +22,9 @@ RUN apk add --no-cache gettext
 # Copy built frontend
 COPY --from=build /frontend/dist /usr/share/nginx/html
 
+# Copy static resources (e.g., favicon/logo) referenced from index.html
+COPY vue-project/resources /usr/share/nginx/html/resources
+
 # Copy nginx config (simple static server)
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
