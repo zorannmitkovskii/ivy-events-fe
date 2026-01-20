@@ -33,7 +33,7 @@ function resolveClientId() {
   const env = getRuntimeEnv()
   const cid = env.VITE_KEYCLOAK_CLIENT_ID
   if (typeof cid === 'string' && cid.trim() && !/\$\{[^}]+\}/.test(cid)) return cid
-  return 'eventsFE'
+  return 'eventFE'
 }
 
 export function createKeycloakSingleton() {
