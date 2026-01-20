@@ -20,7 +20,7 @@ if [ -z "${VITE_KEYCLOAK_URL}" ] || printf '%s' "${VITE_KEYCLOAK_URL}" | grep -q
       VITE_KEYCLOAK_URL="https://auth.ivyevents.mk"
       ;;
     *)
-      VITE_KEYCLOAK_URL="http://localhost:8080"
+      VITE_KEYCLOAK_URL="http://localhost:8181"
       ;;
   esac
 fi

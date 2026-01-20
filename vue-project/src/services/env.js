@@ -46,7 +46,7 @@ export function getRuntimeEnv() {
 // Compute default public Keycloak base URL per environment
 export function computeKeycloakBaseUrl(appEnv) {
   // Local development default
-  if (appEnv === 'local') return 'http://localhost:8080';
+  if (appEnv === 'local') return 'http://localhost:8181';
   // Test & Prod defaults based on host
   if (typeof window !== 'undefined') {
     const host = ((window.location && window.location.hostname) || '').toLowerCase();

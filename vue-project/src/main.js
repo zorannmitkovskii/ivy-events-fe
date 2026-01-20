@@ -17,7 +17,9 @@ async function bootstrap() {
   } catch (err) {
     // Do not block app startup if Keycloak (auth server) is unreachable or misconfigured in local dev
     // The app will continue to work; routes that require auth should redirect to /login where BE handles login
-    console.warn('[Keycloak] init failed. Continuing without SSO.', err);
+    const msg = err && (err.message || err.toString());
+    console.warn('[Keycloak] init failed. Continuing without SSO. Error:', msg);
+    console.debug('[Keycloak] Full error object:', err);
   }
   const app = createApp(App);
   app.use(router);
