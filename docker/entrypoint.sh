@@ -8,7 +8,7 @@ ENV_FILE="$HTML_DIR/env.js"
 : "${APP_ENV:=local}"
 : "${VITE_API_BASE_URL:=http://localhost:8081}"
 : "${VITE_KEYCLOAK_REALM:=event-app}"
-: "${VITE_KEYCLOAK_CLIENT_ID:=ivyeventsFE}"
+: "${VITE_KEYCLOAK_CLIENT_ID:=eventsFE}"
 
 # Default Keycloak URL based on APP_ENV if not provided
 if [ -z "${VITE_KEYCLOAK_URL}" ] || printf '%s' "${VITE_KEYCLOAK_URL}" | grep -q '\${'; then

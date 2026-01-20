@@ -1,14 +1,17 @@
 // Shared environment utilities
 // Detect default APP_ENV based on current location hostname when APP_ENV is missing/unresolved
 // Mapping:
-// - localhost/127.0.0.1 -> local
+// - localhost/127.0.0.1/::1, private LAN IPs (10.x, 172.16-31.x, 192.168.x), 0.0.0.0, and *.local -> local
 // - test.ivyevents.mk -> test
 // - ivyevents.mk -> prod
 // - any other host -> prod (sensible safe default)
 export function detectDefaultEnvFromLocation() {
   if (typeof window === 'undefined') return 'local';
   const host = ((window.location && window.location.hostname) || '').toLowerCase();
-  if (host === 'localhost' || host === '127.0.0.1') return 'local';
+  if (!host) return 'local';
+  const isLocalName = host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0' || host === '::1' || host.endsWith('.local');
+  const isPrivateIPv4 = /^(10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/.test(host);
+  if (isLocalName || isPrivateIPv4) return 'local';
   if (host === 'test.ivyevents.mk') return 'test';
   if (host === 'ivyevents.mk') return 'prod';
   return 'prod';

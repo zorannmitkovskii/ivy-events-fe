@@ -33,7 +33,7 @@ function resolveClientId() {
   const env = getRuntimeEnv()
   const cid = env.VITE_KEYCLOAK_CLIENT_ID
   if (typeof cid === 'string' && cid.trim() && !/\$\{[^}]+\}/.test(cid)) return cid
-  return 'ivyeventsFE'
+  return 'eventsFE'
 }
 
 export function createKeycloakSingleton() {
@@ -52,9 +52,11 @@ export const keycloak = createKeycloakSingleton()
 export async function initKeycloak(options = {}) {
   if (initPromise) return initPromise
   const defaults = {
-    onLoad: 'check-sso', // keep existing behavior from main.js
+    onLoad: 'check-sso', // avoid automatic redirect; just perform silent SSO check if possible
     pkceMethod: 'S256',
-    checkLoginIframe: false
+    checkLoginIframe: false,
+    silentCheckSsoRedirectUri: typeof window !== 'undefined' ? `${window.location.origin}/silent-check-sso.html` : undefined,
+    silentCheckSsoFallback: false // prevent redirect to auth when silent check cannot be performed
   }
   const initOpts = { ...defaults, ...options }
   initPromise = keycloak.init(initOpts)

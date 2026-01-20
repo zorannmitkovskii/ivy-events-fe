@@ -12,7 +12,13 @@ import './assets/styles/components/index.css'
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 async function bootstrap() {
-  await initKeycloak();
+  try {
+    await initKeycloak();
+  } catch (err) {
+    // Do not block app startup if Keycloak (auth server) is unreachable or misconfigured in local dev
+    // The app will continue to work; routes that require auth should redirect to /login where BE handles login
+    console.warn('[Keycloak] init failed. Continuing without SSO.', err);
+  }
   const app = createApp(App);
   app.use(router);
   app.config.globalProperties.$keycloak = keycloak;

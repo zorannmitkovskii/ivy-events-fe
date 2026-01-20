@@ -76,11 +76,15 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !keycloak.authenticated) {
-    keycloak.login();  // redirects to Keycloak login page
-  } else {
-    next();
+  if (to.meta.requiresAuth) {
+    // If a route requires auth, send the user to our app's login page.
+    // The Login page will handle authentication via the backend.
+    if (!to.path.startsWith('/login')) {
+      next({ path: '/login', query: { redirect: to.fullPath } });
+      return;
+    }
   }
+  next();
 });
 
 export default router

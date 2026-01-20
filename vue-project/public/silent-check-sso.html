@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Silent SSO Check</title>
+</head>
+<body>
+<script>
+  // This file is used by keycloak-js to perform a silent check-sso via hidden iframe.
+  // It must be served from the same origin as your app (window.location.origin).
+  // Keycloak expects this file to simply exist and be reachable; content is irrelevant.
+  // For some versions, a small script to notify is harmless.
+  try { window.parent && window.parent.postMessage('kc-iframe-loaded', window.location.origin); } catch (e) {}
+</script>
+</body>
+</html>
