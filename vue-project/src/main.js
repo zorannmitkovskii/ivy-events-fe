@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router/router.js'
-import keycloak from "./keycloak/keycloak.js";
+import { initKeycloak, keycloak } from '@/auth/keycloak'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
@@ -10,15 +10,13 @@ import './assets/styles/styles.css'
 import './assets/styles/fonts.css'
 import './assets/styles/components/index.css'
 import "bootstrap-icons/font/bootstrap-icons.css";
-const app = createApp(App)
-app.use(router)
-app.mount('#app')
 
-keycloak.init({ onLoad: "login-required" }).then(() => {
+async function bootstrap() {
+  await initKeycloak();
   const app = createApp(App);
-
-  // Make Keycloak instance globally available
+  app.use(router);
   app.config.globalProperties.$keycloak = keycloak;
+  app.mount('#app');
+}
 
-  app.mount("#app");
-});
+bootstrap();

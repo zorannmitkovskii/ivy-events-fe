@@ -1,6 +1,7 @@
-// This file is served statically and variables are injected at container startup via envsubst
-// Do not commit secrets here. Values will be replaced in docker/entrypoint.sh
 window.__ENV__ = {
   APP_ENV: "${APP_ENV}",
-  VITE_API_BASE_URL: "${VITE_API_BASE_URL}"
+  VITE_API_BASE_URL: "${VITE_API_BASE_URL}",
+  VITE_KEYCLOAK_URL: "${VITE_KEYCLOAK_URL}",
+  VITE_KEYCLOAK_REALM: "${VITE_KEYCLOAK_REALM}",
+  VITE_KEYCLOAK_CLIENT_ID: "${VITE_KEYCLOAK_CLIENT_ID}"
 };
