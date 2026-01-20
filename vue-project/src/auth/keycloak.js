@@ -52,9 +52,8 @@ export const keycloak = createKeycloakSingleton()
 export async function initKeycloak(options = {}) {
   if (initPromise) return initPromise
   const defaults = {
-    onLoad: 'login-required', // keep existing behavior from main.js
+    onLoad: 'check-sso', // keep existing behavior from main.js
     pkceMethod: 'S256',
-    silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
     checkLoginIframe: false
   }
   const initOpts = { ...defaults, ...options }
