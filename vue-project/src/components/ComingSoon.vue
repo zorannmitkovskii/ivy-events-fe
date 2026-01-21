@@ -56,10 +56,10 @@
     </div>
 
     <!-- Social -->
-    <div class="social mt-5">
-      <a href="#"><i class="fab fa-instagram"></i></a>
-      <a href="#"><i class="fab fa-facebook-f"></i></a>
-      <a href="#"><i class="fab fa-tiktok"></i></a>
+    <div class="social mt-xl-5 mt-3">
+      <a href="https://www.instagram.com/ivyandinc.wedding"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.facebook.com/profile.php?id=61584269536071"><i class="fab fa-facebook-f"></i></a>
+<!--      <a href="#"><i class="fab fa-tiktok"></i></a>-->
     </div>
 
     <!-- Footer -->

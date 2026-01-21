@@ -119,7 +119,7 @@
 .coming-soon-wrapper .dot {
   width: 8px;
   height: 8px;
-  background: #c9a24d;
+  background: #BFD2A4;
   border-radius: 50%;
   box-shadow: 0 0 6px rgba(201, 162, 77, 0.5);
 }
@@ -160,10 +160,27 @@
   .coming-soon-wrapper .title {
     font-size: 42px;
   }
+  .coming-soon-wrapper .subtitle  {
+    font-size: 18px;
+  }
+  .coming-soon-wrapper .description  {
+    font-size: 14px;
+  }
   .coming-soon-wrapper .coming-soon-card {
-    padding: 28px 20px;
+    padding: 20px 14px;
   }
   .coming-soon-wrapper .notify-button {
-    height: 46px;
+    height: 50px;
+    font-size: 14px;
+  }
+  .coming-soon-wrapper .coming-soon-card {
+    width: 300px;
+  }
+  .coming-soon-wrapper .privacy-note {
+    font-size: 10px;
+  }
+  .coming-soon-wrapper .benefits-row{
+    margin-top: 18px;
+    padding-top: 10px;
   }
 }
