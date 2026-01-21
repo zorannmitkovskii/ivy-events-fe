@@ -36,11 +36,6 @@ function resolveClientId() {
   return 'eventFE'
 }
 
-function computeThirdPartyCookiesCheckUrl() {
-  const base = resolveKeycloakUrl().replace(/\/$/, '')
-  const realm = encodeURIComponent(resolveRealm())
-  return `${base}/realms/${realm}/protocol/openid-connect/3p-cookies/step1.html`
-}
 
 function logKcDiagnostics(initOpts) {
   try {
@@ -57,8 +52,7 @@ function logKcDiagnostics(initOpts) {
         realm: resolveRealm(),
         clientId: resolveClientId()
       },
-      initOptions: initOpts,
-      thirdPartyCookiesCheckUrl: computeThirdPartyCookiesCheckUrl()
+      initOptions: initOpts
     }
     // eslint-disable-next-line no-console
   } catch (e) {
@@ -67,28 +61,6 @@ function logKcDiagnostics(initOpts) {
   }
 }
 
-async function preflightThirdPartyCookies(url, timeoutMs = 4000) {
-  if (typeof document === 'undefined') return { status: 'skipped', reason: 'no-document' }
-  return new Promise((resolve) => {
-    const start = Date.now()
-    const iframe = document.createElement('iframe')
-    iframe.style.display = 'none'
-    iframe.src = url
-    const cleanup = (result) => {
-      try { iframe.remove() } catch (_) {}
-      resolve({ ...result, durationMs: Date.now() - start })
-    }
-    const timer = setTimeout(() => cleanup({ status: 'timeout' }), timeoutMs)
-    iframe.onload = () => { clearTimeout(timer); cleanup({ status: 'loaded' }) }
-    iframe.onerror = () => { clearTimeout(timer); cleanup({ status: 'error' }) }
-    try {
-      document.body.appendChild(iframe)
-    } catch (e) {
-      clearTimeout(timer)
-      cleanup({ status: 'skipped', reason: 'append-failed', error: String(e) })
-    }
-  })
-}
 
 function createKeycloakInstance() {
   return new Keycloak({
@@ -118,61 +90,22 @@ export async function initKeycloak(options = {}) {
   const defaults = {
     pkceMethod: 'S256',
     checkLoginIframe: false,
-    silentCheckSsoRedirectUri: typeof window !== 'undefined' ? `${window.location.origin}/silent-check-sso.html` : undefined,
-    silentCheckSsoFallback: false, // prevent redirect to auth when silent check cannot be performed
     enableLogging: true
   }
   const initOpts = { ...defaults, ...options }
 
-  // Log diagnostics and attempt a non-invasive preflight of 3p cookies page for better error context
+  // Log diagnostics (preflight removed per requirement)
   logKcDiagnostics(initOpts)
-  try {
-    const tpUrl = computeThirdPartyCookiesCheckUrl()
-    await preflightThirdPartyCookies(tpUrl, 3500)
-    // eslint-disable-next-line no-console
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.warn('[Keycloak][preflight] Probe failed', e)
-  }
 
   initPromise = keycloak.init(initOpts)
   try {
     await initPromise
   } catch (e) {
-    // eslint-disable-next-line no-console
-    const msg = (e && (e.message || String(e))) || ''
-    const is3pTimeout = /3rd party check iframe/i.test(msg)
-    // Reset so next call can retry if needed
+    // Reset so next call can retry if needed; do not attempt redirect-based or silent-SSO retries
     initPromise = null
-    if (is3pTimeout) {
-      // Retry once WITHOUT silentCheckSso to avoid 3rd-party cookies probe
-      const retryOpts = { ...initOpts, silentCheckSsoRedirectUri: undefined }
-      // eslint-disable-next-line no-console
-      console.info('[Keycloak] Retrying init without silentCheckSsoRedirectUri to bypass 3rd-party cookies probe...')
-      try {
-        // Create a fresh Keycloak instance because keycloak-js forbids init twice on the same instance
-        resetKeycloakInstance()
-        initPromise = keycloak.init(retryOpts)
-        await initPromise
-        // eslint-disable-next-line no-console
-        console.info('[Keycloak] init succeeded on retry without silent SSO')
-      } catch (err2) {
-        initPromise = null
-        // eslint-disable-next-line no-console
-        console.error('[Keycloak] retry init error:', err2?.message || err2, err2)
-        // Provide actionable hints
-        // eslint-disable-next-line no-console
-        console.warn('[Keycloak] Hints: Ensure https auth domain is used, that the auth domain allows to be iframed for 3p-cookies endpoint (no X-Frame-Options DENY), and that third-party cookies/IFRAME are not blocked by the browser or privacy extensions.')
-        throw err2
-      }
-    } else {
-      // Provide actionable hints and rethrow
-      // eslint-disable-next-line no-console
-      console.error('[Keycloak] init error:', e?.message || e, e)
-      // eslint-disable-next-line no-console
-      console.warn('[Keycloak] Hints: Ensure https auth domain is used, that the auth domain allows to be iframed for 3p-cookies endpoint (no X-Frame-Options DENY), and that third-party cookies/IFRAME are not blocked by the browser or privacy extensions.')
-      throw e
-    }
+    // eslint-disable-next-line no-console
+    console.warn('[Keycloak] init error (non-fatal):', e?.message || e)
+    throw e
   }
   return initPromise
 }

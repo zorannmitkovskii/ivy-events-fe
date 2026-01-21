@@ -49,7 +49,6 @@ const appEnv = isUnresolvedTemplate(rawAppEnv)
   : String(rawAppEnv || detectDefaultEnvFromLocation()).toLowerCase();
 
 const runtimeUrl = runtimeEnv.VITE_API_BASE_URL;
-console.log('[ENV] VITE_API_BASE_URL (raw):', runtimeUrl);
 let effectiveUrl;
 if (!runtimeUrl || isUnresolvedTemplate(runtimeUrl)) {
   effectiveUrl = computeDefaultApiBaseUrl(appEnv);
@@ -88,7 +87,6 @@ try {
   if (appEnv !== 'local' && isLocalhostUrl(runtimeUrl)) {
     console.warn('[ENV] Overriding localhost VITE_API_BASE_URL in non-local env (', appEnv, '). Using safer default:', computeDefaultApiBaseUrl(appEnv));
   }
-  console.log('[ENV] API base URL (effective):', effectiveUrl);
 } catch (_) {}
 
 const baseUrl = String(effectiveUrl).replace(/\/$/, '');

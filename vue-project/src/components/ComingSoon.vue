@@ -57,10 +57,27 @@
 
     <!-- Social -->
     <div class="social mt-xl-5 mt-3">
-      <a href="https://www.instagram.com/ivyandinc.wedding"><i class="fab fa-instagram"></i></a>
-      <a href="https://www.facebook.com/profile.php?id=61584269536071"><i class="fab fa-facebook-f"></i></a>
-<!--      <a href="#"><i class="fab fa-tiktok"></i></a>-->
+      <!-- Instagram -->
+      <a
+        href="https://www.instagram.com/ivyandinc.wedding"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Instagram"
+      >
+        <i class="fab fa-instagram"></i>
+      </a>
+
+      <!-- Facebook -->
+      <a
+        href="https://www.facebook.com/profile.php?id=61584269536071"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Facebook"
+      >
+        <i class="fab fa-facebook-f"></i>
+      </a>
     </div>
+
 
     <!-- Footer -->
     <p class="footer">
