@@ -57,7 +57,7 @@
     <div class="social mt-xl-5 mt-3">
       <!-- Instagram -->
       <a
-        href="https://www.instagram.com/ivyandinc.wedding"
+        href="https://www.instagram.com/ivyevents.mk/"
         target="_blank"
         rel="noopener noreferrer"
         :aria-label="$t('comingSoon.social.instagram')"
