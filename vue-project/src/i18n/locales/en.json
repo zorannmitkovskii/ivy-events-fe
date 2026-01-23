@@ -1,0 +1,35 @@
+{
+  "comingSoon": {
+    "bgBrand": "IVY EVENTS",
+    "title": "Coming Soon",
+    "subtitle": "We are preparing something truly special",
+    "description": "We are building a modern event planning platform designed to save you time and give you complete control over every detail.",
+    "emailPlaceholder": "Enter your email address",
+    "button": {
+      "default": "Notify me and get <b>20% off</b>",
+      "loading": "Sending...",
+      "success": "Subscribed ✔"
+    },
+    "privacy": {
+      "line1": "The discount code will be sent via email.",
+      "line2": "Your email is safe. We only send important updates."
+    },
+    "successNote": "You have successfully subscribed! Check your email for the code.",
+    "errors": {
+      "invalidEmail": "Please enter a valid email.",
+      "alreadyRegistered": "This email is already subscribed.",
+      "badRequest": "Invalid request. Check your email and try again.",
+      "generic": "An error occurred. Please try again later."
+    },
+    "benefits": {
+      "earlyAccess": "Early Access",
+      "exclusivePerks": "Exclusive Perks",
+      "priorityUpdates": "Priority Updates"
+    },
+    "social": {
+      "instagram": "Instagram",
+      "facebook": "Facebook"
+    },
+    "footer": "© 2026 Ivy Events. All rights reserved."
+  }
+}

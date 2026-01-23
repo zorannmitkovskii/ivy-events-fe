@@ -1,9 +1,9 @@
 <template>
-  <Login />
+<!--  <Login />-->
 </template>
 
 <script setup>
-import Login from "@/components/header/Login.vue";
+// import Login from "@/components/header/Login.vue";
 </script>
 
 <style scoped>
