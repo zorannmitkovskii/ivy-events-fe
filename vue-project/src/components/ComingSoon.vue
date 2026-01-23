@@ -2,30 +2,28 @@
   <section class="coming-soon-wrapper">
     <!-- Background pattern -->
     <div class="coming-soon-bg">
-      <span v-for="i in 200" :key="i">IVY EVENTS</span>
+      <span v-for="i in 200" :key="i">{{$t('comingSoon.bgBrand')}}</span>
     </div>
 
     <!-- Hero title -->
     <div class="hero mb-4">
-      <h1 class="title text-primary-main">Наскоро</h1>
+      <h1 class="title text-primary-main">{{$t('comingSoon.title')}}</h1>
     </div>
 
     <!-- Card -->
     <div class="coming-soon-card">
       <h2 class="subtitle text-primary-main">
-        Подготвуваме нешто навистина посебно
+        {{$t('comingSoon.subtitle')}}
       </h2>
 
       <p class="description text-primary-main">
-        Работиме на модерна платформа за планирање на настани,
-        создадена да ви заштеди време и да донесе целосна контрола
-        над секој детал.
+        {{$t('comingSoon.description')}}
       </p>
 
       <form class="notify-form" @submit.prevent="onSubmit">
         <input
           type="email"
-          placeholder="Внесете ја вашата е-пошта"
+          :placeholder="$t('comingSoon.emailPlaceholder')"
           class="email-input"
           v-model="email"
           :disabled="loading || success"
@@ -33,24 +31,24 @@
         />
 
         <button class="notify-button text-white" :disabled="loading || success">
-          <template v-if="loading">Се испраќа...</template>
-          <template v-else-if="success">Запишано ✔</template>
-          <template v-else>Пријави се и обезбеди <b>20% попуст</b></template>
+          <template v-if="loading">{{$t('comingSoon.button.loading')}}</template>
+          <template v-else-if="success">{{$t('comingSoon.button.success')}}</template>
+          <template v-else><span v-html="$t('comingSoon.button.default')"></span></template>
         </button>
 
         <small class="privacy-note">
-          Кодот ќе биде испратен по е-пошта.
-          Вашата е-пошта е безбедна. Испраќаме само важни известувања.
+          {{$t('comingSoon.privacy.line1')}}<br />
+          {{$t('comingSoon.privacy.line2')}}
         </small>
-        <p v-if="success" class="success-note">Успешно се пријавивте! Проверете ја вашата е-пошта за кодот.</p>
+        <p v-if="success" class="success-note">{{$t('comingSoon.successNote')}}</p>
         <p v-if="errorMessage" class="error-note">{{ errorMessage }}</p>
       </form>
 
       <!-- Benefits -->
       <div class="benefits-row">
-        <span class="benefit"><span class="dot"></span> Ран пристап</span>
-        <span class="benefit"><span class="dot"></span> Ексклузивни поволности</span>
-        <span class="benefit"><span class="dot"></span> Приоритетни известувања</span>
+        <span class="benefit"><span class="dot"></span> {{$t('comingSoon.benefits.earlyAccess')}}</span>
+        <span class="benefit"><span class="dot"></span> {{$t('comingSoon.benefits.exclusivePerks')}}</span>
+        <span class="benefit"><span class="dot"></span> {{$t('comingSoon.benefits.priorityUpdates')}}</span>
       </div>
 
     </div>
@@ -62,7 +60,7 @@
         href="https://www.instagram.com/ivyandinc.wedding"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Instagram"
+        :aria-label="$t('comingSoon.social.instagram')"
       >
         <i class="fab fa-instagram"></i>
       </a>
@@ -72,7 +70,7 @@
         href="https://www.facebook.com/profile.php?id=61584269536071"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Facebook"
+        :aria-label="$t('comingSoon.social.facebook')"
       >
         <i class="fab fa-facebook-f"></i>
       </a>
@@ -81,7 +79,7 @@
 
     <!-- Footer -->
     <p class="footer">
-      © 2026 Ivy Events. Сите права се задржани.
+      {{$t('comingSoon.footer')}}
     </p>
   </section>
 </template>
@@ -89,6 +87,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { subscribeToDiscounts } from '../services/backendApi'
+import { t } from '@/i18n'
 
 const email = ref('')
 const loading = ref(false)
@@ -101,7 +100,7 @@ const onSubmit = async () => {
   // Basic email validation
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!email.value || !re.test(email.value)) {
-    errorMessage.value = 'Внесете валидна е-пошта.'
+    errorMessage.value = t('comingSoon.errors.invalidEmail')
     return
   }
 
@@ -114,11 +113,11 @@ const onSubmit = async () => {
     const anyErr = err as any
     const status = anyErr?.response?.status
     if (status === 409) {
-      errorMessage.value = 'Оваа е-пошта веќе е пријавена.'
+      errorMessage.value = t('comingSoon.errors.alreadyRegistered')
     } else if (status === 400) {
-      errorMessage.value = 'Невалидно барање. Проверете ја е-поштата и обидете се повторно.'
+      errorMessage.value = t('comingSoon.errors.badRequest')
     } else {
-      errorMessage.value = 'Настана грешка. Обидете се повторно подоцна.'
+      errorMessage.value = t('comingSoon.errors.generic')
     }
   } finally {
     loading.value = false

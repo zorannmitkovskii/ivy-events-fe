@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router/router.js'
 import { initKeycloak, keycloak } from '@/auth/keycloak'
+import i18n from '@/i18n'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
@@ -23,6 +24,7 @@ async function bootstrap() {
   }
   const app = createApp(App);
   app.use(router);
+  app.use(i18n);
   app.config.globalProperties.$keycloak = keycloak;
   app.mount('#app');
 }

@@ -23,7 +23,6 @@ function computeDefaultApiBaseUrl(env) {
   const { protocol, hostname } = window.location || {};
   const usedProtocol = protocol || (env === 'local' ? 'http:' : 'https:');
   const usedHost = (hostname || 'localhost').toLowerCase();
-  console.log('Using default API domain for env:', env);
   if (env === 'local') {
     // Use the current host so mobile devices on the same LAN can reach the backend
     return `${usedProtocol}//${usedHost}:8081`;
@@ -31,11 +30,9 @@ function computeDefaultApiBaseUrl(env) {
 
   // Prefer dedicated public API domains in known environments
   if (usedHost === 'ivyevents.mk')  {
-    console.log('Using public API domain for prod env:', 'https://api.ivyevents.mk');
     return 'https://api.ivyevents.mk'
   };
   if (usedHost === 'test.ivyevents.mk')  {
-    console.log('Using public API domain for prod env:', 'https://api.test.ivyevents.mk');
     return 'https://api.test.ivyevents.mk'
   };
 
@@ -83,11 +80,6 @@ if (!runtimeUrl || isUnresolvedTemplate(runtimeUrl)) {
 }
 
 // Diagnostics: log effective API base URL and warn if overriding an unsafe localhost value in non-local envs
-try {
-  if (appEnv !== 'local' && isLocalhostUrl(runtimeUrl)) {
-    console.warn('[ENV] Overriding localhost VITE_API_BASE_URL in non-local env (', appEnv, '). Using safer default:', computeDefaultApiBaseUrl(appEnv));
-  }
-} catch (_) {}
 
 const baseUrl = String(effectiveUrl).replace(/\/$/, '');
 

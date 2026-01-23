@@ -54,9 +54,3 @@ defineProps({
 });
 </script>
 
-<style scoped>
-/* Optional: Your elegant script font */
-.font-wedding {
-  font-family: "Great Vibes", cursive;
-}
-</style>

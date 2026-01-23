@@ -1,15 +1,25 @@
+/* Page base (like the 2nd design) */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-main);
+  color: var(--brand-main);
+}
+
+/* Wrapper */
 .coming-soon-wrapper {
   position: relative;
   min-height: 100vh;
-  background: var(--soft-light);
+  background-color: var(--bg-main);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  padding: 24px; /* helps on mobile */
 }
 
-/* Background text */
+/* Background text (keep but slightly nicer) */
 .coming-soon-wrapper .coming-soon-bg {
   position: absolute;
   inset: -50%;
@@ -17,7 +27,7 @@
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 48px;
   transform: rotate(-45deg);
-  opacity: 0.04;
+  opacity: 0.035; /* softer */
   pointer-events: none;
 }
 
@@ -25,39 +35,46 @@
   font-size: 28px;
   font-weight: 800;
   letter-spacing: 2px;
-  color: var(--primary-dark);
+  color: var(--brand-main);
   white-space: nowrap;
 }
 
-/* Hero */
+/* Title -> Playfair style like design 2 */
 .coming-soon-wrapper .title {
-  font-size: 64px;
-  font-weight: 800;
-  letter-spacing: 2px;
+  /*font-family: 'Playfair Display', serif;*/
+  font-size: 56px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #2F3E36;
+  margin: 0 0 16px;
 }
 
-/* Card */
+/* Card -> softer + bigger radius + lighter shadow */
 .coming-soon-wrapper .coming-soon-card {
   z-index: 2;
   max-width: 520px;
   width: 100%;
-  padding: 42px 36px;
-  background: #fff;
-  border-radius: 20px;
+  padding: 48px 40px;
+  background: var(--bg-white);
+  border-radius: 24px;
   text-align: center;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
 }
 
+/* Subtitle like h2 */
 .coming-soon-wrapper .subtitle {
   font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 14px;
+  font-weight: 500;
+  color: var(--brand-dark);
+  margin: 0 0 16px;
 }
 
+/* Description */
 .coming-soon-wrapper .description {
-  font-size: 15px;
-  line-height: 1.65;
-  margin-bottom: 28px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--bg-darker-gray);
+  margin: 0 0 32px;
 }
 
 /* Form */
@@ -67,120 +84,145 @@
   gap: 14px;
 }
 
+/* Input like design 2 */
 .coming-soon-wrapper .email-input {
-  height: 48px;
-  padding: 0 16px;
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  height: auto;
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1px solid var(--bg-gray);
+  font-size: 16px;
+  background: var(--bg-white);
+  color: #1F2933;
+}
+
+.coming-soon-wrapper .email-input::placeholder {
+  color: var(--bg-dark-gray);
 }
 
 .coming-soon-wrapper .email-input:focus {
   outline: none;
-  border-color: var(--primary-main);
+  border-color: var(--brand-gold);
+  box-shadow: 0 0 0 3px rgba(200, 162, 77, 0.25);
 }
 
+/* Button -> gold gradient */
 .coming-soon-wrapper .notify-button {
-  height: 48px;
-  border-radius: 12px;
+  height: auto;
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  background: #C9A24D;
-  transition: background-color 0.2s ease;
-}
-
-.coming-soon-wrapper .privacy-note {
-  font-size: 12px;
-  color: #6b6b6b;
+  color: var(--bg-white);
+  background: linear-gradient(135deg, var(--brand-gold), var(--secondary-gold));
+  transition: transform 0.15s ease, filter 0.25s ease;
 }
 
 .coming-soon-wrapper .notify-button:hover {
-  background: #e2bf6f!important;
+  filter: brightness(0.98);
+  transform: translateY(-1px);
 }
 
-/* Benefits */
+/* Small text note */
+.coming-soon-wrapper .privacy-note {
+  font-size: 13px;
+  color: var(--bg-darker-gray);
+  margin-top: 14px;
+}
+
+/* Benefits -> bigger + gold dots */
 .coming-soon-wrapper .benefits-row {
   margin-top: 28px;
   padding-top: 18px;
-  border-top: 1px solid rgba(21, 41, 30, 0.2);
+  border-top: 1px solid rgba(47, 62, 54, 0.12);
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 24px; /* spacing between benefits */
-  font-size: 10px;
+  gap: 24px;
+  font-size: 14px;
+  color: var(--brand-main);
   max-width: 520px;
 }
 
 .coming-soon-wrapper .benefit {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .coming-soon-wrapper .dot {
   width: 8px;
   height: 8px;
-  background: #BFD2A4;
+  background: var(--brand-light); /* gold */
   border-radius: 50%;
-  box-shadow: 0 0 6px rgba(201, 162, 77, 0.5);
+  box-shadow: 0 0 0 3px rgba(200, 162, 77, 0.18);
 }
 
 .coming-soon-wrapper .divider {
-  color: #bfc8af;
-}
-
-.coming-soon-wrapper .social {
-  display: flex;
-  justify-content: center;
-  gap: 24px; /* зголеми ако сакаш повеќе простор */
+  color: rgba(47, 62, 54, 0.25);
 }
 
 /* Social */
+.coming-soon-wrapper .social {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 28px;
+}
+
 .coming-soon-wrapper .social a {
   font-size: 18px;
-  color: #1F3D2B!important;
-  gap: 24px; /* зголеми ако сакаш повеќе простор */
-}
-.coming-soon-wrapper .social a:hover {
-  color: #e2bf6f!important;
+  color: var(--brand-main);
   transition: color 0.2s ease, transform 0.2s ease;
 }
 
+.coming-soon-wrapper .social a:hover {
+  color: var(--brand-gold);
+  transform: translateY(-1px);
+}
+
+/* Footer */
 .coming-soon-wrapper .footer {
   position: absolute;
   bottom: 20px;
   left: 0;
   right: 0;
   text-align: center;
-  color: rgba(21, 41, 30, 0.75);
-  font-size: 13px;
+  color: var(--bg-darker-gray);
+  font-size: 14px;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
+  .coming-soon-wrapper .coming-soon-card {
+    padding: 28px 18px;
+    border-radius: 18px;
+  }
+
   .coming-soon-wrapper .title {
     font-size: 42px;
   }
-  .coming-soon-wrapper .subtitle  {
+
+  .coming-soon-wrapper .subtitle {
     font-size: 18px;
   }
-  .coming-soon-wrapper .description  {
+
+  .coming-soon-wrapper .description {
     font-size: 14px;
+    margin-bottom: 22px;
   }
-  .coming-soon-wrapper .coming-soon-card {
-    padding: 20px 14px;
+
+  .coming-soon-wrapper .benefits-row {
+    flex-wrap: wrap; /* important: prevents overflow */
+    gap: 14px;
+    font-size: 12px;
   }
-  .coming-soon-wrapper .notify-button {
-    height: 50px;
-    font-size: 14px;
-  }
-  .coming-soon-wrapper .coming-soon-card {
-    width: 300px;
-  }
-  .coming-soon-wrapper .privacy-note {
-    font-size: 10px;
-  }
-  .coming-soon-wrapper .benefits-row{
-    margin-top: 18px;
-    padding-top: 10px;
+
+  .coming-soon-wrapper .footer {
+    bottom: 10px;
+    font-size: 12px;
   }
 }

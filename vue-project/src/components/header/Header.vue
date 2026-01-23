@@ -1,25 +1,70 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-brand-light shadow-sm py-3">
-    <div class="container">
-      <BrandLogo />
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+  <header class="app-header">
+    <div class="header-container">
+      <!-- Logo -->
+      <div class="logo">IvyEvents</div>
 
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto align-items-lg-center">
-          <NavLinks />
-          <LoginButton />
-          <SignUpButton />
-        </ul>
+      <NavLinks/>
+      <HeaderActions/>
+      <!-- Mobile hamburger -->
+      <button
+        class="icon-btn mobile-only"
+        type="button"
+        aria-label="Open menu"
+        :aria-expanded="isMenuOpen ? 'true' : 'false'"
+        @click="toggleMenu"
+      >
+        <span class="hamburger" :class="{ open: isMenuOpen }"></span>
+      </button>
+    </div>
+
+    <!-- Mobile menu overlay -->
+    <div
+      class="overlay"
+      :class="{ show: isMenuOpen }"
+      @click="closeMenu"
+    ></div>
+
+    <!-- Mobile menu panel (dropdown) -->
+    <div class="mobile-menu" :class="{ open: isMenuOpen }">
+      <nav class="mobile-nav">
+        <a href="#" @click="closeMenu">Templates</a>
+        <a href="#" @click="closeMenu">Features</a>
+        <a href="#" @click="closeMenu">Pricing</a>
+        <a href="#" @click="closeMenu">FAQ</a>
+      </nav>
+
+      <div class="mobile-actions">
+        <button class="btn btn-outline w-full" @click="closeMenu">Sign In</button>
+        <button class="btn btn-primary w-full" @click="closeMenu">Get Started Free</button>
       </div>
     </div>
-  </nav>
+  </header>
 </template>
 
 <script setup>
-import NavLinks from './NavLinks.vue'
-import LoginButton from './LoginButton.vue'
-import BrandLogo from './BrandLogo.vue'
-import SignUpButton from "@/components/header/SignUpButton.vue";
+import {ref, onMounted, onBeforeUnmount} from "vue";
+import NavLinks from "@/components/header/NavLinks.vue";
+import HeaderActions from "@/components/header/HeaderActions.vue";
+
+const isMenuOpen = ref(false);
+
+function toggleMenu() {
+  isMenuOpen.value = !isMenuOpen.value;
+}
+
+function closeMenu() {
+  isMenuOpen.value = false;
+}
+
+function onKeydown(e) {
+  if (e.key === "Escape") closeMenu();
+}
+
+onMounted(() => window.addEventListener("keydown", onKeydown));
+onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
 </script>
+
+<style>
+
+</style>

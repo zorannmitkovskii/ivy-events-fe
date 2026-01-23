@@ -12,7 +12,7 @@
             >
               <i class="fas fa-calendar-star text-white fs-4"></i>
             </div>
-            <span class="fs-3 fw-bold">EventPro</span>
+            <span class="fs-3 fw-bold">IvyEvents</span>
           </div>
 
           <p class="text-white-50">
@@ -64,7 +64,7 @@
       <hr class="my-4 border-secondary">
 
       <div class="text-center text-white-50">
-        <p class="mb-0">© 2024 EventPro. All rights reserved.</p>
+        <p class="mb-0">© 2026 IvyEvents. All rights reserved.</p>
       </div>
 
     </div>
