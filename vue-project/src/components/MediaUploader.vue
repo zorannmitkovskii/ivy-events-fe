@@ -56,7 +56,7 @@
 
       <!-- upload button -->
       <button
-        class="btn btn-primary mt-3"
+        class="btn btn-main mt-3"
         @click="uploadFiles"
         :disabled="uploading"
       >

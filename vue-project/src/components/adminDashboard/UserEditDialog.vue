@@ -27,7 +27,7 @@
 
         <div class="modal-footer">
           <button class="btn btn-secondary" @click="$emit('close')">Cancel</button>
-          <button class="btn btn-primary" @click="save">Save</button>
+          <button class="btn btn-main" @click="save">Save</button>
         </div>
 
       </div>

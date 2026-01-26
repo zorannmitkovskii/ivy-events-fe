@@ -4,7 +4,7 @@
 
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="text-brand-dark">Manage Categories</h4>
-        <button class="btn btn-primary" @click="createCategory">
+        <button class="btn btn-main" @click="createCategory">
           <i class="bi bi-plus-lg"></i>
           Add Category
         </button>

@@ -1,0 +1,8 @@
+@import './variables.css';
+
+.accordion { border: 1px solid var(--neutral-200); border-radius: var(--radius-lg); overflow: hidden; background: var(--white); }
+.accordion__item + .accordion__item { border-top: 1px solid var(--neutral-200); }
+.accordion__header { display:flex; align-items:center; justify-content: space-between; padding: 14px 16px; cursor: pointer; }
+.accordion__title { margin: 0; font-weight: 700; color: var(--neutral-900); }
+.accordion__icon { color: var(--neutral-500); }
+.accordion__panel { padding: 0 16px 16px; color: var(--neutral-700); }

@@ -63,7 +63,7 @@
                 Cancel
               </button>
 
-              <button type="submit" class="btn btn-primary bg-brand-dark border-0">
+              <button type="submit" class="btn btn-main bg-brand-dark border-0">
                 {{ submitLabel }}
               </button>
             </div>
@@ -118,11 +118,11 @@ defineExpose({ open, close })
   border-radius: 14px;
 }
 
-.btn-primary {
+.btn-main {
   background-color: var(--logo-brown) !important;
 }
 
-.btn-primary:hover {
+.btn-main:hover {
   background-color: #734f31 !important;
 }
 

@@ -35,8 +35,8 @@
       </nav>
 
       <div class="mobile-actions">
-        <button class="btn btn-outline w-full" @click="closeMenu">Sign In</button>
-        <button class="btn btn-primary w-full" @click="closeMenu">Get Started Free</button>
+        <button class="btn btn-main-outline w-full" @click="closeMenu">Sign In</button>
+        <button class="btn btn-main w-full" @click="closeMenu">Get Started Free</button>
       </div>
     </div>
   </header>
