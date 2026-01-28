@@ -4,8 +4,8 @@
       <!-- Logo -->
       <div class="logo">{{$t('header.logo')}}</div>
 
-      <NavLinks/>
-      <HeaderActions/>
+      <NavLinks class="desktop-nav"/>
+      <HeaderActions class="desktop-actions"/>
       <!-- Mobile hamburger -->
       <button
         class="icon-btn mobile-only"
@@ -65,6 +65,6 @@ onMounted(() => window.addEventListener("keydown", onKeydown));
 onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
 </script>
 
-<style>
+<style scoped>
 
 </style>

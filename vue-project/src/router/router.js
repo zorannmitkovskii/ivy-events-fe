@@ -8,9 +8,10 @@ import AuthSignupPage from "@/pages/auth/AuthSignupPage.vue";
 import AuthForgotPasswordPage from "@/pages/auth/AuthForgotPasswordPage.vue";
 import AuthResetPasswordPage from "@/pages/auth/AuthResetPasswordPage.vue";
 import AuthVerifyEmailPage from "@/pages/auth/AuthVerifyEmailPage.vue";
+import { setLocale } from '@/i18n'
 
 const routes = [
-  // Marketing shell
+  // Marketing shell (MK default)
   {
     path: '/',
     children: [
@@ -35,7 +36,18 @@ const routes = [
     ],
   },
 
-  // // Auth shell
+  // English marketing shell (/en)
+  {
+    path: '/en',
+    children: [
+      { path: '', name: 'home-en', component: HomePage },
+      { path: 'features', name: 'features-en', component: FeaturesPage },
+      { path: 'features/rsvp', name: 'features-rsvp-en', component: FeatureRSVPPage },
+      { path: 'features/invitations', name: 'features-invitations-en', component: FeatureInvitationsPage },
+    ],
+  },
+
+  // Auth shell (MK default)
   {
     path: '/auth',
     // component: AuthLayout,
@@ -46,6 +58,19 @@ const routes = [
       { path: 'forgot-password', name: 'forgot-password', component: AuthForgotPasswordPage },
       { path: 'reset-password', name: 'reset-password', component: AuthResetPasswordPage },
       { path: 'verify-email', name: 'verify-email', component: AuthVerifyEmailPage },
+    ],
+  },
+
+  // English Auth shell (/en/auth)
+  {
+    path: '/en/auth',
+    meta: { guestOnly: true },
+    children: [
+      { path: 'login', name: 'login-en', component: AuthLoginPage },
+      { path: 'signup', name: 'signup-en', component: AuthSignupPage },
+      { path: 'forgot-password', name: 'forgot-password-en', component: AuthForgotPasswordPage },
+      { path: 'reset-password', name: 'reset-password-en', component: AuthResetPasswordPage },
+      { path: 'verify-email', name: 'verify-email-en', component: AuthVerifyEmailPage },
     ],
   },
   //
@@ -193,6 +218,13 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  // Set locale by URL prefix: '/en' -> English, otherwise Macedonian (default)
+  if (to.path === '/en' || to.path.startsWith('/en/')) {
+    setLocale('en')
+  } else {
+    setLocale('mk')
+  }
+
   if (to.meta.requiresAuth) {
     // If a route requires auth, send the user to our app's login page.
     // The Login page will handle authentication via the backend.
