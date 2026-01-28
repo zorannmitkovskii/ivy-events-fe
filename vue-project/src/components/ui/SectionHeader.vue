@@ -19,16 +19,16 @@ defineProps({
 }
 
 .section-title {
-  font-family: "Cormorant Garamond", serif;
+  font-family: var(--font-family), serif;
   font-size: 42px;
   font-weight: 500;
-  color: var(--primary-main);
+  color: var(--brand-main);
   margin: 0 0 10px;
 }
 
 .section-subtitle {
   margin: 0;
-  color: var(--neutral-700);
+  color: var(--brand-dark);
   font-size: 16px;
 }
 </style>

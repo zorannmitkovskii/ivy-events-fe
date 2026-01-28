@@ -43,7 +43,7 @@ defineProps({
   position: relative;
   border-radius: 18px;
   overflow: hidden;
-  background: var(--white);
+  background: var(--bg-white);
   box-shadow: 0 16px 34px rgba(0,0,0,0.10);
 }
 
@@ -58,14 +58,14 @@ defineProps({
 /* meta (like p-3 area in bootstrap) */
 .template-meta {
   padding: 14px 14px 16px;
-  background: var(--white);
+  background: var(--bg-white);
   position: relative;
   z-index: 0;
 }
 
 .template-title {
   margin: 0 0 4px;
-  font-family: "Cormorant Garamond", serif;
+  font-family: var(--font-family), serif;
   font-size: 15px;
   font-weight: 700;
   color: var(--neutral-900);
@@ -128,7 +128,7 @@ defineProps({
   text-decoration: none;
 
   background: var(--secondary-gold);
-  color: var(--white);
+  color: var(--bg-white);
   font-weight: 700;
   font-size: 14px;
 

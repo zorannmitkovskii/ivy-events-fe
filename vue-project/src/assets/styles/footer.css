@@ -1,7 +1,7 @@
 @import './variables.css';
 
-.footer { background: var(--neutral-900); color: var(--white); padding: 40px 0; }
-.footer a { color: var(--white); opacity: .9; }
+.footer { background: var(--neutral-900); color: var(--bg-white); padding: 40px 0; }
+.footer a { color: var(--bg-white); opacity: .9; }
 .footer a:hover { opacity: 1; }
 .footer__top { display:flex; gap:32px; flex-wrap: wrap; }
 .footer__col { min-width: 180px; }

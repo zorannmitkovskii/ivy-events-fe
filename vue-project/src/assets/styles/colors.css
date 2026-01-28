@@ -12,7 +12,7 @@
 .text-neutral-500 { color: var(--neutral-500) !important; }
 .text-neutral-300 { color: var(--neutral-300) !important; }
 .text-neutral-100 { color: var(--neutral-100) !important; }
-.text-white { color: var(--white) !important; }
+.text-white { color: var(--bg-white) !important; }
 
 /* Backward-compatible text helpers */
 .text-brand-dark { color: var(--brand-dark) !important; }
@@ -32,7 +32,7 @@
 .bg-neutral-500 { background-color: var(--neutral-500) !important; }
 .bg-neutral-300 { background-color: var(--neutral-300) !important; }
 .bg-neutral-100 { background-color: var(--neutral-100) !important; }
-.bg-white { background-color: var(--white) !important; }
+.bg-white { background-color: var(--bg-white) !important; }
 
 .bg-bg-main { background-color: var(--bg-main) !important; }
 .bg-card { background-color: var(--bg-card) !important; }

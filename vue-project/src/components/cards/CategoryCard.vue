@@ -4,15 +4,17 @@
       <span class="icon-emoji" aria-hidden="true">{{ icon }}</span>
     </div>
 
-    <h3 class="title">{{ title }}</h3>
-    <p class="desc">{{ description }}</p>
+    <h3 class="title">{{ titleKey ? $t(titleKey) : title }}</h3>
+    <p class="desc">{{ descriptionKey ? $t(descriptionKey) : description }}</p>
   </article>
 </template>
 
 <script setup>
 defineProps({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
+  title: { type: String, default: "" },
+  titleKey: { type: String, default: "" },
+  description: { type: String, default: "" },
+  descriptionKey: { type: String, default: "" },
   icon: { type: String, required: true }, // emoji or small char icon
   chipClass: { type: String, default: "" } // e.g. "chip-pink"
 });
@@ -21,7 +23,7 @@ defineProps({
 <style scoped>
 .category-card {
   position: relative;
-  background: var(--white);
+  background: var(--bg-white);
   border-radius: 14px;
   padding: 28px 24px;
   text-align: center;

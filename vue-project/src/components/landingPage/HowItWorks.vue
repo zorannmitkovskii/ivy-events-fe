@@ -13,7 +13,7 @@
 
 <script setup>
 import SectionHeader from "@/components/ui/SectionHeader.vue";
-import StepsGrid from "@/components/cards/StepsGrid.vue";
+import StepsGrid from "@/components/grids/StepsGrid.vue";
 
 const steps = [
   {
@@ -42,7 +42,7 @@ const steps = [
 <style scoped>
 .how-section {
   padding: 6rem 0;
-  background: var(--white);
+  background: var(--bg-white);
 }
 
 /* If you already have global container, remove this */

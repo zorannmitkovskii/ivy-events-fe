@@ -1,40 +1,56 @@
 <template>
-  <SectionWrap>
-    <SectionHeader center eyebrow="FAQ" title="Frequently Asked Questions" />
+  <section class="faq-section" :id="id">
     <div class="container">
-      <div class="accordion mt-24">
-        <div class="accordion__item" v-for="(f, i) in faqs" :key="i">
-          <div class="accordion__header" @click="toggle(i)">
-            <h4 class="accordion__title">{{ f.q }}</h4>
-            <span class="accordion__icon">{{ openIndex === i ? '−' : '+' }}</span>
-          </div>
-          <div v-if="openIndex === i" class="accordion__panel">
-            {{ f.a }}
-          </div>
-        </div>
+      <header class="section-header">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-subtitle">Everything you need to know about EventPro</p>
+      </header>
+
+      <div class="faq-wrap">
+        <FaqList :defaultOpenIndex="defaultOpenIndex" />
       </div>
     </div>
-  </SectionWrap>
+  </section>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import SectionWrap from '@/components/ui/SectionWrap.vue'
-import SectionHeader from '@/components/ui/SectionHeader.vue'
+import FaqList from "@/components/grids/FaqList.vue";
 
-const faqs = [
-  { q: 'Can I share my invitation on social media?', a: 'Yes, you can share via link on any platform, plus download a QR code.' },
-  { q: 'Do you have free templates?', a: 'We offer a selection of free templates and premium options for Pro plans.' },
-  { q: 'Can I track RSVPs?', a: 'Yes, you can view responses in real time and export the guest list.' },
-]
-
-const openIndex = ref(-1)
-const toggle = (i) => {
-  openIndex.value = openIndex.value === i ? -1 : i
-}
 </script>
 
 <style scoped>
-@import '@/assets/styles/accordion.css';
-@import '@/assets/styles/utilities.css';
+.faq-section {
+  padding: 6rem 0;
+  background: var(--bg-white);
+}
+
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.section-title {
+  margin: 0 0 10px;
+  font-family: var(--font-family), serif;
+  font-size: 44px;
+  font-weight: 500;
+  color: var(--neutral-900);
+}
+
+.section-subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: var(--neutral-700);
+}
+
+.faq-wrap {
+  max-width: 860px; /* like screenshot */
+  margin: 0 auto;
+}
 </style>

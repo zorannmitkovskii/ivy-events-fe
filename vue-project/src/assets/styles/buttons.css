@@ -4,14 +4,14 @@
   display: inline-flex; align-items: center; justify-content: center;
   gap: 10px; padding: 12px 18px; border-radius: var(--radius-md);
   border: 1px solid transparent; cursor: pointer; font-weight: 600;
-  background: var(--brand-main); color: var(--white);
+  background: var(--brand-main); color: var(--bg-white);
   transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
 }
 .button:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
 .button:active { transform: translateY(0); }
 
 .button--outline { background: transparent; color: var(--brand-main); border-color: var(--brand-main); }
-.button--outline:hover { background: var(--brand-main); color: var(--white); }
+.button--outline:hover { background: var(--brand-main); color: var(--bg-white); }
 
 .button--ghost { background: transparent; color: var(--brand-main); }
 .button--ghost:hover { background: var(--neutral-100); }

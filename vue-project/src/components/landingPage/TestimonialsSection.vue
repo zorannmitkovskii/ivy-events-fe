@@ -9,7 +9,7 @@
       <TemplatesGrid :items="templates" />
 
       <div class="templates-cta">
-        <AppButton variant="outline" label="View All Templates" :to="ctaTo" />
+        <ButtonMain variant="outline" label="View All Templates" :to="ctaTo" />
       </div>
     </div>
   </section>
@@ -18,7 +18,7 @@
 <script setup>
 import SectionHeader from "@/components/ui/SectionHeader.vue";
 import TemplatesGrid from "@/components/grids/TemplatesGrid.vue";
-import AppButton from "@/components/ui/AppButton.vue";
+import ButtonMain from "@/components/generic/ButtonMain.vue";
 
 defineProps({
   id: { type: String, default: "templates" },
@@ -57,7 +57,7 @@ const templates = [
 <style scoped>
 .templates-section {
   padding: 6rem 0;
-  background: var(--white);
+  background: var(--bg-white);
 }
 
 /* If you already have global container, remove this */

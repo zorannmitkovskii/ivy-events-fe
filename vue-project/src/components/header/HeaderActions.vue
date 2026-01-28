@@ -1,19 +1,20 @@
 <template>
   <div class="actions desktop-actions">
-    <ButtonOutline
-      label="Sign In"
+    <ButtonMain
+      :label="$t('header.actions.signIn')"
       to="/login"
+      variant="outline"
     />
-    <ButtonPrimary
-      label="Get Started"
+    <ButtonMain
+      :label="$t('pricing.cta.getStarted')"
       to="/register"
+      variant="main"
     />
   </div>
 </template>
 
 <script setup>
-import ButtonOutline from "@/components/header/ButtonOutline.vue";
-import ButtonPrimary from "@/components/header/ButtonPrimary.vue";
+import ButtonMain from "@/components/generic/ButtonMain.vue";
 </script>
 
 <style scoped>

@@ -2,34 +2,188 @@
   "comingSoon": {
     "bgBrand": "IVY EVENTS",
     "title": "Coming Soon",
-    "subtitle": "We are preparing something truly special",
-    "description": "We are building a modern event planning platform designed to save you time and give you complete control over every detail.",
-    "emailPlaceholder": "Enter your email address",
+    "subtitle": "We’re preparing something truly special",
+    "description": "We’re building a modern event planning platform designed to save you time and give you full control over every detail.",
+    "emailPlaceholder": "Enter your email",
     "button": {
-      "default": "Notify me and get <b>20% off</b>",
+      "default": "Sign up and get <b>20% off</b>",
       "loading": "Sending...",
       "success": "Subscribed ✔"
     },
     "privacy": {
-      "line1": "The discount code will be sent via email.",
+      "line1": "The code will be sent via email.",
       "line2": "Your email is safe. We only send important updates."
     },
-    "successNote": "You have successfully subscribed! Check your email for the code.",
+    "successNote": "You’ve successfully subscribed! Check your email for the code.",
     "errors": {
       "invalidEmail": "Please enter a valid email.",
-      "alreadyRegistered": "This email is already subscribed.",
+      "alreadyRegistered": "This email is already registered.",
       "badRequest": "Invalid request. Check your email and try again.",
-      "generic": "An error occurred. Please try again later."
+      "generic": "Something went wrong. Please try again later."
     },
     "benefits": {
-      "earlyAccess": "Early Access",
-      "exclusivePerks": "Exclusive Perks",
-      "priorityUpdates": "Priority Updates"
+      "earlyAccess": "Early access",
+      "exclusivePerks": "Exclusive perks",
+      "priorityUpdates": "Priority updates"
     },
     "social": {
-      "instagram": "Instagram",
-      "facebook": "Facebook"
+      "instagram": "Open Ivy Events Instagram",
+      "facebook": "Open Ivy Events Facebook"
     },
     "footer": "© 2026 Ivy Events. All rights reserved."
+  },
+  "pricing": {
+    "section": {
+      "title": "Choose Your Perfect Plan",
+      "subtitle": "Flexible pricing for individuals and professional organizers"
+    },
+    "perMonth": "/month",
+    "badge": {
+      "mostPopular": "Most Popular"
+    },
+    "cta": {
+      "getStarted": "Get Started"
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Perfect for small, personal events",
+        "features": {
+          "upTo50Guests": "Up to 50 guests",
+          "oneEvent": "1 event at a time",
+          "basicTemplates": "Basic templates",
+          "rsvpTracking": "RSVP tracking",
+          "emailInvites": "Email invitations",
+          "customBranding": "Custom branding",
+          "prioritySupport": "Priority support"
+        }
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Ideal for frequent event planners",
+        "features": {
+          "upTo300Guests": "Up to 300 guests",
+          "fiveEvents": "5 events at a time",
+          "premiumTemplates": "Premium templates",
+          "advancedRsvp": "Advanced RSVP tracking",
+          "emailSmsInvites": "Email & SMS invitations",
+          "customBranding": "Custom branding",
+          "prioritySupport": "Priority support"
+        }
+      },
+      "wedding": {
+        "name": "Premium Wedding",
+        "description": "Complete wedding planning suite",
+        "features": {
+          "unlimitedGuests": "Unlimited guests",
+          "unlimitedEvents": "Unlimited events",
+          "allPremiumTemplates": "All premium templates",
+          "advancedAnalytics": "Advanced analytics",
+          "allInvitationMethods": "All invitation methods",
+          "customBranding": "Custom branding",
+          "prioritySupport": "Priority support"
+        }
+      }
+    }
+  },
+  "footer": {
+    "brand": {
+      "logo": "IvyEvents",
+      "tagline": "Create beautiful invitations. Plan unforgettable events."
+    },
+    "columns": {
+      "product": "Product",
+      "company": "Company",
+      "support": "Support",
+      "connect": "Connect"
+    },
+    "links": {
+      "templates": "Templates",
+      "features": "Features",
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "about": "About Us",
+      "blog": "Blog",
+      "careers": "Careers",
+      "contact": "Contact",
+      "help": "Help Center",
+      "terms": "Terms",
+      "privacy": "Privacy",
+      "security": "Security"
+    },
+    "copyright": "All rights reserved."
+  },
+  "header": {
+    "logo": "IvyEvents",
+    "actions": {
+      "signIn": "Sign In",
+      "getStartedFree": "Get Started Free"
+    },
+    "menu": {
+      "templates": "Templates",
+      "features": "Features",
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "openMenu": "Open menu"
+    }
+  },
+  "nav": {
+    "weddings": "Weddings",
+    "business": "Business",
+    "baby": "Baby",
+    "holiday": "Holiday",
+    "invitation": "Invitation",
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "upload": "Upload"
+  },
+  "eventCategories": {
+    "section": {
+      "title": "Perfect for Every Celebration",
+      "subtitle": "Beautiful invitations for all your special moments"
+    },
+    "items": {
+      "weddings": {
+        "title": "Weddings",
+        "description": "Elegant invitations for your special day"
+      },
+      "birthdaysParties": {
+        "title": "Birthdays & Parties",
+        "description": "Celebrate milestones in style"
+      },
+      "corporate": {
+        "title": "Corporate Events",
+        "description": "Professional invitations for business"
+      },
+      "conferences": {
+        "title": "Conferences",
+        "description": "Streamline event registration"
+      },
+      "privateDinners": {
+        "title": "Private Dinners",
+        "description": "Intimate gatherings made easy"
+      },
+      "babyShowers": {
+        "title": "Baby Showers",
+        "description": "Welcome the new arrival"
+      },
+      "graduations": {
+        "title": "Graduations",
+        "description": "Celebrate achievements"
+      },
+      "anniversaries": {
+        "title": "Anniversaries",
+        "description": "Honor years of love"
+      }
+    }
+  },
+  "weddingsPage": {
+    "templates": {
+      "title": "Trending Wedding Invitations",
+      "subtitle": "Most popular themes"
+    },
+    "packages": {
+      "title": "Wedding Packages"
+    }
   }
 }

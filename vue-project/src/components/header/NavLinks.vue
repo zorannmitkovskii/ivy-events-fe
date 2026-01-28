@@ -7,6 +7,7 @@
     >
       <NavLink
         :to="item.to"
+        :labelKey="item.labelKey"
         :label="item.label"
       />
     </li>
@@ -17,16 +18,16 @@
 import NavLink from "./NavLink.vue";
 
 const links = [
-  { label: "Weddings",          to: "/weddings" },
-  { label: "Business",          to: "/business" },
-  // { label: "Kids Birthdays",    to: "/kids-birthdays" },
-  // { label: "Adults Birthdays",  to: "/adult-birthdays" },
-  { label: "Baby",              to: "/baby" },
-  { label: "Holiday",           to: "/holiday" },
-  { label: "Invitation",        to: "/invitation" },
-  { label: "Dashboard",         to: "/dashboard" },
-  { label: "Admin",             to: "/admin" },
-  { label: "Upload",            to: "/upload" }
+  { labelKey: "nav.weddings",     to: "/weddings" },
+  { labelKey: "nav.business",     to: "/business" },
+  // { labelKey: "nav.kidsBirthdays", to: "/kids-birthdays" },
+  // { labelKey: "nav.adultBirthdays", to: "/adult-birthdays" },
+  { labelKey: "nav.baby",         to: "/baby" },
+  { labelKey: "nav.holiday",      to: "/holiday" },
+  { labelKey: "nav.invitation",   to: "/invitation" },
+  { labelKey: "nav.dashboard",    to: "/dashboard" },
+  { labelKey: "nav.admin",        to: "/admin" },
+  { labelKey: "nav.upload",       to: "/upload" }
 ];
 </script>
 

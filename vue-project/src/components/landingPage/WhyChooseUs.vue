@@ -1,28 +1,78 @@
 <template>
-  <SectionWrap>
-    <SectionHeader center eyebrow="Why Ivy" title="Why choose us" subtitle="We obsess over the details so you don't have to." />
+  <section class="why-section" :id="id">
     <div class="container">
-      <div class="grid grid--3 mt-24">
-        <BenefitItem title="Beautiful by default" description="Modern, accessible designs that look great everywhere.">
-          <template #icon>🎨</template>
-        </BenefitItem>
-        <BenefitItem title="Frictionless sharing" description="One link works across devices and platforms.">
-          <template #icon>🔗</template>
-        </BenefitItem>
-        <BenefitItem title="Fast and reliable" description="Backed by scalable infrastructure.">
-          <template #icon>⚡</template>
-        </BenefitItem>
-      </div>
+      <SectionHeader
+          title="Why Choose EventPro?"
+          subtitle="The complete solution for modern event planning"
+      />
+
+      <BenefitsGrid :items="benefits" />
     </div>
-  </SectionWrap>
+  </section>
 </template>
 
 <script setup>
-import SectionWrap from '@/components/ui/SectionWrap.vue'
-import SectionHeader from '@/components/ui/SectionHeader.vue'
-import BenefitItem from '@/components/cards/BenefitItem.vue'
+
+import BenefitsGrid from "@/components/grids/BenefitsGrid.vue";
+import SectionHeader from "@/components/ui/SectionHeader.vue";
+
+defineProps({
+  id: { type: String, default: "why" }
+});
+
+const benefits = [
+  {
+    iconClass: "fas fa-layer-group",
+    title: "All-in-One Platform",
+    description: "Invitations, RSVPs, guest management, and more in one place",
+    highlight: true
+  },
+  {
+    iconClass: "fas fa-ad",
+    title: "No Ads on Invitations",
+    description: "Keep your invitations clean and professional without distractions"
+  },
+  {
+    iconClass: "fas fa-infinity",
+    title: "Unlimited Guests",
+    description: "Invite as many people as you need without restrictions"
+  },
+  {
+    iconClass: "fas fa-heart",
+    title: "Designed for Weddings & Events",
+    description: "Purpose-built features for every type of celebration"
+  }
+];
 </script>
 
 <style scoped>
-@import '@/assets/styles/sections.css';
+.why-section {
+  padding: 6rem 0;
+  background: var(--bg-white);
+}
+
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.section-title {
+  margin: 0 0 10px;
+  font-family: var(--font-family), serif;
+  font-size: 44px;
+  font-weight: 500;
+  color: var(--neutral-900);
+}
+
+.section-subtitle {
+  margin: 0;
+  color: var(--neutral-700);
+  font-size: 14px;
+}
 </style>

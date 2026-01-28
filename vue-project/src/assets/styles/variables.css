@@ -17,7 +17,6 @@
   --neutral-500: #7A8773;    /* Optional mid (derived from palette feel) */
   --neutral-300: #E7E7E7;    /* Light Grey */
   --neutral-100: #FFFFFF;    /* Base White */
-  --white: #FFFFFF;
 
   --bg-main: #F7F5F0;        /* Light Grey */
   --bg-white: #FFFFFF;        /* White */
@@ -39,4 +38,5 @@
 
   --container-max: 1200px;
   --header-height: 72px;
+  --font-family: 'Cormorant Garamond', serif;
 }

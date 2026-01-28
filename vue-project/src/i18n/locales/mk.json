@@ -26,6 +26,164 @@
       "exclusivePerks": "Ексклузивни поволности",
       "priorityUpdates": "Приоритетни известувања"
     },
+    "social": {
+      "instagram": "Отвори Instagram на Ivy Events",
+      "facebook": "Отвори Facebook на Ivy Events"
+    },
     "footer": "© 2026 Ivy Events. Сите права се задржани."
+  },
+  "pricing": {
+    "section": {
+      "title": "Изберете го совршениот пакет",
+      "subtitle": "Флексибилни цени за индивидуалци и професионални организатори"
+    },
+    "perMonth": "/месец",
+    "badge": {
+      "mostPopular": "Најпопуларно"
+    },
+    "cta": {
+      "getStarted": "Започни"
+    },
+    "plans": {
+      "free": {
+        "name": "Бесплатно",
+        "description": "Совршено за мали, приватни настани",
+        "features": {
+          "upTo50Guests": "До 50 гости",
+          "oneEvent": "1 настан истовремено",
+          "basicTemplates": "Основни шаблони",
+          "rsvpTracking": "Следење на RSVP",
+          "emailInvites": "Покани по е-пошта",
+          "customBranding": "Прилагоден брендинг",
+          "prioritySupport": "Приоритетна поддршка"
+        }
+      },
+      "pro": {
+        "name": "Про",
+        "description": "Идеално за чести организатори",
+        "features": {
+          "upTo300Guests": "До 300 гости",
+          "fiveEvents": "5 настани истовремено",
+          "premiumTemplates": "Премиум шаблони",
+          "advancedRsvp": "Напредно следење на RSVP",
+          "emailSmsInvites": "Покани по е-пошта и СМС",
+          "customBranding": "Прилагоден брендинг",
+          "prioritySupport": "Приоритетна поддршка"
+        }
+      },
+      "wedding": {
+        "name": "Премиум свадба",
+        "description": "Комплетен пакет за планирање свадби",
+        "features": {
+          "unlimitedGuests": "Неограничен број гости",
+          "unlimitedEvents": "Неограничен број настани",
+          "allPremiumTemplates": "Сите премиум шаблони",
+          "advancedAnalytics": "Напредна аналитика",
+          "allInvitationMethods": "Сите методи на покана",
+          "customBranding": "Прилагоден брендинг",
+          "prioritySupport": "Приоритетна поддршка"
+        }
+      }
+    }
+  },
+  "footer": {
+    "brand": {
+      "logo": "IvyEvents",
+      "tagline": "Креирајте прекрасни покани. Планирајте незаборавни настани."
+    },
+    "columns": {
+      "product": "Производ",
+      "company": "Компанија",
+      "support": "Поддршка",
+      "connect": "Поврзи се"
+    },
+    "links": {
+      "templates": "Шаблони",
+      "features": "Функционалности",
+      "pricing": "Цени",
+      "faq": "ЧПП",
+      "about": "За нас",
+      "blog": "Блог",
+      "careers": "Кариера",
+      "contact": "Контакт",
+      "help": "Центар за помош",
+      "terms": "Услови",
+      "privacy": "Приватност",
+      "security": "Безбедност"
+    },
+    "copyright": "Сите права се задржани."
+  },
+  "header": {
+    "logo": "IvyEvents",
+    "actions": {
+      "signIn": "Најави се",
+      "getStartedFree": "Започни бесплатно"
+    },
+    "menu": {
+      "templates": "Шаблони",
+      "features": "Функционалности",
+      "pricing": "Цени",
+      "faq": "ЧПП",
+      "openMenu": "Отвори мени"
+    }
+  },
+  "nav": {
+    "weddings": "Свадби",
+    "business": "Бизнис",
+    "baby": "Бебе",
+    "holiday": "Празници",
+    "invitation": "Покана",
+    "dashboard": "Контрола",
+    "admin": "Админ",
+    "upload": "Качи"
+  },
+  "eventCategories": {
+    "section": {
+      "title": "Совршено за секоја прослава",
+      "subtitle": "Прекрасни покани за сите ваши посебни моменти"
+    },
+    "items": {
+      "weddings": {
+        "title": "Свадби",
+        "description": "Елегантни покани за вашиот специјален ден"
+      },
+      "birthdaysParties": {
+        "title": "Родендени и забави",
+        "description": "Прославете ги достигнувањата со стил"
+      },
+      "corporate": {
+        "title": "Корпоративни настани",
+        "description": "Професионални покани за бизнис"
+      },
+      "conferences": {
+        "title": "Конференции",
+        "description": "Едноставна регистрација за настани"
+      },
+      "privateDinners": {
+        "title": "Приватни вечери",
+        "description": "Лесно за интимни собири"
+      },
+      "babyShowers": {
+        "title": "Бејби шауер",
+        "description": "Добредојде за новиот член"
+      },
+      "graduations": {
+        "title": "Матура",
+        "description": "Прославете ги постигнувањата"
+      },
+      "anniversaries": {
+        "title": "Годишнини",
+        "description": "Почит кон годините љубов"
+      }
+    }
+  },
+  "weddingsPage": {
+    "templates": {
+      "title": "Трендовски свадбени покани",
+      "subtitle": "Најпопуларни теми"
+    },
+    "packages": {
+      "title": "Свадбени пакети"
+    }
   }
 }

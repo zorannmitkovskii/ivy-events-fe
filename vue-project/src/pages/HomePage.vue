@@ -12,10 +12,10 @@
     <TemplatesGallery id="templates" />
     <PricingSection id="pricing" />
     <WhyChooseUs />
-    <TestimonialsSection />
+<!--    <TestimonialsSection />-->
     <FaqSection id="faq" />
     <FinalCtaSection />
-    <AppFooter />
+    <Footer />
   </template>
 
   <router-view />
@@ -34,7 +34,7 @@ import WhyChooseUs from "@/components/landingPage/WhyChooseUs.vue";
 import TestimonialsSection from "@/components/landingPage/TestimonialsSection.vue";
 import FaqSection from "@/components/landingPage/FaqSection.vue";
 import FinalCtaSection from "@/components/landingPage/FinalCtaSection.vue";
-import AppFooter from "@/components/layout/AppFooter.vue";
+import Footer from "@/components/layout/Footer.vue";
 import TemplatesGallery from "@/components/landingPage/TemplatesGallery.vue";
 
 // Read APP_ENV injected at runtime via window.__ENV__ (default intelligently based on host)

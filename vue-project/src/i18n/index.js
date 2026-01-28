@@ -1,8 +1,9 @@
 import { ref } from 'vue'
 // import mk from './locales/mk.json'
 import mk from './locales/mk.json'
+import en from './locales/en.json'
 
-const messages = {  mk }
+const messages = { mk, en }
 
 function get(obj, path) {
   return path.split('.').reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : undefined), obj)

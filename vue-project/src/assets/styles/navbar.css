@@ -2,7 +2,7 @@
 
 .navbar {
   height: var(--header-height);
-  background: var(--white);
+  background: var(--bg-white);
   border-bottom: 1px solid var(--neutral-200);
   position: sticky; top: 0; z-index: 50;
 }

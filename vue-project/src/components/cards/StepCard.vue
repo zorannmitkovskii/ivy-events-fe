@@ -53,7 +53,7 @@ defineProps({
   height: 44px;
   border-radius: 999px;
   background: var(--brand-gold);
-  color: var(--white);
+  color: var(--bg-white);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -63,7 +63,7 @@ defineProps({
 
 .step-title {
   margin: 0 0 12px;
-  font-family: "Cormorant Garamond", serif;
+  font-family: var(--font-family), serif;
   font-size: 18px;
   font-weight: 600;
   color: var(--neutral-900);

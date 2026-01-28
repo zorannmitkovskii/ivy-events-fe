@@ -1,6 +1,6 @@
 /* ===== Header ===== */
 .app-header {
-  background: var(--white);
+  background: var(--bg-white);
   border-bottom: 1px solid var(--neutral-300);
   position: relative;
   z-index: 50;
@@ -80,13 +80,13 @@
 .btn-main {
   background: var(--brand-main);
   border: 1px solid var(--brand-main);
-  color: var(--white);
+  color: var(--bg-white);
 }
 
 .btn-main:hover {
   border: 1px solid var(--brand-dark);
   background: var(--brand-dark);
-  color: var(--white);
+  color: var(--bg-white);
   transform: translateY(-1px);
   transition: color 0.2s ease;
 }
@@ -100,7 +100,7 @@
 .btn-main-outline:hover {
   border: 1px solid var(--brand-main);
   background: var(--brand-main);
-  color: var(--white);
+  color: var(--bg-white);
   transform: translateY(-1px);
   transition: color 0.2s ease;
 }
@@ -108,7 +108,7 @@
 /* ===== Hamburger ===== */
 .icon-btn {
   border: 1px solid var(--neutral-300);
-  background: var(--white);
+  background: var(--bg-white);
   border-radius: 12px;
   height: 42px;
   width: 46px;
@@ -188,7 +188,7 @@
   left: 0;
   right: 0;
   top: 100%;
-  background: var(--white);
+  background: var(--bg-white);
   border-bottom: 1px solid var(--neutral-300);
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
 

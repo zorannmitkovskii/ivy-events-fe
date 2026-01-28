@@ -2,9 +2,11 @@
   <div class="category-grid">
     <CategoryCard
       v-for="item in items"
-      :key="item.title"
+      :key="item.titleKey || item.title"
       :title="item.title"
+      :titleKey="item.titleKey"
       :description="item.description"
+      :descriptionKey="item.descriptionKey"
       :icon="item.icon"
       :chipClass="item.chipClass"
     />

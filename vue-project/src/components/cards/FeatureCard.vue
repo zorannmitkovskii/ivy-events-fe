@@ -20,7 +20,7 @@ defineProps({
 
 <style scoped>
 .feature-card {
-  background: var(--white);
+  background: var(--bg-white);
   border-radius: 14px;
   padding: 26px 26px 24px;
   border: 1px solid rgba(0, 0, 0, 0.06);
@@ -55,7 +55,7 @@ defineProps({
 
 .feature-title {
   margin: 0 0 10px;
-  font-family: "Cormorant Garamond", serif;
+  font-family: var(--font-family), serif;
   font-size: 18px;
   font-weight: 600;
   color: var(--neutral-900);

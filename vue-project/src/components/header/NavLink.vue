@@ -13,7 +13,7 @@
 <!--</script>-->
 <template>
   <li>
-    <router-link class="nav-link" :to="to">{{ label }}</router-link>
+    <router-link class="nav-link" :to="to">{{ labelKey ? $t(labelKey) : label }}</router-link>
   </li>
 </template>
 
@@ -21,7 +21,8 @@
 import { RouterLink } from "vue-router";
 
 defineProps({
-  label: { type: String, required: true },
+  label: { type: String, default: '' },
+  labelKey: { type: String, default: '' },
   to: { type: String, required: false, default: '#' }
 });
 </script>

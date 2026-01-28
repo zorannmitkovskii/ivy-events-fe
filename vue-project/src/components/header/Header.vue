@@ -2,7 +2,7 @@
   <header class="app-header">
     <div class="header-container">
       <!-- Logo -->
-      <div class="logo">IvyEvents</div>
+      <div class="logo">{{$t('header.logo')}}</div>
 
       <NavLinks/>
       <HeaderActions/>
@@ -10,7 +10,7 @@
       <button
         class="icon-btn mobile-only"
         type="button"
-        aria-label="Open menu"
+        :aria-label="$t('header.menu.openMenu')"
         :aria-expanded="isMenuOpen ? 'true' : 'false'"
         @click="toggleMenu"
       >
@@ -28,15 +28,15 @@
     <!-- Mobile menu panel (dropdown) -->
     <div class="mobile-menu" :class="{ open: isMenuOpen }">
       <nav class="mobile-nav">
-        <a href="#" @click="closeMenu">Templates</a>
-        <a href="#" @click="closeMenu">Features</a>
-        <a href="#" @click="closeMenu">Pricing</a>
-        <a href="#" @click="closeMenu">FAQ</a>
+        <a href="#" @click="closeMenu">{{$t('header.menu.templates')}}</a>
+        <a href="#" @click="closeMenu">{{$t('header.menu.features')}}</a>
+        <a href="#" @click="closeMenu">{{$t('header.menu.pricing')}}</a>
+        <a href="#" @click="closeMenu">{{$t('header.menu.faq')}}</a>
       </nav>
 
       <div class="mobile-actions">
-        <button class="btn btn-main-outline w-full" @click="closeMenu">Sign In</button>
-        <button class="btn btn-main w-full" @click="closeMenu">Get Started Free</button>
+        <button class="btn btn-main-outline w-full" @click="closeMenu">{{$t('header.actions.signIn')}}</button>
+        <button class="btn btn-main w-full" @click="closeMenu">{{$t('header.actions.getStartedFree')}}</button>
       </div>
     </div>
   </header>

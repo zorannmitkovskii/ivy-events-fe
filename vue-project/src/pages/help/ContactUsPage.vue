@@ -8,7 +8,6 @@
 
 <script setup>
 import Header from '@/components/header/Header.vue'
-import Footer from "@/components/footer/Footer.vue";
 import ContactUsForm from "@/components/help/ContactUsForm.vue";
 </script>
 

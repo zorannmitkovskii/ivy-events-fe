@@ -9,9 +9,10 @@
       <TemplatesGrid :items="templates"/>
 
       <div class="templates-cta">
-        <ButtonMainOutline
+        <ButtonMain
           label="View Templates"
           to="/register"
+          variant="outline"
         />
       </div>
 
@@ -22,7 +23,7 @@
 <script setup>
 import SectionHeader from "@/components/ui/SectionHeader.vue";
 import TemplatesGrid from "@/components/grids/TemplatesGrid.vue";
-import ButtonMainOutline from "@/components/header/ButtonMainOutline.vue";
+import ButtonMain from "@/components/generic/ButtonMain.vue";
 
 defineProps({
   id: {type: String, default: "templates"},
@@ -88,7 +89,7 @@ const templates = [
 
 .templates-section {
   padding: 6rem 0;
-  background: var(--white);
+  background: var(--bg-white);
 }
 
 /* If you already have global container, remove this */

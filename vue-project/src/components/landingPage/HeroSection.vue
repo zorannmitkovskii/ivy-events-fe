@@ -19,10 +19,12 @@
           <ButtonMain
             label="Get Started"
             to="/register"
+            variant="main"
           />
-          <ButtonMainOutline
+          <ButtonMain
             label="View Templates"
             to="/register"
+            variant="outline"
           />
         </div>
       </div>
@@ -41,8 +43,7 @@
 </template>
 
 <script setup>
-import ButtonMain from "@/components/header/ButtonMain.vue";
-import ButtonMainOutline from "@/components/header/ButtonMainOutline.vue";
+import ButtonMain from "@/components/generic/ButtonMain.vue";
 
 defineProps({
   imageSrc: {
