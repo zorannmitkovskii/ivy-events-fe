@@ -14,7 +14,7 @@ do
 done
 # Fallback if none matched (default nginx path)
 : "${HTML_DIR:=/usr/share/nginx/html}"
-ENV_FILE="$HTML_DIR/env.js"
+ENV_FILE="$HTML_DIR/public/env.js"
 
 # Defaults
 : "${APP_ENV:=prod}"
