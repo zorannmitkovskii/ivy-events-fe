@@ -46,7 +46,7 @@ defineProps({
   height: 44px;
   border-radius: 10px;
   border: 1px solid rgba(0,0,0,0.10);
-  background: var(--white);
+  background: var(--bg-white);
   display: grid;
   grid-template-columns: 34px 1fr;
   align-items: center;
@@ -63,7 +63,7 @@ defineProps({
   border: 0;
   outline: 0;
   height: 100%;
-  padding: 0 12px 0 0;
+  padding: 0 12px ;
   font-size: 14px;
   color: var(--neutral-900);
 }

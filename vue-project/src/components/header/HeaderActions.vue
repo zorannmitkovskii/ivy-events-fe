@@ -2,12 +2,12 @@
   <div class="actions desktop-actions">
     <ButtonMain
       :label="$t('header.actions.signIn')"
-      to="/login"
+      to="/auth/login"
       variant="outline"
     />
     <ButtonMain
       :label="$t('pricing.cta.getStarted')"
-      to="/register"
+      to="/auth/signup"
       variant="main"
     />
   </div>

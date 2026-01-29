@@ -1,7 +1,19 @@
 #!/bin/sh
 set -e
 
-HTML_DIR=/usr/share/nginx/html
+# Detect the correct HTML directory where index.html is located
+for d in \
+  /usr/share/nginx/html \
+  /usr/share/nginx/html/dist \
+  /var/www/html
+do
+  if [ -f "$d/index.html" ]; then
+    HTML_DIR="$d"
+    break
+  fi
+done
+# Fallback if none matched (default nginx path)
+: "${HTML_DIR:=/usr/share/nginx/html}"
 ENV_FILE="$HTML_DIR/env.js"
 
 # Defaults

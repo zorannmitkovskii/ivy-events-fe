@@ -112,6 +112,20 @@ const onSubmit = async () => {
   } catch (err) {
     const anyErr = err as any
     const status = anyErr?.response?.status
+    const data = anyErr?.response?.data
+    const headers = anyErr?.response?.headers
+
+    // ✅ dev/prod-friendly structured log (no PII)
+    console.error('[subscribeToDiscounts] failed', {
+      status,
+      backendMessage: data?.message,
+      backendError: data?.error,
+      path: data?.path,
+      requestId: headers?.['x-correlation-id'] || headers?.['x-request-id'],
+      url: anyErr?.config?.url,
+      method: anyErr?.config?.method
+    })
+
     if (status === 409) {
       errorMessage.value = t('comingSoon.errors.alreadyRegistered')
     } else if (status === 400) {

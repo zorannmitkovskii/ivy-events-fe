@@ -1,14 +1,14 @@
 <template>
   <AuthLayout>
     <template #left>
-      <div class="card">
+      <div>
         <AuthBrand name="Lumière Events" />
 
         <h1 class="title">Create your account</h1>
         <p class="subtitle">Begin planning your unforgettable celebration.</p>
         <div class="accent-line" aria-hidden="true"></div>
 
-        <SocialAuthButton
+        <GoogleButton
           label="Continue with Google"
           icon-src="https://www.svgrepo.com/show/475656/google-color.svg"
           @click="onGoogle"
@@ -17,19 +17,19 @@
         <AuthDivider label="Or continue with email" />
 
         <div class="form">
-          <AuthInput v-model="fullName" label="Full Name" placeholder="Jane Doe">
+          <AuthInput v-model="fullName" label="Full Name" placeholder="" required autofocus>
             <template #icon>👤</template>
           </AuthInput>
 
-          <AuthInput v-model="email" label="Email Address" placeholder="jane@example.com" type="email">
+          <AuthInput v-model="email" label="Email Address" placeholder="" type="email" required autofocus>
             <template #icon>✉️</template>
           </AuthInput>
 
-          <AuthInput v-model="password" label="Password" placeholder="••••••••" type="password">
+          <AuthInput v-model="password" label="Password" placeholder="" type="password" required autofocus>
             <template #icon>🔒</template>
           </AuthInput>
 
-          <AuthInput v-model="confirmPassword" label="Confirm Password" placeholder="••••••••" type="password">
+          <AuthInput v-model="confirmPassword" label="Confirm Password" placeholder="" type="password" required autofocus>
             <template #icon>✅</template>
           </AuthInput>
 
@@ -82,13 +82,13 @@ import { RouterLink } from "vue-router";
 
 import AuthLayout from "@/components/layout/AuthLayout.vue";
 import AuthBrand from "@/components/auth/AuthBrand.vue";
-import SocialAuthButton from "@/components/auth/SocialAuthButton.vue";
 import AuthDivider from "@/components/auth/AuthDivider.vue";
 import AuthInput from "@/components/auth/AuthInput.vue";
 import AuthCheckbox from "@/components/auth/AuthCheckbox.vue";
 
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import RightPromoPanel from "@/components/auth/RightPromoPanel.vue";
+import GoogleButton from "@/components/auth/GoogleButton.vue";
 
 const fullName = ref("");
 const email = ref("");
@@ -97,8 +97,23 @@ const confirmPassword = ref("");
 const agree = ref(false);
 
 function onGoogle() {
-  // trigger your oauth flow here
-  console.log("google");
+  const keycloakBaseUrl = import.meta.env.VITE_KEYCLOAK_URL;
+  const realm = import.meta.env.VITE_KEYCLOAK_REALM;
+  const clientId = import.meta.env.VITE_KEYCLOAK_CLIENT_ID;
+
+  const redirectUri = encodeURIComponent(
+    `${window.location.origin}/auth/callback`
+  );
+
+  const googleLoginUrl =
+    `${keycloakBaseUrl}/realms/${realm}/protocol/openid-connect/auth` +
+    `?client_id=${clientId}` +
+    `&redirect_uri=${redirectUri}` +
+    `&response_type=code` +
+    `&scope=openid` +
+    `&kc_idp_hint=google`;
+
+  window.location.href = googleLoginUrl;
 }
 </script>
 
