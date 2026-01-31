@@ -1,13 +1,15 @@
 <template>
   <div class="container mt-5">
-    <h1>Event Categories</h1>
-    <p>Select a category to continue.</p>
+    <PricingSection id="pricing" />
   </div>
 </template>
 
 <script>
+import PricingSection from "@/components/landingPage/PricingSection.vue";
+
 export default {
-  name: 'EventCategoryPage'
+  name: 'EventCategoryPage',
+  components: {PricingSection}
 }
 </script>
 

@@ -247,5 +247,100 @@
       "cta": "Reset password",
       "backToLogin": "Back to login"
     }
+  },
+  "onboarding": {
+    "eventBasics": {
+      "title": "Event Basics",
+      "subtitle": "Let's start with the broad strokes. You can always change these details later.",
+      "fields": {
+        "brideName": "Bride's Name",
+        "groomName": "Groom's Name",
+        "weddingDate": "Wedding Date (Optional)",
+        "location": "Location (Optional)"
+      },
+      "placeholders": {
+        "brideName": "e.g. Sarah",
+        "groomName": "e.g. Michael",
+        "location": "e.g. Napa Valley, CA"
+      },
+      "hints": {
+        "weddingDate": "Don't have a date yet? No worries.",
+        "location": "TBD is perfectly fine at this stage."
+      },
+      "actions": {
+        "continue": "Continue",
+        "skip": "Skip for now"
+      },
+      "protip": {
+        "label": "Pro tip:",
+        "text": "You can invite collaborators after you’ve set up the basics. We’ll remind you later."
+      }
+    },
+    "footer": {
+      "help": "Help Center",
+      "privacy": "Privacy"
+    }
+  },
+  "checkout": {
+    "header": {
+      "title": "Complete Your Purchase",
+      "subtitle": "Secure payment powered by Stripe"
+    },
+    "payment": {
+      "title": "Payment Information",
+      "email": "Email Address",
+      "emailPh": "user@example.com",
+      "cardNumber": "Card Number",
+      "expiry": "Expiry Date",
+      "cvc": "CVC",
+      "country": "Billing Country",
+      "countryPh": "Select your country",
+      "note": "Your payment information is encrypted and secure. We never store your full card details."
+    },
+    "summary": {
+      "title": "Order Summary",
+      "selected": "SELECTED",
+      "duration": "Duration",
+      "annual": "Annual",
+      "yearly": "Yearly",
+      "subtotal": "Subtotal",
+      "savings": "Savings (2 months free)",
+      "total": "Total",
+      "pay": "Pay & Activate Event",
+      "ssl": "256-bit SSL encrypted payment",
+      "legalPrefix": "By completing this purchase, you agree to our",
+      "terms": "Terms of Service",
+      "and": "and",
+      "privacy": "Privacy Policy",
+      "couponLabel": "Coupon Code",
+      "couponPh": "Enter coupon (e.g. IVY-WELCOME20)",
+      "couponValidating": "Validating coupon...",
+      "discount": "Discount"
+    },
+    "plan": {
+      "pro": {
+        "name": "Pro Plan",
+        "tagline": "Up to 300 guests"
+      }
+    }
+  },
+  "eventLive": {
+    "title": "Your Event Is Live",
+    "subtitle": "Congratulations! Your event has been successfully published and is now visible to attendees.",
+
+    "event": {
+      "statusActive": "Active & Registration Open"
+    },
+
+    "actions": {
+      "shareInvitation": "Share Invitation",
+      "sendRsvp": "Send RSVP Email",
+      "goToOverview": "Go to Event Overview"
+    },
+
+    "footer": {
+      "text": "Need to make changes?",
+      "editDetails": "Edit event details"
+    }
   }
 }

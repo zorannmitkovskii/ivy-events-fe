@@ -1,34 +1,51 @@
 <template>
-  <RouterLink
-      :to="to"
-      class="btn"
-      :class="variantClass"
+  <component
+    :is="componentTag"
+    :to="isLink ? to : undefined"
+    class="btn"
+    :class="variantClass"
+    :type="isLink ? undefined : type"
+    @click="onClick"
   >
     <slot>{{ label }}</slot>
-  </RouterLink>
+  </component>
 </template>
 
 <script setup>
 import { computed } from "vue";
 import { RouterLink } from "vue-router";
 
+const emit = defineEmits(["click"]);
+
 const props = defineProps({
-  label: {
-    type: String,
-    default: ""
-  },
-  to: {
-    type: [String, Object],
-    required: true
-  },
+  label: { type: String, default: "" },
+
+  // make optional ✅
+  to: { type: [String, Object], default: null },
+
   variant: {
     type: String,
     default: "main",
     validator: (v) => ["main", "outline", "gold", "secondary"].includes(v)
-  }
+  },
+
+  // button-only
+  type: { type: String, default: "button" },
+  disabled: { type: Boolean, default: false }
 });
 
+const isLink = computed(() => !!props.to);
+const componentTag = computed(() => (isLink.value ? RouterLink : "button"));
 const variantClass = computed(() => `btn--${props.variant}`);
+
+function onClick(e) {
+  if (props.disabled) {
+    e.preventDefault();
+    return;
+  }
+  // Only emit click if it's NOT a router link
+  if (!isLink.value) emit("click", e);
+}
 </script>
 
 <style scoped>
