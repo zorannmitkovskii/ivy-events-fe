@@ -1,5 +1,13 @@
 <template>
-  <article class="category-card">
+  <article
+    class="category-card"
+    :class="{ 'is-selected': selected }"
+    role="button"
+    tabindex="0"
+    @click="$emit('select')"
+    @keydown.enter.prevent="$emit('select')"
+    @keydown.space.prevent="$emit('select')"
+  >
     <div class="icon-chip" :class="chipClass">
       <span class="icon-emoji" aria-hidden="true">{{ icon }}</span>
     </div>
@@ -10,13 +18,18 @@
 </template>
 
 <script setup>
+defineEmits(["select"]);
+
 defineProps({
   title: { type: String, default: "" },
   titleKey: { type: String, default: "" },
   description: { type: String, default: "" },
   descriptionKey: { type: String, default: "" },
-  icon: { type: String, required: true }, // emoji or small char icon
-  chipClass: { type: String, default: "" } // e.g. "chip-pink"
+  icon: { type: String, required: true },
+  chipClass: { type: String, default: "" },
+
+  // NEW
+  selected: { type: Boolean, default: false }
 });
 </script>
 
@@ -27,37 +40,41 @@ defineProps({
   border-radius: 14px;
   padding: 28px 24px;
   text-align: center;
+  cursor: pointer;
 
   border: 1.5px solid transparent;
   box-shadow:
-    0 22px 50px rgba(0, 0, 0, 0.10),
-    inset 0 0 0 1px rgba(201, 162, 77, 0.4);
-  transition:
-    transform 0.28s ease,
-    box-shadow 0.28s ease,
-    border-color 0.28s ease;
+    0 22px 50px rgba(0, 0, 0, 0),
+    inset 0 0 0 0 rgba(201, 162, 77, 0.4);
+
+  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
 }
 
-/* Hover state */
 .category-card:hover {
   transform: translateY(-2px);
   border-color: var(--secondary-gold);
   box-shadow:
-    0 22px 50px rgba(0, 0, 0, 0.10),
+    0 22px 50px rgba(0, 0, 0, 0),
     0 0 0 1px rgba(201, 162, 77, 0.15);
 }
 
-
-/* Icon chip subtle lift */
-.category-card .icon-chip {
-  transition: transform 0.28s ease;
+/* ✅ Selected state */
+.category-card.is-selected {
+  border-color: var(--brand-gold);
+  box-shadow:
+    0 22px 50px rgba(0, 0, 0, 0),
+    0 0 0 2px rgba(200, 162, 77, 0.25),
+    inset 0 0 0 1px rgba(200, 162, 77, 0.55);
+  transform: translateY(-1px);
 }
 
-.category-card:hover .icon-chip {
-  transform: translateY(-2px);
+.category-card:focus-visible {
+  outline: none;
+  border-color: var(--brand-main);
+  box-shadow: 0 0 0 4px rgba(47, 62, 54, 0.15);
 }
 
-
+/* Icon chip */
 .icon-chip {
   width: 56px;
   height: 56px;
@@ -66,11 +83,14 @@ defineProps({
   align-items: center;
   justify-content: center;
   margin-bottom: 18px;
+  transition: transform 0.28s ease;
 }
 
-.icon-emoji {
-  font-size: 22px;
+.category-card:hover .icon-chip {
+  transform: translateY(-2px);
 }
+
+.icon-emoji { font-size: 22px; }
 
 .title {
   margin: 0 0 10px;
@@ -86,7 +106,7 @@ defineProps({
   line-height: 1.5;
 }
 
-/* Pastel chip variants (match screenshot vibes) */
+/* chips */
 .chip-pink   { background: #f7d3e6; }
 .chip-peach  { background: #f7d1b9; }
 .chip-gold   { background: #f8e0b3; }

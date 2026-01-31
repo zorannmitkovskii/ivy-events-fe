@@ -26,5 +26,5 @@ import AuthLoginForm from "@/components/auth/AuthLoginForm.vue";
 </script>
 
 <style>
-@import "@/assets/styles/auth.css";
+@import "@/assets/styles/auth/auth.css";
 </style>

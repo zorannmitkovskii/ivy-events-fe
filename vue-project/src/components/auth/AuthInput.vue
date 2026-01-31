@@ -3,7 +3,8 @@
     <span class="field__label">{{ label }}</span>
 
     <div class="field__control">
-      <span class="field__icon" v-if="$slots.icon">
+      <!-- icon INSIDE the input, left -->
+      <span v-if="$slots.icon" class="field__icon" aria-hidden="true">
         <slot name="icon" />
       </span>
 
@@ -13,7 +14,7 @@
         :placeholder="placeholder"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
-        autocomplete="off"
+        :autocomplete="autocomplete"
       />
     </div>
   </label>
@@ -26,7 +27,8 @@ defineProps({
   label: { type: String, required: true },
   placeholder: { type: String, default: "" },
   type: { type: String, default: "text" },
-  modelValue: { type: String, default: "" }
+  modelValue: { type: [String, Number], default: "" },
+  autocomplete: { type: String, default: "off" }
 });
 </script>
 
@@ -38,38 +40,67 @@ defineProps({
 
 .field__label {
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: rgba(51, 67, 56, 0.75);
 }
 
+/* Wrapper that gets focus ring */
 .field__control {
-  height: 44px;
-  border-radius: 10px;
-  border: 1px solid rgba(0,0,0,0.10);
-  background: var(--bg-white);
-  display: grid;
-  grid-template-columns: 34px 1fr;
+  position: relative;
+  display: flex;
   align-items: center;
-  overflow: hidden;
+
+  width: 100%;
+  border: 1px solid var(--neutral-300);
+  border-radius: 12px;
+
+  background: color-mix(in srgb, var(--bg-main) 30%, transparent);
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Hover like the example */
+.field__control:hover {
+  background: var(--bg-white);
+}
+
+/* Icon sits inside input area */
 .field__icon {
-  display: grid;
-  place-items: center;
-  color: rgba(51, 67, 56, 0.55);
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  color: var(--bg-dark-gray);
 }
 
+/* Input */
 .field__input {
+  width: 100%;
   border: 0;
   outline: 0;
-  height: 100%;
-  padding: 0 12px ;
+  background: transparent;
+
+  padding: 12px 12px 12px 44px; /* LEFT SPACE FOR ICON */
   font-size: 14px;
   color: var(--neutral-900);
 }
 
+.field__input::placeholder {
+  color: var(--bg-dark-gray);
+}
+
+/* Focus ring like example */
 .field__control:focus-within {
-  border-color: rgba(200, 162, 77, 0.70);
-  box-shadow: 0 0 0 4px rgba(200, 162, 77, 0.12);
+  border-color: var(--brand-main);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand-main) 20%, transparent);
+}
+input:focus {
+  outline: none;
+  box-shadow: none;
 }
 </style>

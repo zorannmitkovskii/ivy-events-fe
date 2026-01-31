@@ -9,6 +9,7 @@ import AuthForgotPasswordPage from "@/pages/auth/AuthForgotPasswordPage.vue";
 import AuthResetPasswordPage from "@/pages/auth/AuthResetPasswordPage.vue";
 import AuthVerifyEmailPage from "@/pages/auth/AuthVerifyEmailPage.vue";
 import { setLocale } from '@/i18n'
+import EventCategoryPage from "@/pages/EventCategoryPage.vue";
 
 const routes = [
   // Marketing shell (MK default)
@@ -19,6 +20,7 @@ const routes = [
       { path: 'features', name: 'features', component: FeaturesPage },
       { path: 'features/rsvp', name: 'features-rsvp', component: FeatureRSVPPage },
       { path: 'features/invitations', name: 'features-invitations', component: FeatureInvitationsPage },
+      { path: 'event-category', name: 'event-categories', component: EventCategoryPage },
       // { path: 'features/tables', name: 'features-tables', component: FeatureTablesPage },
       // { path: 'features/tasks', name: 'features-tasks', component: FeatureTasksPage },
       // { path: 'features/budget', name: 'features-budget', component: FeatureBudgetPage },

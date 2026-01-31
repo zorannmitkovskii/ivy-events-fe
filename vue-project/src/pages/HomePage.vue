@@ -6,7 +6,7 @@
   <template v-if="isTest || isLocal">
     <Header />
     <HeroSection />
-    <EventCategories />
+    <EventCategories bgClass="bg-white"/>
     <HowItWorks />
     <CoreFeatures id="features" />
     <TemplatesGallery id="templates" />

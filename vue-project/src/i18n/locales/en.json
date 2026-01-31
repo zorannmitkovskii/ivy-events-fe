@@ -140,7 +140,9 @@
   "eventCategories": {
     "section": {
       "title": "Perfect for Every Celebration",
-      "subtitle": "Beautiful invitations for all your special moments"
+      "subtitle": "Beautiful invitations for all your special moments",
+      "continue": "Continue",
+      "description": "You can change this later in settings"
     },
     "items": {
       "weddings": {
@@ -194,13 +196,6 @@
       "privacy": "Privacy Policy"
     },
 
-    "fields": {
-      "email": "Email Address",
-      "password": "Password",
-      "fullName": "Full Name",
-      "confirmPassword": "Confirm Password"
-    },
-
     "placeholders": {
       "email": "your@email.com",
       "password": "Enter your password",
@@ -224,6 +219,33 @@
       "haveAccount": "Already have an account?",
       "signIn": "Sign in",
       "agree": "I agree to the Terms of Service and Privacy Policy"
+    },
+    "fields": {
+      "email": "Email Address",
+      "emailPlaceholder": "your@email.com",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password"
+    },
+    "verify": {
+      "title": "Verify your email",
+      "subtitle": "We’ve sent a verification code to {email}. Please enter it below to continue.",
+      "cta": "Verify email",
+      "resend": "Resend code",
+      "changeEmail": "Change email address"
+    },
+    "forgot": {
+      "title": "Forgot your password?",
+      "subtitle": "Enter your email address and we’ll send you a reset link.",
+      "cta": "Send reset link",
+      "backToLogin": "Back to login"
+    },
+    "reset": {
+      "title": "Create a new password",
+      "subtitle": "Please choose a secure password for your account.",
+      "cta": "Reset password",
+      "backToLogin": "Back to login"
     }
   }
 }
