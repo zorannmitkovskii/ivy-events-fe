@@ -2,8 +2,8 @@
   <section class="why-section" :id="id">
     <div class="container">
       <SectionHeader
-          title="Why Choose EventPro?"
-          subtitle="The complete solution for modern event planning"
+          :title="$t('home.whyChoose.title')"
+          :subtitle="$t('home.whyChoose.subtitle')"
       />
 
       <BenefitsGrid :items="benefits" />
@@ -15,6 +15,7 @@
 
 import BenefitsGrid from "@/components/grids/BenefitsGrid.vue";
 import SectionHeader from "@/components/ui/SectionHeader.vue";
+import { t } from '@/i18n'
 
 defineProps({
   id: { type: String, default: "why" }
@@ -23,24 +24,24 @@ defineProps({
 const benefits = [
   {
     iconClass: "fas fa-layer-group",
-    title: "All-in-One Platform",
-    description: "Invitations, RSVPs, guest management, and more in one place",
+    title: t('home.whyChoose.items.allInOne.title'),
+    description: t('home.whyChoose.items.allInOne.description'),
     highlight: true
   },
   {
     iconClass: "fas fa-ad",
-    title: "No Ads on Invitations",
-    description: "Keep your invitations clean and professional without distractions"
+    title: t('home.whyChoose.items.noAds.title'),
+    description: t('home.whyChoose.items.noAds.description')
   },
   {
     iconClass: "fas fa-infinity",
-    title: "Unlimited Guests",
-    description: "Invite as many people as you need without restrictions"
+    title: t('home.whyChoose.items.unlimitedGuests.title'),
+    description: t('home.whyChoose.items.unlimitedGuests.description')
   },
   {
     iconClass: "fas fa-heart",
-    title: "Designed for Weddings & Events",
-    description: "Purpose-built features for every type of celebration"
+    title: t('home.whyChoose.items.designedForEvents.title'),
+    description: t('home.whyChoose.items.designedForEvents.description')
   }
 ];
 </script>

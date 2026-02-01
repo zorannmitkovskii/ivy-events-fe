@@ -2,8 +2,8 @@
   <section class="faq-section" :id="id">
     <div class="container">
       <header class="section-header">
-        <h2 class="section-title">Frequently Asked Questions</h2>
-        <p class="section-subtitle">Everything you need to know about EventPro</p>
+        <h2 class="section-title">{{ $t('home.faq.title') }}</h2>
+        <p class="section-subtitle">{{ $t('home.faq.subtitle') }}</p>
       </header>
 
       <div class="faq-wrap">
@@ -16,6 +16,10 @@
 <script setup>
 import FaqList from "@/components/grids/FaqList.vue";
 
+const props = defineProps({
+  id: { type: String, default: 'faq' },
+  defaultOpenIndex: { type: Number, default: 0 }
+});
 </script>
 
 <style scoped>

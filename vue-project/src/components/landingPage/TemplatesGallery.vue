@@ -2,16 +2,16 @@
   <section class="templates-section" :id="id">
     <div class="container">
       <SectionHeader
-        title="Stunning Templates for Every Occasion"
-        subtitle="Professionally designed, fully customizable invitations"
+        :title="$t('home.templates.title')"
+        :subtitle="$t('home.templates.subtitle')"
       />
 
       <TemplatesGrid :items="templates"/>
 
       <div class="templates-cta">
         <ButtonMain
-          label="View Templates"
-          to="/register"
+          :label="$t('home.templates.cta')"
+          :to="ctaTo"
           variant="outline"
         />
       </div>
@@ -24,6 +24,7 @@
 import SectionHeader from "@/components/ui/SectionHeader.vue";
 import TemplatesGrid from "@/components/grids/TemplatesGrid.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
+import { t } from '@/i18n'
 
 defineProps({
   id: {type: String, default: "templates"},
@@ -33,26 +34,26 @@ defineProps({
 const templates = [
   {
     image: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=900&fit=crop",
-    title: "Elegant Wedding",
-    subtitle: "Classic & Timeless",
+    title: t('home.templates.items.elegantWedding.title'),
+    subtitle: t('home.templates.items.elegantWedding.subtitle'),
     useTo: "/login"
   },
   {
     image: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&h=900&fit=crop",
-    title: "Birthday Celebration",
-    subtitle: "Fun & Festive",
+    title: t('home.templates.items.birthday.title'),
+    subtitle: t('home.templates.items.birthday.subtitle'),
     useTo: "/login"
   },
   {
     image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=900&fit=crop",
-    title: "Corporate Event",
-    subtitle: "Professional & Modern",
+    title: t('home.templates.items.corporate.title'),
+    subtitle: t('home.templates.items.corporate.subtitle'),
     useTo: "/login"
   },
   {
     image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&h=900&fit=crop",
-    title: "Baby Shower",
-    subtitle: "Sweet & Charming",
+    title: t('home.templates.items.babyShower.title'),
+    subtitle: t('home.templates.items.babyShower.subtitle'),
     useTo: "/login"
   }
 ];

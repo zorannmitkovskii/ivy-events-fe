@@ -14,6 +14,7 @@
 <script setup>
 import { ref } from "vue";
 import FaqItem from "@/components/cards/FaqItem.vue";
+import { t } from '@/i18n'
 
 const props = defineProps({
   defaultOpenIndex: { type: Number, default: 0 } // first open like screenshot
@@ -22,39 +23,32 @@ const props = defineProps({
 const openIndex = ref(props.defaultOpenIndex);
 const faqItems = [
   {
-    question: "How do I create an invitation?",
-    answer:
-      "Creating an invitation is simple! Just sign up for free, choose a template from our gallery, customize it with your event details and photos, then share it via email, text, or social media. The entire process takes less than 10 minutes."
+    question: t('home.faq.items.q1.question'),
+    answer: t('home.faq.items.q1.answer')
   },
   {
-    question: "Can I customize the invitation templates?",
-    answer:
-      "Absolutely! All templates are fully customizable. You can change colors, fonts, images, text, and layout."
+    question: t('home.faq.items.q2.question'),
+    answer: t('home.faq.items.q2.answer')
   },
   {
-    question: "How does RSVP tracking work?",
-    answer:
-      "Guests RSVP with one click. You'll see responses in real-time and can send reminders to guests who haven't replied."
+    question: t('home.faq.items.q3.question'),
+    answer: t('home.faq.items.q3.answer')
   },
   {
-    question: "Is EventPro free to use?",
-    answer:
-      "Yes! We offer a free plan for small events. Pro and Premium plans unlock advanced features for larger events."
+    question: t('home.faq.items.q4.question'),
+    answer: t('home.faq.items.q4.answer')
   },
   {
-    question: "Can I use EventPro for professional event planning?",
-    answer:
-      "Definitely. You can manage multiple events, use premium templates, and keep everything organized for clients."
+    question: t('home.faq.items.q5.question'),
+    answer: t('home.faq.items.q5.answer')
   },
   {
-    question: "Are the invitations mobile-friendly?",
-    answer:
-      "Yes! All invitations are responsive and work beautifully on desktop, tablet, and mobile."
+    question: t('home.faq.items.q6.question'),
+    answer: t('home.faq.items.q6.answer')
   },
   {
-    question: "What if I need help or have questions?",
-    answer:
-      "We offer a help center and email support. Pro and Premium users get priority support with faster response times."
+    question: t('home.faq.items.q7.question'),
+    answer: t('home.faq.items.q7.answer')
   }
 ];
 function toggle(idx) {

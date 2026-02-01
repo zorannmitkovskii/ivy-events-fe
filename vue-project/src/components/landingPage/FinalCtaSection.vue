@@ -2,23 +2,21 @@
   <section class="cta">
     <div class="cta__content">
       <h2 class="cta__title">
-        Ready to Create Your Perfect Event?
+        {{ $t('home.finalCta.title') }}
       </h2>
 
       <p class="cta__subtitle">
-        Join thousands of happy couples and event planners who trust
-        IvyEvents. Start planning your unforgettable celebration today –
-        it's free to get started!
+        {{ $t('home.finalCta.subtitle') }}
       </p>
 
       <div class="cta__actions">
         <ButtonMain
-            label="Start Planning Your Event"
+            :label="$t('home.finalCta.primaryCta')"
             to="/register"
             variant="outline"
         />
         <ButtonMain
-            label="View Templates"
+            :label="$t('home.finalCta.secondaryCta')"
             to="/templates"
             variant="secondary"
         />

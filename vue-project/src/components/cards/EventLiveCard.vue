@@ -5,18 +5,18 @@
 
       <div class="card__body">
         <h1 class="title">
-          {{ title }}
+          {{ $t('eventLive.title') }}
           <span class="title__emoji" aria-hidden="true">🎉</span>
         </h1>
 
-        <p class="subtitle">{{ subtitle }}</p>
+        <p class="subtitle">{{ $t('eventLive.subtitle') }}</p>
 
         <EventMiniCard
           :image="event.image"
           :title="event.title"
-          :dateText="event.dateText"
-          :statusText="event.statusText"
-         :date-range="event.startDate" status="ACTIVE"/>
+          :dateRange="event.dateText"
+          :status="event.statusText"
+        />
 
         <div class="actions">
           <ButtonMain
@@ -25,7 +25,7 @@
             variant="main"
           >
             <span class="btn-ico" aria-hidden="true">🔗</span>
-            {{ shareLabel }}
+            {{ $t('eventLive.actions.shareInvitation') }}
           </ButtonMain>
 
           <!-- Secondary (sage) -->
@@ -35,21 +35,21 @@
             variant="outline"
           >
             <span class="btn-ico" aria-hidden="true">✉️</span>
-            {{ rsvpLabel }}
+            {{ $t('eventLive.actions.sendRsvp') }}
           </ButtonMain>
         </div>
 
         <DividerRow />
 
         <RouterLink class="link" :to="overviewTo">
-          {{ overviewLabel }} <span aria-hidden="true">→</span>
+          {{ $t('eventLive.actions.goToOverview') }} <span aria-hidden="true">→</span>
         </RouterLink>
       </div>
     </div>
 
     <p>
-      {{ footerText }}
-      <RouterLink class="footer__link" :to="editTo">{{ footerLinkLabel }}</RouterLink>
+      {{ $t('eventLive.footer.text') }}
+      <RouterLink class="footer__link" :to="editTo">{{ $t('eventLive.footer.editDetails') }}</RouterLink>
     </p>
   </section>
 </template>

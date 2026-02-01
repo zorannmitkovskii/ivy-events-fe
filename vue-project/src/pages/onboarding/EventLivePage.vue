@@ -4,7 +4,7 @@
     image: '/img/templates/corporate.jpg',
     title: 'Annual Tech Innovators Summit 2024',
     dateText: 'Oct 24 - Oct 26, 2024',
-    statusText: 'Active & Registration Open'
+    statusText: $t('eventLive.event.statusActive')
   }"
     shareTo="/event/123/share"
     rsvpTo="/event/123/rsvp"

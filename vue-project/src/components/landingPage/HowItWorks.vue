@@ -2,8 +2,8 @@
   <section class="how-section">
     <div class="container">
       <SectionHeader
-        title="How It Works"
-        subtitle="Four simple steps to your perfect event"
+        :title="$t('home.howItWorks.title')"
+        :subtitle="$t('home.howItWorks.subtitle')"
       />
 
       <StepsGrid :items="steps" />
@@ -14,27 +14,28 @@
 <script setup>
 import SectionHeader from "@/components/ui/SectionHeader.vue";
 import StepsGrid from "@/components/grids/StepsGrid.vue";
+import { t } from '@/i18n'
 
 const steps = [
   {
     iconClass: "fas fa-palette",
-    title: "Choose a Template",
-    description: "Browse our collection of elegant, customizable invitation designs"
+    title: t('home.howItWorks.steps.chooseTemplate.title'),
+    description: t('home.howItWorks.steps.chooseTemplate.description')
   },
   {
     iconClass: "fas fa-pen-to-square",
-    title: "Customize Your Event",
-    description: "Add your details, photos, and personal touches with our easy editor"
+    title: t('home.howItWorks.steps.customizeEvent.title'),
+    description: t('home.howItWorks.steps.customizeEvent.description')
   },
   {
     iconClass: "fas fa-paper-plane",
-    title: "Send Invitations",
-    description: "Share via email, text, or social media with one click"
+    title: t('home.howItWorks.steps.sendInvitations.title'),
+    description: t('home.howItWorks.steps.sendInvitations.description')
   },
   {
     iconClass: "fas fa-chart-line",
-    title: "Track RSVPs",
-    description: "Monitor responses and manage your guest list in real-time"
+    title: t('home.howItWorks.steps.trackRsvps.title'),
+    description: t('home.howItWorks.steps.trackRsvps.description')
   }
 ];
 </script>

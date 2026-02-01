@@ -5,25 +5,24 @@
       <!-- Left -->
       <div class="hero-content">
         <h1 class="hero-title">
-          Create beautiful<br />
-          invitations. Plan<br />
-          unforgettable events.
+          {{ $t('home.hero.titleLine1') }}<br />
+          {{ $t('home.hero.titleLine2') }}<br />
+          {{ $t('home.hero.titleLine3') }}
         </h1>
 
         <p class="hero-subtitle">
-          The all-in-one platform for elegant digital invitations,
-          seamless RSVP tracking, and stress-free event management.
+          {{ $t('home.hero.subtitle') }}
         </p>
 
         <div class="d-flex gap-3 flex-wrap">
           <ButtonMain
-            label="Get Started"
-            to="/register"
+            :label="$t('home.hero.primaryCta')"
+            :to="primaryTo"
             variant="main"
           />
           <ButtonMain
-            label="View Templates"
-            to="/register"
+            :label="$t('home.hero.secondaryCta')"
+            :to="secondaryTo"
             variant="outline"
           />
         </div>

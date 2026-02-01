@@ -6,7 +6,7 @@
       <div class="event-mini__meta">
         <div class="event-mini__row">
           <span class="event-mini__icon" aria-hidden="true">📅</span>
-          <span class="event-mini__text">{{ dateRange }} 14.10.2026</span>
+          <span class="event-mini__text">{{ dateRange }}</span>
         </div>
 
         <div class="event-mini__row text-center">

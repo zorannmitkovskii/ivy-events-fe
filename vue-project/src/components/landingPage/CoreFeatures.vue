@@ -2,8 +2,8 @@
   <section class="features-section" :id="id">
     <div class="container">
       <SectionHeader
-        title="Features for Every Stage of Event Management"
-        subtitle="Everything you need to plan, manage, and celebrate"
+        :title="$t('home.features.title')"
+        :subtitle="$t('home.features.subtitle')"
       />
 
       <FeatureGrid :items="features" />
@@ -14,6 +14,7 @@
 <script setup>
 import SectionHeader from "@/components/ui/SectionHeader.vue";
 import FeatureGrid from "@/components/cards/FeatureGrid.vue";
+import { t } from '@/i18n'
 
 defineProps({
   id: { type: String, default: "features" }
@@ -23,44 +24,38 @@ const features = [
   {
     icon: "🎨",
     chipClass: "chip-pink",
-    title: "Beautiful Invitation Designs",
-    description:
-      "Choose from hundreds of professionally designed templates or create your own custom design"
+    title: t('home.features.items.beautifulDesigns.title'),
+    description: t('home.features.items.beautifulDesigns.description')
   },
   {
     icon: "👥",
     chipClass: "chip-green",
-    title: "RSVP & Guest Management",
-    description:
-      "Track responses, manage guest lists, and send automated reminders effortlessly"
+    title: t('home.features.items.rsvpManagement.title'),
+    description: t('home.features.items.rsvpManagement.description')
   },
   {
     icon: "🔔",
     chipClass: "chip-blue",
-    title: "Automated Reminders",
-    description:
-      "Send timely reminders to guests automatically so you never miss an RSVP"
+    title: t('home.features.items.automatedReminders.title'),
+    description: t('home.features.items.automatedReminders.description')
   },
   {
     icon: "📱",
     chipClass: "chip-purple",
-    title: "Mobile-Friendly Experience",
-    description:
-      "Perfect viewing on any device - your guests can RSVP from anywhere"
+    title: t('home.features.items.mobileFriendly.title'),
+    description: t('home.features.items.mobileFriendly.description')
   },
   {
     icon: "📅",
     chipClass: "chip-gold",
-    title: "Event Details & Schedule",
-    description:
-      "Share venue information, directions, schedule, and important details in one place"
+    title: t('home.features.items.eventDetails.title'),
+    description: t('home.features.items.eventDetails.description')
   },
   {
     icon: "📈",
     chipClass: "chip-peach",
-    title: "Real-Time Analytics",
-    description:
-      "Get insights into guest responses, attendance rates, and engagement metrics"
+    title: t('home.features.items.analytics.title'),
+    description: t('home.features.items.analytics.description')
   }
 ];
 </script>
