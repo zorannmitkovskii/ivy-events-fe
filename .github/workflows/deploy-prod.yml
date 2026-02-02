@@ -62,4 +62,3 @@ jobs:
               ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
   
             echo "✅ Frontend PROD deployed"
-  

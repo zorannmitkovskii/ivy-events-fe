@@ -1,0 +1,42 @@
+/* Design tokens */
+:root {
+  --brand-main: #2F3E36;   /* Forest Green */
+  --brand-light: #BFD2A4;  /* Sage Green */
+  --brand-dark: #5D6A57;   /* Moss Green (deepest available in palette) */
+  --brand-gold: #C8A24D; /* Gold */
+
+  --soft-light: #E7E7E7;     /* Light Grey */
+
+  --secondary-sage: #BFD2A4; /* Sage Green */
+  --secondary-salmon: #ED6E69; /* Salmon Pink */
+  --secondary-moss: #5D6A57; /* Moss Green */
+  --secondary-gold: #E1C699; /* Gold */
+
+  --neutral-900: #334338;    /* Forest Green (as “near-black”) */
+  --neutral-700: #5D6A57;    /* Moss Green */
+  --neutral-500: #7A8773;    /* Optional mid (derived from palette feel) */
+  --neutral-300: #E7E7E7;    /* Light Grey */
+  --neutral-100: #FFFFFF;    /* Base White */
+
+  --bg-main: #F7F5F0;        /* Light Grey */
+  --bg-white: #FFFFFF;        /* White */
+  --bg-gray: #E5E7EB;        /*  Grey */
+  --bg-dark-gray: #9CA3AF;        /* Dark Grey */
+  --bg-darker-gray: #6B7280;        /* Dark Grey */
+
+  --success: #BFD2A4;        /* Sage Green */
+  --warning: #5D6A57;        /* Moss Green (calm warning) */
+  --error: #ED6E69;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --shadow-sm: 0 4px 10px rgba(0,0,0,0.06);
+  --shadow-md: 0 10px 24px rgba(0,0,0,0.08);
+  --shadow-lg: 0 16px 40px rgba(0,0,0,0.12);
+
+  --container-max: 1200px;
+  --header-height: 72px;
+  --font-family: 'Cormorant Garamond', serif;
+}

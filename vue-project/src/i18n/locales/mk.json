@@ -396,10 +396,22 @@
       "subtitle": "Професионално дизајнирани, целосно приспособливи покани",
       "cta": "Погледни шаблони",
       "items": {
-        "elegantWedding": { "title": "Елегантна свадба", "subtitle": "Класично и вечно" },
-        "birthday": { "title": "Роденденска прослава", "subtitle": "Забавно и весело" },
-        "corporate": { "title": "Корпоративен настан", "subtitle": "Професионално и модерно" },
-        "babyShower": { "title": "Бејби шауер", "subtitle": "Слатко и шармантно" }
+        "elegantWedding": {
+          "title": "Елегантна свадба",
+          "subtitle": "Класично и вечно"
+        },
+        "birthday": {
+          "title": "Роденденска прослава",
+          "subtitle": "Забавно и весело"
+        },
+        "corporate": {
+          "title": "Корпоративен настан",
+          "subtitle": "Професионално и модерно"
+        },
+        "babyShower": {
+          "title": "Бејби шауер",
+          "subtitle": "Слатко и шармантно"
+        }
       }
     },
     "features": {
@@ -471,6 +483,135 @@
       "subtitle": "Придружете се на илјадници задоволни парови и организатори кои му веруваат на IvyEvents. Започнете со планирање на вашата незаборавна прослава – бесплатно е!",
       "primaryCta": "Започни со планирање",
       "secondaryCta": "Погледни шаблони"
+    }
+  },
+  "overview": {
+    "daysToGo": "дена до настанот",
+    "editInvitation": "Измени покана",
+    "manageGuests": "Управувај гости",
+    "sendUpdate": "Испрати известување",
+    "totalGuests": "Вкупно гости",
+    "tablesAssigned": "Распоредени маси",
+    "tablesSeated": "од масите се пополнети",
+    "budgetStatus": "Статус на буџет",
+    "of": "од",
+    "budget": "буџет",
+    "rsvpSummary": "RSVP преглед",
+    "viewDetails": "Види детали",
+    "invited": "ПОКАНЕТИ",
+    "attending": "Доаѓаат",
+    "declined": "Одбиени",
+    "pending": "Во тек",
+    "upcomingTasks": "Наредни задачи",
+    "viewAllTasks": "Види сите задачи",
+    "onTrackTitle": "Сè е под контрола!",
+    "viewTimeline": "Види тајмлајн"
+  },
+  "guests": {
+    "title": "Гости",
+    "subtitle": "Управувајте со гостите и распоредот по маси",
+    "addGuest": "Додади гостин",
+    "importGuests": "Увези гости",
+    "sendReminder": "Прати потсетник",
+    "searchPlaceholder": "Пребарај по име или е-пошта...",
+    "allRsvp": "Сите RSVP статуси",
+    "allTables": "Сите маси",
+    "unassigned": "Нераспределени",
+    "thGuestName": "Гостин",
+    "thRsvp": "RSVP статус",
+    "thPlus": "Гости",
+    "thTable": "Маса",
+    "thNotes": "Седиште / Забелешка",
+    "thActions": "Акции",
+    "edit": "Измени",
+    "remove": "Избриши",
+    "accepted": "Прифатени",
+    "pending": "Во чекање",
+    "declined": "Одбиени",
+    "loading": "Се вчитуваат гости...",
+    "errorTitle": "Не може да се вчитаат гости",
+    "retry": "Обиди се повторно",
+    "emptyTitle": "Нема гости",
+    "emptyMessage": "Додадете гости или увезете листа за да почнете со RSVP."
+  },
+  "agenda": {
+    "title": "Агенда",
+    "subtitle": "Управувајте со временска линија и одговорности",
+    "dayView": "Дневен преглед",
+    "multiDay": "Повеќе денови",
+    "templates": "Шаблони",
+    "addItem": "+ Додади ставка",
+    "totalDuration": "Вкупно времетраење",
+    "now": "Сега",
+    "editItem": "Измени ставка",
+    "close": "Затвори",
+    "save": "Зачувај",
+    "cancel": "Откажи",
+    "delete": "Избриши",
+    "fieldTitle": "Наслов",
+    "fieldStart": "Почеток",
+    "fieldEnd": "Крај",
+    "fieldLocation": "Локација",
+    "fieldResponsible": "Одговорен",
+    "fieldVisibility": "Видливост",
+    "fieldNotes": "Забелешки",
+    "visibilityEveryone": "Сите",
+    "visibilityTeam": "Само тим",
+    "statusCompleted": "Завршено",
+    "statusInProgress": "Во тек",
+    "statusUpcoming": "Следно",
+    "statusBreak": "Пауза",
+    "loading": "Се вчитува агенда...",
+    "errorTitle": "Не може да се вчита агенда",
+    "retry": "Обиди се повторно",
+    "emptyTitle": "Нема ставки",
+    "emptyMessage": "Додадете прва ставка за да ја креирате агендата."
+  },
+  "sidebar": {
+    "overview": "Преглед",
+    "guests": "Гости",
+    "tasks": "Задачи",
+    "budget": "Буџет",
+    "seating": "Распоред",
+    "agenda": "Агенда",
+    "gallery": "Галерија",
+    "team": "Тим",
+    "settings": "Подесувања",
+    "premium": "ПРЕМИУМ",
+    "eventPlanner": "Организатор"
+  },
+  "common": { "cancel": "Откажи", "save": "Зачувај" },
+  "tables": {
+    "title": "Маси и распоред",
+    "subtitle": "Управувај со распоред по маси",
+    "addTable": "Додади маса",
+    "printExport": "Печати / Експорт",
+    "tableList": "Листа на маси",
+    "guestAssignment": "Распоред на гости",
+    "addGuest": "Додади гостин",
+    "guestName": "Име",
+    "assignedTable": "Доделена маса",
+    "status": "Статус",
+    "action": "Акција",
+    "remove": "Избриши",
+    "selected": "Избрано",
+    "capacity": "Капацитет",
+    "guests": "гости",
+    "unassigned": "Нераспределени",
+    "confirmed": "Потврден",
+    "pending": "Во тек",
+    "form": {
+      "name": "Име и презиме",
+      "namePh": "Внеси име",
+      "phone": "Телефон",
+      "phonePh": "+389…",
+      "email": "Е-пошта",
+      "emailPh": "ime@email.com",
+      "status": "Статус"
+    },
+    "errors": {
+      "nameRequired": "Името е задолжително",
+      "statusRequired": "Статусот е задолжителен"
     }
   }
 }

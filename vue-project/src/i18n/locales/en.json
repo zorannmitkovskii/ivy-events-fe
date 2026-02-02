@@ -196,14 +196,12 @@
       "terms": "Terms of Service",
       "privacy": "Privacy Policy"
     },
-
     "placeholders": {
       "email": "your@email.com",
       "password": "Enter your password",
       "fullName": "Jane Doe",
       "confirmPassword": "Repeat your password"
     },
-
     "login": {
       "title": "Welcome Back",
       "subtitle": "Sign in to continue planning your perfect event",
@@ -212,7 +210,6 @@
       "noAccount": "Don't have an account?",
       "createAccount": "Create account"
     },
-
     "register": {
       "title": "Create your account",
       "subtitle": "Begin planning your unforgettable celebration",
@@ -328,17 +325,14 @@
   "eventLive": {
     "title": "Your Event Is Live",
     "subtitle": "Congratulations! Your event has been successfully published and is now visible to attendees.",
-
     "event": {
       "statusActive": "Active & Registration Open"
     },
-
     "actions": {
       "shareInvitation": "Share Invitation",
       "sendRsvp": "Send RSVP Email",
       "goToOverview": "Go to Event Overview"
     },
-
     "footer": {
       "text": "Need to make changes?",
       "editDetails": "Edit event details"
@@ -402,10 +396,22 @@
       "subtitle": "Professionally designed, fully customizable invitations",
       "cta": "View Templates",
       "items": {
-        "elegantWedding": { "title": "Elegant Wedding", "subtitle": "Classic & Timeless" },
-        "birthday": { "title": "Birthday Celebration", "subtitle": "Fun & Festive" },
-        "corporate": { "title": "Corporate Event", "subtitle": "Professional & Modern" },
-        "babyShower": { "title": "Baby Shower", "subtitle": "Sweet & Charming" }
+        "elegantWedding": {
+          "title": "Elegant Wedding",
+          "subtitle": "Classic & Timeless"
+        },
+        "birthday": {
+          "title": "Birthday Celebration",
+          "subtitle": "Fun & Festive"
+        },
+        "corporate": {
+          "title": "Corporate Event",
+          "subtitle": "Professional & Modern"
+        },
+        "babyShower": {
+          "title": "Baby Shower",
+          "subtitle": "Sweet & Charming"
+        }
       }
     },
     "features": {
@@ -477,6 +483,135 @@
       "subtitle": "Join thousands of happy couples and event planners who trust IvyEvents. Start planning your unforgettable celebration today – it's free to get started!",
       "primaryCta": "Start Planning Your Event",
       "secondaryCta": "View Templates"
+    }
+  },
+  "guests": {
+    "title": "Guests",
+    "subtitle": "Manage your event guests and table assignments",
+    "addGuest": "Add Guest",
+    "importGuests": "Import Guests",
+    "sendReminder": "Send Reminder",
+    "searchPlaceholder": "Search by name or email...",
+    "allRsvp": "All RSVP Status",
+    "allTables": "All Tables",
+    "unassigned": "Unassigned",
+    "thGuestName": "Guest Name",
+    "thRsvp": "RSVP Status",
+    "thPlus": "Guests",
+    "thTable": "Assigned Table",
+    "thNotes": "Seat / Notes",
+    "thActions": "Actions",
+    "edit": "Edit",
+    "remove": "Remove",
+    "accepted": "Accepted",
+    "pending": "Pending",
+    "declined": "Declined",
+    "loading": "Loading guests...",
+    "errorTitle": "Could not load guests",
+    "retry": "Retry",
+    "emptyTitle": "No guests yet",
+    "emptyMessage": "Add guests or import a list to start managing RSVPs."
+  },
+  "agenda": {
+    "title": "Event Agenda",
+    "subtitle": "Manage your timeline and responsibilities",
+    "dayView": "Day View",
+    "multiDay": "Multi-day",
+    "templates": "Templates",
+    "addItem": "+ Add Item",
+    "totalDuration": "Total Duration",
+    "now": "Now",
+    "editItem": "Edit Item",
+    "close": "Close",
+    "save": "Save Changes",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "fieldTitle": "Title",
+    "fieldStart": "Start Time",
+    "fieldEnd": "End Time",
+    "fieldLocation": "Location",
+    "fieldResponsible": "Responsible",
+    "fieldVisibility": "Visibility",
+    "fieldNotes": "Notes",
+    "visibilityEveryone": "Everyone",
+    "visibilityTeam": "Team only",
+    "statusCompleted": "Completed",
+    "statusInProgress": "In Progress",
+    "statusUpcoming": "Upcoming",
+    "statusBreak": "Break",
+    "loading": "Loading agenda...",
+    "errorTitle": "Could not load agenda",
+    "retry": "Retry",
+    "emptyTitle": "No agenda items",
+    "emptyMessage": "Add your first agenda item to build the timeline."
+  },
+  "sidebar": {
+    "overview": "Overview",
+    "guests": "Guests",
+    "tasks": "Tasks",
+    "budget": "Budget",
+    "seating": "Seating",
+    "agenda": "Agenda",
+    "gallery": "Gallery",
+    "team": "Team",
+    "settings": "Settings",
+    "premium": "PREMIUM",
+    "eventPlanner": "Event Planner"
+  },
+  "overview": {
+    "daysToGo": "days to go",
+    "editInvitation": "Edit Invitation",
+    "manageGuests": "Manage Guests",
+    "sendUpdate": "Send Update",
+    "totalGuests": "Total Guests",
+    "tablesAssigned": "Tables Assigned",
+    "tablesSeated": "of tables seated",
+    "budgetStatus": "Budget Status",
+    "of": "of",
+    "budget": "budget",
+    "rsvpSummary": "RSVP Summary",
+    "viewDetails": "View Details",
+    "invited": "INVITED",
+    "attending": "Attending",
+    "declined": "Declined",
+    "pending": "Pending",
+    "upcomingTasks": "Upcoming Tasks",
+    "viewAllTasks": "View All Tasks",
+    "onTrackTitle": "Everything is on track!",
+    "viewTimeline": "View Timeline"
+  },
+  "common": { "cancel": "Cancel", "save": "Save" },
+  "tables": {
+    "title": "Tables & Seating",
+    "subtitle": "Manage seating assignments by table",
+    "addTable": "Add Table",
+    "printExport": "Print / Export",
+    "tableList": "Table List",
+    "guestAssignment": "Guest Assignment",
+    "addGuest": "Add Guest",
+    "guestName": "Guest Name",
+    "assignedTable": "Assigned Table",
+    "status": "Status",
+    "action": "Action",
+    "remove": "Remove",
+    "selected": "Selected",
+    "capacity": "Capacity",
+    "guests": "guests",
+    "unassigned": "Unassigned",
+    "confirmed": "Confirmed",
+    "pending": "Pending",
+    "form": {
+      "name": "Name",
+      "namePh": "Full name",
+      "phone": "Phone",
+      "phonePh": "+389…",
+      "email": "Email",
+      "emailPh": "name@email.com",
+      "status": "Status"
+    },
+    "errors": {
+      "nameRequired": "Name is required",
+      "statusRequired": "Status is required"
     }
   }
 }
