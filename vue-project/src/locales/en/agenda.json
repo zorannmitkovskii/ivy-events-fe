@@ -1,0 +1,13 @@
+{
+  "title": "Event Agenda",
+  "subtitle": "Manage your timeline for {event} • {dateRange}",
+  "dayView": "Day View",
+  "multiDay": "Multi-day",
+  "template": "Template",
+  "addItem": "Add Item",
+  "totalDuration": "Total Duration: {duration}",
+  "editItem": "Edit Item",
+  "saveChanges": "Save Changes",
+  "cancel": "Cancel",
+  "delete": "Delete"
+}

@@ -1,0 +1,23 @@
+{
+  "title": "Буџет",
+  "export": "Експорт",
+  "addExpense": "Додај трошок",
+  "categories": "Категории",
+  "overviewSubtitle": "Преглед за {monthLabel}",
+
+  "totalBudget": "Вкупен буџет",
+  "totalSpent": "Вкупно потрошено",
+  "remaining": "Преостанато",
+  "monthly": "Месечно",
+  "fixedAndVariable": "Фиксно и варијабилно",
+  "safeToSpend": "Безбедно за трошење",
+  "ofBudgetUsed": "{percent}% од буџетот е искористен",
+
+  "expense": {
+    "date": "Датум",
+    "category": "Категорија",
+    "merchant": "Продавница/Место",
+    "amount": "Износ",
+    "note": "Забелешка"
+  }
+}

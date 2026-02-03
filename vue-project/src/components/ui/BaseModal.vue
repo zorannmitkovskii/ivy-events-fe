@@ -4,7 +4,7 @@
       <div class="modal">
         <header class="header">
           <h3 class="title">{{ title }}</h3>
-          <button class="close" @click="$emit('close')">✕</button>
+          <button class="close" type="button" @click="$emit('close')">✕</button>
         </header>
 
         <section class="body">
@@ -28,27 +28,40 @@ defineEmits(["close"]);
 </script>
 
 <style scoped>
-/* 🔥 overlay centers modal */
+/* overlay centers modal */
 .overlay{
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.45);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
 }
 
-/* 🔥 modal is content-based height */
+/* ✅ no rgba: use pseudo layer with opacity */
+.overlay::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--brand-main);
+  opacity: 0.45;
+}
+
+/* modal */
 .modal{
-  background: var(--bg-white);
+  position: relative;
+  z-index: 1;
+
+  background: #ffffff;
   border-radius: 16px;
   width: 100%;
   max-width: 520px;
   max-height: 90vh;
   overflow: auto;
 
-  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  border: 1px solid var(--brand-dark);
+  box-shadow: 0 20px 60px var(--brand-dark);
+
   display: flex;
   flex-direction: column;
 }
@@ -59,33 +72,37 @@ defineEmits(["close"]);
   align-items: center;
   justify-content: space-between;
   padding: 18px 20px;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid var(--brand-dark);
 }
 
 .title{
   font-size: 18px;
   font-weight: 800;
   margin: 0;
+  color: var(--brand-main);
 }
 
 .close{
-  border: none;
-  background: transparent;
-  font-size: 18px;
+  border: 1px solid var(--brand-dark);
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 6px 10px;
   cursor: pointer;
+  font-size: 16px;
+  color: var(--brand-main);
 }
 
-/* body grows naturally */
+/* body */
 .body{
   padding: 20px;
 }
 
-/* 🔥 footer buttons aligned right */
+/* footer buttons aligned right */
 .footer{
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   padding: 16px 20px;
-  border-top: 1px solid rgba(0,0,0,0.06);
+  border-top: 1px solid var(--brand-dark);
 }
 </style>

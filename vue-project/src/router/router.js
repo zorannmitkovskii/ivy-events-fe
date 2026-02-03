@@ -30,6 +30,7 @@ import GalleryPage from "@/pages/dashboard/GalleryPage.vue";
 import NotificationsPage from "@/pages/dashboard/NotificationsPage.vue";
 import TeamPage from "@/pages/dashboard/TeamPage.vue";
 import EventSettingsPage from "@/pages/dashboard/EventSettingsPage.vue";
+import BudgetPage from "@/pages/userDashboard/BudgetPage.vue";
 
 const routes = [
   // Redirect root to /mk
@@ -75,6 +76,7 @@ const routes = [
           { path: "events/:eventId/guests", name: "dashboard.guests", component: GuestsPage },
           { path: "events/:eventId/tables", name: "dashboard.tables", component: TablesSeatingPage },
           { path: "events/:eventId/agenda", name: "dashboard.agenda", component: AgendaPage },
+          { path: "events/:eventId/budget", name: "dashboard.budget", component: BudgetPage },
           { path: "events/:eventId/gallery", name: "dashboard.gallery", component: GalleryPage },
           { path: "events/:eventId/notifications", name: "dashboard.notifications", component: NotificationsPage },
           { path: "events/:eventId/team", name: "dashboard.team", component: TeamPage },
