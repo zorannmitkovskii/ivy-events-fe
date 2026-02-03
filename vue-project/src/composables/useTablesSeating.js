@@ -44,7 +44,7 @@ export function useTablesSeating() {
       tables.value = tRes || [];
       guests.value = gRes || [];
       tables.value = recomputeAssignedCounts(tables.value, guests.value);
-      selectedTableId.value = tables.value[0]?.id || null;
+      selectedTableId.value = tables.value[0]?.id || "unassigned";
 
     } catch (e) {
       error.value = e?.message || "Failed to load seating";

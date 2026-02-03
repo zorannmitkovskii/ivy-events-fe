@@ -287,7 +287,7 @@
     "payment": {
       "title": "Информации за плаќање",
       "email": "Емаил адреса",
-      "emailPh": "user@example.com",
+      "emailPh": "userexample.com",
       "cardNumber": "Број на картичка",
       "expiry": "Важи до",
       "cvc": "CVC",
@@ -606,7 +606,7 @@
       "phone": "Телефон",
       "phonePh": "+389…",
       "email": "Е-пошта",
-      "emailPh": "ime@email.com",
+      "emailPh": "imeemail.com",
       "status": "Статус"
     },
     "errors": {

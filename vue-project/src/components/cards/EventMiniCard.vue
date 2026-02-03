@@ -29,7 +29,6 @@ defineProps({
 
 <style scoped>
 .event-mini {
-  //display: grid;
   grid-template-columns: 56px 1fr;
   gap: 14px;
   align-items: center;

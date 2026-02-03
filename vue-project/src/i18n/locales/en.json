@@ -287,7 +287,7 @@
     "payment": {
       "title": "Payment Information",
       "email": "Email Address",
-      "emailPh": "user@example.com",
+      "emailPh": "userexample.com",
       "cardNumber": "Card Number",
       "expiry": "Expiry Date",
       "cvc": "CVC",
@@ -606,7 +606,7 @@
       "phone": "Phone",
       "phonePh": "+389…",
       "email": "Email",
-      "emailPh": "name@email.com",
+      "emailPh": "nameemail.com",
       "status": "Status"
     },
     "errors": {

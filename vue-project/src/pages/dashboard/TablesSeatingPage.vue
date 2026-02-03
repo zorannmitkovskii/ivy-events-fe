@@ -14,7 +14,7 @@
 
     <template #left>
       <TableListCard
-        :tables="tables"
+        :tables="tablesForList"
         :selectedId="selectedTableId"
         @select="selectedTableId = $event"
       />
@@ -23,6 +23,7 @@
     <template #right>
       <div v-if="loading" class="card card-pad">Loading…</div>
       <div v-else-if="error" class="card card-pad">{{ error }}</div>
+
       <GuestAssignmentCard
         v-else
         :guests="guests"
@@ -42,7 +43,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useTablesSeating } from "@/composables/useTablesSeating";
 
@@ -50,7 +51,9 @@ import BaseButton from "@/components/ui/BaseButton.vue";
 import TablesLayout from "@/components/dashboard/tables/TablesLayout.vue";
 import TableListCard from "@/components/dashboard/tables/TableListCard.vue";
 import GuestAssignmentCard from "@/components/dashboard/tables/GuestAssignmentCard.vue";
-import AddGuestModal from "@/components/dashboard/tables/AddGuestsModal.vue";
+import AddGuestModal from "@/components/dashboard/tables/AddGuestModal.vue";
+
+// ✅ FIX: correct filename (singular)
 
 const { t } = useI18n();
 const modalOpen = ref(false);
@@ -62,13 +65,27 @@ const {
 
 onMounted(load);
 
+// ✅ add "Unassigned" item on the left
+const tablesForList = computed(() => {
+  const unassignedCount = guests.value.filter(g => !g.tableId).length;
+
+  return [
+    {
+      id: "unassigned",
+      name: t("tables.unassigned"),
+      capacity: Math.max(unassignedCount, 1),
+      assigned: unassignedCount
+    },
+    ...tables.value
+  ];
+});
+
 async function handleAddGuest(payload) {
   await addGuest(payload);
   modalOpen.value = false;
 }
 
 function openAddTable() {
-  // placeholder (later modal)
   alert("Add Table (next)");
 }
 
