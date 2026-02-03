@@ -1,95 +1,114 @@
-<template>
-  <div class="page">
-    <AgendaToolbar @add="onAdd" />
-
-    <div v-if="loading" class="card card-pad">
-      {{ t("agenda.loading") }}
-    </div>
-
-    <div v-else-if="error" class="card card-pad">
-      <div style="font-weight:900;">{{ t("agenda.errorTitle") }}</div>
-      <div class="small" style="margin-top:6px;">{{ error }}</div>
-      <div style="margin-top:12px;">
-        <button class="btn btn-primary" @click="run">{{ t("agenda.retry") }}</button>
-      </div>
-    </div>
-
-    <template v-else>
-      <div v-if="items.length === 0" class="card card-pad">
-        <div style="font-weight:900;">{{ t("agenda.emptyTitle") }}</div>
-        <div class="small" style="margin-top:6px;">{{ t("agenda.emptyMessage") }}</div>
-        <div style="margin-top:12px;">
-          <button class="btn btn-primary" @click="onAdd">{{ t("agenda.addItem") }}</button>
-        </div>
-      </div>
-
-      <div v-else style="display:grid; grid-template-columns: 1fr 420px; gap:14px;">
-        <AgendaTimeline :items="items" :date="date" @select="openEdit" />
-
-        <AgendaEditDrawer
-          v-if="drawerOpen"
-          v-model="form"
-          @close="closeEdit"
-          @cancel="closeEdit"
-          @delete="remove"
-          @save="onSave"
-        />
-        <div v-else class="card card-pad" style="display:flex; align-items:center; justify-content:center; color: var(--neutral-700);">
-          Select an agenda item to edit
-        </div>
-      </div>
-    </template>
-  </div>
-</template>
-
 <script setup>
-import { useI18n } from "vue-i18n";
-import { useAgenda } from "@/composables/useAgenda";
+import {onMounted, computed, ref} from "vue";
+import {useRoute} from "vue-router";
+import {useI18n} from "vue-i18n";
 
-import AgendaToolbar from "@/components/dashboard/agenda/AgendaToolbar.vue";
+import DrawerRight from "@/components/ui/DrawerRight.vue";
+import {useAgenda} from "@/composables/useAgenda.js";
+import AgendaEditor from "@/components/dashboard/agenda/AgendaEditor.vue";
+import AgendaMultiDay from "@/components/dashboard/agenda/AgendaMultiDay.vue";
 import AgendaTimeline from "@/components/dashboard/agenda/AgendaTimeline.vue";
-import AgendaEditDrawer from "@/components/dashboard/agenda/AgendaEditDrawer.vue";
+import AgendaHeader from "@/components/dashboard/agenda/AgendaHeader.vue";
 
-const { t } = useI18n();
+
+const {t} = useI18n();
+const route = useRoute();
+const viewMode = ref("day");
 
 const {
-  items,
-  date,
-  loading,
-  error,
-  run,
-  drawerOpen,
-  form,
-  openEdit,
-  closeEdit,
-  addNew,
-  save,
-  create,
-  remove
+  loading, error,
+  days, itemsByDay,
+  activeDayId, selectedItem,
+  totalDurationLabel,
+  loadAgenda, createItem, updateItem, deleteItem,
+  selectItem, closeEditor
 } = useAgenda();
 
-function onAdd() {
-  addNew();
+const viewOptions = computed(() => [
+  {value: "day", label: t("agenda.dayView")},
+  {value: "multi", label: t("agenda.multiDay")}
+]);
+
+const dayTitle = computed(() => {
+  const d = days.value.find(x => x.id === activeDayId.value);
+  return d?.title ?? "";
+});
+
+const totalLabel = computed(() =>
+  t("agenda.totalDuration", {duration: totalDurationLabel.value})
+);
+
+onMounted(async () => {
+  // if you want demo when no eventId provided:
+  const eventId = route.params.eventId;
+  if (!eventId) await loadAgenda({useDemo: true});
+  else await loadAgenda({id: eventId});
+});
+
+async function onSave(payload) {
+  // payload contains editor fields
+  if (payload.id) {
+    await updateItem(payload.id, payload);
+  } else {
+    await createItem(payload);
+  }
+  closeEditor();
 }
 
-async function onSave() {
-  // if creating a new item:
-  // composable uses selectedId="__new__" when addNew()
-  // so decide between create vs save:
-  if (form.value && form.value.title && form.value.start && form.value.end) {
-    // create if new draft
-    // the composable will only create when selectedId === "__new__"
-    await create().catch(() => {});
-    await save().catch(() => {});
-  } else {
-    // basic safeguard; you can add validation UI later
-    await save().catch(() => {});
-  }
+async function onDelete(id) {
+  await deleteItem(id);
 }
 </script>
 
-<style scoped>
-@media (max-width: 1100px){
-  .page > div[style*="grid-template-columns: 1fr 420px"] { grid-template-columns: 1fr !important; }
-}
-</style>
+<template>
+  <AgendaHeader
+    :title="t('agenda.title')"
+    :subtitle="t('agenda.subtitle', { event: 'The Annual Gala', dateRange: 'Oct 24-26, 2024' })"
+    :viewMode="viewMode"
+    :viewOptions="viewOptions"
+    :templateLabel="t('agenda.template')"
+    :addLabel="t('agenda.addItem')"
+    @update:viewMode="viewMode = $event"
+    @add="selectItem({ dayId: activeDayId, title:'', startTime:'', endTime:'', location:'', notes:'', responsible:'', visibility:'EVERYONE', tag:'' })"
+    @template="console.log('open template')"
+  />
+
+  <div style="padding-bottom: 24px">
+    <div v-if="loading" style="padding: 18px 26px;">Loading...</div>
+    <div v-else-if="error" style="padding: 18px 26px; color:#b00020;">{{ error }}</div>
+
+    <AgendaTimeline
+      v-if="viewMode === 'day'"
+      :dayTitle="dayTitle"
+      :totalLabel="totalLabel"
+      :items="itemsByDay[activeDayId] || []"
+      :selectedId="selectedItem?.id"
+      @select="selectItem"
+    />
+
+    <AgendaMultiDay
+      v-else
+      :days="days"
+      :itemsByDay="itemsByDay"
+      :activeDayId="activeDayId"
+      :totalLabel="totalLabel"
+      :selectedId="selectedItem?.id"
+      @update:activeDayId="activeDayId = $event"
+      @addDay="console.log('add day')"
+      @select="selectItem"
+    />
+
+    <DrawerRight :open="!!selectedItem" @close="closeEditor">
+      <AgendaEditor
+        :titleLabel="t('agenda.editItem')"
+        :saveLabel="t('agenda.saveChanges')"
+        :cancelLabel="t('agenda.cancel')"
+        :deleteLabel="t('agenda.delete')"
+        :modelValue="selectedItem"
+        @close="closeEditor"
+        @save="onSave"
+        @delete="onDelete"
+      />
+    </DrawerRight>
+  </div>
+</template>

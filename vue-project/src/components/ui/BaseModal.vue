@@ -1,80 +1,91 @@
 <template>
-  <Teleport to="body">
-    <div v-if="open" class="backdrop" @click.self="$emit('close')">
-      <div class="modal" role="dialog" aria-modal="true">
-        <div class="head">
-          <div class="title">{{ title }}</div>
-          <button class="x" type="button" @click="$emit('close')">✕</button>
-        </div>
+  <teleport to="body">
+    <div v-if="open" class="overlay" @click.self="$emit('close')">
+      <div class="modal">
+        <header class="header">
+          <h3 class="title">{{ title }}</h3>
+          <button class="close" @click="$emit('close')">✕</button>
+        </header>
 
-        <div class="body">
+        <section class="body">
           <slot />
-        </div>
+        </section>
 
-        <div v-if="$slots.footer" class="foot">
+        <footer v-if="$slots.footer" class="footer">
           <slot name="footer" />
-        </div>
+        </footer>
       </div>
     </div>
-  </Teleport>
+  </teleport>
 </template>
 
 <script setup>
 defineProps({
-  open: { type: Boolean, default: false },
-  title: { type: String, default: "" }
+  open: Boolean,
+  title: String
 });
 defineEmits(["close"]);
 </script>
 
 <style scoped>
-.backdrop{
+/* 🔥 overlay centers modal */
+.overlay{
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.45);
-  display: grid;
-  place-items: center;
-  padding: 18px;
-  z-index: 9999; /* ✅ super high */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
 }
 
+/* 🔥 modal is content-based height */
 .modal{
-  width: min(560px, 100%);
-  background: rgba(255,255,255,0.96);
-  border: 1px solid rgba(0,0,0,0.12);
+  background: var(--bg-white);
   border-radius: 16px;
-  box-shadow: 0 30px 70px rgba(0,0,0,0.22);
-  overflow: hidden;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow: auto;
+
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
 }
 
-.head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding: 14px 16px;
+/* header */
+.header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
   border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 
 .title{
-  font-weight: 950;
-  font-size: 16px;
-}
-
-.x{
-  border: 0;
-  background: transparent;
-  cursor: pointer;
   font-size: 18px;
-  opacity: .8;
+  font-weight: 800;
+  margin: 0;
 }
 
-.body{ padding: 16px; }
+.close{
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+}
 
-.foot{
-  padding: 14px 16px;
-  border-top: 1px solid rgba(0,0,0,0.06);
-  display:flex;
-  justify-content:flex-end;
+/* body grows naturally */
+.body{
+  padding: 20px;
+}
+
+/* 🔥 footer buttons aligned right */
+.footer{
+  display: flex;
+  justify-content: flex-end;
   gap: 10px;
+  padding: 16px 20px;
+  border-top: 1px solid rgba(0,0,0,0.06);
 }
 </style>

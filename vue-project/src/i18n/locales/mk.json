@@ -536,36 +536,35 @@
   },
   "agenda": {
     "title": "Агенда",
-    "subtitle": "Управувајте со временска линија и одговорности",
-    "dayView": "Дневен преглед",
+    "subtitle": "Управувај со распоредот за {eventName} • {date}",
+    "dayView": "Дневен",
     "multiDay": "Повеќе денови",
-    "templates": "Шаблони",
-    "addItem": "+ Додади ставка",
+    "template": "Шаблон",
+    "addItem": "Додади ставка",
+    "addAgendaItem": "Додади ставка во агенда",
     "totalDuration": "Вкупно времетраење",
-    "now": "Сега",
     "editItem": "Измени ставка",
-    "close": "Затвори",
-    "save": "Зачувај",
-    "cancel": "Откажи",
-    "delete": "Избриши",
-    "fieldTitle": "Наслов",
-    "fieldStart": "Почеток",
-    "fieldEnd": "Крај",
-    "fieldLocation": "Локација",
-    "fieldResponsible": "Одговорен",
-    "fieldVisibility": "Видливост",
-    "fieldNotes": "Забелешки",
-    "visibilityEveryone": "Сите",
-    "visibilityTeam": "Само тим",
-    "statusCompleted": "Завршено",
-    "statusInProgress": "Во тек",
-    "statusUpcoming": "Следно",
-    "statusBreak": "Пауза",
-    "loading": "Се вчитува агенда...",
-    "errorTitle": "Не може да се вчита агенда",
-    "retry": "Обиди се повторно",
-    "emptyTitle": "Нема ставки",
-    "emptyMessage": "Додадете прва ставка за да ја креирате агендата."
+    "emptyEditor": "Избери ставка од агендата за да уредиш.",
+    "newItemTitle": "Нова ставка",
+    "status": {
+      "completed": "Завршено",
+      "inProgress": "Во тек",
+      "upcoming": "Следно",
+      "break": "Пауза"
+    },
+    "form": {
+      "title": "Наслов",
+      "startTime": "Почеток",
+      "endTime": "Крај",
+      "location": "Локација",
+      "notes": "Белешки",
+      "responsible": "Одговорен",
+      "visibility": "Видливост"
+    },
+    "visibility": {
+      "everyone": "Сите",
+      "team": "Тим"
+    }
   },
   "sidebar": {
     "overview": "Преглед",
@@ -580,7 +579,10 @@
     "premium": "ПРЕМИУМ",
     "eventPlanner": "Организатор"
   },
-  "common": { "cancel": "Откажи", "save": "Зачувај" },
+  "common": {
+    "cancel": "Откажи",
+    "save": "Зачувај"
+  },
   "tables": {
     "title": "Маси и распоред",
     "subtitle": "Управувај со распоред по маси",
@@ -611,7 +613,8 @@
     },
     "errors": {
       "nameRequired": "Името е задолжително",
-      "statusRequired": "Статусот е задолжителен"
+      "statusRequired": "Статусот е задолжителен",
+      "saveChanges": "Зачувај промени"
     }
   }
 }

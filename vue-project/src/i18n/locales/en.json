@@ -512,38 +512,29 @@
     "emptyTitle": "No guests yet",
     "emptyMessage": "Add guests or import a list to start managing RSVPs."
   },
-  "agenda": {
-    "title": "Event Agenda",
-    "subtitle": "Manage your timeline and responsibilities",
-    "dayView": "Day View",
-    "multiDay": "Multi-day",
-    "templates": "Templates",
-    "addItem": "+ Add Item",
-    "totalDuration": "Total Duration",
-    "now": "Now",
-    "editItem": "Edit Item",
-    "close": "Close",
-    "save": "Save Changes",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "fieldTitle": "Title",
-    "fieldStart": "Start Time",
-    "fieldEnd": "End Time",
-    "fieldLocation": "Location",
-    "fieldResponsible": "Responsible",
-    "fieldVisibility": "Visibility",
-    "fieldNotes": "Notes",
-    "visibilityEveryone": "Everyone",
-    "visibilityTeam": "Team only",
-    "statusCompleted": "Completed",
-    "statusInProgress": "In Progress",
-    "statusUpcoming": "Upcoming",
-    "statusBreak": "Break",
-    "loading": "Loading agenda...",
-    "errorTitle": "Could not load agenda",
-    "retry": "Retry",
-    "emptyTitle": "No agenda items",
-    "emptyMessage": "Add your first agenda item to build the timeline."
+   "agenda": {
+    "form": {
+      "status": "Status"
+    },
+    "status": {
+      "completed": "Completed",
+      "inProgress": "In Progress",
+      "upcoming": "Upcoming",
+      "break": "Break"
+    },
+    "addDialog": {
+      "title": "Add Agenda Item",
+      "create": "Create",
+      "titlePh": "e.g. Welcome Reception",
+      "locationPh": "e.g. Foyer",
+      "notesPh": "Notes…",
+      "responsiblePh": "e.g. Sarah J."
+    },
+    "errors": {
+      "titleRequired": "Title is required",
+      "startRequired": "Start time is required",
+      "endRequired": "End time is required"
+    }
   },
   "sidebar": {
     "overview": "Overview",
@@ -580,7 +571,11 @@
     "onTrackTitle": "Everything is on track!",
     "viewTimeline": "View Timeline"
   },
-  "common": { "cancel": "Cancel", "save": "Save" },
+  "common": {
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "saveChanges": "Save Changes"
+  },
   "tables": {
     "title": "Tables & Seating",
     "subtitle": "Manage seating assignments by table",

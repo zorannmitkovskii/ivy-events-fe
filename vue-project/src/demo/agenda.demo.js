@@ -1,7 +1,8 @@
-export function getDemoAgenda(eventId = "demo") {
+export function getAgendaDemo() {
   return {
-    eventId,
-    date: "2024-10-24",
+    eventName: "The Annual Gala",
+    dateLabel: "Friday, October 24",
+    totalDuration: "6h 30m",
     items: [
       {
         id: "a1",
@@ -9,10 +10,11 @@ export function getDemoAgenda(eventId = "demo") {
         end: "15:00",
         status: "completed",
         title: "Vendor Setup & Registration",
+        description: "",
         location: "Grand Ballroom",
         responsible: "Mike T.",
         visibility: "everyone",
-        notes: "Ensure badges, registration desk, and vendor tables are ready."
+        tags: []
       },
       {
         id: "a2",
@@ -20,11 +22,11 @@ export function getDemoAgenda(eventId = "demo") {
         end: "16:30",
         status: "in_progress",
         title: "Welcome Reception",
+        description: "Guests arriving, serving champagne and light hors d’oeuvres. Ensure background music is at 40% volume.",
         location: "Foyer",
         responsible: "Sarah J.",
         visibility: "everyone",
-        notes:
-          "Guests arriving, serving champagne and light hors d'oeuvres. Ensure background music is at 40% volume."
+        tags: ["Now"]
       },
       {
         id: "a3",
@@ -32,10 +34,11 @@ export function getDemoAgenda(eventId = "demo") {
         end: "17:15",
         status: "upcoming",
         title: "Opening Keynote",
+        description: "",
         location: "Main Stage",
         responsible: "Dr. Alistair",
         visibility: "everyone",
-        notes: ""
+        tags: ["Overlap"]
       },
       {
         id: "a4",
@@ -43,10 +46,11 @@ export function getDemoAgenda(eventId = "demo") {
         end: "17:30",
         status: "break",
         title: "Coffee Transition",
+        description: "",
         location: "Hallway B",
         responsible: "",
-        visibility: "team",
-        notes: ""
+        visibility: "everyone",
+        tags: []
       }
     ]
   };
