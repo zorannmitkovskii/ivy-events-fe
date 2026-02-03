@@ -186,10 +186,7 @@ body {
 
 /* Footer */
 .coming-soon-wrapper .footer {
-  position: absolute;
-  bottom: 20px;
-  left: 0;
-  right: 0;
+  background: transparent!important;
   text-align: center;
   color: var(--bg-darker-gray);
   font-size: 14px;
