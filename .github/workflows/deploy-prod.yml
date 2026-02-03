@@ -13,7 +13,7 @@ env:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Checkout frontend repo
@@ -36,7 +36,7 @@ jobs:
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: build-and-push
     steps:
       - name: Deploy Frontend to DigitalOcean
@@ -62,4 +62,3 @@ jobs:
               ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
   
             echo "✅ Frontend PROD deployed"
-  

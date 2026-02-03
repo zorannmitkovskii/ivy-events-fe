@@ -1,0 +1,183 @@
+/* ===== Overview design helpers ===== */
+
+.page {
+  display: grid;
+  gap: 18px;
+}
+
+.ov-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.ov-title {
+  font-family: var(--font-family), Serif;
+  font-size: 34px;
+  margin: 0;
+  line-height: 1.05;
+  color: var(--neutral-900);
+}
+
+.ov-subline {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 6px;
+  color: var(--neutral-700);
+  font-size: 13px;
+}
+
+.pill-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  background: rgba(191,210,164,0.30);
+  color: var(--brand-main);
+  border: 1px solid rgba(47,62,54,0.12);
+}
+
+.ov-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+.btn-outline {
+  background: rgba(255,255,255,0.65);
+  border: 1px solid rgba(0,0,0,0.14);
+  color: var(--neutral-900);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+}
+.btn-outline:hover { background: rgba(255,255,255,0.85); }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  gap: 16px;
+}
+
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1.9fr;
+  gap: 16px;
+}
+
+@media (max-width: 1100px) {
+  .stats-grid, .bottom-grid { grid-template-columns: 1fr; }
+}
+
+/* Card headers like the design */
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.card-label {
+  font-size: 11px;
+  letter-spacing: .08em;
+  font-weight: 900;
+  color: var(--neutral-700);
+  text-transform: uppercase;
+}
+
+.card-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: rgba(191,210,164,0.25);
+  border: 1px solid rgba(47,62,54,0.10);
+  color: var(--brand-main);
+  font-weight: 900;
+}
+
+/* KPI numbers */
+.kpi {
+  margin-top: 8px;
+  font-size: 30px;
+  font-weight: 950;
+  color: var(--neutral-900);
+}
+
+.kpi-sub {
+  color: var(--neutral-700);
+  font-size: 13px;
+}
+
+/* Progress bars */
+.track {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+.fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--brand-gold);
+}
+
+/* Task rows */
+.task-row {
+  display: grid;
+  grid-template-columns: 18px 1fr auto;
+  gap: 12px;
+  align-items: start;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.07);
+  background: rgba(255,255,255,0.70);
+}
+.task-row + .task-row { margin-top: 12px; }
+
+.due-pill {
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 900;
+  border: 1px solid rgba(0,0,0,0.06);
+  background: rgba(0,0,0,0.04);
+  color: var(--neutral-900);
+}
+.due-today { background: rgba(237,110,105,0.18); color: #7c1f1c; }
+.due-tomorrow { background: rgba(200,162,77,0.20); color: #5a4410; }
+.due-soon { background: rgba(93,106,87,0.18); color: var(--brand-main); }
+
+/* Banner */
+.ov-banner {
+  background: #2f3e36;
+  color: white;
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  box-shadow: var(--shadow-md);
+}
+.ov-banner .bicon {
+  width: 44px; height: 44px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.10);
+  display: grid; place-items: center;
+}
+.btn-gold {
+  background: var(--brand-gold);
+  border: 1px solid rgba(0,0,0,0.10);
+  color: #1b1b1b;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 900;
+  cursor: pointer;
+}
+.btn-gold:hover { filter: brightness(0.98); }

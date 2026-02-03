@@ -1,9 +1,11 @@
 #!/bin/sh
 set -e
 
+# Detect the correct HTML directory where index.html is located
 HTML_DIR=/usr/share/nginx/html
-ENV_FILE="$HTML_DIR/env.js"
+ENV_FILE="$HTML_DIR/public/env.js"
 
+mkdir -p "$HTML_DIR/public"
 # Defaults
 : "${APP_ENV:=prod}"
 : "${VITE_API_BASE_URL:=https://api.ivyevents.mk}"

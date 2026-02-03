@@ -1,44 +1,47 @@
-import { ref } from 'vue'
-// import mk from './locales/mk.json'
-import mk from './locales/mk.json'
+import { createI18n } from "vue-i18n";
+import mk from "./locales/mk.json";
+import en from "./locales/en.json";
 
-const messages = {  mk }
-
-function get(obj, path) {
-  return path.split('.').reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : undefined), obj)
-}
+const messages = { mk, en };
 
 function detectLocale() {
   try {
-    const saved = localStorage.getItem('lang')
-    if (saved && messages[saved]) return saved
+    const saved = localStorage.getItem("lang");
+    if (saved && messages[saved]) return saved;
   } catch (_) {}
-  const nav = (typeof navigator !== 'undefined' && navigator.language) ? navigator.language : 'mk'
-  const short = nav.split('-')[0]
-  return messages[short] ? short : 'mk'
+
+  const nav =
+    typeof navigator !== "undefined" && navigator.language
+      ? navigator.language
+      : "mk";
+
+  const short = nav.split("-")[0];
+  return messages[short] ? short : "mk";
 }
 
-const locale = ref(detectLocale())
+const i18n = createI18n({
+  legacy: false, // ✅ REQUIRED for useI18n()
+  locale: detectLocale(),
+  fallbackLocale: "en",
+  messages
+});
 
-function setLocale(newLocale) {
-  if (messages[newLocale]) {
-    locale.value = newLocale
-    try { localStorage.setItem('lang', newLocale) } catch (_) {}
-  } else {
-    console.warn(`[i18n] Unsupported locale: ${newLocale}`)
+export function setLocale(newLocale) {
+  if (!messages[newLocale]) {
+    console.warn(`[i18n] Unsupported locale: ${newLocale}`);
+    return;
   }
+
+  i18n.global.locale.value = newLocale;
+
+  try {
+    localStorage.setItem("lang", newLocale);
+  } catch (_) {}
 }
 
-function t(key) {
-  const loc = locale.value || 'mk'
-  return get(messages[loc], key) ?? get(messages['mk'], key) ?? key
+// Optional helper if you ever want direct usage (not required)
+export function t(key, params) {
+  return i18n.global.t(key, params);
 }
 
-export default {
-  install(app) {
-    app.config.globalProperties.$t = t
-    app.provide('i18n', { t, setLocale, locale })
-  }
-}
-
-export { t, setLocale, locale }
+export default i18n;

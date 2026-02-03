@@ -2,34 +2,616 @@
   "comingSoon": {
     "bgBrand": "IVY EVENTS",
     "title": "Coming Soon",
-    "subtitle": "We are preparing something truly special",
-    "description": "We are building a modern event planning platform designed to save you time and give you complete control over every detail.",
-    "emailPlaceholder": "Enter your email address",
+    "subtitle": "We’re preparing something truly special",
+    "description": "We’re building a modern event planning platform designed to save you time and give you full control over every detail.",
+    "emailPlaceholder": "Enter your email",
     "button": {
-      "default": "Notify me and get <b>20% off</b>",
+      "default": "Sign up and get <b>20% off</b>",
       "loading": "Sending...",
       "success": "Subscribed ✔"
     },
     "privacy": {
-      "line1": "The discount code will be sent via email.",
+      "line1": "The code will be sent via email.",
       "line2": "Your email is safe. We only send important updates."
     },
-    "successNote": "You have successfully subscribed! Check your email for the code.",
+    "successNote": "You’ve successfully subscribed! Check your email for the code.",
     "errors": {
       "invalidEmail": "Please enter a valid email.",
-      "alreadyRegistered": "This email is already subscribed.",
+      "alreadyRegistered": "This email is already registered.",
       "badRequest": "Invalid request. Check your email and try again.",
-      "generic": "An error occurred. Please try again later."
+      "generic": "Something went wrong. Please try again later."
     },
     "benefits": {
-      "earlyAccess": "Early Access",
-      "exclusivePerks": "Exclusive Perks",
-      "priorityUpdates": "Priority Updates"
+      "earlyAccess": "Early access",
+      "exclusivePerks": "Exclusive perks",
+      "priorityUpdates": "Priority updates"
     },
     "social": {
-      "instagram": "Instagram",
-      "facebook": "Facebook"
+      "instagram": "Open Ivy Events Instagram",
+      "facebook": "Open Ivy Events Facebook"
     },
     "footer": "© 2026 Ivy Events. All rights reserved."
+  },
+  "pricing": {
+    "section": {
+      "title": "Choose Your Perfect Plan",
+      "subtitle": "Flexible pricing for individuals and professional organizers"
+    },
+    "perMonth": "/month",
+    "badge": {
+      "mostPopular": "Most Popular"
+    },
+    "cta": {
+      "getStarted": "Get Started"
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Perfect for small, personal events",
+        "features": {
+          "upTo50Guests": "Up to 50 guests",
+          "oneEvent": "1 event at a time",
+          "basicTemplates": "Basic templates",
+          "rsvpTracking": "RSVP tracking",
+          "emailInvites": "Email invitations",
+          "customBranding": "Custom branding",
+          "prioritySupport": "Priority support"
+        }
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Ideal for frequent event planners",
+        "features": {
+          "upTo300Guests": "Up to 300 guests",
+          "fiveEvents": "5 events at a time",
+          "premiumTemplates": "Premium templates",
+          "advancedRsvp": "Advanced RSVP tracking",
+          "emailSmsInvites": "Email & SMS invitations",
+          "customBranding": "Custom branding",
+          "prioritySupport": "Priority support"
+        }
+      },
+      "wedding": {
+        "name": "Premium Wedding",
+        "description": "Complete wedding planning suite",
+        "features": {
+          "unlimitedGuests": "Unlimited guests",
+          "unlimitedEvents": "Unlimited events",
+          "allPremiumTemplates": "All premium templates",
+          "advancedAnalytics": "Advanced analytics",
+          "allInvitationMethods": "All invitation methods",
+          "customBranding": "Custom branding",
+          "prioritySupport": "Priority support"
+        }
+      }
+    }
+  },
+  "footer": {
+    "brand": {
+      "logo": "IvyEvents",
+      "tagline": "Create beautiful invitations. Plan unforgettable events."
+    },
+    "columns": {
+      "product": "Product",
+      "company": "Company",
+      "support": "Support",
+      "connect": "Connect"
+    },
+    "links": {
+      "templates": "Templates",
+      "features": "Features",
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "about": "About Us",
+      "blog": "Blog",
+      "careers": "Careers",
+      "contact": "Contact",
+      "help": "Help Center",
+      "terms": "Terms",
+      "privacy": "Privacy",
+      "security": "Security"
+    },
+    "copyright": "All rights reserved."
+  },
+  "header": {
+    "logo": "IvyEvents",
+    "actions": {
+      "signIn": "Sign In",
+      "getStartedFree": "Get Started Free"
+    },
+    "menu": {
+      "templates": "Templates",
+      "features": "Features",
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "openMenu": "Open menu"
+    }
+  },
+  "nav": {
+    "weddings": "Weddings",
+    "business": "Business",
+    "baby": "Baby",
+    "holiday": "Holiday",
+    "invitation": "Invitation",
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "upload": "Upload"
+  },
+  "eventCategories": {
+    "section": {
+      "title": "Perfect for Every Celebration",
+      "subtitle": "Beautiful invitations for all your special moments",
+      "continue": "Continue",
+      "description": "You can change this later in settings"
+    },
+    "items": {
+      "weddings": {
+        "title": "Weddings",
+        "description": "Elegant invitations for your special day"
+      },
+      "birthdaysParties": {
+        "title": "Birthdays & Parties",
+        "description": "Celebrate milestones in style"
+      },
+      "corporate": {
+        "title": "Corporate Events",
+        "description": "Professional invitations for business"
+      },
+      "conferences": {
+        "title": "Conferences",
+        "description": "Streamline event registration"
+      },
+      "privateDinners": {
+        "title": "Private Dinners",
+        "description": "Intimate gatherings made easy"
+      },
+      "babyShowers": {
+        "title": "Baby Showers",
+        "description": "Welcome the new arrival"
+      },
+      "graduations": {
+        "title": "Graduations",
+        "description": "Celebrate achievements"
+      },
+      "anniversaries": {
+        "title": "Anniversaries",
+        "description": "Honor years of love"
+      }
+    }
+  },
+  "weddingsPage": {
+    "templates": {
+      "title": "Trending Wedding Invitations",
+      "subtitle": "Most popular themes"
+    },
+    "packages": {
+      "title": "Wedding Packages"
+    }
+  },
+  "auth": {
+    "brand": "Ivy Events",
+    "common": {
+      "orContinue": "or continue with",
+      "continueWithGoogle": "Continue with Google",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy"
+    },
+    "placeholders": {
+      "email": "your@email.com",
+      "password": "Enter your password",
+      "fullName": "Jane Doe",
+      "confirmPassword": "Repeat your password"
+    },
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to continue planning your perfect event",
+      "signIn": "Sign In",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create account"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Begin planning your unforgettable celebration",
+      "createAccount": "Create Account",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "agree": "I agree to the Terms of Service and Privacy Policy"
+    },
+    "fields": {
+      "email": "Email Address",
+      "emailPlaceholder": "your@email.com",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password"
+    },
+    "verify": {
+      "title": "Verify your email",
+      "subtitle": "We’ve sent a verification code to {email}. Please enter it below to continue.",
+      "cta": "Verify email",
+      "resend": "Resend code",
+      "changeEmail": "Change email address"
+    },
+    "forgot": {
+      "title": "Forgot your password?",
+      "subtitle": "Enter your email address and we’ll send you a reset link.",
+      "cta": "Send reset link",
+      "backToLogin": "Back to login"
+    },
+    "reset": {
+      "title": "Create a new password",
+      "subtitle": "Please choose a secure password for your account.",
+      "cta": "Reset password",
+      "backToLogin": "Back to login"
+    }
+  },
+  "onboarding": {
+    "eventBasics": {
+      "title": "Event Basics",
+      "subtitle": "Let's start with the broad strokes. You can always change these details later.",
+      "fields": {
+        "brideName": "Bride's Name",
+        "groomName": "Groom's Name",
+        "weddingDate": "Wedding Date (Optional)",
+        "location": "Location (Optional)"
+      },
+      "placeholders": {
+        "brideName": "e.g. Sarah",
+        "groomName": "e.g. Michael",
+        "location": "e.g. Napa Valley, CA"
+      },
+      "hints": {
+        "weddingDate": "Don't have a date yet? No worries.",
+        "location": "TBD is perfectly fine at this stage."
+      },
+      "actions": {
+        "continue": "Continue",
+        "skip": "Skip for now"
+      },
+      "protip": {
+        "label": "Pro tip:",
+        "text": "You can invite collaborators after you’ve set up the basics. We’ll remind you later."
+      }
+    },
+    "footer": {
+      "help": "Help Center",
+      "privacy": "Privacy"
+    }
+  },
+  "checkout": {
+    "header": {
+      "title": "Complete Your Purchase",
+      "subtitle": "Secure payment powered by Stripe"
+    },
+    "payment": {
+      "title": "Payment Information",
+      "email": "Email Address",
+      "emailPh": "userexample.com",
+      "cardNumber": "Card Number",
+      "expiry": "Expiry Date",
+      "cvc": "CVC",
+      "country": "Billing Country",
+      "countryPh": "Select your country",
+      "note": "Your payment information is encrypted and secure. We never store your full card details."
+    },
+    "summary": {
+      "title": "Order Summary",
+      "selected": "SELECTED",
+      "duration": "Duration",
+      "annual": "Annual",
+      "yearly": "Yearly",
+      "subtotal": "Subtotal",
+      "savings": "Savings (2 months free)",
+      "total": "Total",
+      "pay": "Pay & Activate Event",
+      "ssl": "256-bit SSL encrypted payment",
+      "legalPrefix": "By completing this purchase, you agree to our",
+      "terms": "Terms of Service",
+      "and": "and",
+      "privacy": "Privacy Policy",
+      "couponLabel": "Coupon Code",
+      "couponPh": "Enter coupon (e.g. IVY-WELCOME20)",
+      "couponValidating": "Validating coupon...",
+      "discount": "Discount"
+    },
+    "plan": {
+      "pro": {
+        "name": "Pro Plan",
+        "tagline": "Up to 300 guests"
+      }
+    }
+  },
+  "eventLive": {
+    "title": "Your Event Is Live",
+    "subtitle": "Congratulations! Your event has been successfully published and is now visible to attendees.",
+    "event": {
+      "statusActive": "Active & Registration Open"
+    },
+    "actions": {
+      "shareInvitation": "Share Invitation",
+      "sendRsvp": "Send RSVP Email",
+      "goToOverview": "Go to Event Overview"
+    },
+    "footer": {
+      "text": "Need to make changes?",
+      "editDetails": "Edit event details"
+    }
+  },
+  "home": {
+    "hero": {
+      "titleLine1": "Create beautiful",
+      "titleLine2": "invitations. Plan",
+      "titleLine3": "unforgettable events.",
+      "subtitle": "The all-in-one platform for elegant digital invitations, seamless RSVP tracking, and stress-free event management.",
+      "primaryCta": "Get Started",
+      "secondaryCta": "View Templates"
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Four simple steps to your perfect event",
+      "steps": {
+        "chooseTemplate": {
+          "title": "Choose a Template",
+          "description": "Browse our collection of elegant, customizable invitation designs"
+        },
+        "customizeEvent": {
+          "title": "Customize Your Event",
+          "description": "Add your details, photos, and personal touches with our easy editor"
+        },
+        "sendInvitations": {
+          "title": "Send Invitations",
+          "description": "Share via email, text, or social media with one click"
+        },
+        "trackRsvps": {
+          "title": "Track RSVPs",
+          "description": "Monitor responses and manage your guest list in real-time"
+        }
+      }
+    },
+    "whyChoose": {
+      "title": "Why Choose IvyEvents?",
+      "subtitle": "The complete solution for modern event planning",
+      "items": {
+        "allInOne": {
+          "title": "All-in-One Platform",
+          "description": "Invitations, RSVPs, guest management, and more in one place"
+        },
+        "noAds": {
+          "title": "No Ads on Invitations",
+          "description": "Keep your invitations clean and professional without distractions"
+        },
+        "unlimitedGuests": {
+          "title": "Unlimited Guests",
+          "description": "Invite as many people as you need without restrictions"
+        },
+        "designedForEvents": {
+          "title": "Designed for Weddings & Events",
+          "description": "Purpose-built features for every type of celebration"
+        }
+      }
+    },
+    "templates": {
+      "title": "Stunning Templates for Every Occasion",
+      "subtitle": "Professionally designed, fully customizable invitations",
+      "cta": "View Templates",
+      "items": {
+        "elegantWedding": {
+          "title": "Elegant Wedding",
+          "subtitle": "Classic & Timeless"
+        },
+        "birthday": {
+          "title": "Birthday Celebration",
+          "subtitle": "Fun & Festive"
+        },
+        "corporate": {
+          "title": "Corporate Event",
+          "subtitle": "Professional & Modern"
+        },
+        "babyShower": {
+          "title": "Baby Shower",
+          "subtitle": "Sweet & Charming"
+        }
+      }
+    },
+    "features": {
+      "title": "Features for Every Stage of Event Management",
+      "subtitle": "Everything you need to plan, manage, and celebrate",
+      "items": {
+        "beautifulDesigns": {
+          "title": "Beautiful Invitation Designs",
+          "description": "Choose from hundreds of professionally designed templates or create your own custom design"
+        },
+        "rsvpManagement": {
+          "title": "RSVP & Guest Management",
+          "description": "Track responses, manage guest lists, and send automated reminders effortlessly"
+        },
+        "automatedReminders": {
+          "title": "Automated Reminders",
+          "description": "Send timely reminders to guests automatically so you never miss an RSVP"
+        },
+        "mobileFriendly": {
+          "title": "Mobile-Friendly Experience",
+          "description": "Perfect viewing on any device - your guests can RSVP from anywhere"
+        },
+        "eventDetails": {
+          "title": "Event Details & Schedule",
+          "description": "Share venue information, directions, schedule, and important details in one place"
+        },
+        "analytics": {
+          "title": "Real-Time Analytics",
+          "description": "Get insights into guest responses, attendance rates, and engagement metrics"
+        }
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Everything you need to know about IvyEvents",
+      "items": {
+        "q1": {
+          "question": "How do I create an invitation?",
+          "answer": "Creating an invitation is simple! Just sign up for free, choose a template from our gallery, customize it with your event details and photos, then share it via email, text, or social media. The entire process takes less than 10 minutes."
+        },
+        "q2": {
+          "question": "Can I customize the invitation templates?",
+          "answer": "Absolutely! All templates are fully customizable. You can change colors, fonts, images, text, and layout."
+        },
+        "q3": {
+          "question": "How does RSVP tracking work?",
+          "answer": "Guests RSVP with one click. You'll see responses in real-time and can send reminders to guests who haven't replied."
+        },
+        "q4": {
+          "question": "Is IvyEvents free to use?",
+          "answer": "Yes! We offer a free plan for small events. Pro and Premium plans unlock advanced features for larger events."
+        },
+        "q5": {
+          "question": "Can I use IvyEvents for professional event planning?",
+          "answer": "Definitely. You can manage multiple events, use premium templates, and keep everything organized for clients."
+        },
+        "q6": {
+          "question": "Are the invitations mobile-friendly?",
+          "answer": "Yes! All invitations are responsive and work beautifully on desktop, tablet, and mobile."
+        },
+        "q7": {
+          "question": "What if I need help or have questions?",
+          "answer": "We offer a help center and email support. Pro and Premium users get priority support with faster response times."
+        }
+      }
+    },
+    "finalCta": {
+      "title": "Ready to Create Your Perfect Event?",
+      "subtitle": "Join thousands of happy couples and event planners who trust IvyEvents. Start planning your unforgettable celebration today – it's free to get started!",
+      "primaryCta": "Start Planning Your Event",
+      "secondaryCta": "View Templates"
+    }
+  },
+  "guests": {
+    "title": "Guests",
+    "subtitle": "Manage your event guests and table assignments",
+    "addGuest": "Add Guest",
+    "importGuests": "Import Guests",
+    "sendReminder": "Send Reminder",
+    "searchPlaceholder": "Search by name or email...",
+    "allRsvp": "All RSVP Status",
+    "allTables": "All Tables",
+    "unassigned": "Unassigned",
+    "thGuestName": "Guest Name",
+    "thRsvp": "RSVP Status",
+    "thPlus": "Guests",
+    "thTable": "Assigned Table",
+    "thNotes": "Seat / Notes",
+    "thActions": "Actions",
+    "edit": "Edit",
+    "remove": "Remove",
+    "accepted": "Accepted",
+    "pending": "Pending",
+    "declined": "Declined",
+    "loading": "Loading guests...",
+    "errorTitle": "Could not load guests",
+    "retry": "Retry",
+    "emptyTitle": "No guests yet",
+    "emptyMessage": "Add guests or import a list to start managing RSVPs."
+  },
+  "agenda": {
+    "title": "Event Agenda",
+    "subtitle": "Manage your timeline and responsibilities",
+    "dayView": "Day View",
+    "multiDay": "Multi-day",
+    "templates": "Templates",
+    "addItem": "+ Add Item",
+    "totalDuration": "Total Duration",
+    "now": "Now",
+    "editItem": "Edit Item",
+    "close": "Close",
+    "save": "Save Changes",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "fieldTitle": "Title",
+    "fieldStart": "Start Time",
+    "fieldEnd": "End Time",
+    "fieldLocation": "Location",
+    "fieldResponsible": "Responsible",
+    "fieldVisibility": "Visibility",
+    "fieldNotes": "Notes",
+    "visibilityEveryone": "Everyone",
+    "visibilityTeam": "Team only",
+    "statusCompleted": "Completed",
+    "statusInProgress": "In Progress",
+    "statusUpcoming": "Upcoming",
+    "statusBreak": "Break",
+    "loading": "Loading agenda...",
+    "errorTitle": "Could not load agenda",
+    "retry": "Retry",
+    "emptyTitle": "No agenda items",
+    "emptyMessage": "Add your first agenda item to build the timeline."
+  },
+  "sidebar": {
+    "overview": "Overview",
+    "guests": "Guests",
+    "tasks": "Tasks",
+    "budget": "Budget",
+    "seating": "Seating",
+    "agenda": "Agenda",
+    "gallery": "Gallery",
+    "team": "Team",
+    "settings": "Settings",
+    "premium": "PREMIUM",
+    "eventPlanner": "Event Planner"
+  },
+  "overview": {
+    "daysToGo": "days to go",
+    "editInvitation": "Edit Invitation",
+    "manageGuests": "Manage Guests",
+    "sendUpdate": "Send Update",
+    "totalGuests": "Total Guests",
+    "tablesAssigned": "Tables Assigned",
+    "tablesSeated": "of tables seated",
+    "budgetStatus": "Budget Status",
+    "of": "of",
+    "budget": "budget",
+    "rsvpSummary": "RSVP Summary",
+    "viewDetails": "View Details",
+    "invited": "INVITED",
+    "attending": "Attending",
+    "declined": "Declined",
+    "pending": "Pending",
+    "upcomingTasks": "Upcoming Tasks",
+    "viewAllTasks": "View All Tasks",
+    "onTrackTitle": "Everything is on track!",
+    "viewTimeline": "View Timeline"
+  },
+  "common": { "cancel": "Cancel", "save": "Save" },
+  "tables": {
+    "title": "Tables & Seating",
+    "subtitle": "Manage seating assignments by table",
+    "addTable": "Add Table",
+    "printExport": "Print / Export",
+    "tableList": "Table List",
+    "guestAssignment": "Guest Assignment",
+    "addGuest": "Add Guest",
+    "guestName": "Guest Name",
+    "assignedTable": "Assigned Table",
+    "status": "Status",
+    "action": "Action",
+    "remove": "Remove",
+    "selected": "Selected",
+    "capacity": "Capacity",
+    "guests": "guests",
+    "unassigned": "Unassigned",
+    "confirmed": "Confirmed",
+    "pending": "Pending",
+    "form": {
+      "name": "Name",
+      "namePh": "Full name",
+      "phone": "Phone",
+      "phonePh": "+389…",
+      "email": "Email",
+      "emailPh": "nameemail.com",
+      "status": "Status"
+    },
+    "errors": {
+      "nameRequired": "Name is required",
+      "statusRequired": "Status is required"
+    }
   }
 }

@@ -33,7 +33,7 @@
             <h4>{{ p.name }}</h4>
             <p class="text-muted">{{ p.desc }}</p>
             <h3 class="text-primary fw-bold">{{ p.price }}</h3>
-            <button class="btn btn-primary mt-2 w-100">Choose</button>
+            <button class="btn btn-main mt-2 w-100">Choose</button>
           </div>
         </div>
       </div>

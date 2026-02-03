@@ -1,0 +1,12 @@
+@import './variables.css';
+
+.card { padding: 10px 15px; background: var(--bg-white); border: 1px solid var(--neutral-200); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden; }
+.card__body { padding: 16px; }
+.card__title { font-weight: 700; color: var(--neutral-900); margin: 0 0 6px; }
+.card__subtitle { color: var(--neutral-500); margin: 0; }
+.card__media { display:block; width:100%; height:auto; }
+.badge--icon { display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius: 999px; background: var(--neutral-100); color: var(--neutral-700); font-weight:600; }
+.price { font-size: 28px; font-weight: 800; color: var(--neutral-900); }
+.testimonial { display:flex; flex-direction: column; gap: 10px; }
+.testimonial__quote { font-style: italic; color: var(--neutral-700); }
+.testimonial__author { font-weight: 700; color: var(--neutral-900); }

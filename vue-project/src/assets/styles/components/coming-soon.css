@@ -1,7 +1,7 @@
 /* Page base (like the 2nd design) */
 body {
   margin: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family), serif;
   background-color: var(--bg-main);
   color: var(--brand-main);
 }

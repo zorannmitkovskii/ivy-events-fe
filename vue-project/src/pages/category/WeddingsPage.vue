@@ -6,8 +6,8 @@
       <HeroVideoSection/>
       <!-- TRENDING TEMPLATES -->
       <WeddingTemplatesCarousel
-        title="Trending Wedding Invitations"
-        subtitle="Most popular themes"
+        :title="$t('weddingsPage.templates.title')"
+        :subtitle="$t('weddingsPage.templates.subtitle')"
         :items="[
     {id:1,image:'https://picsum.photos/id/101/800/600',name:'Golden'},
     {id:2,image:'https://picsum.photos/id/102/800/600',name:'Modern'},
@@ -19,7 +19,7 @@
       />
       <!-- Packages with toggle -->
       <WeddingPackages
-        title="Wedding Packages"
+        :title="$t('weddingsPage.packages.title')"
         @choose="console.log($event)"
       />
       <!-- WHAT IS INCLUDED -->
@@ -44,7 +44,6 @@ import WeddingFaq from "@/components/wedding/WeddingFaq.vue"
 import WeddingFeedback from "@/components/wedding/WeddingFeedback.vue"
 import Header from "@/components/header/Header.vue";
 import DetailsLayout from "@/components/DetailsLayout.vue";
-import Footer from "@/components/footer/Footer.vue";
 import HeroVideoSection from "@/components/wedding/HeroVideoSection.vue";
 </script>
 

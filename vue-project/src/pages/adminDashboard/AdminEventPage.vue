@@ -5,7 +5,7 @@
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="text-brand-dark">Manage Events</h4>
 
-        <button class="btn btn-primary">
+        <button class="btn btn-main">
           <i class="bi bi-plus-lg"></i>
           Add Event
         </button>

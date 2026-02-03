@@ -4,7 +4,7 @@
 
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="text-brand-dark">Manage Locations</h4>
-        <button class="btn btn-primary" @click="openCreate">
+        <button class="btn btn-main" @click="openCreate">
           <i class="bi bi-plus-lg"></i>
           Add Location
         </button>
@@ -62,7 +62,7 @@
             </div>
             <div class="modal-footer">
               <button class="btn btn-secondary" @click="modal.hide()">Close</button>
-              <button class="btn btn-primary" @click="saveLocation">{{ isEditing ? "Save Changes" : "Add Location" }}</button>
+              <button class="btn btn-main" @click="saveLocation">{{ isEditing ? "Save Changes" : "Add Location" }}</button>
             </div>
           </div>
         </div>

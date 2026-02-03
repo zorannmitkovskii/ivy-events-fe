@@ -1,0 +1,14 @@
+@import './variables.css';
+
+.navbar {
+  height: var(--header-height);
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--neutral-200);
+  position: sticky; top: 0; z-index: 50;
+}
+.navbar .container { height: 100%; display:flex; align-items:center; justify-content: space-between; }
+.navbar__brand { display:flex; align-items:center; gap:10px; font-weight: 800; color: var(--neutral-900); }
+.navbar__links { display:flex; align-items:center; gap: 16px; }
+.navbar__link { color: var(--neutral-700); padding: 8px 10px; border-radius: 10px; }
+.navbar__link:hover { color: var(--neutral-900); background: var(--neutral-100); }
+.navbar__cta { display:flex; align-items:center; gap: 10px; }
