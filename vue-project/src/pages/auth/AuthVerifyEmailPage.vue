@@ -7,14 +7,18 @@
         :title="$t('auth.verify.title')"
         :subtitle="$t('auth.verify.subtitle', { email })"
       />
-      <form class="auth-form">
+      <form class="auth-form" @submit.prevent="onVerify">
         <AuthInput v-model="code" @complete="onVerify"  label=""/>
+
+        <p v-if="error" class="error">{{ error }}</p>
 
         <ButtonMain
           :label="$t('auth.verify.cta')"
-          to="#"
           variant="main"
-          @click.prevent="onVerify"
+          class="w-100"
+          :disabled="!code || loading"
+          :loading="loading"
+          type="submit"
         />
       </form>
 
@@ -34,27 +38,47 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import AuthShell from "@/components/auth/AuthShell.vue";
 import AuthCardTitle from "@/components/auth/AuthCardTitle.vue";
 import AuthCard from "@/components/auth/AuthCard.vue";
 import AuthInput from "@/components/auth/AuthInput.vue";
+import { onboardingStore, setEmailVerified } from "@/store/onboarding.store";
+import { verifyEmail } from "@/services/auth.service";
 
-const email = ref("label@example.com"); // replace with real state/router param
+const router = useRouter();
+const route = useRoute();
+const lang = computed(() => route.params.lang || "mk");
+
+const email = computed(() => onboardingStore.email || "");
 const code = ref("");
+const loading = ref(false);
+const error = ref("");
 
-function onVerify() {
-  // call API verify
-  console.log("verify code", code.value);
+async function onVerify() {
+  error.value = "";
+  if (!code.value || !email.value) return;
+  loading.value = true;
+  try {
+    await verifyEmail(code.value.trim(), email.value.trim());
+    setEmailVerified(true);
+    await router.push({ name: "EventCategoryPage", params: { lang: lang.value } });
+  } catch (e) {
+    error.value = e?.message || "Verification failed";
+  } finally {
+    loading.value = false;
+  }
 }
 
 function onResend() {
-  console.log("resend code");
+  // optionally call resend endpoint if available
+  // toast or message
 }
 
 function onChangeEmail() {
-  console.log("change email");
+  router.push({ name: "signup", params: { lang: lang.value } });
 }
 </script>
 

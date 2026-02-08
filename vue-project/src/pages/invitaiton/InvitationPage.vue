@@ -7,10 +7,10 @@
 </template>
 
 <script setup>
-import InvitationHero from "@/components/invitation/InvitationHero.vue";
-import Location from "@/components/invitation/Location.vue";
-import Intro from "@/components/invitation/Intro.vue";
-import RSVP from "@/components/invitation/RSVP.vue";
+import InvitationHero from "@/components/invitations/InvitationHero.vue";
+import Location from "@/components/invitations/Location.vue";
+import Intro from "@/components/invitations/Intro.vue";
+import RSVP from "@/components/invitations/RSVP.vue";
 </script>
 
 <style scoped>

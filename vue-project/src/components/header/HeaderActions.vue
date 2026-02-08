@@ -2,12 +2,12 @@
   <div class="actions desktop-actions">
     <ButtonMain
       :label="$t('header.actions.signIn')"
-      to="/auth/login"
+      :to="{ name: 'login', params: { lang } }"
       variant="outline"
     />
     <ButtonMain
       :label="$t('pricing.cta.getStarted')"
-      to="/auth/signup"
+      :to="{ name: 'signup', params: { lang } }"
       variant="main"
     />
   </div>
@@ -15,6 +15,9 @@
 
 <script setup>
 import ButtonMain from "@/components/generic/ButtonMain.vue";
+import { useRoute } from "vue-router";
+const route = useRoute();
+const lang = route.params.lang || "mk";
 </script>
 
 <style scoped>

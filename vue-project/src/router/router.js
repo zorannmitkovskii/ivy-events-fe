@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { setLocale } from "@/i18n";
 import { isAuthenticated } from "@/services/auth.service";
+import { onboardingStore } from "@/store/onboarding.store";
 
 // Marketing / Auth / Onboarding
 import HomePage from "@/pages/marketing/HomePage.vue";
@@ -31,6 +32,9 @@ import NotificationsPage from "@/pages/dashboard/NotificationsPage.vue";
 import TeamPage from "@/pages/dashboard/TeamPage.vue";
 import EventSettingsPage from "@/pages/dashboard/EventSettingsPage.vue";
 import BudgetPage from "@/pages/userDashboard/BudgetPage.vue";
+import InvitationOne from "@/components/invitations/InvitationOne.vue";
+import InvitationTwo from "@/components/invitations/InvitationTwo.vue";
+import InvitationThree from "@/components/invitations/InvitationThree.vue";
 
 const routes = [
   // Redirect root to /mk
@@ -42,14 +46,17 @@ const routes = [
     children: [
       // MARKETING
       { path: "", name: "home", component: HomePage },
+      { path: "invitationOne", name: "invitationOne", component: InvitationOne },
+      { path: "invitationTwo", name: "invitationTwo", component: InvitationTwo },
+      { path: "invitationThree", name: "invitationThree", component: InvitationThree },
       { path: "features", name: "features", component: FeaturesPage },
       { path: "features/rsvp", name: "features-rsvp", component: FeatureRSVPPage },
       { path: "features/invitations", name: "features-invitations", component: FeatureInvitationsPage },
       { path: "pricing", name: "pricing", component: PricingPage },
 
       // ONBOARDING
-      { path: "event-category", name: "event-category", component: EventCategoryPage, meta: { requiresAuth: true } },
-      { path: "event-details", name: "event-details", component: EventBasicDetailsPage, meta: { requiresAuth: true } },
+      { path: "event-category", name: "EventCategoryPage", component: EventCategoryPage },
+      { path: "event-details", name: "EventBasicDetailsPage", component: EventBasicDetailsPage },
       { path: "checkout", name: "checkout", component: CheckoutPurchasePage, meta: { requiresAuth: true } },
       { path: "event-live", name: "event-live", component: EventLivePage, meta: { requiresAuth: true } },
 
@@ -62,7 +69,7 @@ const routes = [
           { path: "signup", name: "signup", component: AuthSignupPage },
           { path: "forgot-password", name: "forgot-password", component: AuthForgotPasswordPage },
           { path: "reset-password", name: "reset-password", component: AuthResetPasswordPage },
-          { path: "verify-email", name: "verify-email", component: AuthVerifyEmailPage }
+          { path: "verify-email", name: "AuthVerifyEmailPage", component: AuthVerifyEmailPage }
         ]
       },
 
@@ -90,6 +97,13 @@ const routes = [
         ]
       }
     ]
+  },
+
+  // alias name for overview to satisfy onboarding requirement
+  {
+    path: "/:lang(mk|en)/event-overview/:eventId",
+    name: "EventOverviewPage",
+    redirect: (to) => `/${to.params.lang}/dashboard/events/${to.params.eventId}/overview`
   },
 
   // catch-all
@@ -125,6 +139,23 @@ router.beforeEach((to, from, next) => {
   // Guest-only routes (if logged in, send to dashboard)
   if (to.meta.guestOnly && isAuthenticated()) {
     next(`/${lang}/dashboard/events/demo/overview`);
+    return;
+  }
+
+  // Onboarding guards
+  const isVerifyPage = to.name === 'AuthVerifyEmailPage';
+  const isCategoryPage = to.name === 'EventCategoryPage';
+  const isDetailsPage = to.name === 'EventBasicDetailsPage';
+
+  // Block category page until email is verified
+  if (isCategoryPage && !onboardingStore.isEmailVerified) {
+    next({ name: 'AuthVerifyEmailPage', params: { lang } });
+    return;
+  }
+
+  // Block details page until category selected
+  if (isDetailsPage && !onboardingStore.selectedCategory) {
+    next({ name: 'EventCategoryPage', params: { lang } });
     return;
   }
 

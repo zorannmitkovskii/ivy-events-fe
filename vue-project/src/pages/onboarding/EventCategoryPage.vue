@@ -1,64 +1,107 @@
 <template>
-  <EventCategories bgClass="bg-main" v-model="selectedId" />
+  <main class="category-page">
+    <div class="wrap">
+      <h1 class="title">{{ $t('onboarding.category.title') }}</h1>
+      <p class="subtitle">{{ $t('onboarding.category.subtitle') }}</p>
 
-  <div class="mt-5 d-flex flex-column button-lg mx-auto">
-    <button-main
-      :to="selectedTo"
-      :label="$t('eventCategories.section.continue')"
-      variant="main"
-      class="w-100"
-      :class="{ disabled: !selectedId }"
-      :aria-disabled="!selectedId"
-      @click.prevent="!selectedId && null"
-    />
+      <!-- Use EventCategories component without header, no navigation -->
+      <EventCategories
+        v-model="selectedCategoryId"
+        bg-class="bg-transparent"
+        :show-header="false"
+        :disable-navigation="true"
+      />
 
-    <p class="mt-3 text-center">
-      {{ $t('eventCategories.section.description') }}
-    </p>
-  </div>
+      <div class="actions">
+        <ButtonMain
+          class="w-100"
+          :label="$t('onboarding.category.continue')"
+          variant="main"
+          :disabled="!selectedCategoryId"
+          @click="onContinue"
+        />
+      </div>
+    </div>
+  </main>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import ButtonMain from '@/components/generic/ButtonMain.vue';
+import { setSelectedCategory, onboardingStore } from '@/store/onboarding.store';
 import EventCategories from "@/components/landingPage/EventCategories.vue";
-import ButtonMain from "@/components/generic/ButtonMain.vue";
+import {categoryIdToEnum, enumToCategoryId} from "@/helper/CategoryMapping.helper.js";
 
-export default {
-  name: "EventCategoryPage",
-  components: { ButtonMain, EventCategories },
-  data() {
-    return {
-      selectedId: null
-    };
-  },
-  computed: {
-    selectedTo() {
-      // fallback if nothing selected
-      if (!this.selectedId) return "/invitations";
+const router = useRouter();
+const route = useRoute();
+const lang = computed(() => route.params.lang || 'mk');
 
-      // IMPORTANT: to get category->to, best is to move categories array outside into a shared config file.
-      // For now simplest: map ids here:
-      const map = {
-        weddings: "/invitations/weddings",
-        birthdays: "/invitations/birthdays",
-        corporate: "/invitations/corporate",
-        conferences: "/invitations/conferences",
-        dinners: "/invitations/dinners",
-        baby: "/invitations/baby",
-        graduations: "/invitations/graduations",
-        anniversaries: "/invitations/anniversaries"
-      };
+// Initialize with stored category (convert enum to ID for the component)
+const selectedCategoryId = ref(
+  onboardingStore.selectedCategory
+    ? enumToCategoryId(onboardingStore.selectedCategory)
+    : null
+);
 
-      return map[this.selectedId] || "/invitations";
+// Watch for selection changes and sync to store
+watch(selectedCategoryId, (newId) => {
+  if (newId) {
+    const enumValue = categoryIdToEnum(newId);
+    if (enumValue) {
+      setSelectedCategory(enumValue);
     }
   }
-};
+});
+
+async function onContinue() {
+  if (!selectedCategoryId.value) return;
+
+  // Ensure the enum is stored (should already be from watch)
+  const enumValue = categoryIdToEnum(selectedCategoryId.value);
+  if (enumValue) {
+    setSelectedCategory(enumValue);
+  }
+
+  await router.push({ name: 'EventBasicDetailsPage', params: { lang: lang.value } });
+}
 </script>
 
 <style scoped>
-.button-lg { max-width: 24rem; }
-
-.disabled {
-  pointer-events: none;
-  opacity: 0.6;
+.category-page {
+  min-height: 100vh;
+  background: var(--bg-main);
+  display: grid;
+  place-items: center;
+  padding: 40px 16px;
 }
+
+.wrap {
+  width: 100%;
+  max-width: 1180px;
+  display: grid;
+  gap: 24px;
+}
+
+.title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--neutral-900);
+  text-align: center;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 16px;
+  color: var(--neutral-700);
+  text-align: center;
+}
+
+.actions {
+  max-width: 420px;
+  margin: 10px auto 0;
+}
+
+.w-100 { width: 100%; }
 </style>
