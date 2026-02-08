@@ -22,16 +22,15 @@
 import HeroSection from "@/components/invitations/wedding/invitationThree/HeroSection.vue";
 import Agenda from "@/components/invitations/wedding/invitationThree/Agenda.vue";
 import WeddingDetails from "@/components/invitations/wedding/invitationThree/WeddingDetails.vue";
-import RSVP from "@/components/invitations/wedding/invitationThree/RSVP.vue";
+import RsvpFormThree from "@/components/invitations/wedding/invitationThree/RsvpFormThree.vue";
 
 export default {
   name: 'App',
   components: {
-    RSVP,
+    RsvpFormThree,
     HeroSection,
     WeddingDetails,
     Agenda,
-    Rsvp
   },
   data() {
     return {
