@@ -21,6 +21,7 @@ const classes = computed(() => {
     secondary: 'btn-secondary',
     outline: 'btn-outline-secondary',
     danger: 'btn-danger',
+    gold: 'btn-gold',
   };
   base.push(map[props.variant] || 'btn-secondary');
   if (props.size === 'sm') base.push('btn-sm');

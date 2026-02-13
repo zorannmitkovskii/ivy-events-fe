@@ -3,6 +3,7 @@ export function getDemoOverview() {
     event: {
       name: "Eleanor & James Wedding",
       date: "October 14, 2024",
+      rawDate: "2024-10-14T14:00:00",
       daysLeft: 45,
       status: "PLANNING"
     },
@@ -14,19 +15,24 @@ export function getDemoOverview() {
       ],
       tablesAssigned: 12,
       tablesTotal: 15,
+      assignedGuests: 98,
+      totalGuestsForTables: 142,
       budget: {
         used: 24500,
         total: 30000,
+        remaining: 5500,
+        currency: "EUR",
         items: [
           { name: "Venue & Catering", used: 15200, limit: 18000 },
           { name: "Decor & Florals", used: 4100, limit: 5000 }
         ]
       },
       rsvp: {
-        invited: 185,
-        attending: 142,
-        declined: 12,
-        pending: 31
+        total: 185,
+        comming: 142,
+        maybe: 12,
+        decline: 8,
+        waiting: 23
       },
       tasks: [
         {
@@ -42,6 +48,7 @@ export function getDemoOverview() {
           due: "Due Tomorrow"
         }
       ],
+      galleryImages: [],
       progress: 85,
       progressMessage:
         "You have completed 85% of your tasks. Next milestone is final fitting."

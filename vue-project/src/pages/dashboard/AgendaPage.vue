@@ -1,114 +1,146 @@
 <script setup>
-import {onMounted, computed, ref} from "vue";
-import {useRoute} from "vue-router";
-import {useI18n} from "vue-i18n";
+import { onMounted, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
-import DrawerRight from "@/components/ui/DrawerRight.vue";
-import {useAgenda} from "@/composables/useAgenda.js";
-import AgendaEditor from "@/components/dashboard/agenda/AgendaEditor.vue";
-import AgendaMultiDay from "@/components/dashboard/agenda/AgendaMultiDay.vue";
-import AgendaTimeline from "@/components/dashboard/agenda/AgendaTimeline.vue";
+import { useAgenda } from "@/composables/useAgenda.js";
+import AddAgendaItemModal from "@/components/modals/AddAgendaItemModal.vue";
 import AgendaHeader from "@/components/dashboard/agenda/AgendaHeader.vue";
+import DashboardTable from "@/components/dashboard/DashboardTable.vue";
+import AgendaTableRow from "@/components/dashboard/agenda/AgendaTableRow.vue";
+import ButtonMain from "@/components/generic/ButtonMain.vue";
 
-
-const {t} = useI18n();
-const route = useRoute();
-const viewMode = ref("day");
+const { t } = useI18n();
 
 const {
   loading, error,
-  days, itemsByDay,
-  activeDayId, selectedItem,
-  totalDurationLabel,
+  items,
   loadAgenda, createItem, updateItem, deleteItem,
-  selectItem, closeEditor
 } = useAgenda();
 
-const viewOptions = computed(() => [
-  {value: "day", label: t("agenda.dayView")},
-  {value: "multi", label: t("agenda.multiDay")}
-]);
+// Modal state
+const modalOpen = ref(false);
+const editingItem = ref(null);
 
-const dayTitle = computed(() => {
-  const d = days.value.find(x => x.id === activeDayId.value);
-  return d?.title ?? "";
-});
+function openCreateModal() {
+  editingItem.value = null;
+  modalOpen.value = true;
+}
 
-const totalLabel = computed(() =>
-  t("agenda.totalDuration", {duration: totalDurationLabel.value})
-);
+function openEditModal(item) {
+  editingItem.value = { ...item };
+  modalOpen.value = true;
+}
 
-onMounted(async () => {
-  // if you want demo when no eventId provided:
-  const eventId = route.params.eventId;
-  if (!eventId) await loadAgenda({useDemo: true});
-  else await loadAgenda({id: eventId});
+function closeModal() {
+  modalOpen.value = false;
+  editingItem.value = null;
+}
+
+onMounted(() => {
+  loadAgenda();
 });
 
 async function onSave(payload) {
-  // payload contains editor fields
   if (payload.id) {
     await updateItem(payload.id, payload);
   } else {
     await createItem(payload);
   }
-  closeEditor();
+  closeModal();
 }
 
 async function onDelete(id) {
   await deleteItem(id);
+  closeModal();
 }
 </script>
 
 <template>
-  <AgendaHeader
-    :title="t('agenda.title')"
-    :subtitle="t('agenda.subtitle', { event: 'The Annual Gala', dateRange: 'Oct 24-26, 2024' })"
-    :viewMode="viewMode"
-    :viewOptions="viewOptions"
-    :templateLabel="t('agenda.template')"
-    :addLabel="t('agenda.addItem')"
-    @update:viewMode="viewMode = $event"
-    @add="selectItem({ dayId: activeDayId, title:'', startTime:'', endTime:'', location:'', notes:'', responsible:'', visibility:'EVERYONE', tag:'' })"
-    @template="console.log('open template')"
-  />
+  <div class="dash-page">
+    <div class="dash-page-header">
+      <h1 class="dash-page-title">{{ t('agenda.title') }}</h1>
+      <p class="dash-page-subtitle">{{ t('agenda.subtitle', { event: '', dateRange: '' }) }}</p>
+    </div>
 
-  <div style="padding-bottom: 24px">
-    <div v-if="loading" style="padding: 18px 26px;">Loading...</div>
-    <div v-else-if="error" style="padding: 18px 26px; color:#b00020;">{{ error }}</div>
-
-    <AgendaTimeline
-      v-if="viewMode === 'day'"
-      :dayTitle="dayTitle"
-      :totalLabel="totalLabel"
-      :items="itemsByDay[activeDayId] || []"
-      :selectedId="selectedItem?.id"
-      @select="selectItem"
+    <AgendaHeader
+      :addLabel="t('agenda.addItem')"
+      @add="openCreateModal"
     />
 
-    <AgendaMultiDay
-      v-else
-      :days="days"
-      :itemsByDay="itemsByDay"
-      :activeDayId="activeDayId"
-      :totalLabel="totalLabel"
-      :selectedId="selectedItem?.id"
-      @update:activeDayId="activeDayId = $event"
-      @addDay="console.log('add day')"
-      @select="selectItem"
-    />
+    <div v-if="loading" class="loading-msg">Loading...</div>
+    <div v-else-if="error" class="error-msg">{{ error }}</div>
 
-    <DrawerRight :open="!!selectedItem" @close="closeEditor">
-      <AgendaEditor
-        :titleLabel="t('agenda.editItem')"
-        :saveLabel="t('agenda.saveChanges')"
-        :cancelLabel="t('agenda.cancel')"
-        :deleteLabel="t('agenda.delete')"
-        :modelValue="selectedItem"
-        @close="closeEditor"
-        @save="onSave"
-        @delete="onDelete"
-      />
-    </DrawerRight>
+    <div v-else-if="items.length === 0" class="empty-card">
+      <div class="empty-title">{{ t('agenda.emptyTitle') }}</div>
+      <div class="empty-sub">{{ t('agenda.emptyMessage') }}</div>
+      <div style="margin-top:12px;">
+        <ButtonMain variant="main" @click="openCreateModal">{{ t('agenda.addItem') }}</ButtonMain>
+      </div>
+    </div>
+
+    <DashboardTable v-else>
+      <template #head>
+        <th>{{ t("agenda.th.title") }}</th>
+        <th>{{ t("agenda.th.type") }}</th>
+        <th>{{ t("agenda.th.dateTime") }}</th>
+        <th>{{ t("agenda.th.location") }}</th>
+        <th>{{ t("agenda.th.visibility") }}</th>
+        <th>{{ t("agenda.th.actions") }}</th>
+      </template>
+
+      <template #body>
+        <AgendaTableRow
+          v-for="item in items"
+          :key="item.id"
+          :item="item"
+          @edit="openEditModal"
+          @delete="onDelete"
+        />
+      </template>
+
+      <template #footer>
+        <span>{{ t("agenda.totalItems", { count: items.length }) }}</span>
+      </template>
+    </DashboardTable>
+
+    <AddAgendaItemModal
+      :open="modalOpen"
+      :item="editingItem"
+      @close="closeModal"
+      @submit="onSave"
+      @delete="onDelete"
+    />
   </div>
 </template>
+
+<style scoped>
+.loading-msg {
+  padding: 18px 0;
+  color: var(--neutral-500);
+}
+
+.error-msg {
+  padding: 18px 0;
+  color: #b00020;
+}
+
+.empty-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 20px 24px;
+}
+
+.empty-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--neutral-900);
+}
+
+.empty-sub {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--neutral-500);
+}
+</style>

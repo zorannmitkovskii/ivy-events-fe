@@ -9,12 +9,13 @@
       </div>
     </div>
 
-    <button class="btn-gold">{{ t("overview.viewTimeline") }}</button>
+    <ButtonMain variant="gold">{{ t("overview.viewTimeline") }}</ButtonMain>
   </div>
 </template>
 
 <script setup>
 import { useI18n } from "vue-i18n";
+import ButtonMain from "@/components/generic/ButtonMain.vue";
 defineProps({ percent: Number, message: String });
 const { t } = useI18n();
 </script>

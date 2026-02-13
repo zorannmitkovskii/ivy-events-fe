@@ -274,6 +274,15 @@
         "text": "Можеш да поканиш соработници откако ќе ги внесеш основните информации. Ќе те потсетиме подоцна."
       }
     },
+    "invitations": {
+      "title": "Изберете покана",
+      "subtitle": "Одберете дизајн кој одговара на вашиот стил. Може да го прилагодите подоцна.",
+      "selected": "Избрано",
+      "preview": "Преглед",
+      "continue": "Продолжи",
+      "back": "Назад кон деталите",
+      "emptyState": "Сеуште нема дизајни за покани за оваа категорија. Работиме на тоа!"
+    },
     "footer": {
       "help": "Центар за помош",
       "privacy": "Приватност"
@@ -478,6 +487,16 @@
         }
       }
     },
+    "socialProof": {
+      "rating": "4.9/5 Оценка",
+      "eventsCreated": "50,000+ Креирани настани",
+      "trustedBy": "Доверба од 25,000+ парови",
+      "satisfaction": "98% Задоволство на клиенти"
+    },
+    "testimonials": {
+      "title": "Обожавани од илјадници задоволни парови",
+      "subtitle": "Вистински приказни од вистински прослави"
+    },
     "finalCta": {
       "title": "Подготвени да го создадете вашиот совршен настан?",
       "subtitle": "Придружете се на илјадници задоволни парови и организатори кои му веруваат на IvyEvents. Започнете со планирање на вашата незаборавна прослава – бесплатно е!",
@@ -490,19 +509,32 @@
     "editInvitation": "Измени покана",
     "manageGuests": "Управувај гости",
     "sendUpdate": "Испрати известување",
+    "sending": "Се испраќа...",
     "totalGuests": "Вкупно гости",
     "tablesAssigned": "Распоредени маси",
     "tablesSeated": "од масите се пополнети",
     "budgetStatus": "Статус на буџет",
     "of": "од",
     "budget": "буџет",
+    "remaining": "Преостанато",
+    "used": "Потрошено",
     "rsvpSummary": "RSVP преглед",
     "viewDetails": "Види детали",
-    "invited": "ПОКАНЕТИ",
-    "attending": "Доаѓаат",
+    "total": "ВКУПНО",
+    "coming": "Доаѓаат",
+    "maybe": "Можеби",
     "declined": "Одбиени",
-    "pending": "Во тек",
+    "waiting": "Чекаат",
     "upcomingTasks": "Наредни задачи",
+    "daysUntilEvent": "Денови до настанот",
+    "days": "Денови",
+    "hours": "Часови",
+    "minutes": "Минути",
+    "seconds": "Секунди",
+    "galleryPreview": "Галерија преглед",
+    "noPhotosYet": "Нема прикачени фотографии",
+    "guestAssignment": "Распоред на гости",
+    "guestsAssigned": "гости распоредени",
     "viewAllTasks": "Види сите задачи",
     "onTrackTitle": "Сè е под контрола!",
     "viewTimeline": "Види тајмлајн"
@@ -521,31 +553,57 @@
     "thRsvp": "RSVP статус",
     "thPlus": "Гости",
     "thTable": "Маса",
-    "thNotes": "Седиште / Забелешка",
+    "thDietary": "Исхрана",
     "thActions": "Акции",
     "edit": "Измени",
     "remove": "Избриши",
-    "accepted": "Прифатени",
+    "confirmed": "Потврдени",
     "pending": "Во чекање",
     "declined": "Одбиени",
     "loading": "Се вчитуваат гости...",
     "errorTitle": "Не може да се вчитаат гости",
     "retry": "Обиди се повторно",
     "emptyTitle": "Нема гости",
-    "emptyMessage": "Додадете гости или увезете листа за да почнете со RSVP."
+    "emptyMessage": "Додадете гости или увезете листа за да почнете со RSVP.",
+    "editGuest": "Измени гостин",
+    "dietary": "Исхрана",
+    "noDietaryRestrictions": "Без ограничувања",
+    "dietaryDescription": "Опис",
+    "dietaryDescriptionPh": "пр. алергија на ореви",
+    "dietaryOptions": {
+      "vegetarian": "Вегетаријанска",
+      "vegan": "Веганска",
+      "glutenFree": "Без глутен",
+      "fish": "Риба",
+      "chicken": "Пилешко",
+      "other": "Друго"
+    },
+    "isChild": "Дете",
+    "adults": "Возрасни",
+    "children": "Деца",
+    "note": "Забелешка",
+    "notePh": "Опциона забелешка..."
   },
   "agenda": {
     "title": "Агенда",
-    "subtitle": "Управувај со распоредот за {eventName} • {date}",
+    "subtitle": "Управувај со распоредот за {event} • {dateRange}",
     "dayView": "Дневен",
     "multiDay": "Повеќе денови",
     "template": "Шаблон",
     "addItem": "Додади ставка",
-    "addAgendaItem": "Додади ставка во агенда",
-    "totalDuration": "Вкупно времетраење",
+    "totalDuration": "Вкупно времетраење: {duration}",
     "editItem": "Измени ставка",
-    "emptyEditor": "Избери ставка од агендата за да уредиш.",
-    "newItemTitle": "Нова ставка",
+    "emptyTitle": "Нема ставки во агендата",
+    "emptyMessage": "Додадете ја првата ставка за да го започнете распоредот.",
+    "totalItems": "{count} ставки",
+    "th": {
+      "title": "Наслов",
+      "type": "Тип",
+      "dateTime": "Датум и време",
+      "location": "Локација",
+      "visibility": "Видливост",
+      "actions": "Акции"
+    },
     "status": {
       "completed": "Завршено",
       "inProgress": "Во тек",
@@ -554,17 +612,52 @@
     },
     "form": {
       "title": "Наслов",
-      "startTime": "Почеток",
-      "endTime": "Крај",
+      "type": "Тип",
+      "dateTime": "Датум и време",
       "location": "Локација",
-      "notes": "Белешки",
-      "responsible": "Одговорен",
-      "visibility": "Видливост"
+      "locationName": "Име на место",
+      "addressLine": "Адреса",
+      "city": "Град",
+      "postalCode": "Поштенски код",
+      "googleMapsUrl": "Google Maps URL",
+      "description": "Опис",
+      "visibility": "Видливост",
+      "status": "Статус"
     },
     "visibility": {
-      "everyone": "Сите",
-      "team": "Тим"
+      "EVERYONE": "Сите",
+      "TEAM": "Само тим",
+      "CLOSE_FRIENDS": "Блиски пријатели"
+    },
+    "addDialog": {
+      "title": "Додади ставка",
+      "create": "Креирај",
+      "titlePh": "пр. Добредојде на прием",
+      "locationPh": "Пребарај место или адреса...",
+      "addressPh": "пр. ул. Македонија бр. 1",
+      "descriptionPh": "Опишете ја оваа ставка..."
+    },
+    "editDialog": {
+      "title": "Измени ставка"
+    },
+    "errors": {
+      "titleRequired": "Насловот е задолжителен",
+      "typeRequired": "Типот е задолжителен",
+      "dateTimeRequired": "Датумот и времето се задолжителни"
+    },
+    "types": {
+      "CHURCH": "Црква",
+      "CEREMONY": "Церемонија",
+      "RECEPTION": "Прием",
+      "FIRST_DANCE": "Прв танц",
+      "START_GROOM": "Старт младоженец",
+      "START_BRIDE": "Старт невеста"
     }
+  },
+  "storyTypes": {
+    "HOW_WE_MET": "Како се запознавме",
+    "FIRST_DATE": "Прв состанок",
+    "PROPOSAL": "Предлог"
   },
   "sidebar": {
     "overview": "Преглед",
@@ -577,11 +670,16 @@
     "team": "Тим",
     "settings": "Подесувања",
     "premium": "ПРЕМИУМ",
-    "eventPlanner": "Организатор"
+    "eventPlanner": "Организатор",
+    "eventSettings": "Подесувања на настан",
+    "signOut": "Одјави се"
   },
   "common": {
+    "delete": "Избриши",
     "cancel": "Откажи",
-    "save": "Зачувај"
+    "save": "Зачувај",
+    "saveChanges": "Зачувај промени",
+    "viewAll": "Прегледај ги сите"
   },
   "tables": {
     "title": "Маси и распоред",
@@ -615,6 +713,41 @@
       "nameRequired": "Името е задолжително",
       "statusRequired": "Статусот е задолжителен",
       "saveChanges": "Зачувај промени"
+    },
+    "addTableDialog": {
+      "title": "Додади маса",
+      "name": "Име на маса",
+      "namePh": "пр. Маса 4",
+      "maxGuests": "Максимум гости",
+      "maxGuestsPh": "пр. 8",
+      "nameRequired": "Името на масата е задолжително",
+      "maxGuestsRequired": "Бројот на гости мора да биде поголем од 0"
+    },
+    "tabs": {
+      "seating": "Маси и распоред",
+      "tasks": "Задачи"
+    },
+    "tasks": {
+      "title": "Задачи",
+      "addTask": "Додади задача",
+      "addReminder": "Додади потсетник",
+      "setReminder": "Постави потсетник",
+      "task": "Задача",
+      "reminder": "Потсетник",
+      "due": "Рок",
+      "completed": "Завршено",
+      "inProgress": "Во тек",
+      "pending": "Чека",
+      "empty": "Нема задачи. Додадете ја вашата прва задача.",
+      "form": {
+        "title": "Име на задача",
+        "titlePh": "пр. Резервирај локација и потврди датум",
+        "description": "Опис",
+        "descriptionPh": "Додади опис или белешки...",
+        "dueDate": "Рок",
+        "status": "Статус",
+        "titleRequired": "Името на задачата е задолжително"
+      }
     }
   },
   "budget": {
@@ -630,12 +763,58 @@
     "fixedAndVariable": "Фиксно и варијабилно",
     "safeToSpend": "Безбедно за трошење",
     "ofBudgetUsed": "{percent}% од буџетот е искористен",
+    "createBudget": "Креирај буџет",
+    "budgetDialog": {
+      "name": "Име на буџет",
+      "namePh": "пр. Буџет за свадба",
+      "description": "Опис",
+      "descriptionPh": "Опционален опис",
+      "amount": "Вкупен износ",
+      "nameRequired": "Името на буџетот е задолжително",
+      "amountRequired": "Износот мора да биде поголем од 0"
+    },
     "expense": {
       "date": "Датум",
       "category": "Категорија",
+      "categoryPh": "Избери категорија",
       "merchant": "Продавница/Место",
+      "merchantPh": "пр. Ресторан, Цвеќара, Кетеринг",
       "amount": "Износ",
-      "note": "Забелешка"
+      "note": "Забелешка",
+      "notePh": "Опционална забелешка",
+      "merchantRequired": "Продавница/Место е задолжително",
+      "amountRequired": "Износот мора да биде поголем од 0"
     }
+  },
+  "gallery": {
+    "title": "Галерија",
+    "subtitle": "Прегледувај и управувај со фотографии од настанот",
+    "loading": "Вчитување слики...",
+    "loadingMore": "Вчитување повеќе...",
+    "errorTitle": "Неуспешно вчитување на галеријата",
+    "empty": "Нема слики. Прикачете ја вашата прва фотографија.",
+    "noMore": "Сите слики се вчитани",
+    "download": "Преземи"
+  },
+  "settings": {
+    "title": "Подесувања на настан",
+    "subtitle": "Прегледајте и управувајте со конфигурацијата на настанот",
+    "loading": "Се вчитуваат детали за настанот...",
+    "errorTitle": "Не може да се вчита настанот",
+    "retry": "Обиди се повторно",
+    "eventDetails": "Детали за настанот",
+    "eventName": "Име на настанот",
+    "eventDate": "Датум на настанот",
+    "eventLocation": "Локација",
+    "eventCategory": "Категорија",
+    "invitationLink": "Линк за покана",
+    "invitationLinkDesc": "Споделете го овој линк со гостите за да ја видат поканата и да потврдат присуство.",
+    "noInvitationUrl": "Сè уште нема линк за покана.",
+    "copy": "Копирај",
+    "copied": "Копирано!",
+    "changeInvitation": "Промени покана",
+    "dangerZone": "Опасна зона",
+    "archiveDesc": "Архивирањето на настанот ќе го скрие од контролната табла. Ова може да се врати подоцна.",
+    "archiveEvent": "Архивирај настан"
   }
 }

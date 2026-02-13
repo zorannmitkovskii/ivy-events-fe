@@ -81,23 +81,23 @@
       </div>
 
       <div class="actions">
-        <button
+        <ButtonMain
           v-if="draft.id"
-          class="btn btn-danger"
+          variant="danger"
           type="button"
           @click="$emit('delete', draft.id)"
         >
           {{ deleteLabel }}
-        </button>
+        </ButtonMain>
 
         <div class="actions-right">
-          <button class="btn btn-ghost" type="button" @click="$emit('close')">
+          <ButtonMain variant="ghost" type="button" @click="$emit('close')">
             {{ cancelLabel }}
-          </button>
+          </ButtonMain>
 
-          <button class="btn btn-primary" type="submit">
+          <ButtonMain variant="main" type="submit">
             {{ saveLabel }}
-          </button>
+          </ButtonMain>
         </div>
       </div>
     </form>
@@ -106,6 +106,7 @@
 
 <script setup>
 import { reactive, watch, ref } from "vue";
+import ButtonMain from "@/components/generic/ButtonMain.vue";
 
 const props = defineProps({
   modelValue: { type: Object, default: null }, // selected item
@@ -276,33 +277,6 @@ function submit() {
   display: flex;
   gap: 10px;
   margin-left: auto;
-}
-
-.btn {
-  border-radius: 12px;
-  padding: 10px 12px;
-  font-weight: 900;
-  cursor: pointer;
-  border: 1px solid transparent;
-  font-size: 13px;
-}
-
-.btn-ghost {
-  border-color: #e1ddcf;
-  background: #fff;
-  color: #3a362f;
-}
-
-.btn-primary {
-  background: #2f3e36;
-  border-color: #2f3e36;
-  color: #fff;
-}
-
-.btn-danger {
-  border-color: #ffd2d2;
-  background: #fff5f5;
-  color: #b00020;
 }
 
 @media (max-width: 520px) {

@@ -1,8 +1,7 @@
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { onboardingStore } from '@/store/onboarding.store'
 
 export default function useEventId() {
-  const route = useRoute()
-  const eventId = computed(() => route.params.eventId || null)
+  const eventId = computed(() => onboardingStore.eventId || null)
   return { eventId }
 }

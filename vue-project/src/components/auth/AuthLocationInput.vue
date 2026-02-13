@@ -58,12 +58,12 @@
     </div>
 
     <template #footer>
-      <BaseButton variant="outline" type="button" @click="openModal = false">
+      <ButtonMain variant="outline" type="button" @click="openModal = false">
         {{ cancelLabel }}
-      </BaseButton>
-      <BaseButton variant="primary" type="button" @click="applySelection" :disabled="temp.lat == null">
+      </ButtonMain>
+      <ButtonMain variant="main" type="button" @click="applySelection" :disabled="temp.lat == null">
         {{ useThisLocationLabel }}
-      </BaseButton>
+      </ButtonMain>
     </template>
   </BaseModal>
 </template>
@@ -71,7 +71,7 @@
 <script setup>
 import { ref, watch, onMounted, nextTick, computed } from "vue";
 import BaseModal from "@/components/ui/BaseModal.vue";
-import BaseButton from "@/components/ui/BaseButton.vue";
+import ButtonMain from "@/components/generic/ButtonMain.vue";
 
 /**
  * v-model returns object:

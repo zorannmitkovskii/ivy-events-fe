@@ -7,34 +7,34 @@
 
 <script setup>
 defineProps({
-  title: {type: String, required: true},
-  subtitle: {type: String, default: ""},
-  showAccent: {type: Boolean, default: true}
+  title: { type: String, required: true },
+  subtitle: { type: String, default: "" }
 });
 </script>
 
 <style scoped>
 .auth-title {
-  margin-bottom: 18px;
+  margin-bottom: 24px;
+  text-align: center;
 }
-
 .auth-title__h {
-  font-size: 44px;
-  line-height: 1.05;
+  font-family: var(--font-family), serif;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.15;
   color: var(--brand-main);
-  margin: 0;
-  text-align: center;
+  margin: 0 0 8px;
 }
-
 .auth-title__p {
-  margin: 8px 0 0;
-  color: var(--brand-dark);
-  text-align: center;
+  margin: 0;
+  font-size: 14px;
+  color: var(--neutral-500);
+  font-weight: 300;
 }
 
-@media (max-width: 992px) {
+@media (max-width: 480px) {
   .auth-title__h {
-    font-size: 38px;
+    font-size: 26px;
   }
 }
 </style>

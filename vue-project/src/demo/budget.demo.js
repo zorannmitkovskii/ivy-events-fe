@@ -1,5 +1,5 @@
 export const budgetDemo = {
-  currency: "USD",
+  currency: "EUR",
   summary: {
     totalBudget: 4250.0,
     totalSpent: 2845.5

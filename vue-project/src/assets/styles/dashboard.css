@@ -69,8 +69,20 @@
   gap: 16px;
 }
 
+.hero-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.middle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
 @media (max-width: 1100px) {
-  .stats-grid, .bottom-grid { grid-template-columns: 1fr; }
+  .stats-grid, .bottom-grid, .hero-grid, .middle-grid { grid-template-columns: 1fr; }
 }
 
 /* Card headers like the design */
@@ -181,3 +193,28 @@
   cursor: pointer;
 }
 .btn-gold:hover { filter: brightness(0.98); }
+
+/* ===== Shared dashboard page layout ===== */
+
+.dash-page {
+  display: grid;
+  gap: 24px;
+}
+
+.dash-page-header {
+  margin-bottom: 0;
+}
+
+.dash-page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--neutral-900);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.dash-page-subtitle {
+  font-size: 14px;
+  color: var(--neutral-500);
+  margin: 4px 0 0;
+}

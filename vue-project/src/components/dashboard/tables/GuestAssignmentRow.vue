@@ -1,27 +1,29 @@
 <template>
-  <div class="row">
-    <div class="name">{{ guest.name }}</div>
+  <tr>
+    <td>
+      <span class="name">{{ guest.name }}</span>
+    </td>
 
-    <div>
-      <select class="select" :value="guest.tableId || 'unassigned'" @change="onChange">
+    <td>
+      <select class="table-select" :value="guest.tableId || 'unassigned'" @change="onChange">
         <option value="unassigned">{{ t("tables.unassigned") }}</option>
         <option v-for="tb in tables" :key="tb.id" :value="tb.id">
           {{ tb.name }}
         </option>
       </select>
-    </div>
+    </td>
 
-    <div>
+    <td>
       <StatusPill
         :status="guest.status"
         :label="guest.status === 'confirmed' ? t('tables.confirmed') : t('tables.pending')"
       />
-    </div>
+    </td>
 
-    <div class="right">
-      <button class="remove" @click="$emit('remove')">{{ t("tables.remove") }}</button>
-    </div>
-  </div>
+    <td class="td-right">
+      <button class="remove" type="button" @click="emit('remove')">{{ t("tables.remove") }}</button>
+    </td>
+  </tr>
 </template>
 
 <script setup>
@@ -33,50 +35,57 @@ const props = defineProps({
   guest: Object,
   tables: Array
 });
-defineEmits(["change-table", "remove"]);
+const emit = defineEmits(["change-table", "remove"]);
 
 function onChange(e) {
   const tableId = e.target.value;
-  props.guest.tableId = tableId === "unassigned" ? null : tableId; // local immediate UI feel
-  // notify parent
-  // payload: { guestId, tableId|null }
-  // eslint-disable-next-line vue/require-explicit-emits
+  props.guest.tableId = tableId === "unassigned" ? null : tableId;
   emit("change-table", { guestId: props.guest.id, tableId: props.guest.tableId });
 }
 </script>
 
-<script>
-/* Workaround for emit usage in <script setup> across lint configs */
-export default {
-  emits: ["change-table", "remove"]
-};
-</script>
-
 <style scoped>
-.row{
-  display:grid;
-  grid-template-columns: 1.3fr 1fr .7fr .6fr;
-  gap: 12px;
-  align-items:center;
-  padding: 12px 4px;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+.name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--brand-main);
 }
-.name{ font-weight: 900; }
-.right{ text-align:right; }
-.remove{
+
+.td-right {
+  text-align: right;
+}
+
+.remove {
   background: transparent;
   border: 0;
-  color: #d32f2f;
-  font-weight: 900;
+  color: var(--error);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.remove:hover {
+  color: #a91e1e;
+  text-decoration: underline;
+}
+
+.table-select {
+  width: 100%;
+  max-width: 170px;
+  border: 1px solid var(--neutral-300);
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--neutral-900);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
 }
-.remove:hover{ text-decoration: underline; }
-.select{
-  width: 100%;
-  border: 1px solid rgba(0,0,0,0.10);
-  background: rgba(255,255,255,0.90);
-  border-radius: 10px;
-  padding: 8px 10px;
-  font-size: 13px;
+
+.table-select:focus {
+  border-color: var(--brand-gold);
+  box-shadow: 0 0 0 3px rgba(200, 162, 77, 0.15);
 }
 </style>

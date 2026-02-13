@@ -1,13 +1,31 @@
 import { api } from "@/services/api";
 
 export const eventsService = {
-  getOverview(eventId) {
-    return api.get(`/events/${encodeURIComponent(eventId)}/overview`);
+  getAll() {
+    return api.get("/events");
   },
 
-  // POST /events
+  getById(eventId) {
+    return api.get(`/events/${encodeURIComponent(eventId)}`);
+  },
+
+  getOverview(eventId) {
+    return api.get("/events/overview", { params: { eventId } });
+  },
+
   create(payload) {
-    return api.post(`/events`, payload);
-    // expected response: { id: "evt_123", ... }
+    return api.post("/events", payload);
+  },
+
+  update(eventId, payload) {
+    return api.put(`/events/${encodeURIComponent(eventId)}`, payload);
+  },
+
+  updateInvitation(eventId, payload) {
+    return api.put(`/events/${encodeURIComponent(eventId)}/invitation`, payload);
+  },
+
+  remove(eventId) {
+    return api.del(`/events/${encodeURIComponent(eventId)}`);
   }
 };

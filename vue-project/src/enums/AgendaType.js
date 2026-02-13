@@ -1,0 +1,8 @@
+export const AgendaType = Object.freeze({
+  CHURCH: 'CHURCH',
+  CEREMONY: 'CEREMONY',
+  RECEPTION: 'RECEPTION',
+  FIRST_DANCE: 'FIRST_DANCE',
+  START_GROOM: 'START_GROOM',
+  START_BRIDE: 'START_BRIDE',
+});

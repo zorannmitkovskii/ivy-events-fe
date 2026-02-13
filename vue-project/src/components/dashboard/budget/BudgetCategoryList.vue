@@ -25,7 +25,7 @@ import BudgetCategoryRow from "@/components/dashboard/budget/BudgetCategoryRow.v
 defineProps({
   title: { type: String, required: true },
   viewAllLabel: { type: String, required: true },
-  currency: { type: String, default: "USD" },
+  currency: { type: String, default: "EUR" },
   categories: { type: Array, default: () => [] }
 });
 

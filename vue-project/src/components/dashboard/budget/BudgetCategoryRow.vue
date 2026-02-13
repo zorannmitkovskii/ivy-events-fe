@@ -30,7 +30,7 @@
 import { computed } from "vue";
 
 const props = defineProps({
-  currency: { type: String, default: "USD" },
+  currency: { type: String, default: "EUR" },
   name: { type: String, required: true },
   description: { type: String, default: "" },
   spent: { type: Number, default: 0 },

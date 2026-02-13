@@ -1,40 +1,39 @@
 <template>
-  <div class="card">
-    <table class="table">
-      <thead>
-      <tr>
-        <th>{{ t("guests.thGuestName") }}</th>
-        <th>{{ t("guests.thRsvp") }}</th>
-        <th>{{ t("guests.thPlus") }}</th>
-        <th>{{ t("guests.thTable") }}</th>
-        <th>{{ t("guests.thNotes") }}</th>
-        <th style="text-align:right;">{{ t("guests.thActions") }}</th>
-      </tr>
-      </thead>
+  <DashboardTable>
+    <template #head>
+      <th>{{ t("guests.thGuestName") }}</th>
+      <th>{{ t("guests.thRsvp") }}</th>
+      <th>{{ t("guests.thPlus") }}</th>
+      <th>{{ t("guests.thTable") }}</th>
+      <th>{{ t("guests.thDietary") }}</th>
+      <th>{{ t("guests.thActions") }}</th>
+    </template>
 
-      <tbody>
+    <template #body>
       <GuestsTableRow
         v-for="g in rows"
         :key="g.id"
         :guest="g"
         :tables="tables"
         @changeTable="$emit('changeTable', $event)"
+        @changeStatus="$emit('changeStatus', $event)"
         @remove="$emit('remove', $event)"
+        @edit="$emit('edit', $event)"
       />
-      </tbody>
-    </table>
+    </template>
 
-    <div class="card-pad" v-if="totals">
-      <span class="small"><b>{{ totals.total }}</b> guests</span>
-      <span class="small" style="margin-left:10px; color:#2f3e36;">• {{ totals.accepted }} accepted</span>
-      <span class="small" style="margin-left:10px; color:#334338;">• {{ totals.pending }} pending</span>
-      <span class="small" style="margin-left:10px; color:var(--error);">• {{ totals.declined }} declined</span>
-    </div>
-  </div>
+    <template v-if="totals" #footer>
+      <span class="stat"><strong>{{ totals.total }} {{ t("guests.thPlus").toLowerCase() }}</strong></span>
+      <span class="stat stat-confirmed">{{ totals.confirmed }} {{ t("guests.confirmed").toLowerCase() }}</span>
+      <span class="stat stat-pending">{{ totals.pending }} {{ t("guests.pending").toLowerCase() }}</span>
+      <span class="stat stat-declined">{{ totals.declined }} {{ t("guests.declined").toLowerCase() }}</span>
+    </template>
+  </DashboardTable>
 </template>
 
 <script setup>
 import { useI18n } from "vue-i18n";
+import DashboardTable from "@/components/dashboard/DashboardTable.vue";
 import GuestsTableRow from "./GuestsTableRow.vue";
 
 const { t } = useI18n();
@@ -44,5 +43,26 @@ defineProps({
   tables: { type: Array, default: () => [] },
   totals: { type: Object, default: null }
 });
-defineEmits(["changeTable", "remove"]);
+defineEmits(["changeTable", "changeStatus", "remove", "edit"]);
 </script>
+
+<style scoped>
+.stat strong {
+  color: var(--neutral-900);
+}
+
+.stat-confirmed {
+  color: var(--success);
+  font-weight: 500;
+}
+
+.stat-pending {
+  color: var(--brand-dark);
+  font-weight: 500;
+}
+
+.stat-declined {
+  color: var(--error);
+  font-weight: 500;
+}
+</style>

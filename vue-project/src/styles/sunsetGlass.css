@@ -1,0 +1,35 @@
+:root {
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Lato", sans-serif;
+
+  --radius-small: 8px;
+  --radius-large: 16px;
+
+  --shadow-color: 200 180 220;
+  --shadow-custom: 0px 4px 20px rgba(var(--shadow-color), 0.15);
+  --shadow-custom-hover: 0px 6px 24px rgba(var(--shadow-color), 0.25);
+}
+
+.font-heading { font-family: var(--font-heading); letter-spacing: 0.5px; }
+.font-body { font-family: var(--font-body); }
+
+.rounded-small { border-radius: var(--radius-small); }
+.rounded-large { border-radius: var(--radius-large); }
+
+.shadow-custom { box-shadow: var(--shadow-custom); }
+.shadow-custom-hover { box-shadow: var(--shadow-custom-hover); }
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.text-glow {
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 192, 203, 0.3);
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, #FFE5EC 0%, #E5D4ED 50%, #D4F1E8 100%);
+}

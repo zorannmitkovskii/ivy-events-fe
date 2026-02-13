@@ -1,12 +1,18 @@
 <template>
-  <div class="budget-page">
+  <div class="dash-page">
+    <div class="dash-page-header">
+      <h1 class="dash-page-title">{{ t('budget.title') }}</h1>
+      <p class="dash-page-subtitle">{{ subtitle }}</p>
+    </div>
+
     <BudgetHeader
-      :title="t('budget.title')"
-      :subtitle="subtitle"
       :exportLabel="t('budget.export')"
       :addExpenseLabel="t('budget.addExpense')"
+      :createBudgetLabel="t('budget.createBudget')"
+      :hasBudget="hasBudget"
       @export="onExport"
       @add="onOpenAdd"
+      @create-budget="budgetDialogOpen = true"
     />
 
     <section class="content">
@@ -25,17 +31,21 @@
       />
     </section>
 
-    <!-- ✅ classic v-model -->
+    <AddBudgetDialog
+      :open="budgetDialogOpen"
+      @close="budgetDialogOpen = false"
+      @save="onCreateBudget"
+    />
+
     <AddExpenseDialog
       v-model:open="addDialogOpen"
       :title="t('budget.addExpense')"
       :cancelLabel="t('common.cancel')"
       :saveLabel="t('common.save')"
       :currency="currency"
-      :categories="categories"
+      :categories="allCategories"
       @save="onCreateExpense"
     />
-
   </div>
 </template>
 
@@ -47,35 +57,38 @@ import BudgetHeader from "@/components/dashboard/budget/BudgetHeader.vue";
 import BudgetSummaryCards from "@/components/dashboard/budget/BudgetSummaryCards.vue";
 import BudgetCategoryList from "@/components/dashboard/budget/BudgetCategoryList.vue";
 import AddExpenseDialog from "@/components/dashboard/budget/AddExpenseDialog.vue";
+import AddBudgetDialog from "@/components/dashboard/budget/AddBudgetDialog.vue";
 
 import { useBudget } from "@/composables/useBudget";
 import { exportBudgetToCsv } from "@/utils/budgetExport";
 
 const { t } = useI18n();
 const addDialogOpen = ref(false);
+const budgetDialogOpen = ref(false);
 
 const subtitle = computed(() => t("budget.overviewSubtitle", { monthLabel: "October 2023" }));
 
-const { currency, summary, categories, loadBudget, createExpense } = useBudget({
-  budgetId: "demo",
-  month: "2023-10"
-});
+const { currency, summary, categories, allCategories, hasBudget, loadBudget, createBudget, createExpense } = useBudget();
 
 onMounted(loadBudget);
 
 function onOpenAdd() {
-  console.log("ADD clicked"); // ✅ if you don’t see this, header emit/listener issue
+  console.log("ADD clicked");
   addDialogOpen.value = true;
 }
 
+async function onCreateBudget(payload) {
+  await createBudget(payload);
+  budgetDialogOpen.value = false;
+}
+
 async function onCreateExpense(payload) {
-  console.log("SAVE expense payload", payload); // ✅ verify save fires
   await createExpense(payload);
   addDialogOpen.value = false;
 }
 
 function onExport() {
-  console.log("EXPORT clicked"); // ✅ verify export fires
+  console.log("EXPORT clicked");
   exportBudgetToCsv({
     month: "2023-10",
     currency: currency.value,
@@ -86,12 +99,8 @@ function onExport() {
 </script>
 
 <style scoped>
-.budget-page{
-  min-height:100%;
-}
-.content{
-  max-width:1150px;
-  margin:0 auto;
-  padding:18px 24px 32px;
+.content {
+  display: grid;
+  gap: 24px;
 }
 </style>

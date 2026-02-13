@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  ivy-postgres:
+    image: postgres:16
+    container_name: ivy-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ivy_events
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: DbS!5x2@M7q$Wk1Z
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - ivy-net
+  ivy-keycloak:
+    image: quay.io/keycloak/keycloak:26.2.4
+    container_name: ivy-keycloak
+    command: start
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: ivy-postgres
+      KC_DB_URL_DATABASE: keycloakdb
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+      KC_HTTP_ENABLED: "true"
+      KC_HTTP_PORT: "8080"
+      KC_PROXY: edge                  # Important for HTTPS behind proxy
+      KC_HOSTNAME: auth.ivyevents.mk  # Full hostname your users will use
+      KC_HOSTNAME_STRICT: true     # Enforce strict hostname for prod
+      KC_HOSTNAME_STRICT_HTTPS: true
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: G!5rM2@bQ8tZ#1Js
+      KEYCLOAK_FRONTEND_URL: "https://auth.ivyevents.mk" # Must be HTTPS
+    depends_on:
+      - ivy-postgres
+    networks:
+      - ivy-net
+    expose:
+      - "8080"   # Use expose, not ports, since Nginx will map HTTPS
+
+volumes:
+  pg_data:
+
+networks:
+  ivy-net:

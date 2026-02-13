@@ -21,6 +21,7 @@ import './assets/styles/utilities.css'
 import './assets/styles/variables.css'
 import './assets/styles/fonts.css'
 import './assets/styles/components/index.css'
+import './assets/styles/dashboard.css'
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 async function bootstrap() {

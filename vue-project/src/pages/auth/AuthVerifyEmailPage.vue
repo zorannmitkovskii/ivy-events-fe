@@ -38,15 +38,15 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import AuthShell from "@/components/auth/AuthShell.vue";
 import AuthCardTitle from "@/components/auth/AuthCardTitle.vue";
 import AuthCard from "@/components/auth/AuthCard.vue";
 import AuthInput from "@/components/auth/AuthInput.vue";
-import { onboardingStore, setEmailVerified } from "@/store/onboarding.store";
-import { verifyEmail } from "@/services/auth.service";
+import { onboardingStore, setEmailVerified, getTempPassword, getTempUsername, clearTempCredentials } from "@/store/onboarding.store";
+import { verifyEmail, exchangeOAuthCode, loginWithCredentials } from "@/services/auth.service";
 
 const router = useRouter();
 const route = useRoute();
@@ -57,6 +57,25 @@ const code = ref("");
 const loading = ref(false);
 const error = ref("");
 
+// Detect Google OAuth callback and skip verification
+onMounted(async () => {
+  const oauthCode = route.query.code;
+  const sessionState = route.query.session_state;
+
+  if (oauthCode && sessionState) {
+    loading.value = true;
+    try {
+      const redirectUri = `${window.location.origin}/${lang.value}/auth/verify-email`;
+      await exchangeOAuthCode(oauthCode, redirectUri);
+      setEmailVerified(true);
+      await router.replace({ name: "EventCategoryPage", params: { lang: lang.value } });
+    } catch (e) {
+      error.value = e?.message || "Google sign-in failed. Please try again.";
+      loading.value = false;
+    }
+  }
+});
+
 async function onVerify() {
   error.value = "";
   if (!code.value || !email.value) return;
@@ -64,6 +83,20 @@ async function onVerify() {
   try {
     await verifyEmail(code.value.trim(), email.value.trim());
     setEmailVerified(true);
+
+    // Auto-login with credentials stored during registration
+    const tempPw = getTempPassword();
+    const tempUser = getTempUsername();
+    if (tempPw && tempUser) {
+      try {
+        await loginWithCredentials(tempUser, tempPw);
+      } catch (loginErr) {
+        console.warn("[auto-login] failed after verify:", loginErr?.message);
+      } finally {
+        clearTempCredentials();
+      }
+    }
+
     await router.push({ name: "EventCategoryPage", params: { lang: lang.value } });
   } catch (e) {
     error.value = e?.message || "Verification failed";

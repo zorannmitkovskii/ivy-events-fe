@@ -30,7 +30,7 @@ const props = defineProps({
   variant: {
     type: String,
     default: "main",
-    validator: (v) => ["main", "outline", "gold", "secondary"].includes(v)
+    validator: (v) => ["main", "outline", "gold", "secondary", "ghost", "danger", "success"].includes(v)
   },
 
   // button-only
@@ -173,5 +173,41 @@ function onClick(e) {
   background: var(--brand-main);
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(147, 162, 154, 0.3);
+}
+
+/* Ghost – subtle, white bg */
+.btn--ghost {
+  background: #fff;
+  color: var(--brand-main);
+  border: 1px solid var(--neutral-300);
+}
+
+.btn--ghost:hover {
+  background: var(--neutral-100);
+  transform: translateY(-1px);
+}
+
+/* Success – sage green bg, dark text */
+.btn--success {
+  background: var(--success);
+  color: var(--brand-main);
+  border: 1px solid var(--success);
+}
+
+.btn--success:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+
+/* Danger */
+.btn--danger {
+  background: #fff5f5;
+  color: #b00020;
+  border: 1px solid #ffd2d2;
+}
+
+.btn--danger:hover {
+  background: #ffe0e0;
+  transform: translateY(-1px);
 }
 </style>

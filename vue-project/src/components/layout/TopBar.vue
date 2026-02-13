@@ -30,11 +30,7 @@ const title = computed(() => {
   };
   return map[String(route.name)] ?? "Dashboard";
 });
-const subtitle = computed(() =>
-  route.params.eventId === "demo"
-    ? "Demo Event"
-    : `Event: ${String(route.params.eventId)}`
-);
+const subtitle = computed(() => "");
 </script>
 
 <style scoped>

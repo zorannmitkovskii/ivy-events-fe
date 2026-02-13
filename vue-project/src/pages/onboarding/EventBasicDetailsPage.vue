@@ -93,9 +93,9 @@ import AuthInput from '@/components/auth/AuthInput.vue';
 import AuthLocationInput from '@/components/auth/AuthLocationInput.vue';
 import ButtonMain from '@/components/generic/ButtonMain.vue';
 import OnboardingFooterLinks from '@/components/onboarding/OnboardingFooterLinks.vue';
-import { onboardingStore, clearOnboarding } from '@/store/onboarding.store';
+import { onboardingStore, setEventDetails, setEventId } from '@/store/onboarding.store';
 import { eventsService } from '@/services/events.service';
-import { keycloak } from '@/auth/keycloak';
+import { getUsername } from '@/services/auth.service';
 
 const router = useRouter();
 const route = useRoute();
@@ -125,61 +125,59 @@ function composeEventName() {
   return 'New Event';
 }
 
-async function createEventAndGo() {
-  const payload = {
-    name: composeEventName(),
+function saveDetails() {
+  setEventDetails({
+    brideName: brideName.value.trim(),
+    groomName: groomName.value.trim(),
     date: date.value || '',
-    // Auth: include owner UUID from Keycloak token (subject)
-    userId: keycloak?.tokenParsed?.sub || null,
-    // Send location data properly
-    location: location.value?.address || location.value?.name || '',
-    latitude: location.value?.lat || null,
-    longitude: location.value?.lng || null,
-    placeId: location.value?.placeId || null,
-    category: onboardingStore.selectedCategory
-  };
-
-  console.log('Creating event with payload:', payload);
-
-  const res = await eventsService.create(payload);
-  const eventId = res?.id || res?.eventId || 'demo';
-
-  // Clear temp onboarding state but keep email for account context
-  clearOnboarding(true);
-
-  await router.push({ name: 'dashboard.overview', params: { lang: lang.value, eventId } });
+    location: location.value,
+  });
 }
 
-async function onCreate() {
+async function createEventAndNavigate() {
   error.value = '';
+  loading.value = true;
+
+  try {
+    saveDetails();
+
+    const loc = location.value || {};
+    const payload = {
+      name: composeEventName(),
+      categoryType: onboardingStore.selectedCategory,
+      groom: groomName.value.trim() ? { name: groomName.value.trim() } : null,
+      bride: brideName.value.trim() ? { name: brideName.value.trim() } : null,
+      location: (loc.address || loc.name) ? {
+        name: loc.name || loc.address || '',
+        addressLine: loc.address || '',
+        latitude: loc.lat || null,
+        longitude: loc.lng || null
+      } : null,
+      status: 'DRAFT',
+      username: getUsername(),
+      date: date.value || null,
+    };
+
+    const res = await eventsService.create(payload);
+    const eventId = res?.id || res?.eventId;
+    setEventId(eventId);
+
+    router.push({ name: 'EventInvitationsPage', params: { lang: lang.value } });
+  } catch (e) {
+    error.value = e?.message || 'Failed to create event';
+  } finally {
+    loading.value = false;
+  }
+}
+
+function onCreate() {
   if (!canSubmit.value) return;
-  loading.value = true;
-  try {
-    // Remember typed details in store (in-memory)
-    onboardingStore.eventDetails = onboardingStore.eventDetails || {};
-    onboardingStore.eventDetails.brideName = brideName.value.trim();
-    onboardingStore.eventDetails.groomName = groomName.value.trim();
-    onboardingStore.eventDetails.date = date.value || '';
-    onboardingStore.eventDetails.location = location.value;
-
-    await createEventAndGo();
-  } catch (e) {
-    error.value = e?.message || 'Failed to create event';
-  } finally {
-    loading.value = false;
-  }
+  createEventAndNavigate();
 }
 
-async function onSkip() {
-  error.value = '';
-  loading.value = true;
-  try {
-    await createEventAndGo();
-  } catch (e) {
-    error.value = e?.message || 'Failed to create event';
-  } finally {
-    loading.value = false;
-  }
+function onSkip() {
+  saveDetails();
+  router.push({ name: 'EventInvitationsPage', params: { lang: lang.value } });
 }
 </script>
 

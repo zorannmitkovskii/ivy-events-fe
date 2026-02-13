@@ -132,7 +132,7 @@
 import { computed, ref } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 import { register } from "@/services/auth.service";
-import { setEmail } from "@/store/onboarding.store";
+import { setEmail, setTempPassword, setTempUsername } from "@/store/onboarding.store";
 
 import AuthLayout from "@/components/layout/AuthLayout.vue";
 import AuthBrand from "@/components/auth/AuthBrand.vue";
@@ -331,7 +331,7 @@ async function onRegister() {
 
   isLoading.value = true;
   try {
-    await register({
+    const regResponse = await register({
       username: usernameFromEmail(email.value),
       email: email.value.trim(),
       password: password.value,
@@ -341,6 +341,8 @@ async function onRegister() {
     });
 
     setEmail(email.value.trim());
+    setTempPassword(password.value);
+    setTempUsername(regResponse?.username || usernameFromEmail(email.value));
 
     await router.push({
       name: "AuthVerifyEmailPage",

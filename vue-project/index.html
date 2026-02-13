@@ -9,14 +9,20 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ivy Events</title>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RCSM0NSYSC"></script>
+    <!-- Google Analytics — production only (ivyevents.mk) -->
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'G-RCSM0NSYSC');
+        (function() {
+            var host = window.location.hostname.toLowerCase();
+            if (host !== 'ivyevents.mk') return;
+            var s = document.createElement('script');
+            s.async = true;
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=G-RCSM0NSYSC';
+            document.head.appendChild(s);
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-RCSM0NSYSC');
+        })();
     </script>
 </head>
 <body>

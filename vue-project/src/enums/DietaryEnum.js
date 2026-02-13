@@ -1,0 +1,9 @@
+export const DietaryEnum = Object.freeze({
+  NO_RESTRICTIONS: 'NO_RESTRICTIONS',
+  VEGETARIAN: 'VEGETARIAN',
+  VEGAN: 'VEGAN',
+  CHICKEN: 'CHICKEN',
+  FISH: 'FISH',
+  GLUTEN_FREE: 'GLUTEN_FREE',
+  OTHER: 'OTHER',
+});

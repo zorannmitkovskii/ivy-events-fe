@@ -1,30 +1,7 @@
-/* ===== Auth Shell (page background) ===== */
-.auth-shell {
-  min-height: 100vh;
-  background: var(--bg-main); /* NOT white */
-  display: grid;
-  place-items: center;
-  padding: 48px 18px;
-}
-
-.auth-shell__inner {
-  width: 100%;
-  max-width: 440px;
-}
-
-/* ===== Card ===== */
-.auth-card {
-  background: var(--bg-white);
-  border-radius: 18px;
-  box-shadow: var(--shadow-md);
-  padding: 34px 34px 26px;
-}
-
-/* ===== Form ===== */
+/* ===== Auth Form ===== */
 .auth-form {
   display: grid;
   gap: 16px;
-  margin-top: 18px;
 }
 
 .auth-row {
@@ -34,38 +11,27 @@
 }
 
 .auth-link {
-  color: var(--neutral-700);
+  color: var(--neutral-500);
   text-decoration: none;
   font-size: 12px;
+  transition: color 0.2s ease;
 }
 .auth-link:hover {
-  color: var(--brand-main);
-  text-decoration: underline;
+  color: var(--brand-gold);
 }
 
-.auth-submit {
-  width: 100%;
-  padding: 12px 16px;
-  border-radius: 12px;
+/* ===== Error ===== */
+.auth-error {
+  margin: 0;
+  font-size: 13px;
+  color: #b42318;
+  background: rgba(180, 35, 24, 0.06);
+  border: 1px solid rgba(180, 35, 24, 0.15);
+  padding: 10px 14px;
+  border-radius: 10px;
 }
 
-/* Divider (if your shared component doesn't already style it) */
-.auth-divider {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 12px;
-  color: var(--neutral-500);
-  font-size: 12px;
-  margin: 6px 0;
-}
-.auth-divider::before,
-.auth-divider::after {
-  content: "";
-  height: 1px;
-  background: var(--neutral-300);
-}
-/* Remove Chrome autofill blue background */
+/* ===== Remove Chrome autofill blue background ===== */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -75,10 +41,4 @@ select:-webkit-autofill {
   box-shadow: 0 0 0px 1000px var(--bg-white) inset !important;
   -webkit-text-fill-color: var(--neutral-900) !important;
   transition: background-color 9999s ease-in-out 0s;
-}
-
-input:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(47, 62, 54, 0.15); /* brand-main soft ring */
-  border-color: var(--brand-main);
 }

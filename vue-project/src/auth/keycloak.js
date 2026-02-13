@@ -20,7 +20,7 @@ function resolveKeycloakUrl() {
     return url
   }
   return computeKeycloakBaseUrl(appEnv)
-}
+} 
 
 function resolveRealm() {
   const env = getRuntimeEnv()

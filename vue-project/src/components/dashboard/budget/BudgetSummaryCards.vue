@@ -32,7 +32,7 @@ import BudgetStatCard from "./BudgetStatCard.vue";
 const { t } = useI18n();
 
 const props = defineProps({
-  currency: { type: String, default: "USD" },
+  currency: { type: String, default: "EUR" },
   totalBudget: { type: Number, required: true },
   totalSpent: { type: Number, required: true },
   remaining: { type: Number, required: true },
