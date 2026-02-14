@@ -15,12 +15,19 @@ function resolveAppEnv() {
 function resolveKeycloakUrl() {
   const env = getRuntimeEnv()
   const appEnv = resolveAppEnv()
+
+  // In test/prod, always derive from hostname to prevent a prod URL
+  // baked at build time from being used on test (or vice versa).
+  if (appEnv !== 'local') {
+    return computeKeycloakBaseUrl(appEnv)
+  }
+
   const url = env.VITE_KEYCLOAK_URL
   if (typeof url === 'string' && url.trim() && !/\$\{[^}]+\}/.test(url)) {
     return url
   }
   return computeKeycloakBaseUrl(appEnv)
-} 
+}
 
 function resolveRealm() {
   const env = getRuntimeEnv()
