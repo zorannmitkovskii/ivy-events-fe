@@ -79,9 +79,13 @@ if (!runtimeUrl || isUnresolvedTemplate(runtimeUrl)) {
   }
 }
 
-// Diagnostics: log effective API base URL and warn if overriding an unsafe localhost value in non-local envs
-
 const baseUrl = String(effectiveUrl).replace(/\/$/, '');
+
+// Diagnostics
+console.log('[BaseUrl] hostname:', typeof window !== 'undefined' ? window.location.hostname : 'SSR');
+console.log('[BaseUrl] APP_ENV raw:', rawAppEnv, '→ resolved:', appEnv);
+console.log('[BaseUrl] VITE_API_BASE_URL raw:', runtimeUrl);
+console.log('[BaseUrl] effectiveUrl:', baseUrl);
 
 export { baseUrl };
 export default baseUrl;
