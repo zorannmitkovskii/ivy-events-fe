@@ -70,11 +70,19 @@ function logKcDiagnostics(initOpts) {
 
 
 function createKeycloakInstance() {
-  return new Keycloak({
-    url: resolveKeycloakUrl(),
-    realm: resolveRealm(),
-    clientId: resolveClientId()
-  })
+  const url = resolveKeycloakUrl()
+  const realm = resolveRealm()
+  const clientId = resolveClientId()
+  const appEnv = resolveAppEnv()
+  const rawUrl = getRuntimeEnv().VITE_KEYCLOAK_URL
+
+  console.log('[Keycloak] hostname:', typeof window !== 'undefined' ? window.location.hostname : 'SSR')
+  console.log('[Keycloak] appEnv:', appEnv)
+  console.log('[Keycloak] VITE_KEYCLOAK_URL raw:', rawUrl)
+  console.log('[Keycloak] resolved url:', url)
+  console.log('[Keycloak] realm:', realm, '| clientId:', clientId)
+
+  return new Keycloak({ url, realm, clientId })
 }
 
 function ensureKeycloakInstance() {
