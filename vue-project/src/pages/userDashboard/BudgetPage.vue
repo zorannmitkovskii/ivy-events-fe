@@ -15,7 +15,7 @@
       @create-budget="budgetDialogOpen = true"
     />
 
-    <section class="content">
+    <section v-if="hasBudget" class="content">
       <BudgetSummaryCards
         :currency="currency"
         :totalBudget="summary.totalBudget"
@@ -30,6 +30,19 @@
         :categories="categories"
       />
     </section>
+
+    <div v-else class="empty-card">
+      <div class="empty-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+        </svg>
+      </div>
+      <h3 class="empty-title">{{ t('budget.emptyTitle') }}</h3>
+      <p class="empty-sub">{{ t('budget.emptyMessage') }}</p>
+      <ButtonMain variant="main" @click="budgetDialogOpen = true">
+        {{ t('budget.createBudget') }}
+      </ButtonMain>
+    </div>
 
     <AddBudgetDialog
       :open="budgetDialogOpen"
@@ -58,6 +71,7 @@ import BudgetSummaryCards from "@/components/dashboard/budget/BudgetSummaryCards
 import BudgetCategoryList from "@/components/dashboard/budget/BudgetCategoryList.vue";
 import AddExpenseDialog from "@/components/dashboard/budget/AddExpenseDialog.vue";
 import AddBudgetDialog from "@/components/dashboard/budget/AddBudgetDialog.vue";
+import ButtonMain from "@/components/generic/ButtonMain.vue";
 
 import { useBudget } from "@/composables/useBudget";
 import { exportBudgetToCsv } from "@/utils/budgetExport";
@@ -102,5 +116,35 @@ function onExport() {
 .content {
   display: grid;
   gap: 24px;
+}
+
+.empty-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 48px 24px;
+  text-align: center;
+  display: grid;
+  place-items: center;
+  gap: 8px;
+}
+
+.empty-icon {
+  color: var(--neutral-400);
+  margin-bottom: 8px;
+}
+
+.empty-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--neutral-900);
+  margin: 0;
+}
+
+.empty-sub {
+  font-size: 13px;
+  color: var(--neutral-500);
+  margin: 0 0 8px;
 }
 </style>

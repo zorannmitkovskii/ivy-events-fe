@@ -64,9 +64,14 @@ export function useTablesSeating() {
     guests.value = list.map(dto => ({
       id: dto.id,
       name: dto.name,
+      phone: dto.phone ?? null,
+      email: dto.email ?? null,
       tableId: dto.tableNumber ?? null,
       status: (dto.inviteStatus || "PENDING").toLowerCase(),
       isChild: dto.isChild ?? false,
+      note: dto.note ?? "",
+      dietaryPreferences: dto.dietaryPreferences ?? null,
+      _raw: dto,
     }));
   }
 
@@ -102,7 +107,8 @@ export function useTablesSeating() {
       tables.value = recomputeAssignedCounts(tables.value, guests.value);
       return;
     }
-    await tablesService.createGuest({ ...payload, eventId: eventId.value });
+    const { name, isChild, ...rest } = payload;
+    await guestsService.create({ ...rest, guests: [{ name, isChild: isChild ?? false }], eventId: eventId.value });
     await load();
   }
 
@@ -113,6 +119,16 @@ export function useTablesSeating() {
       return;
     }
     await guestsService.updateTableNumber(guestId, { tableNumber: tableId });
+    await load();
+  }
+
+  async function updateGuest(guestId, payload) {
+    if (isDemo.value) {
+      const g = guests.value.find(x => x.id === guestId);
+      if (g) Object.assign(g, { name: payload.name, email: payload.email, note: payload.note });
+      return;
+    }
+    await guestsService.update(guestId, payload);
     await load();
   }
 
@@ -137,6 +153,7 @@ export function useTablesSeating() {
     load,
     addTable,
     addGuest,
+    updateGuest,
     changeTable,
     removeGuest
   };

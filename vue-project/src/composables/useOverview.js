@@ -110,7 +110,10 @@ export function useOverview() {
     try {
       const list = await budgetsService.list(eventId.value);
       const data = Array.isArray(list) ? list[0] : list;
-      if (!data) return;
+      if (!data) {
+        overview.value.budget = { currency: "EUR", total: 0, used: 0, remaining: 0, items: [] };
+        return;
+      }
       const amount = Number(data.amount || 0);
       const remainAmount = Number(data.remainAmount || 0);
       const used = amount - remainAmount;

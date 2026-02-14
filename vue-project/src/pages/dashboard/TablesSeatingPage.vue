@@ -77,7 +77,7 @@ const editingGuest = ref(null);
 
 const {
   loading, error, tables, guests, selectedTableId,
-  load, addTable, addGuest, changeTable, removeGuest
+  load, addTable, addGuest, updateGuest, changeTable, removeGuest
 } = useTablesSeating();
 
 onMounted(load);
@@ -104,8 +104,13 @@ async function handleAddTable(payload) {
 }
 
 async function handleAddGuest(payload) {
-  await addGuest(payload);
-  guestModalOpen.value = false;
+  if (payload.id) {
+    const { id, ...body } = payload;
+    await updateGuest(id, body);
+  } else {
+    await addGuest(payload);
+  }
+  closeGuestModal();
 }
 
 function openEditGuest(guest) {

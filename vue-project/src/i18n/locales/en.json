@@ -197,7 +197,7 @@
       "privacy": "Privacy Policy"
     },
     "placeholders": {
-      "email": "your@email.com",
+      "email": "your{'@'}email.com",
       "password": "Enter your password",
       "fullName": "Jane Doe",
       "confirmPassword": "Repeat your password"
@@ -220,7 +220,7 @@
     },
     "fields": {
       "email": "Email Address",
-      "emailPlaceholder": "your@email.com",
+      "emailPlaceholder": "your{'@'}email.com",
       "password": "Password",
       "passwordPlaceholder": "Enter your password",
       "newPassword": "New Password",
@@ -765,6 +765,8 @@
     "safeToSpend": "Safe to spend",
     "ofBudgetUsed": "{percent}% of budget used",
     "createBudget": "Create Budget",
+    "emptyTitle": "No budget yet",
+    "emptyMessage": "Create a budget to start tracking your event expenses.",
     "budgetDialog": {
       "name": "Budget Name",
       "namePh": "e.g. Wedding Budget",

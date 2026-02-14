@@ -50,44 +50,10 @@ function resolveClientId() {
 }
 
 
-function logKcDiagnostics(initOpts) {
-  try {
-    const diag = {
-      when: new Date().toISOString(),
-      location: typeof window !== 'undefined' ? {
-        origin: window.location.origin,
-        href: window.location.href,
-        userAgent: navigator.userAgent
-      } : 'no-window',
-      appEnv: resolveAppEnv(),
-      keycloak: {
-        url: resolveKeycloakUrl(),
-        realm: resolveRealm(),
-        clientId: resolveClientId()
-      },
-      initOptions: initOpts
-    }
-    // eslint-disable-next-line no-console
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.warn('[Keycloak][diag] Failed to log diagnostics', e)
-  }
-}
-
-
 function createKeycloakInstance() {
   const url = resolveKeycloakUrl()
   const realm = resolveRealm()
   const clientId = resolveClientId()
-  const appEnv = resolveAppEnv()
-  const rawUrl = getRuntimeEnv().VITE_KEYCLOAK_URL
-
-  console.log('[Keycloak] hostname:', typeof window !== 'undefined' ? window.location.hostname : 'SSR')
-  console.log('[Keycloak] appEnv:', appEnv)
-  console.log('[Keycloak] VITE_KEYCLOAK_URL raw:', rawUrl)
-  console.log('[Keycloak] resolved url:', url)
-  console.log('[Keycloak] realm:', realm, '| clientId:', clientId)
-
   return new Keycloak({ url, realm, clientId })
 }
 
@@ -114,9 +80,6 @@ export async function initKeycloak(options = {}) {
     enableLogging: true
   }
   const initOpts = { ...defaults, ...options }
-
-  // Log diagnostics (preflight removed per requirement)
-  logKcDiagnostics(initOpts)
 
   initPromise = keycloak.init(initOpts)
   try {

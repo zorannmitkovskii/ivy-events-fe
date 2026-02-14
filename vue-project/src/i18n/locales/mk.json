@@ -201,11 +201,11 @@
       "password": "Лозинка",
       "fullName": "Име и презиме",
       "newPassword": "Нова лозинка",
-      "emailPlaceholder": "ваш@email.com",
+      "emailPlaceholder": "ваш{'@'}email.com",
       "confirmPassword": "Потврди лозинка"
     },
     "placeholders": {
-      "email": "ваш@email.com",
+      "email": "ваш{'@'}email.com",
       "password": "Внесете лозинка",
       "fullName": "Име Презиме",
       "confirmPassword": "Повторете лозинка"
@@ -765,6 +765,8 @@
     "safeToSpend": "Безбедно за трошење",
     "ofBudgetUsed": "{percent}% од буџетот е искористен",
     "createBudget": "Креирај буџет",
+    "emptyTitle": "Нема буџет",
+    "emptyMessage": "Креирајте буџет за да ги следите трошоците за настанот.",
     "budgetDialog": {
       "name": "Име на буџет",
       "namePh": "пр. Буџет за свадба",
