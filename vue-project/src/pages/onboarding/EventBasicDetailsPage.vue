@@ -156,6 +156,7 @@ async function createEventAndNavigate() {
       status: 'DRAFT',
       username: getUsername(),
       date: date.value || null,
+      lang: lang.value,
     };
 
     const res = await eventsService.create(payload);

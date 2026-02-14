@@ -71,10 +71,10 @@ const error = ref('');
 
 const INVITATION_REGISTRY = {
   [EventCategoryEnum.WEDDING]: [
-    { id: 'persianWedding', name: 'Persian Wedding', subtitle: 'Glass & Gradient' },
-    { id: 'parisianWedding', name: 'Parisian Wedding', subtitle: 'Elegant French' },
-    { id: 'coastalBreeze', name: 'Coastal Breeze', subtitle: 'Modern Seaside' },
-    { id: 'sunsetGlass', name: 'Sunset Glass', subtitle: 'Sunset Glass' },
+    { id: 'persianWedding', slug: 'persian-wedding', name: 'Persian Wedding', subtitle: 'Glass & Gradient' },
+    { id: 'parisianWedding', slug: 'parisian-wedding', name: 'Parisian Wedding', subtitle: 'Elegant French' },
+    { id: 'coastalBreeze', slug: 'coastal-breeze', name: 'Coastal Breeze', subtitle: 'Modern Seaside' },
+    { id: 'sunsetGlass', slug: 'sunset-glass', name: 'Sunset Glass', subtitle: 'Sunset Glass' },
   ],
 };
 
@@ -126,8 +126,13 @@ async function onContinue() {
     const eventId = onboardingStore.eventId;
 
     if (eventId) {
+      // Send full path (e.g. "invitations/sunset-glass")
+      const allInvitations = Object.values(INVITATION_REGISTRY).flat();
+      const selected = allInvitations.find(inv => inv.id === onboardingStore.invitationName);
+      const slug = selected?.slug || onboardingStore.invitationName;
+
       await eventsService.updateInvitation(eventId, {
-        invitationName: onboardingStore.invitationName
+        invitationName: `invitations/${slug}`
       });
     }
 

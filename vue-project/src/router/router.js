@@ -65,6 +65,9 @@ const routes = [
       // RSVP
       { path: "rsvp-success", name: "RsvpSuccessSubmitPage", component: RsvpSuccessSubmitPage },
 
+      // PUBLIC GALLERY UPLOAD (link sent to guests)
+      { path: "gallery", name: "GalleryUpload", component: () => import("@/pages/GalleryUpload.vue") },
+
       // INVITATION PREVIEWS
       { path: "invitations/persian-wedding", name: "persianWedding", component: PersianWedding },
       { path: "invitations/parisian-wedding", name: "parisianWedding", component: ParisianWedding },

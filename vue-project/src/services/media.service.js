@@ -8,14 +8,14 @@ export const mediaService = {
     return res.data;
   },
 
-  async upload(files, folder = "general") {
+  async upload(files, eventId) {
     const formData = new FormData();
     const fileList = Array.isArray(files) ? files : [files];
     fileList.forEach(f => formData.append("files", f));
 
     const res = await backendApi.post("/api/media/upload", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-      params: { folder }
+      headers: { "Content-Type": undefined },
+      params: { eventId }
     });
     return res.data;
   },

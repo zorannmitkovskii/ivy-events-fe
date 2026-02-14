@@ -32,7 +32,7 @@
           class="gallery-item"
           @click="openPreview(image)"
         >
-          <img :src="image.url" :alt="image.name || ''" loading="lazy" />
+          <img :src="image.thumb" :alt="image.name || ''" loading="lazy" />
           <div class="gallery-overlay">
             <i class="bi bi-arrows-fullscreen"></i>
           </div>
@@ -108,9 +108,9 @@ async function loadInitial() {
   error.value = null;
   try {
     const data = await mediaService.list(getEventId(), { page: 0, size: INITIAL_SIZE });
-    const list = extractList(data);
-    images.value = list;
-    hasMore.value = list.length >= INITIAL_SIZE;
+    const result = unwrap(data);
+    images.value = mapItems(result.content);
+    hasMore.value = !result.last;
     page.value = 1;
   } catch (e) {
     error.value = e?.message || "Failed to load images";
@@ -124,9 +124,9 @@ async function loadMore() {
   loadingMore.value = true;
   try {
     const data = await mediaService.list(getEventId(), { page: page.value, size: LOAD_MORE_SIZE });
-    const list = extractList(data);
-    images.value.push(...list);
-    hasMore.value = list.length >= LOAD_MORE_SIZE;
+    const result = unwrap(data);
+    images.value.push(...mapItems(result.content));
+    hasMore.value = !result.last;
     page.value++;
   } catch {
     hasMore.value = false;
@@ -135,10 +135,24 @@ async function loadMore() {
   }
 }
 
-function extractList(data) {
-  if (Array.isArray(data)) return data;
-  if (data?.content && Array.isArray(data.content)) return data.content;
-  return [];
+function unwrap(data) {
+  // Handle { success, data: { content, last, ... } } wrapper
+  const inner = data?.data ?? data;
+  return {
+    content: Array.isArray(inner?.content) ? inner.content : Array.isArray(inner) ? inner : [],
+    last: inner?.last ?? true
+  };
+}
+
+function mapItems(list) {
+  return list.map(item => ({
+    id: item.id,
+    url: item.fileUrl || item.url,
+    thumb: item.thumbUrl || item.fileUrl || item.url,
+    name: item.fileName || item.fileUrl?.split("/").pop()?.split("?")[0] || "",
+    fileType: item.fileType,
+    fileSize: item.fileSize
+  }));
 }
 
 function openPreview(image) {
