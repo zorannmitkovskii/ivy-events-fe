@@ -93,10 +93,11 @@ export async function exchangeOAuthCode(code, redirectUri) {
     }
   }
 
-  const realm = env.VITE_KEYCLOAK_REALM || 'event-app';
-  const clientId = env.VITE_KEYCLOAK_CLIENT_ID || 'eventFE';
+  // Non-local envs always use canonical realm/clientId — prevents Docker misconfiguration
+  const realm = appEnv !== 'local' ? 'event-app' : (env.VITE_KEYCLOAK_REALM || 'event-app');
+  const clientId = appEnv !== 'local' ? 'eventFE' : (env.VITE_KEYCLOAK_CLIENT_ID || 'eventFE');
 
-  console.log('[Auth] exchangeOAuthCode appEnv:', appEnv, '| keycloakUrl:', keycloakUrl);
+  console.log('[Auth] exchangeOAuthCode appEnv:', appEnv, '| keycloakUrl:', keycloakUrl, '| realm:', realm, '| clientId:', clientId);
 
   const tokenUrl = `${keycloakUrl}/realms/${realm}/protocol/openid-connect/token`;
 

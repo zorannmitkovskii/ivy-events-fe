@@ -361,8 +361,8 @@ function onGoogle() {
   const env = getRuntimeEnv();
   const appEnv = (env.APP_ENV || detectDefaultEnvFromLocation()).toString().toLowerCase();
   const keycloakBaseUrl = appEnv !== 'local' ? computeKeycloakBaseUrl(appEnv) : (env.VITE_KEYCLOAK_URL || computeKeycloakBaseUrl(appEnv));
-  const realm = env.VITE_KEYCLOAK_REALM || 'event-app';
-  const clientId = env.VITE_KEYCLOAK_CLIENT_ID || 'eventFE';
+  const realm = appEnv !== 'local' ? 'event-app' : (env.VITE_KEYCLOAK_REALM || 'event-app');
+  const clientId = appEnv !== 'local' ? 'eventFE' : (env.VITE_KEYCLOAK_CLIENT_ID || 'eventFE');
 
   const redirectUri = encodeURIComponent(
     `${window.location.origin}/${lang.value}/auth/verify-email`

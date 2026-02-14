@@ -30,6 +30,9 @@ function resolveKeycloakUrl() {
 }
 
 function resolveRealm() {
+  const appEnv = resolveAppEnv()
+  // Non-local envs always use the canonical realm — prevents Docker misconfiguration
+  if (appEnv !== 'local') return 'event-app'
   const env = getRuntimeEnv()
   const realm = env.VITE_KEYCLOAK_REALM
   if (typeof realm === 'string' && realm.trim() && !/\$\{[^}]+\}/.test(realm)) return realm
@@ -37,6 +40,9 @@ function resolveRealm() {
 }
 
 function resolveClientId() {
+  const appEnv = resolveAppEnv()
+  // Non-local envs always use the canonical clientId — prevents Docker misconfiguration
+  if (appEnv !== 'local') return 'eventFE'
   const env = getRuntimeEnv()
   const cid = env.VITE_KEYCLOAK_CLIENT_ID
   if (typeof cid === 'string' && cid.trim() && !/\$\{[^}]+\}/.test(cid)) return cid
