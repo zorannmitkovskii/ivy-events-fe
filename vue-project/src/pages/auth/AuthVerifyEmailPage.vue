@@ -1,5 +1,16 @@
 <template>
-  <AuthShell>
+  <!-- Google OAuth callback: show only a spinner, never the verify form -->
+  <AuthShell v-if="isOAuthCallback">
+    <AuthCard>
+      <div class="oauth-loading">
+        <div class="spinner"></div>
+        <p v-if="error" class="oauth-error">{{ error }}</p>
+      </div>
+    </AuthCard>
+  </AuthShell>
+
+  <!-- Normal email verification flow -->
+  <AuthShell v-else>
     <AuthCard>
       <AuthBrandHeader :title="$t('auth.brand')" />
 
@@ -21,8 +32,6 @@
           type="submit"
         />
       </form>
-
-
 
       <div class="auth-links">
         <button class="link" type="button" @click="onResend">
@@ -57,22 +66,22 @@ const code = ref("");
 const loading = ref(false);
 const error = ref("");
 
-// Detect Google OAuth callback and skip verification
-onMounted(async () => {
-  const oauthCode = route.query.code;
-  const sessionState = route.query.session_state;
+// Detect OAuth callback synchronously so template never shows the verify form
+const isOAuthCallback = computed(() => !!(route.query.code && route.query.session_state));
 
-  if (oauthCode && sessionState) {
-    loading.value = true;
-    try {
-      const redirectUri = `${window.location.origin}/${lang.value}/auth/verify-email`;
-      await exchangeOAuthCode(oauthCode, redirectUri);
-      setEmailVerified(true);
-      await router.replace({ name: "EventCategoryPage", params: { lang: lang.value } });
-    } catch (e) {
-      error.value = e?.message || "Google sign-in failed. Please try again.";
-      loading.value = false;
-    }
+// Handle Google OAuth callback — exchange code and redirect to category page
+onMounted(async () => {
+  if (!isOAuthCallback.value) return;
+
+  loading.value = true;
+  try {
+    const redirectUri = `${window.location.origin}/${lang.value}/auth/verify-email`;
+    await exchangeOAuthCode(route.query.code, redirectUri);
+    setEmailVerified(true);
+    await router.replace({ name: "EventCategoryPage", params: { lang: lang.value } });
+  } catch (e) {
+    error.value = e?.message || "Google sign-in failed. Please try again.";
+    loading.value = false;
   }
 });
 
@@ -131,5 +140,32 @@ function onChangeEmail() {
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 4px;
+}
+
+.oauth-loading {
+  display: grid;
+  place-items: center;
+  padding: 48px 24px;
+  gap: 16px;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--neutral-200);
+  border-top-color: var(--brand-gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.oauth-error {
+  color: var(--error);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
 }
 </style>
