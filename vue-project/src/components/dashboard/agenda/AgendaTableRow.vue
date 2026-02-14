@@ -1,5 +1,5 @@
 <template>
-  <tr>
+  <tr class="clickable-row" @click="$emit('edit', item)">
     <td>
       <div class="item-title">{{ item.title }}</div>
       <div v-if="item.description" class="item-desc">{{ item.description }}</div>
@@ -23,8 +23,8 @@
 
     <td>
       <div class="actions">
-        <button class="action-link" type="button" @click="$emit('edit', item)">{{ t("common.edit") }}</button>
-        <button class="action-link action-remove" type="button" @click="$emit('delete', item.id)">{{ t("common.delete") }}</button>
+        <button class="action-link" type="button" @click.stop="$emit('edit', item)">{{ t("common.edit") }}</button>
+        <button class="action-link action-remove" type="button" @click.stop="$emit('delete', item.id)">{{ t("common.delete") }}</button>
       </div>
     </td>
   </tr>
@@ -127,5 +127,9 @@ const formattedDateTime = computed(() => {
 
 .action-remove:hover {
   color: #c0302b;
+}
+
+.clickable-row {
+  cursor: pointer;
 }
 </style>

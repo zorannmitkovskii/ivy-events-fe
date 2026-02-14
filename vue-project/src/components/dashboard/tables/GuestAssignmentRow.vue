@@ -1,11 +1,11 @@
 <template>
-  <tr>
+  <tr class="clickable-row" @click="$emit('edit', guest)">
     <td>
       <span class="name">{{ guest.name }}</span>
     </td>
 
     <td>
-      <select class="table-select" :value="guest.tableId || 'unassigned'" @change="onChange">
+      <select class="table-select" :value="guest.tableId || 'unassigned'" @change="onChange" @click.stop>
         <option value="unassigned">{{ t("tables.unassigned") }}</option>
         <option v-for="tb in tables" :key="tb.id" :value="tb.id">
           {{ tb.name }}
@@ -21,7 +21,7 @@
     </td>
 
     <td class="td-right">
-      <button class="remove" type="button" @click="emit('remove')">{{ t("tables.remove") }}</button>
+      <button class="remove" type="button" @click.stop="emit('remove')">{{ t("tables.remove") }}</button>
     </td>
   </tr>
 </template>
@@ -35,7 +35,7 @@ const props = defineProps({
   guest: Object,
   tables: Array
 });
-const emit = defineEmits(["change-table", "remove"]);
+const emit = defineEmits(["change-table", "remove", "edit"]);
 
 function onChange(e) {
   const tableId = e.target.value;
@@ -87,5 +87,9 @@ function onChange(e) {
 .table-select:focus {
   border-color: var(--brand-gold);
   box-shadow: 0 0 0 3px rgba(200, 162, 77, 0.15);
+}
+
+.clickable-row {
+  cursor: pointer;
 }
 </style>

@@ -1,4 +1,5 @@
 import apiPublic from "./backendApi";
+import { getRuntimeEnv, detectDefaultEnvFromLocation, computeKeycloakBaseUrl } from '@/services/env';
 
 export function isAuthenticated() {
   return !!localStorage.getItem("access_token");
@@ -75,9 +76,27 @@ export async function loginWithCredentials(username, password) {
 
 // Exchange Keycloak authorization code for tokens (Google OAuth callback)
 export async function exchangeOAuthCode(code, redirectUri) {
-  const keycloakUrl = import.meta.env.VITE_KEYCLOAK_URL;
-  const realm = import.meta.env.VITE_KEYCLOAK_REALM || 'event-app';
-  const clientId = import.meta.env.VITE_KEYCLOAK_CLIENT_ID || 'eventFE';
+  const env = getRuntimeEnv();
+  const rawAppEnv = env.APP_ENV;
+  const appEnv = (rawAppEnv || detectDefaultEnvFromLocation()).toString().toLowerCase();
+
+  // Resolve Keycloak URL using hostname-based logic (same as keycloak.js)
+  let keycloakUrl;
+  if (appEnv !== 'local') {
+    keycloakUrl = computeKeycloakBaseUrl(appEnv);
+  } else {
+    const url = env.VITE_KEYCLOAK_URL;
+    if (typeof url === 'string' && url.trim() && !/\$\{[^}]+\}/.test(url)) {
+      keycloakUrl = url;
+    } else {
+      keycloakUrl = computeKeycloakBaseUrl(appEnv);
+    }
+  }
+
+  const realm = env.VITE_KEYCLOAK_REALM || 'event-app';
+  const clientId = env.VITE_KEYCLOAK_CLIENT_ID || 'eventFE';
+
+  console.log('[Auth] exchangeOAuthCode appEnv:', appEnv, '| keycloakUrl:', keycloakUrl);
 
   const tokenUrl = `${keycloakUrl}/realms/${realm}/protocol/openid-connect/token`;
 

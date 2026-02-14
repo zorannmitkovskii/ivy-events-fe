@@ -43,7 +43,7 @@
         {{ t("common.cancel") }}
       </ButtonMain>
       <ButtonMain variant="main" type="button" @click="submit">
-        {{ t("common.save") }}
+        {{ isEdit ? t("common.save") : t("common.save") }}
       </ButtonMain>
     </template>
   </BaseModal>
@@ -59,10 +59,13 @@ const { t } = useI18n();
 
 const props = defineProps({
   open: { type: Boolean, default: false },
-  type: { type: String, default: "TASK" }
+  type: { type: String, default: "TASK" },
+  task: { type: Object, default: null }
 });
 
 const emit = defineEmits(["close", "submit"]);
+
+const isEdit = computed(() => !!props.task);
 
 const title = ref("");
 const description = ref("");
@@ -71,6 +74,7 @@ const status = ref("PENDING");
 const errors = ref({ title: "" });
 
 const modalTitle = computed(() => {
+  if (isEdit.value) return t("tables.tasks.editTask");
   return props.type === "REMINDER"
     ? t("tables.tasks.addReminder")
     : t("tables.tasks.addTask");
@@ -80,10 +84,17 @@ watch(
   () => props.open,
   (v) => {
     if (v) {
-      title.value = "";
-      description.value = "";
-      dueDate.value = "";
-      status.value = "PENDING";
+      if (props.task) {
+        title.value = props.task.title || "";
+        description.value = props.task.description || "";
+        dueDate.value = props.task.dueDate ? props.task.dueDate.substring(0, 10) : "";
+        status.value = props.task.status || "PENDING";
+      } else {
+        title.value = "";
+        description.value = "";
+        dueDate.value = "";
+        status.value = "PENDING";
+      }
       errors.value = { title: "" };
     }
   }
@@ -93,13 +104,17 @@ function submit() {
   errors.value.title = title.value.trim() ? "" : t("tables.tasks.form.titleRequired");
   if (errors.value.title) return;
 
-  emit("submit", {
+  const payload = {
     title: title.value.trim(),
     description: description.value.trim() || null,
     dueDate: dueDate.value || null,
     status: status.value,
-    type: props.type
-  });
+    type: props.task?.type || props.type
+  };
+
+  if (isEdit.value) payload.id = props.task.id;
+
+  emit("submit", payload);
 }
 </script>
 

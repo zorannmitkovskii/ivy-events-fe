@@ -19,13 +19,15 @@
       :tasks="tasks"
       @toggle-task="handleToggle"
       @change-status="handleChangeStatus"
+      @edit="openEditModal"
     />
 
     <AddTaskModal
       :open="modalOpen"
       :type="modalType"
-      @close="modalOpen = false"
-      @submit="handleAddTask"
+      :task="editingTask"
+      @close="closeModal"
+      @submit="handleSubmitTask"
     />
   </div>
 </template>
@@ -40,26 +42,44 @@ import AddTaskModal from '@/components/dashboard/tables/AddTaskModal.vue';
 import { useTasks } from '@/composables/useTasks';
 
 const { t } = useI18n();
-const { tasks, load, createTask, toggleTask, updateStatus } = useTasks();
+const { tasks, load, createTask, updateTask, toggleTask, updateStatus } = useTasks();
 
 const modalOpen = ref(false);
 const modalType = ref('TASK');
+const editingTask = ref(null);
 
 onMounted(load);
 
 function openTaskModal() {
+  editingTask.value = null;
   modalType.value = 'TASK';
   modalOpen.value = true;
 }
 
 function openReminderModal() {
+  editingTask.value = null;
   modalType.value = 'REMINDER';
   modalOpen.value = true;
 }
 
-async function handleAddTask(payload) {
-  await createTask(payload);
+function openEditModal(task) {
+  editingTask.value = { ...task };
+  modalType.value = task.type || 'TASK';
+  modalOpen.value = true;
+}
+
+function closeModal() {
   modalOpen.value = false;
+  editingTask.value = null;
+}
+
+async function handleSubmitTask(payload) {
+  if (payload.id) {
+    await updateTask(payload.id, payload);
+  } else {
+    await createTask(payload);
+  }
+  closeModal();
 }
 
 async function handleToggle(taskId) {

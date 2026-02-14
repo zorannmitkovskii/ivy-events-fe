@@ -132,6 +132,7 @@
 import { computed, ref } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 import { register } from "@/services/auth.service";
+import { getRuntimeEnv, detectDefaultEnvFromLocation, computeKeycloakBaseUrl } from '@/services/env';
 import { setEmail, setTempPassword, setTempUsername } from "@/store/onboarding.store";
 
 import AuthLayout from "@/components/layout/AuthLayout.vue";
@@ -357,9 +358,11 @@ async function onRegister() {
 }
 
 function onGoogle() {
-  const keycloakBaseUrl = import.meta.env.VITE_KEYCLOAK_URL;
-  const realm = import.meta.env.VITE_KEYCLOAK_REALM;
-  const clientId = import.meta.env.VITE_KEYCLOAK_CLIENT_ID;
+  const env = getRuntimeEnv();
+  const appEnv = (env.APP_ENV || detectDefaultEnvFromLocation()).toString().toLowerCase();
+  const keycloakBaseUrl = appEnv !== 'local' ? computeKeycloakBaseUrl(appEnv) : (env.VITE_KEYCLOAK_URL || computeKeycloakBaseUrl(appEnv));
+  const realm = env.VITE_KEYCLOAK_REALM || 'event-app';
+  const clientId = env.VITE_KEYCLOAK_CLIENT_ID || 'eventFE';
 
   const redirectUri = encodeURIComponent(
     `${window.location.origin}/${lang.value}/auth/verify-email`

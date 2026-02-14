@@ -4,14 +4,16 @@
       <div
         v-for="task in tasks"
         :key="task.id"
-        class="task-item"
+        class="task-item clickable"
         :class="{ 'task-completed': task.status === 'DONE' }"
+        @click="$emit('edit', task)"
       >
         <input
           type="checkbox"
           class="task-checkbox"
           :checked="task.status === 'DONE'"
           @change="$emit('toggle-task', task.id)"
+          @click.stop
         />
         <div class="task-body">
           <div class="task-name" :class="{ done: task.status === 'DONE' }">
@@ -34,6 +36,7 @@
             :class="badgeClass(task.status)"
             :value="task.status"
             @change="$emit('change-status', task.id, $event.target.value)"
+            @click.stop
           >
             <option value="PENDING">{{ t('tables.tasks.pending') }}</option>
             <option value="IN_PROGRESS">{{ t('tables.tasks.inProgress') }}</option>
@@ -58,7 +61,7 @@ defineProps({
   tasks: { type: Array, default: () => [] }
 });
 
-defineEmits(['toggle-task', 'change-status']);
+defineEmits(['toggle-task', 'change-status', 'edit']);
 
 function formatDate(raw) {
   if (!raw) return '';
@@ -108,6 +111,10 @@ function typeBadgeClass(type) {
 
 .task-item:hover {
   background: var(--bg-main);
+}
+
+.task-item.clickable {
+  cursor: pointer;
 }
 
 .task-completed {

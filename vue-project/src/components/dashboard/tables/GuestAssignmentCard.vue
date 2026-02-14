@@ -15,6 +15,7 @@
         :tables="tables"
         @change-table="$emit('change-table', $event)"
         @remove="$emit('remove', g.id)"
+        @edit="$emit('edit', $event)"
       />
     </template>
   </DashboardTable>
@@ -29,7 +30,7 @@ defineProps({
   guests: Array,
   tables: Array
 });
-defineEmits(["add-guest", "change-table", "remove"]);
+defineEmits(["add-guest", "change-table", "remove", "edit"]);
 
 const { t } = useI18n();
 </script>

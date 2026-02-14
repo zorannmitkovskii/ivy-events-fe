@@ -45,6 +45,13 @@ export function useTasks() {
     if (task) task.status = status;
   }
 
+  async function updateTask(taskId, payload) {
+    const updated = await tasksService.update(taskId, payload);
+    const idx = tasks.value.findIndex((t) => t.id === taskId);
+    if (idx !== -1) tasks.value[idx] = updated;
+    return updated;
+  }
+
   async function removeTask(taskId) {
     await tasksService.remove(taskId);
     tasks.value = tasks.value.filter((t) => t.id !== taskId);
@@ -56,6 +63,7 @@ export function useTasks() {
     error,
     load,
     createTask,
+    updateTask,
     toggleTask,
     updateStatus,
     removeTask

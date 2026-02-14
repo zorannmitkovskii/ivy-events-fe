@@ -73,6 +73,7 @@ import GoogleButton from '@/components/auth/GoogleButton.vue';
 import ButtonMain from '@/components/generic/ButtonMain.vue';
 import { loginWithCredentials, getEventId } from '@/services/auth.service';
 import { setEventId } from '@/store/onboarding.store';
+import { getRuntimeEnv, detectDefaultEnvFromLocation, computeKeycloakBaseUrl } from '@/services/env';
 
 const route = useRoute();
 const router = useRouter();
@@ -109,9 +110,11 @@ async function onSubmit() {
 }
 
 function onGoogle() {
-  const keycloakUrl = import.meta.env.VITE_KEYCLOAK_URL;
-  const realm = import.meta.env.VITE_KEYCLOAK_REALM || 'event-app';
-  const clientId = import.meta.env.VITE_KEYCLOAK_CLIENT_ID || 'eventFE';
+  const env = getRuntimeEnv();
+  const appEnv = (env.APP_ENV || detectDefaultEnvFromLocation()).toString().toLowerCase();
+  const keycloakUrl = appEnv !== 'local' ? computeKeycloakBaseUrl(appEnv) : (env.VITE_KEYCLOAK_URL || computeKeycloakBaseUrl(appEnv));
+  const realm = env.VITE_KEYCLOAK_REALM || 'event-app';
+  const clientId = env.VITE_KEYCLOAK_CLIENT_ID || 'eventFE';
 
   const redirectUri = encodeURIComponent(
     `${window.location.origin}/${lang.value}/auth/verify-email`

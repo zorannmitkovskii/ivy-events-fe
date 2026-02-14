@@ -1,5 +1,5 @@
 <template>
-  <tr :class="{ 'row-declined': isDeclined }">
+  <tr class="clickable-row" :class="{ 'row-declined': isDeclined }" @click="$emit('edit', guest)">
     <td>
       <div class="guest-name">{{ guest.name }}</div>
       <div class="guest-email">{{ guest.email }}</div>
@@ -11,6 +11,7 @@
         :class="pillClass"
         :value="guest.status"
         @change="onChangeStatus($event.target.value)"
+        @click.stop
       >
         <option value="confirmed">{{ t("guests.confirmed") }}</option>
         <option value="pending">{{ t("guests.pending") }}</option>
@@ -26,6 +27,7 @@
         :value="tableSelectValue"
         :disabled="isDeclined"
         @change="onChangeTable($event.target.value)"
+        @click.stop
       >
         <option value="unassigned">{{ t("guests.unassigned") }}</option>
         <option v-for="tb in tables" :key="tb.id" :value="tb.id">
@@ -38,8 +40,8 @@
 
     <td>
       <div class="actions">
-        <button class="action-link" type="button" @click="$emit('edit', guest)">{{ t("guests.edit") }}</button>
-        <button class="action-link action-remove" type="button" @click="$emit('remove', guest.id)">
+        <button class="action-link" type="button" @click.stop="$emit('edit', guest)">{{ t("guests.edit") }}</button>
+        <button class="action-link action-remove" type="button" @click.stop="$emit('remove', guest.id)">
           {{ t("guests.remove") }}
         </button>
       </div>
@@ -184,5 +186,9 @@ function onChangeStatus(value) {
 
 .action-remove:hover {
   color: #c0302b;
+}
+
+.clickable-row {
+  cursor: pointer;
 }
 </style>

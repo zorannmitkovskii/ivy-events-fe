@@ -37,6 +37,7 @@
           @add-guest="guestModalOpen = true"
           @change-table="changeTable"
           @remove="removeGuest"
+          @edit="openEditGuest"
         />
       </template>
     </TablesLayout>
@@ -50,7 +51,8 @@
 
     <AddGuestModal
       :open="guestModalOpen"
-      @close="guestModalOpen = false"
+      :guest="editingGuest"
+      @close="closeGuestModal"
       @submit="handleAddGuest"
     />
   </div>
@@ -71,6 +73,7 @@ import AddTableModal from "@/components/dashboard/tables/AddTableModal.vue";
 const { t } = useI18n();
 const guestModalOpen = ref(false);
 const tableModalOpen = ref(false);
+const editingGuest = ref(null);
 
 const {
   loading, error, tables, guests, selectedTableId,
@@ -103,6 +106,16 @@ async function handleAddTable(payload) {
 async function handleAddGuest(payload) {
   await addGuest(payload);
   guestModalOpen.value = false;
+}
+
+function openEditGuest(guest) {
+  editingGuest.value = guest;
+  guestModalOpen.value = true;
+}
+
+function closeGuestModal() {
+  guestModalOpen.value = false;
+  editingGuest.value = null;
 }
 
 function printExport() {

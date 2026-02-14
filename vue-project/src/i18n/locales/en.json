@@ -729,6 +729,7 @@
     "tasks": {
       "title": "Tasks",
       "addTask": "Add Task",
+      "editTask": "Edit Task",
       "addReminder": "Add Reminder",
       "setReminder": "Set Reminder",
       "task": "Task",
