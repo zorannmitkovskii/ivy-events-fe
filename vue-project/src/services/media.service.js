@@ -25,6 +25,21 @@ export const mediaService = {
       params: { path }
     });
     return res.data;
+  },
+
+  async downloadAll(eventId) {
+    const res = await backendApi.get("/api/media/download/all", {
+      params: { eventId },
+      responseType: "blob"
+    });
+    return res.data;
+  },
+
+  async downloadSelected(fileIds) {
+    const res = await backendApi.post("/api/media/download/selected", fileIds, {
+      responseType: "blob"
+    });
+    return res.data;
   }
 };
 

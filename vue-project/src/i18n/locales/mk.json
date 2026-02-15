@@ -797,7 +797,13 @@
     "errorTitle": "Неуспешно вчитување на галеријата",
     "empty": "Нема слики. Прикачете ја вашата прва фотографија.",
     "noMore": "Сите слики се вчитани",
-    "download": "Преземи"
+    "download": "Преземи",
+    "downloadAll": "Преземи сите",
+    "downloadSelected": "Преземи избрани",
+    "downloading": "Се презема...",
+    "selectMode": "Избери",
+    "cancelSelect": "Откажи",
+    "selected": "{count} избрани"
   },
   "settings": {
     "title": "Подесувања на настан",

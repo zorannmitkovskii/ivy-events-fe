@@ -797,7 +797,13 @@
     "errorTitle": "Failed to load gallery",
     "empty": "No images yet. Upload your first photo to get started.",
     "noMore": "All images loaded",
-    "download": "Download"
+    "download": "Download",
+    "downloadAll": "Download All",
+    "downloadSelected": "Download Selected",
+    "downloading": "Downloading...",
+    "selectMode": "Select",
+    "cancelSelect": "Cancel",
+    "selected": "{count} selected"
   },
   "settings": {
     "title": "Event Settings",

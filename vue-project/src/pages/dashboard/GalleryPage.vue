@@ -5,9 +5,42 @@
       <p class="dash-page-subtitle">{{ t("gallery.subtitle") }}</p>
     </div>
 
-    <DashboardToolbar>
+    <DashboardToolbar v-if="images.length > 0">
       <template #actions>
-        <!-- future upload button -->
+        <ButtonMain
+          v-if="!selectMode"
+          variant="outline"
+          :disabled="downloading"
+          @click="downloadAll"
+        >
+          <i class="bi bi-download"></i>
+          {{ downloading === 'all' ? t("gallery.downloading") : t("gallery.downloadAll") }}
+        </ButtonMain>
+
+        <ButtonMain
+          v-if="!selectMode"
+          variant="outline"
+          @click="selectMode = true"
+        >
+          <i class="bi bi-check2-square"></i>
+          {{ t("gallery.selectMode") }}
+        </ButtonMain>
+
+        <template v-if="selectMode">
+          <ButtonMain
+            variant="main"
+            :disabled="selectedIds.size === 0 || downloading === 'selected'"
+            @click="downloadSelected"
+          >
+            <i class="bi bi-download"></i>
+            {{ downloading === 'selected' ? t("gallery.downloading") : t("gallery.downloadSelected") }}
+            <span v-if="selectedIds.size > 0" class="sel-badge">{{ selectedIds.size }}</span>
+          </ButtonMain>
+
+          <ButtonMain variant="outline" @click="cancelSelection">
+            {{ t("gallery.cancelSelect") }}
+          </ButtonMain>
+        </template>
       </template>
     </DashboardToolbar>
 
@@ -30,10 +63,18 @@
           v-for="image in images"
           :key="image.id"
           class="gallery-item"
-          @click="openPreview(image)"
+          :class="{ selected: selectedIds.has(image.id) }"
+          @click="onItemClick(image)"
         >
           <img :src="image.thumb" :alt="image.name || ''" loading="lazy" />
-          <div class="gallery-overlay">
+
+          <!-- Select checkbox -->
+          <div v-if="selectMode" class="select-check" @click.stop="toggleSelect(image.id)">
+            <i :class="selectedIds.has(image.id) ? 'bi bi-check-circle-fill' : 'bi bi-circle'"></i>
+          </div>
+
+          <!-- Fullscreen overlay (only when not selecting) -->
+          <div v-if="!selectMode" class="gallery-overlay">
             <i class="bi bi-arrows-fullscreen"></i>
           </div>
         </div>
@@ -73,7 +114,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, reactive, onMounted, onBeforeUnmount } from "vue";
 import { useI18n } from "vue-i18n";
 import { mediaService } from "@/services/media.service";
 import { onboardingStore } from "@/store/onboarding.store";
@@ -96,6 +137,11 @@ const LOAD_MORE_SIZE = 10;
 const previewOpen = ref(false);
 const previewImage = ref({});
 const sentinelRef = ref(null);
+
+// Selection state
+const selectMode = ref(false);
+const selectedIds = reactive(new Set());
+const downloading = ref(null); // null | 'all' | 'selected'
 
 let observer = null;
 
@@ -136,7 +182,6 @@ async function loadMore() {
 }
 
 function unwrap(data) {
-  // Handle { success, data: { content, last, ... } } wrapper
   const inner = data?.data ?? data;
   return {
     content: Array.isArray(inner?.content) ? inner.content : Array.isArray(inner) ? inner : [],
@@ -155,9 +200,69 @@ function mapItems(list) {
   }));
 }
 
+function onItemClick(image) {
+  if (selectMode.value) {
+    toggleSelect(image.id);
+  } else {
+    openPreview(image);
+  }
+}
+
 function openPreview(image) {
   previewImage.value = image;
   previewOpen.value = true;
+}
+
+function toggleSelect(id) {
+  if (selectedIds.has(id)) {
+    selectedIds.delete(id);
+  } else {
+    selectedIds.add(id);
+  }
+}
+
+function cancelSelection() {
+  selectMode.value = false;
+  selectedIds.clear();
+}
+
+function triggerDownload(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+async function downloadAll() {
+  if (downloading.value) return;
+  downloading.value = "all";
+  try {
+    const blob = await mediaService.downloadAll(getEventId());
+    triggerDownload(blob, "gallery.zip");
+  } catch (e) {
+    error.value = e?.message || "Download failed";
+  } finally {
+    downloading.value = null;
+  }
+}
+
+async function downloadSelected() {
+  if (downloading.value || selectedIds.size === 0) return;
+  downloading.value = "selected";
+  try {
+    const ids = Array.from(selectedIds);
+    const blob = await mediaService.downloadSelected(ids);
+    triggerDownload(blob, "gallery-selected.zip");
+    cancelSelection();
+  } catch (e) {
+    error.value = e?.message || "Download failed";
+  } finally {
+    downloading.value = null;
+  }
 }
 
 onMounted(async () => {
@@ -213,6 +318,20 @@ onBeforeUnmount(() => {
   padding: 48px 24px;
 }
 
+/* Toolbar badge */
+.sel-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.25);
+  font-size: 12px;
+  font-weight: 700;
+}
+
 /* Grid */
 .gallery-grid {
   display: grid;
@@ -238,6 +357,27 @@ onBeforeUnmount(() => {
 
 .gallery-item:hover img {
   transform: scale(1.08);
+}
+
+.gallery-item.selected {
+  outline: 3px solid var(--brand-gold, #C8A24D);
+  outline-offset: -3px;
+}
+
+/* Select checkbox */
+.select-check {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  font-size: 22px;
+  color: #fff;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+  cursor: pointer;
+}
+
+.gallery-item.selected .select-check {
+  color: var(--brand-gold, #C8A24D);
 }
 
 .gallery-overlay {
