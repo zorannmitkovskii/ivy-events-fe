@@ -66,6 +66,7 @@ watch(() => route.path, () => {
     z-index: 1000;
     transform: translateX(-100%);
     transition: transform 0.25s ease;
+    overflow: hidden;
   }
 
   .sidebar.open {

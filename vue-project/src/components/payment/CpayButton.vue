@@ -22,14 +22,15 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAuthUser } from "@/composables/useAuthUser";
+import { getUserId } from "@/services/auth.service";
 import { cpayService } from "@/services/cpay.service";
 import { redirectToCpay } from "@/utils/redirectToCpay";
 
 const props = defineProps({
-  packageId: { type: String, default: "" },
+  packageType: { type: String, default: "" }, // INV_BASIC | INV_PRO | IVY_PREMIUM | GALLERY | ORGANIZER
   eventId: { type: String, default: "" },
   label: { type: String, default: "" },
-  variant: { type: String, default: "default" } // "default" | "sidebar" | "gold"
+  variant: { type: String, default: "default" } // "default" | "gold"
 });
 
 const { t } = useI18n();
@@ -51,8 +52,9 @@ async function payWithCpay() {
       email: user.value?.email || "",
       telephone: "+38971234061",
       eventId: props.eventId || authEventId.value,
+      userId: getUserId(),
     };
-    if (props.packageId) payload.packageId = props.packageId;
+    if (props.packageType) payload.packageType = props.packageType;
 
     const res = await cpayService.initPayment(payload);
     const data = res?.data ?? res;

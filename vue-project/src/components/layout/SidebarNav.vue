@@ -12,14 +12,6 @@
         :badge="it.badge ? t(it.badge) : null"
         :active="isActive(it.path)"
       />
-
-      <div class="nav-upgrade">
-        <CpayButton
-          :event-id="eventId"
-          variant="sidebar"
-          :label="t('cpay.upgrade')"
-        />
-      </div>
     </nav>
 
     <SidebarAccount
@@ -39,7 +31,6 @@ import { useI18n } from "vue-i18n";
 import SidebarBrand from "@/components/sidebar/SidebarBrand.vue";
 import SidebarNavItem from "@/components/sidebar/SidebarNavItem.vue";
 import SidebarAccount from "@/components/sidebar/SidebarAccount.vue";
-import CpayButton from "@/components/payment/CpayButton.vue";
 import { Icons } from "@/utils/icons.js";
 import { getFullName, logout } from "@/services/auth.service";
 import { onboardingStore, clearOnboarding } from "@/store/onboarding.store";
@@ -49,7 +40,6 @@ const { t } = useI18n();
 const route = useRoute();
 
 const lang = computed(() => route.params.lang || "mk");
-const eventId = computed(() => onboardingStore.eventId || "");
 
 const link = (section) =>
   `/${lang.value}/dashboard/events/${section}`;
@@ -97,6 +87,8 @@ function signOut() {
   padding: 18px 14px;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  height: 100%;
+  overflow-y: auto;
 }
 .brand { padding: 8px 10px 14px; }
 .logo { font-family: var(--font-family), serif; font-size: 22px; letter-spacing: .4px; }
@@ -117,12 +109,6 @@ function signOut() {
   padding: 2px 8px;
   font-size: 12px;
 }
-.nav-upgrade {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-}
-
 .footer { padding: 14px 10px 8px; }
 .account { color: var(--neutral-100); text-decoration: none; opacity: .9; }
 </style>

@@ -94,10 +94,21 @@ function goToDashboard() {
 onMounted(async () => {
   await loadStatus();
 
+  // Auto-redirect to dashboard on success
+  if (status.value === "SUCCESS") {
+    goToDashboard();
+    return;
+  }
+
   if (status.value === "PENDING") {
     const started = Date.now();
     timer = setInterval(async () => {
       await loadStatus();
+      if (status.value === "SUCCESS") {
+        clearInterval(timer);
+        goToDashboard();
+        return;
+      }
       if (status.value !== "PENDING" || Date.now() - started > 30000) {
         clearInterval(timer);
       }
