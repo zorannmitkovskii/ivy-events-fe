@@ -12,6 +12,11 @@
     </div>
 
     <div class="ov-actions">
+      <CpayButton
+        :event-id="eventId"
+        variant="gold"
+        :label="t('cpay.upgrade')"
+      />
       <ButtonMain variant="outline" @click="goToInvitations">✉ {{ t("overview.editInvitation") }}</ButtonMain>
       <ButtonMain variant="outline" @click="goToGuests">👥 {{ t("overview.manageGuests") }}</ButtonMain>
       <ButtonMain variant="main" :disabled="sending" @click="sendNotification">
@@ -26,6 +31,7 @@ import { ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
+import CpayButton from "@/components/payment/CpayButton.vue";
 import { guestsService } from "@/services/guests.service";
 import { onboardingStore } from "@/store/onboarding.store";
 

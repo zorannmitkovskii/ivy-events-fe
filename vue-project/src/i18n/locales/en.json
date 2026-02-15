@@ -838,6 +838,25 @@
     "archiveDesc": "Archiving this event will hide it from your dashboard. This action can be reversed later.",
     "archiveEvent": "Archive Event"
   },
+  "cpay": {
+    "pay": "Pay with cPay",
+    "upgrade": "Upgrade",
+    "redirecting": "Redirecting...",
+    "initFailed": "Payment initialization failed",
+    "orderId": "Order",
+    "goToDashboard": "Go to Dashboard",
+    "successTitle": "Payment Successful",
+    "successDesc": "Your payment has been processed. Thank you!",
+    "failedTitle": "Payment Failed",
+    "failedDesc": "Your payment could not be processed. Please try again.",
+    "canceledTitle": "Payment Canceled",
+    "canceledDesc": "You canceled the payment.",
+    "expiredTitle": "Payment Expired",
+    "expiredDesc": "The payment session has expired. Please try again.",
+    "pendingTitle": "Confirming Payment",
+    "pendingDesc": "We are confirming your payment. Please wait...",
+    "unknownTitle": "Unknown Status"
+  },
   "galleryUpload": {
     "title": "Share Your Moments",
     "subtitle": "Upload photos and videos from the event",

@@ -5,14 +5,20 @@
         <h1 class="dash-page-title">{{ t("settings.title") }}</h1>
         <p class="dash-page-subtitle">{{ t("settings.subtitle") }}</p>
       </div>
-      <ButtonMain
-        v-if="event && !loading"
-        variant="main"
-        :disabled="saving"
-        @click="saveEvent"
-      >
-        {{ saving ? t("settings.saving") : t("settings.save") }}
-      </ButtonMain>
+      <div v-if="event && !loading" class="header-actions">
+        <CpayButton
+          :event-id="eventId"
+          variant="gold"
+          :label="t('cpay.upgrade')"
+        />
+        <ButtonMain
+          variant="main"
+          :disabled="saving"
+          @click="saveEvent"
+        >
+          {{ saving ? t("settings.saving") : t("settings.save") }}
+        </ButtonMain>
+      </div>
     </div>
 
     <!-- Save feedback -->
@@ -178,6 +184,7 @@ import { eventsService } from "@/services/events.service";
 import { onboardingStore, setSelectedCategory } from "@/store/onboarding.store";
 import { EventCategoryEnum } from "@/enums/EventCategory";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
+import CpayButton from "@/components/payment/CpayButton.vue";
 
 const { t, locale } = useI18n();
 const router = useRouter();
@@ -323,6 +330,13 @@ onMounted(loadEvent);
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 /* Cards */
