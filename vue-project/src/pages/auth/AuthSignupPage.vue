@@ -358,6 +358,8 @@ async function onRegister() {
 }
 
 function onGoogle() {
+  sessionStorage.setItem("google_oauth_intent", "signup");
+
   const env = getRuntimeEnv();
   const appEnv = (env.APP_ENV || detectDefaultEnvFromLocation()).toString().toLowerCase();
   const keycloakBaseUrl = appEnv !== 'local' ? computeKeycloakBaseUrl(appEnv) : (env.VITE_KEYCLOAK_URL || computeKeycloakBaseUrl(appEnv));

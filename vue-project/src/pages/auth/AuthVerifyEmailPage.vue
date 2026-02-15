@@ -54,8 +54,8 @@ import AuthShell from "@/components/auth/AuthShell.vue";
 import AuthCardTitle from "@/components/auth/AuthCardTitle.vue";
 import AuthCard from "@/components/auth/AuthCard.vue";
 import AuthInput from "@/components/auth/AuthInput.vue";
-import { onboardingStore, setEmailVerified, getTempPassword, getTempUsername, clearTempCredentials } from "@/store/onboarding.store";
-import { verifyEmail, exchangeOAuthCode, assignRole, refreshAccessToken, loginWithCredentials } from "@/services/auth.service";
+import { onboardingStore, setEmailVerified, setEventId, getTempPassword, getTempUsername, clearTempCredentials } from "@/store/onboarding.store";
+import { verifyEmail, exchangeOAuthCode, assignRole, refreshAccessToken, getEventId, loginWithCredentials } from "@/services/auth.service";
 
 const router = useRouter();
 const route = useRoute();
@@ -88,7 +88,17 @@ onMounted(async () => {
     }
 
     setEmailVerified(true);
-    await router.replace({ name: "EventCategoryPage", params: { lang: lang.value } });
+    setEventId(getEventId());
+
+    // Login → dashboard, Signup → event creation flow
+    const intent = sessionStorage.getItem("google_oauth_intent");
+    sessionStorage.removeItem("google_oauth_intent");
+
+    if (intent === "login") {
+      await router.replace({ name: "dashboard.overview", params: { lang: lang.value } });
+    } else {
+      await router.replace({ name: "EventCategoryPage", params: { lang: lang.value } });
+    }
   } catch (e) {
     error.value = e?.message || "Google sign-in failed. Please try again.";
     loading.value = false;

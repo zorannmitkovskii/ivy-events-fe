@@ -117,6 +117,8 @@ function onGoogle() {
   const realm = appEnv !== 'local' ? 'event-app' : (env.VITE_KEYCLOAK_REALM || 'event-app');
   const clientId = appEnv !== 'local' ? 'eventFE' : (env.VITE_KEYCLOAK_CLIENT_ID || 'eventFE');
 
+  sessionStorage.setItem("google_oauth_intent", "login");
+
   const redirectUri = encodeURIComponent(
     `${window.location.origin}/${lang.value}/auth/verify-email`
   );
