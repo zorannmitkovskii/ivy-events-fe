@@ -55,7 +55,7 @@ import AuthCardTitle from "@/components/auth/AuthCardTitle.vue";
 import AuthCard from "@/components/auth/AuthCard.vue";
 import AuthInput from "@/components/auth/AuthInput.vue";
 import { onboardingStore, setEmailVerified, getTempPassword, getTempUsername, clearTempCredentials } from "@/store/onboarding.store";
-import { verifyEmail, exchangeOAuthCode, loginWithCredentials } from "@/services/auth.service";
+import { verifyEmail, exchangeOAuthCode, assignRole, refreshAccessToken, loginWithCredentials } from "@/services/auth.service";
 
 const router = useRouter();
 const route = useRoute();
@@ -77,6 +77,16 @@ onMounted(async () => {
   try {
     const redirectUri = `${window.location.origin}/${lang.value}/auth/verify-email`;
     await exchangeOAuthCode(route.query.code, redirectUri);
+
+    // Assign USER role to the Google-created user, then refresh token so role is in JWT
+    try {
+      const claims = JSON.parse(atob(localStorage.getItem("access_token").split(".")[1]));
+      await assignRole(claims.email, "USER");
+      await refreshAccessToken();
+    } catch (e) {
+      console.warn("[google-assign-role]", e?.message);
+    }
+
     setEmailVerified(true);
     await router.replace({ name: "EventCategoryPage", params: { lang: lang.value } });
   } catch (e) {

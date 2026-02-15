@@ -76,6 +76,48 @@ export async function loginWithCredentials(username, password) {
   return data;
 }
 
+// Assign a role to a user by email (e.g. after Google OAuth registration)
+export async function assignRole(email, role = "USER") {
+  const res = await apiPublic.post("/public/users/assign-role", { email, role });
+  return res?.data || res;
+}
+
+// Refresh tokens via Keycloak so the new role appears in the JWT
+export async function refreshAccessToken() {
+  const storedRefresh = localStorage.getItem("refresh_token");
+  if (!storedRefresh) throw new Error("No refresh token");
+
+  const env = getRuntimeEnv();
+  const appEnv = (env.APP_ENV || detectDefaultEnvFromLocation()).toString().toLowerCase();
+  const keycloakUrl = appEnv !== 'local'
+    ? computeKeycloakBaseUrl(appEnv)
+    : (env.VITE_KEYCLOAK_URL || computeKeycloakBaseUrl(appEnv));
+  const realm = appEnv !== 'local' ? 'event-app' : (env.VITE_KEYCLOAK_REALM || 'event-app');
+  const clientId = appEnv !== 'local' ? 'eventFE' : (env.VITE_KEYCLOAK_CLIENT_ID || 'eventFE');
+
+  const tokenUrl = `${keycloakUrl}/realms/${realm}/protocol/openid-connect/token`;
+
+  const params = new URLSearchParams();
+  params.append('grant_type', 'refresh_token');
+  params.append('refresh_token', storedRefresh);
+  params.append('client_id', clientId);
+
+  const response = await fetch(tokenUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params,
+  });
+
+  if (!response.ok) throw new Error('Token refresh failed');
+
+  const data = await response.json();
+
+  if (data.access_token) localStorage.setItem('access_token', data.access_token);
+  if (data.refresh_token) localStorage.setItem('refresh_token', data.refresh_token);
+
+  return data;
+}
+
 // Exchange Keycloak authorization code for tokens (Google OAuth callback)
 export async function exchangeOAuthCode(code, redirectUri) {
   const env = getRuntimeEnv();
