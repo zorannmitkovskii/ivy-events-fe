@@ -1,21 +1,46 @@
 import { api } from "@/services/api";
 
-export const agendaService = {
-  list(eventId, date) {
-    return api.get(`/events/${encodeURIComponent(eventId)}/agenda`, {
-      params: date ? { date } : {}
-    });
+export const agendaApi = {
+  list(eventId) {
+    const params = {};
+    if (eventId) params.eventId = eventId;
+    return api.get("/agendas", { params });
   },
 
-  update(eventId, itemId, payload) {
-    return api.put(`/events/${encodeURIComponent(eventId)}/agenda/${encodeURIComponent(itemId)}`, payload);
+  getById(agendaId) {
+    return api.get(`/agendas/${encodeURIComponent(agendaId)}`);
   },
 
-  create(eventId, payload) {
-    return api.post(`/events/${encodeURIComponent(eventId)}/agenda`, payload);
+  create(payload) {
+    return api.post("/agendas", payload);
   },
 
-  remove(eventId, itemId) {
-    return api.del(`/events/${encodeURIComponent(eventId)}/agenda/${encodeURIComponent(itemId)}`);
+  update(agendaId, payload) {
+    return api.put(`/agendas/${encodeURIComponent(agendaId)}`, payload);
+  },
+
+  remove(agendaId) {
+    return api.del(`/agendas/${encodeURIComponent(agendaId)}`);
+  },
+
+  // Convenience aliases used by useAgenda composable
+  getDemoAgenda() {
+    return api.get("/agendas", { params: { eventId: "demo" } });
+  },
+
+  getAgenda(eventId) {
+    return api.get("/agendas", { params: { eventId } });
+  },
+
+  createItem(eventId, payload) {
+    return api.post("/agendas", { ...payload, eventId });
+  },
+
+  updateItem(eventId, itemId, payload) {
+    return api.put(`/agendas/${encodeURIComponent(itemId)}`, payload);
+  },
+
+  deleteItem(eventId, itemId) {
+    return api.del(`/agendas/${encodeURIComponent(itemId)}`);
   }
 };

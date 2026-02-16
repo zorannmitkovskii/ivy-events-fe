@@ -5,15 +5,22 @@
       <span v-if="selected" class="tag">{{ t("tables.selected") }}</span>
     </div>
 
-    <div class="meta">
-      {{ t("tables.capacity") }}: {{ table.capacity }} {{ t("tables.guests") }}
-    </div>
+    <template v-if="isUnassigned">
+      <div class="meta">{{ table.assigned }} {{ t("tables.guests") }}</div>
+    </template>
 
-    <div class="bar">
-      <div class="fill" :style="{ width: pct + '%' }"></div>
-    </div>
+    <template v-else>
+      <div class="meta">
+        {{ t("tables.capacity") }}: {{ table.capacity }} {{ t("tables.guests") }}
+      </div>
 
-    <div class="count">{{ table.assigned }}/{{ table.capacity }}</div>
+      <div class="progress">
+        <div class="bar">
+          <div class="fill" :style="{ width: pct + '%' }"></div>
+        </div>
+        <span class="count">{{ table.assigned }}/{{ table.capacity }}</span>
+      </div>
+    </template>
   </button>
 </template>
 
@@ -28,6 +35,8 @@ const props = defineProps({
 });
 defineEmits(["select"]);
 
+const isUnassigned = computed(() => props.table?.id === "unassigned");
+
 const pct = computed(() => {
   if (!props.table?.capacity) return 0;
   return Math.min(100, Math.round((props.table.assigned / props.table.capacity) * 100));
@@ -38,29 +47,35 @@ const pct = computed(() => {
 .item{
   width: 100%;
   text-align: left;
-  border: 1px solid rgba(0,0,0,0.08);
-  background: rgba(255,255,255,0.72);
-  border-radius: 14px;
-  padding: 12px;
+  border: 2px solid var(--neutral-300);
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
-.item:hover{ background: rgba(255,255,255,0.90); }
+.item:hover{
+  box-shadow: var(--shadow-sm);
+}
 .selected{
-  border-color: rgba(200,162,77,0.55);
-  box-shadow: 0 10px 24px rgba(200,162,77,0.10);
+  background: var(--bg-main);
+  border-color: var(--brand-gold);
+  box-shadow: 0 4px 16px rgba(200,162,77,0.12);
 }
-.top{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
-.name{ font-weight: 950; }
+.top{ display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
+.name{ font-weight: 600; font-size: 15px; color: var(--brand-main); }
 .tag{
   border-radius: 999px;
   padding: 3px 10px;
   font-size: 11px;
-  font-weight: 900;
-  background: rgba(200,162,77,0.24);
-  color: #5a4410;
+  font-weight: 600;
+  background: var(--brand-gold);
+  color: var(--brand-main);
+  white-space: nowrap;
 }
-.meta{ margin-top: 6px; font-size: 12px; color: var(--neutral-700); }
-.bar{ margin-top: 10px; height: 6px; background: rgba(0,0,0,0.06); border-radius: 999px; overflow:hidden; }
-.fill{ height:100%; background: var(--brand-gold); border-radius: 999px; }
-.count{ margin-top: 8px; font-size: 12px; color: var(--neutral-700); text-align:right; font-weight: 800; }
+.meta{ font-size: 13px; color: var(--neutral-500); }
+.progress{ display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.bar{ flex: 1; height: 8px; background: var(--neutral-300); border-radius: 999px; overflow: hidden; }
+.fill{ height: 100%; background: var(--brand-gold); border-radius: 999px; transition: width 0.3s ease; }
+.count{ font-size: 12px; color: var(--neutral-500); font-weight: 600; white-space: nowrap; }
 </style>

@@ -15,6 +15,13 @@ function resolveAppEnv() {
 function resolveKeycloakUrl() {
   const env = getRuntimeEnv()
   const appEnv = resolveAppEnv()
+
+  // In test/prod, always derive from hostname to prevent a prod URL
+  // baked at build time from being used on test (or vice versa).
+  if (appEnv !== 'local') {
+    return computeKeycloakBaseUrl(appEnv)
+  }
+
   const url = env.VITE_KEYCLOAK_URL
   if (typeof url === 'string' && url.trim() && !/\$\{[^}]+\}/.test(url)) {
     return url
@@ -23,6 +30,9 @@ function resolveKeycloakUrl() {
 }
 
 function resolveRealm() {
+  const appEnv = resolveAppEnv()
+  // Non-local envs always use the canonical realm — prevents Docker misconfiguration
+  if (appEnv !== 'local') return 'event-app'
   const env = getRuntimeEnv()
   const realm = env.VITE_KEYCLOAK_REALM
   if (typeof realm === 'string' && realm.trim() && !/\$\{[^}]+\}/.test(realm)) return realm
@@ -30,6 +40,9 @@ function resolveRealm() {
 }
 
 function resolveClientId() {
+  const appEnv = resolveAppEnv()
+  // Non-local envs always use the canonical clientId — prevents Docker misconfiguration
+  if (appEnv !== 'local') return 'eventFE'
   const env = getRuntimeEnv()
   const cid = env.VITE_KEYCLOAK_CLIENT_ID
   if (typeof cid === 'string' && cid.trim() && !/\$\{[^}]+\}/.test(cid)) return cid
@@ -37,37 +50,11 @@ function resolveClientId() {
 }
 
 
-function logKcDiagnostics(initOpts) {
-  try {
-    const diag = {
-      when: new Date().toISOString(),
-      location: typeof window !== 'undefined' ? {
-        origin: window.location.origin,
-        href: window.location.href,
-        userAgent: navigator.userAgent
-      } : 'no-window',
-      appEnv: resolveAppEnv(),
-      keycloak: {
-        url: resolveKeycloakUrl(),
-        realm: resolveRealm(),
-        clientId: resolveClientId()
-      },
-      initOptions: initOpts
-    }
-    // eslint-disable-next-line no-console
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.warn('[Keycloak][diag] Failed to log diagnostics', e)
-  }
-}
-
-
 function createKeycloakInstance() {
-  return new Keycloak({
-    url: resolveKeycloakUrl(),
-    realm: resolveRealm(),
-    clientId: resolveClientId()
-  })
+  const url = resolveKeycloakUrl()
+  const realm = resolveRealm()
+  const clientId = resolveClientId()
+  return new Keycloak({ url, realm, clientId })
 }
 
 function ensureKeycloakInstance() {
@@ -93,9 +80,6 @@ export async function initKeycloak(options = {}) {
     enableLogging: true
   }
   const initOpts = { ...defaults, ...options }
-
-  // Log diagnostics (preflight removed per requirement)
-  logKcDiagnostics(initOpts)
 
   initPromise = keycloak.init(initOpts)
   try {

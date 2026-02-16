@@ -10,7 +10,7 @@
 
       <select class="select" :value="modelValue.rsvp" @change="update('rsvp', $event.target.value)">
         <option value="all">{{ t("guests.allRsvp") }}</option>
-        <option value="accepted">{{ t("guests.accepted") }}</option>
+        <option value="confirmed">{{ t("guests.confirmed") }}</option>
         <option value="pending">{{ t("guests.pending") }}</option>
         <option value="declined">{{ t("guests.declined") }}</option>
       </select>
@@ -23,9 +23,9 @@
         </option>
       </select>
 
-      <button class="btn btn-ghost" @click="$emit('apply')">
+      <ButtonMain variant="ghost" @click="$emit('apply')">
         Apply
-      </button>
+      </ButtonMain>
     </div>
   </div>
 </template>
@@ -34,6 +34,7 @@
 <script setup>
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import ButtonMain from "@/components/generic/ButtonMain.vue";
 const { t } = useI18n();
 
 const props = defineProps({

@@ -10,23 +10,27 @@
     <div class="donut-wrap">
       <div class="donut" :style="{ background: donutBg }"></div>
       <div class="donut-center">
-        <div class="big">{{ rsvp.invited }}</div>
-        <div class="kpi-sub">{{ t("overview.invited") }}</div>
+        <div class="big">{{ rsvp.total }}</div>
+        <div class="kpi-sub">{{ t("overview.total") }}</div>
       </div>
     </div>
 
     <div class="mini">
       <div class="box">
-        <div class="num">{{ rsvp.attending }}</div>
-        <div class="kpi-sub">{{ t("overview.attending") }}</div>
+        <div class="num">{{ rsvp.comming }}</div>
+        <div class="kpi-sub">{{ t("overview.coming") }}</div>
       </div>
       <div class="box">
-        <div class="num">{{ rsvp.declined }}</div>
+        <div class="num">{{ rsvp.maybe }}</div>
+        <div class="kpi-sub">{{ t("overview.maybe") }}</div>
+      </div>
+      <div class="box">
+        <div class="num">{{ rsvp.decline }}</div>
         <div class="kpi-sub">{{ t("overview.declined") }}</div>
       </div>
       <div class="box">
-        <div class="num">{{ rsvp.pending }}</div>
-        <div class="kpi-sub">{{ t("overview.pending") }}</div>
+        <div class="num">{{ rsvp.waiting }}</div>
+        <div class="kpi-sub">{{ t("overview.waiting") }}</div>
       </div>
     </div>
   </div>
@@ -40,16 +44,16 @@ const { t } = useI18n();
 const props = defineProps({ rsvp: Object });
 
 const donutBg = computed(() => {
-  const total = props.rsvp?.invited || 1;
-  const attending = props.rsvp?.attending || 0;
-  const declined = props.rsvp?.declined || 0;
+  const total = props.rsvp?.total || 1;
+  const comming = props.rsvp?.comming || 0;
+  const maybe = props.rsvp?.maybe || 0;
+  const decline = props.rsvp?.decline || 0;
 
-  const a = Math.round((attending / total) * 360);
-  const d = Math.round((declined / total) * 360);
-  const p = Math.max(0, 360 - a - d);
+  const a1 = Math.round((comming / total) * 360);
+  const a2 = a1 + Math.round((maybe / total) * 360);
+  const a3 = a2 + Math.round((decline / total) * 360);
 
-  // match design: dark green + sage + light grey
-  return `conic-gradient(#2f3e36 0 ${a}deg, #bfd2a4 ${a}deg ${a + d}deg, #e7e7e7 ${a + d}deg ${a + d + p}deg)`;
+  return `conic-gradient(#2f3e36 0deg ${a1}deg, #C8A24D ${a1}deg ${a2}deg, #c27c7c ${a2}deg ${a3}deg, #e7e7e7 ${a3}deg 360deg)`;
 });
 </script>
 
@@ -83,7 +87,7 @@ const donutBg = computed(() => {
 .big{ font-size: 28px; font-weight: 950; color: var(--neutral-900); }
 .mini{
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
   margin-top: 12px;
 }

@@ -1,31 +1,43 @@
 import { api } from "@/services/api";
 
-/**
- * Adjust endpoints to your BE.
- * Recommended REST:
- *  GET  /events/{eventId}/tables
- *  GET  /events/{eventId}/guests
- *  POST /events/{eventId}/guests
- *  PUT  /events/{eventId}/guests/{guestId}/table
- *  DELETE /events/{eventId}/guests/{guestId}
- */
 export const tablesService = {
   getTables(eventId) {
-    return api.get(`/events/${encodeURIComponent(eventId)}/tables`);
+    return api.get("/event-tables", { params: { eventId } });
   },
+
+  getById(tableId) {
+    return api.get(`/event-tables/${encodeURIComponent(tableId)}`);
+  },
+
+  createTable(payload) {
+    return api.post("/event-tables", payload);
+  },
+
+  updateTable(tableId, payload) {
+    return api.put(`/event-tables/${encodeURIComponent(tableId)}`, payload);
+  },
+
+  removeTable(tableId) {
+    return api.del(`/event-tables/${encodeURIComponent(tableId)}`);
+  },
+
+  getSummary(eventId) {
+    return api.get("/event-tables/summary", { params: { eventId } });
+  },
+
   getGuests(eventId) {
-    return api.get(`/events/${encodeURIComponent(eventId)}/guests`);
+    return api.get("/guests", { params: { eventId } });
   },
-  createGuest(eventId, payload) {
-    return api.post(`/events/${encodeURIComponent(eventId)}/guests`, payload);
+
+  createGuest(payload) {
+    return api.post("/guests", payload);
   },
-  assignGuestToTable(eventId, guestId, tableId) {
-    return api.put(
-      `/events/${encodeURIComponent(eventId)}/guests/${encodeURIComponent(guestId)}/table`,
-      { tableId }
-    );
+
+  assignGuestToTable(guestId, payload) {
+    return api.put(`/guests/${encodeURIComponent(guestId)}/event-table`, payload);
   },
-  removeGuest(eventId, guestId) {
-    return api.del(`/events/${encodeURIComponent(eventId)}/guests/${encodeURIComponent(guestId)}`);
+
+  removeGuest(guestId) {
+    return api.del(`/guests/${encodeURIComponent(guestId)}`);
   }
 };

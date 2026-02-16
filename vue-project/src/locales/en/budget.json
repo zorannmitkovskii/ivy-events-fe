@@ -1,0 +1,22 @@
+{
+  "title": "Budget",
+  "export": "Export",
+  "addExpense": "Add Expense",
+  "categories": "Categories",
+  "overviewSubtitle": "{monthLabel} Overview",
+
+  "totalBudget": "Total Budget",
+  "totalSpent": "Total Spent",
+  "remaining": "Remaining",
+  "monthly": "Monthly",
+  "fixedAndVariable": "Fixed & Variable",
+  "safeToSpend": "Safe to spend",
+  "ofBudgetUsed": "{percent}% of budget used",
+  "expense": {
+    "date": "Date",
+    "category": "Category",
+    "merchant": "Merchant",
+    "amount": "Amount",
+    "note": "Note"
+  }
+}

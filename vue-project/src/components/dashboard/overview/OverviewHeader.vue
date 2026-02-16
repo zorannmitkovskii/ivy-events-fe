@@ -12,15 +12,53 @@
     </div>
 
     <div class="ov-actions">
-      <button class="btn-outline">✉ {{ t("overview.editInvitation") }}</button>
-      <button class="btn-outline">👥 {{ t("overview.manageGuests") }}</button>
-      <button class="btn btn-primary">➤ {{ t("overview.sendUpdate") }}</button>
+      <CpayButton
+        :event-id="eventId"
+        variant="gold"
+        :label="t('cpay.upgrade')"
+      />
+      <ButtonMain variant="outline" @click="goToInvitations">✉ {{ t("overview.editInvitation") }}</ButtonMain>
+      <ButtonMain variant="outline" @click="goToGuests">👥 {{ t("overview.manageGuests") }}</ButtonMain>
+      <ButtonMain variant="main" :disabled="sending" @click="sendNotification">
+        ➤ {{ sending ? t("overview.sending") : t("overview.sendUpdate") }}
+      </ButtonMain>
     </div>
   </div>
 </template>
 
 <script setup>
+import { ref, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
+import ButtonMain from "@/components/generic/ButtonMain.vue";
+import CpayButton from "@/components/payment/CpayButton.vue";
+import { guestsService } from "@/services/guests.service";
+import { onboardingStore } from "@/store/onboarding.store";
+
 defineProps({ event: Object });
 const { t } = useI18n();
+const router = useRouter();
+const route = useRoute();
+
+const lang = computed(() => route.params.lang || "mk");
+const eventId = computed(() => onboardingStore.eventId);
+const sending = ref(false);
+
+function goToInvitations() {
+  router.push({ name: "EventInvitationsPage", params: { lang: lang.value } });
+}
+
+function goToGuests() {
+  router.push(`/${lang.value}/dashboard/events/guests`);
+}
+
+async function sendNotification() {
+  if (sending.value || !eventId.value) return;
+  sending.value = true;
+  try {
+    await guestsService.sendNotification(eventId.value);
+  } finally {
+    sending.value = false;
+  }
+}
 </script>

@@ -197,7 +197,7 @@
       "privacy": "Privacy Policy"
     },
     "placeholders": {
-      "email": "your@email.com",
+      "email": "your{'@'}email.com",
       "password": "Enter your password",
       "fullName": "Jane Doe",
       "confirmPassword": "Repeat your password"
@@ -220,7 +220,7 @@
     },
     "fields": {
       "email": "Email Address",
-      "emailPlaceholder": "your@email.com",
+      "emailPlaceholder": "your{'@'}email.com",
       "password": "Password",
       "passwordPlaceholder": "Enter your password",
       "newPassword": "New Password",
@@ -273,6 +273,15 @@
         "label": "Pro tip:",
         "text": "You can invite collaborators after you’ve set up the basics. We’ll remind you later."
       }
+    },
+    "invitations": {
+      "title": "Choose Your Invitation",
+      "subtitle": "Pick a design that matches your style. You can customize it later.",
+      "selected": "Selected",
+      "preview": "Preview",
+      "continue": "Continue",
+      "back": "Back to details",
+      "emptyState": "No invitation designs available for this category yet. We're working on it!"
     },
     "footer": {
       "help": "Help Center",
@@ -478,6 +487,16 @@
         }
       }
     },
+    "socialProof": {
+      "rating": "4.9/5 Rating",
+      "eventsCreated": "50,000+ Events Created",
+      "trustedBy": "Trusted by 25,000+ Couples",
+      "satisfaction": "98% Customer Satisfaction"
+    },
+    "testimonials": {
+      "title": "Loved by Thousands of Happy Couples",
+      "subtitle": "Real stories from real celebrations"
+    },
     "finalCta": {
       "title": "Ready to Create Your Perfect Event?",
       "subtitle": "Join thousands of happy couples and event planners who trust IvyEvents. Start planning your unforgettable celebration today – it's free to get started!",
@@ -499,51 +518,111 @@
     "thRsvp": "RSVP Status",
     "thPlus": "Guests",
     "thTable": "Assigned Table",
-    "thNotes": "Seat / Notes",
+    "thDietary": "Dietary",
     "thActions": "Actions",
     "edit": "Edit",
     "remove": "Remove",
-    "accepted": "Accepted",
+    "confirmed": "Confirmed",
     "pending": "Pending",
     "declined": "Declined",
     "loading": "Loading guests...",
     "errorTitle": "Could not load guests",
     "retry": "Retry",
     "emptyTitle": "No guests yet",
-    "emptyMessage": "Add guests or import a list to start managing RSVPs."
+    "emptyMessage": "Add guests or import a list to start managing RSVPs.",
+    "editGuest": "Edit Guest",
+    "dietary": "Dietary",
+    "noDietaryRestrictions": "No restrictions",
+    "dietaryDescription": "Description",
+    "dietaryDescriptionPh": "e.g. allergic to nuts",
+    "dietaryOptions": {
+      "vegetarian": "Vegetarian",
+      "vegan": "Vegan",
+      "glutenFree": "Gluten Free",
+      "fish": "Fish",
+      "chicken": "Chicken",
+      "other": "Other"
+    },
+    "isChild": "Child",
+    "adults": "Adults",
+    "children": "Children",
+    "note": "Note",
+    "notePh": "Optional note..."
   },
-  "agenda": {
-    "title": "Event Agenda",
-    "subtitle": "Manage your timeline and responsibilities",
-    "dayView": "Day View",
+   "agenda": {
+    "title": "Agenda",
+    "subtitle": "Manage the schedule for {event} • {dateRange}",
+    "dayView": "Day",
     "multiDay": "Multi-day",
-    "templates": "Templates",
-    "addItem": "+ Add Item",
-    "totalDuration": "Total Duration",
-    "now": "Now",
+    "template": "Template",
+    "addItem": "Add Item",
+    "totalDuration": "Total duration: {duration}",
     "editItem": "Edit Item",
-    "close": "Close",
-    "save": "Save Changes",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "fieldTitle": "Title",
-    "fieldStart": "Start Time",
-    "fieldEnd": "End Time",
-    "fieldLocation": "Location",
-    "fieldResponsible": "Responsible",
-    "fieldVisibility": "Visibility",
-    "fieldNotes": "Notes",
-    "visibilityEveryone": "Everyone",
-    "visibilityTeam": "Team only",
-    "statusCompleted": "Completed",
-    "statusInProgress": "In Progress",
-    "statusUpcoming": "Upcoming",
-    "statusBreak": "Break",
-    "loading": "Loading agenda...",
-    "errorTitle": "Could not load agenda",
-    "retry": "Retry",
-    "emptyTitle": "No agenda items",
-    "emptyMessage": "Add your first agenda item to build the timeline."
+    "emptyTitle": "No agenda items yet",
+    "emptyMessage": "Add your first agenda item to start building your schedule.",
+    "totalItems": "{count} items",
+    "th": {
+      "title": "Title",
+      "type": "Type",
+      "dateTime": "Date & Time",
+      "location": "Location",
+      "visibility": "Visibility",
+      "actions": "Actions"
+    },
+    "form": {
+      "title": "Title",
+      "type": "Type",
+      "dateTime": "Date & Time",
+      "location": "Location",
+      "locationName": "Venue Name",
+      "addressLine": "Address",
+      "city": "City",
+      "postalCode": "Postal Code",
+      "googleMapsUrl": "Google Maps URL",
+      "description": "Description",
+      "visibility": "Visibility",
+      "status": "Status"
+    },
+    "status": {
+      "completed": "Completed",
+      "inProgress": "In Progress",
+      "upcoming": "Upcoming",
+      "break": "Break"
+    },
+    "visibility": {
+      "EVERYONE": "Everyone",
+      "TEAM": "Team only",
+      "CLOSE_FRIENDS": "Close Friends"
+    },
+    "addDialog": {
+      "title": "Add Agenda Item",
+      "create": "Create",
+      "titlePh": "e.g. Welcome Reception",
+      "locationPh": "Search for a venue or address...",
+      "addressPh": "e.g. 123 Main Street",
+      "descriptionPh": "Describe this agenda item..."
+    },
+    "editDialog": {
+      "title": "Edit Agenda Item"
+    },
+    "errors": {
+      "titleRequired": "Title is required",
+      "typeRequired": "Type is required",
+      "dateTimeRequired": "Date and time is required"
+    },
+    "types": {
+      "CHURCH": "Church",
+      "CEREMONY": "Ceremony",
+      "RECEPTION": "Reception",
+      "FIRST_DANCE": "First Dance",
+      "START_GROOM": "Start Groom",
+      "START_BRIDE": "Start Bride"
+    }
+  },
+  "storyTypes": {
+    "HOW_WE_MET": "How We Met",
+    "FIRST_DATE": "First Date",
+    "PROPOSAL": "Proposal"
   },
   "sidebar": {
     "overview": "Overview",
@@ -556,31 +635,52 @@
     "team": "Team",
     "settings": "Settings",
     "premium": "PREMIUM",
-    "eventPlanner": "Event Planner"
+    "eventPlanner": "Event Planner",
+    "eventSettings": "Event Settings",
+    "signOut": "Sign Out"
   },
   "overview": {
     "daysToGo": "days to go",
     "editInvitation": "Edit Invitation",
     "manageGuests": "Manage Guests",
     "sendUpdate": "Send Update",
+    "sending": "Sending...",
     "totalGuests": "Total Guests",
     "tablesAssigned": "Tables Assigned",
     "tablesSeated": "of tables seated",
     "budgetStatus": "Budget Status",
     "of": "of",
     "budget": "budget",
+    "remaining": "Remaining",
+    "used": "Used",
     "rsvpSummary": "RSVP Summary",
     "viewDetails": "View Details",
-    "invited": "INVITED",
-    "attending": "Attending",
+    "total": "TOTAL",
+    "coming": "Coming",
+    "maybe": "Maybe",
     "declined": "Declined",
-    "pending": "Pending",
+    "waiting": "Waiting",
     "upcomingTasks": "Upcoming Tasks",
+    "daysUntilEvent": "Days Until Event",
+    "days": "Days",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds",
+    "galleryPreview": "Gallery Preview",
+    "noPhotosYet": "No photos uploaded yet",
+    "guestAssignment": "Guest Assignment",
+    "guestsAssigned": "guests assigned",
     "viewAllTasks": "View All Tasks",
     "onTrackTitle": "Everything is on track!",
     "viewTimeline": "View Timeline"
   },
-  "common": { "cancel": "Cancel", "save": "Save" },
+  "common": {
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saveChanges": "Save Changes",
+    "viewAll": "View All"
+  },
   "tables": {
     "title": "Tables & Seating",
     "subtitle": "Manage seating assignments by table",
@@ -612,6 +712,159 @@
     "errors": {
       "nameRequired": "Name is required",
       "statusRequired": "Status is required"
+    },
+    "addTableDialog": {
+      "title": "Add Table",
+      "name": "Table Name",
+      "namePh": "e.g. Table 4",
+      "maxGuests": "Max Guests",
+      "maxGuestsPh": "e.g. 8",
+      "nameRequired": "Table name is required",
+      "maxGuestsRequired": "Max guests must be greater than 0"
+    },
+    "tabs": {
+      "seating": "Tables & Seating",
+      "tasks": "Tasks"
+    },
+    "tasks": {
+      "title": "Tasks",
+      "addTask": "Add Task",
+      "editTask": "Edit Task",
+      "addReminder": "Add Reminder",
+      "setReminder": "Set Reminder",
+      "task": "Task",
+      "reminder": "Reminder",
+      "due": "Due",
+      "completed": "Completed",
+      "inProgress": "In Progress",
+      "pending": "Pending",
+      "empty": "No tasks yet. Add your first task to get started.",
+      "form": {
+        "title": "Task Name",
+        "titlePh": "e.g. Book venue and confirm date",
+        "description": "Description",
+        "descriptionPh": "Add a description or notes...",
+        "dueDate": "Due Date",
+        "status": "Status",
+        "titleRequired": "Task name is required"
+      }
     }
+  },
+  "budget": {
+    "title": "Budget",
+    "export": "Export",
+    "addExpense": "Add Expense",
+    "categories": "Categories",
+    "overviewSubtitle": "{monthLabel} Overview",
+
+    "totalBudget": "Total Budget",
+    "totalSpent": "Total Spent",
+    "remaining": "Remaining",
+    "monthly": "Monthly",
+    "fixedAndVariable": "Fixed & Variable",
+    "safeToSpend": "Safe to spend",
+    "ofBudgetUsed": "{percent}% of budget used",
+    "createBudget": "Create Budget",
+    "emptyTitle": "No budget yet",
+    "emptyMessage": "Create a budget to start tracking your event expenses.",
+    "budgetDialog": {
+      "name": "Budget Name",
+      "namePh": "e.g. Wedding Budget",
+      "description": "Description",
+      "descriptionPh": "Optional description",
+      "amount": "Total Amount",
+      "nameRequired": "Budget name is required",
+      "amountRequired": "Amount must be greater than 0"
+    },
+    "expense": {
+      "date": "Date",
+      "category": "Category",
+      "categoryPh": "Select category",
+      "merchant": "Merchant",
+      "merchantPh": "e.g. Venue, Florist, Caterer",
+      "amount": "Amount",
+      "note": "Note",
+      "notePh": "Optional note",
+      "merchantRequired": "Merchant is required",
+      "amountRequired": "Amount must be greater than 0"
+    }
+  },
+  "gallery": {
+    "title": "Gallery",
+    "subtitle": "Browse and manage your event photos",
+    "loading": "Loading images...",
+    "loadingMore": "Loading more...",
+    "errorTitle": "Failed to load gallery",
+    "empty": "No images yet. Upload your first photo to get started.",
+    "noMore": "All images loaded",
+    "download": "Download",
+    "downloadAll": "Download All",
+    "downloadSelected": "Download Selected",
+    "downloading": "Downloading...",
+    "selectMode": "Select",
+    "cancelSelect": "Cancel",
+    "selected": "{count} selected"
+  },
+  "settings": {
+    "title": "Event Settings",
+    "subtitle": "View and manage your event configuration",
+    "loading": "Loading event details...",
+    "errorTitle": "Could not load event",
+    "retry": "Retry",
+    "save": "Save",
+    "saving": "Saving...",
+    "saved": "Changes saved!",
+    "saveError": "Failed to save changes",
+    "eventDetails": "Event Details",
+    "eventName": "Event Name",
+    "eventDate": "Event Date",
+    "eventLocation": "Location",
+    "eventCategory": "Category",
+    "language": "Language",
+    "showAgenda": "Show Agenda",
+    "showOurStory": "Show Our Story",
+    "linksAndSharing": "Links & Sharing",
+    "invitationLink": "Invitation Link",
+    "invitationLinkDesc": "Share this link with your guests so they can view the invitation and RSVP.",
+    "noInvitationUrl": "No invitation link available yet.",
+    "galleryUrl": "Gallery URL",
+    "galleryUrlDesc": "Share this link so guests can upload photos from the event.",
+    "privateInvitationUrl": "Private Invitation URL",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "changeInvitation": "Change Invitation",
+    "displayOptions": "Display Options",
+    "dangerZone": "Danger Zone",
+    "archiveDesc": "Archiving this event will hide it from your dashboard. This action can be reversed later.",
+    "archiveEvent": "Archive Event"
+  },
+  "cpay": {
+    "pay": "Pay with cPay",
+    "upgrade": "Upgrade",
+    "redirecting": "Redirecting...",
+    "initFailed": "Payment initialization failed",
+    "orderId": "Order",
+    "goToDashboard": "Go to Dashboard",
+    "successTitle": "Payment Successful",
+    "successDesc": "Your payment has been processed. Thank you!",
+    "failedTitle": "Payment Failed",
+    "failedDesc": "Your payment could not be processed. Please try again.",
+    "canceledTitle": "Payment Canceled",
+    "canceledDesc": "You canceled the payment.",
+    "expiredTitle": "Payment Expired",
+    "expiredDesc": "The payment session has expired. Please try again.",
+    "pendingTitle": "Confirming Payment",
+    "pendingDesc": "We are confirming your payment. Please wait...",
+    "unknownTitle": "Unknown Status"
+  },
+  "galleryUpload": {
+    "title": "Share Your Moments",
+    "subtitle": "Upload photos and videos from the event",
+    "dropzone": "Drag & drop files here or tap to browse",
+    "formats": "JPG, PNG, HEIC, MP4 supported",
+    "upload": "Upload {count} file(s)",
+    "uploading": "Uploading...",
+    "success": "Photos uploaded successfully! Thank you!",
+    "error": "Upload failed. Please try again."
   }
 }

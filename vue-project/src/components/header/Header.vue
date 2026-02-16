@@ -28,26 +28,44 @@
     <!-- Mobile menu panel (dropdown) -->
     <div class="mobile-menu" :class="{ open: isMenuOpen }">
       <nav class="mobile-nav">
-        <a href="#" @click="closeMenu">{{$t('header.menu.templates')}}</a>
-        <a href="#" @click="closeMenu">{{$t('header.menu.features')}}</a>
-        <a href="#" @click="closeMenu">{{$t('header.menu.pricing')}}</a>
-        <a href="#" @click="closeMenu">{{$t('header.menu.faq')}}</a>
+        <a
+          v-for="link in mobileLinks"
+          :key="link.labelKey"
+          href="#"
+          @click.prevent="goTo(link.to)"
+        >{{ $t(link.labelKey) }}</a>
       </nav>
 
       <div class="mobile-actions">
-        <button class="btn btn-main-outline w-full" @click="closeMenu">{{$t('header.actions.signIn')}}</button>
-        <button class="btn btn-main w-full" @click="closeMenu">{{$t('header.actions.getStartedFree')}}</button>
+        <button class="btn btn-main-outline w-full" @click="goToLogin">{{$t('header.actions.signIn')}}</button>
+        <button class="btn btn-main w-full" @click="goToSignup">{{$t('header.actions.getStartedFree')}}</button>
       </div>
     </div>
   </header>
 </template>
 
 <script setup>
-import {ref, onMounted, onBeforeUnmount} from "vue";
+import {ref, computed, onMounted, onBeforeUnmount} from "vue";
+import { useRoute, useRouter } from "vue-router";
 import NavLinks from "@/components/header/NavLinks.vue";
 import HeaderActions from "@/components/header/HeaderActions.vue";
 
+const route = useRoute();
+const router = useRouter();
+const lang = computed(() => route.params.lang || "mk");
+
 const isMenuOpen = ref(false);
+
+const mobileLinks = [
+  { labelKey: "header.menu.templates", to: "/" },
+  { labelKey: "header.menu.features", to: "features" },
+  { labelKey: "header.menu.pricing", to: "pricing" },
+  { labelKey: "header.menu.faq", to: "/" },
+];
+
+function mobileRoute(path) {
+  return `/${lang.value}/${path}`;
+}
 
 function toggleMenu() {
   isMenuOpen.value = !isMenuOpen.value;
@@ -55,6 +73,21 @@ function toggleMenu() {
 
 function closeMenu() {
   isMenuOpen.value = false;
+}
+
+function goTo(path) {
+  router.push(mobileRoute(path));
+  closeMenu();
+}
+
+function goToLogin() {
+  router.push({ name: "login", params: { lang: lang.value } });
+  closeMenu();
+}
+
+function goToSignup() {
+  router.push({ name: "signup", params: { lang: lang.value } });
+  closeMenu();
 }
 
 function onKeydown(e) {

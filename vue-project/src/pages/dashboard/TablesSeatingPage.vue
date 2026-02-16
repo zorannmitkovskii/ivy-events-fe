@@ -1,45 +1,61 @@
 <template>
-  <TablesLayout
-    :title="t('tables.title')"
-    :subtitle="t('tables.subtitle')"
-  >
-    <template #actions>
-      <BaseButton variant="primary" @click="openAddTable">
-        {{ t("tables.addTable") }}
-      </BaseButton>
-      <BaseButton variant="gold" @click="printExport">
-        {{ t("tables.printExport") }}
-      </BaseButton>
-    </template>
+  <div class="dash-page">
+    <div class="dash-page-header">
+      <h1 class="dash-page-title">{{ t("tables.title") }}</h1>
+      <p class="dash-page-subtitle">{{ t("tables.subtitle") }}</p>
+    </div>
 
-    <template #left>
-      <TableListCard
-        :tables="tablesForList"
-        :selectedId="selectedTableId"
-        @select="selectedTableId = $event"
-      />
-    </template>
+    <TablesLayout>
+      <template #actions>
+        <ButtonMain variant="main" @click="tableModalOpen = true">
+          {{ t("tables.addTable") }}
+        </ButtonMain>
+        <ButtonMain variant="gold" @click="printExport">
+          {{ t("tables.printExport") }}
+        </ButtonMain>
+        <ButtonMain variant="outline" @click="guestModalOpen = true">
+          {{ t("tables.addGuest") }}
+        </ButtonMain>
+      </template>
 
-    <template #right>
-      <div v-if="loading" class="card card-pad">Loading…</div>
-      <div v-else-if="error" class="card card-pad">{{ error }}</div>
+      <template #left>
+        <TableListCard
+          :tables="tablesForList"
+          :selectedId="selectedTableId"
+          @select="selectedTableId = $event"
+        />
+      </template>
 
-      <GuestAssignmentCard
-        v-else
-        :guests="guests"
-        :tables="tables"
-        @add-guest="modalOpen = true"
-        @change-table="changeTable"
-        @remove="removeGuest"
-      />
-    </template>
-  </TablesLayout>
+      <template #right>
+        <div v-if="loading" class="card card-pad">Loading…</div>
+        <div v-else-if="error" class="card card-pad">{{ error }}</div>
 
-  <AddGuestModal
-    :open="modalOpen"
-    @close="modalOpen = false"
-    @submit="handleAddGuest"
-  />
+        <GuestAssignmentCard
+          v-else
+          :guests="guests"
+          :tables="tables"
+          @add-guest="guestModalOpen = true"
+          @change-table="changeTable"
+          @remove="removeGuest"
+          @edit="openEditGuest"
+        />
+      </template>
+    </TablesLayout>
+
+    <AddTableModal
+      :open="tableModalOpen"
+      :nextNumber="nextTableNumber"
+      @close="tableModalOpen = false"
+      @submit="handleAddTable"
+    />
+
+    <AddGuestModal
+      :open="guestModalOpen"
+      :guest="editingGuest"
+      @close="closeGuestModal"
+      @submit="handleAddGuest"
+    />
+  </div>
 </template>
 
 <script setup>
@@ -47,25 +63,27 @@ import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useTablesSeating } from "@/composables/useTablesSeating";
 
-import BaseButton from "@/components/ui/BaseButton.vue";
+import ButtonMain from "@/components/generic/ButtonMain.vue";
 import TablesLayout from "@/components/dashboard/tables/TablesLayout.vue";
 import TableListCard from "@/components/dashboard/tables/TableListCard.vue";
 import GuestAssignmentCard from "@/components/dashboard/tables/GuestAssignmentCard.vue";
 import AddGuestModal from "@/components/dashboard/tables/AddGuestModal.vue";
-
-// ✅ FIX: correct filename (singular)
+import AddTableModal from "@/components/dashboard/tables/AddTableModal.vue";
 
 const { t } = useI18n();
-const modalOpen = ref(false);
+const guestModalOpen = ref(false);
+const tableModalOpen = ref(false);
+const editingGuest = ref(null);
 
 const {
   loading, error, tables, guests, selectedTableId,
-  load, addGuest, changeTable, removeGuest
+  load, addTable, addGuest, updateGuest, changeTable, removeGuest
 } = useTablesSeating();
 
 onMounted(load);
 
-// ✅ add "Unassigned" item on the left
+const nextTableNumber = computed(() => tables.value.length + 1);
+
 const tablesForList = computed(() => {
   const unassignedCount = guests.value.filter(g => !g.tableId).length;
 
@@ -80,13 +98,29 @@ const tablesForList = computed(() => {
   ];
 });
 
-async function handleAddGuest(payload) {
-  await addGuest(payload);
-  modalOpen.value = false;
+async function handleAddTable(payload) {
+  await addTable(payload);
+  tableModalOpen.value = false;
 }
 
-function openAddTable() {
-  alert("Add Table (next)");
+async function handleAddGuest(payload) {
+  if (payload.id) {
+    const { id, ...body } = payload;
+    await updateGuest(id, body);
+  } else {
+    await addGuest(payload);
+  }
+  closeGuestModal();
+}
+
+function openEditGuest(guest) {
+  editingGuest.value = guest;
+  guestModalOpen.value = true;
+}
+
+function closeGuestModal() {
+  guestModalOpen.value = false;
+  editingGuest.value = null;
 }
 
 function printExport() {

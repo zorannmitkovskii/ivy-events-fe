@@ -1,7 +1,17 @@
-import { computed, ref } from "vue";
-import { useRoute } from "vue-router";
+import { computed, ref, watch } from "vue";
 import { tablesService } from "@/services/tables.service";
+import { guestsService } from "@/services/guests.service";
 import { getDemoTablesSeating } from "@/demo/tables.demo";
+import { onboardingStore } from "@/store/onboarding.store";
+
+function mapTable(dto) {
+  return {
+    id: dto.id,
+    name: dto.title,
+    capacity: dto.maxGuest,
+    assigned: dto.assignedGuests || 0,
+  };
+}
 
 function recomputeAssignedCounts(tables, guests) {
   const map = new Map(tables.map(t => [t.id, 0]));
@@ -12,9 +22,8 @@ function recomputeAssignedCounts(tables, guests) {
 }
 
 export function useTablesSeating() {
-  const route = useRoute();
-  const eventId = computed(() => String(route.params.eventId || "demo"));
-  const isDemo = computed(() => eventId.value === "demo" || String(route.query.demo || "") === "1");
+  const eventId = computed(() => onboardingStore.eventId || "");
+  const isDemo = computed(() => !eventId.value);
 
   const loading = ref(false);
   const error = ref(null);
@@ -36,21 +45,59 @@ export function useTablesSeating() {
         return;
       }
 
-      const [tRes, gRes] = await Promise.all([
-        tablesService.getTables(eventId.value),
-        tablesService.getGuests(eventId.value)
-      ]);
-
-      tables.value = tRes || [];
-      guests.value = gRes || [];
-      tables.value = recomputeAssignedCounts(tables.value, guests.value);
-      selectedTableId.value = tables.value[0]?.id || "unassigned";
+      const raw = (await tablesService.getTables(eventId.value)) || [];
+      tables.value = raw.map(mapTable);
+      selectedTableId.value = "unassigned";
+      await loadGuests();
 
     } catch (e) {
       error.value = e?.message || "Failed to load seating";
     } finally {
       loading.value = false;
     }
+  }
+
+  async function loadGuests() {
+    const tableId = selectedTableId.value === "unassigned" ? null : selectedTableId.value;
+    const data = await guestsService.listPerTable(eventId.value, tableId);
+    const list = Array.isArray(data) ? data : data?.items ?? data?.content ?? [];
+    guests.value = list.map(dto => ({
+      id: dto.id,
+      name: dto.name,
+      phone: dto.phone ?? null,
+      email: dto.email ?? null,
+      tableId: dto.tableNumber ?? null,
+      status: (dto.inviteStatus || "PENDING").toLowerCase(),
+      isChild: dto.isChild ?? false,
+      note: dto.note ?? "",
+      dietaryPreferences: dto.dietaryPreferences ?? null,
+      _raw: dto,
+    }));
+  }
+
+  // Reload guests when selected table changes
+  watch(selectedTableId, async (newVal, oldVal) => {
+    if (!eventId.value || isDemo.value || oldVal === null) return;
+    try {
+      await loadGuests();
+    } catch (e) {
+      error.value = e?.message || "Failed to load guests";
+    }
+  });
+
+  async function addTable(payload) {
+    if (isDemo.value) {
+      const id = `t-${Date.now()}`;
+      tables.value = [...tables.value, { id, name: payload.name, capacity: payload.capacity, assigned: 0 }];
+      selectedTableId.value = id;
+      return;
+    }
+    await tablesService.createTable({
+      eventId: eventId.value,
+      title: payload.name,
+      maxGuest: payload.capacity,
+    });
+    await load();
   }
 
   async function addGuest(payload) {
@@ -60,7 +107,8 @@ export function useTablesSeating() {
       tables.value = recomputeAssignedCounts(tables.value, guests.value);
       return;
     }
-    await tablesService.createGuest(eventId.value, payload);
+    const { name, isChild, ...rest } = payload;
+    await guestsService.create({ ...rest, guests: [{ name, isChild: isChild ?? false }], eventId: eventId.value });
     await load();
   }
 
@@ -70,7 +118,17 @@ export function useTablesSeating() {
       tables.value = recomputeAssignedCounts(tables.value, guests.value);
       return;
     }
-    await tablesService.assignGuestToTable(eventId.value, guestId, tableId);
+    await guestsService.updateTableNumber(guestId, { tableNumber: tableId });
+    await load();
+  }
+
+  async function updateGuest(guestId, payload) {
+    if (isDemo.value) {
+      const g = guests.value.find(x => x.id === guestId);
+      if (g) Object.assign(g, { name: payload.name, email: payload.email, note: payload.note });
+      return;
+    }
+    await guestsService.update(guestId, payload);
     await load();
   }
 
@@ -80,23 +138,9 @@ export function useTablesSeating() {
       tables.value = recomputeAssignedCounts(tables.value, guests.value);
       return;
     }
-    await tablesService.removeGuest(eventId.value, guestId);
+    await tablesService.removeGuest(guestId);
     await load();
   }
-
-  const filteredGuests = computed(() => {
-    // if no selected table, show all (safe fallback)
-    if (!selectedTableId.value) return guests.value;
-
-    // special option: show unassigned
-    if (selectedTableId.value === "unassigned") {
-      return guests.value.filter(g => !g.tableId);
-    }
-
-    // normal: show only guests on selected table
-    return guests.value.filter(g => g.tableId === selectedTableId.value);
-  });
-
 
   return {
     eventId,
@@ -104,10 +148,12 @@ export function useTablesSeating() {
     loading,
     error,
     tables,
-    guests: filteredGuests,
+    guests,
     selectedTableId,
     load,
+    addTable,
     addGuest,
+    updateGuest,
     changeTable,
     removeGuest
   };

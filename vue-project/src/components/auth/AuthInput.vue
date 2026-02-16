@@ -94,10 +94,10 @@ defineProps({
   color: var(--bg-dark-gray);
 }
 
-/* Focus ring like example */
+/* Focus ring */
 .field__control:focus-within {
-  border-color: var(--brand-main);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand-main) 20%, transparent);
+  border-color: var(--brand-gold);
+  box-shadow: 0 0 0 3px rgba(200, 162, 77, 0.15);
 }
 input:focus {
   outline: none;

@@ -1,70 +1,163 @@
+<!-- src/components/agenda/AgendaItemCard.vue -->
 <template>
-  <div class="item" :class="{ muted: item.status === 'completed' }">
-    <div class="time">{{ item.start }} - {{ item.end }}</div>
+  <article class="card" :class="{ selected }" @click="$emit('select')">
+    <div class="top">
+      <div class="time">{{ time }}</div>
 
-    <div class="box" :class="{ highlight: item.status === 'in_progress' }" @click="$emit('select', item)">
-      <span class="pill" :style="pillStyle">{{ statusLabel }}</span>
-
-      <div class="title" :style="item.status === 'in_progress' ? 'font-family: var(--font-family); font-size:26px;' : ''">
-        {{ item.title }}
+      <div v-if="status" class="status">
+        {{ statusText }}
       </div>
 
-      <div v-if="item.notes" class="small" style="margin-top:8px; max-width:520px;">
-        {{ item.notes }}
-      </div>
-
-      <div class="chips">
-        <span v-if="item.location" class="pill" style="background:rgba(0,0,0,0.03);">📍 {{ item.location }}</span>
-        <span v-if="item.responsible" class="pill" style="background:rgba(0,0,0,0.03);">👤 {{ item.responsible }}</span>
-      </div>
+      <button
+        class="more"
+        type="button"
+        @click.stop="$emit('select')"
+        aria-label="Edit"
+        title="Edit"
+      >
+        ⋯
+      </button>
     </div>
-  </div>
+
+    <h3 class="title">{{ title }}</h3>
+
+    <p v-if="notes" class="notes">
+      {{ notes }}
+    </p>
+
+    <div class="meta">
+      <span v-if="location" class="pill">📍 {{ location }}</span>
+      <span v-if="responsible" class="pill">👤 {{ responsible }}</span>
+      <span v-if="tag" class="tag">{{ tag }}</span>
+    </div>
+  </article>
 </template>
 
 <script setup>
 import { computed } from "vue";
-import { useI18n } from "vue-i18n";
-const { t } = useI18n();
 
-const props = defineProps({ item: Object });
-
-const statusLabel = computed(() => {
-  switch (props.item.status) {
-    case "completed": return t("agenda.statusCompleted");
-    case "in_progress": return t("agenda.statusInProgress");
-    case "break": return t("agenda.statusBreak");
-    default: return t("agenda.statusUpcoming");
-  }
-});
-
-const pillStyle = computed(() => {
-  if (props.item.status === "in_progress") return { background: "#FFF2D6" };
-  if (props.item.status === "completed") return { background: "rgba(0,0,0,0.03)" };
-  if (props.item.status === "break") return { background: "rgba(0,0,0,0.03)" };
-  return { background: "rgba(0,0,0,0.03)" };
+const props = defineProps({
+  time: { type: String, default: "" },
+  title: { type: String, required: true },
+  notes: { type: String, default: "" },
+  location: { type: String, default: "" },
+  responsible: { type: String, default: "" },
+  status: { type: String, default: "" }, // UPCOMING | IN_PROGRESS | COMPLETED | ...
+  tag: { type: String, default: "" },
+  selected: { type: Boolean, default: false }
 });
 
 defineEmits(["select"]);
+
+const statusText = computed(() => {
+  // Keep it simple; if you want i18n later, map with t()
+  switch (props.status) {
+    case "UPCOMING":
+      return "Upcoming";
+    case "IN_PROGRESS":
+      return "In progress";
+    case "COMPLETED":
+      return "Completed";
+    default:
+      return props.status;
+  }
+});
 </script>
 
 <style scoped>
-.item { display:grid; grid-template-columns: 120px 1fr; gap:14px; align-items:start; }
-.time { color: var(--neutral-700); font-size:12px; padding-top:12px; }
-.box{
-  background: rgba(255,255,255,0.75);
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 16px;
-  padding: 14px;
+.card {
+  background: #fff;
+  border: 1px solid #ece7d8;
+  border-radius: 14px;
+  padding: 14px 14px 12px;
   cursor: pointer;
+  transition: box-shadow 120ms ease, border-color 120ms ease, transform 120ms ease;
 }
-.box.highlight{
-  border-left: 4px solid var(--brand-gold);
-  box-shadow: var(--shadow-sm);
+
+.card:hover {
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
 }
-.title{ font-weight:900; font-size:18px; margin-top:8px; }
-.chips{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
-.muted .box { opacity: 0.65; }
-@media (max-width: 1100px){
-  .item { grid-template-columns: 1fr; }
+
+.card.selected {
+  border-color: #c8a24d;
+  box-shadow: 0 10px 22px rgba(200, 162, 77, 0.12);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.time {
+  font-weight: 900;
+  font-size: 12px;
+  color: #2b2a27;
+  letter-spacing: 0.02em;
+}
+
+.status {
+  font-size: 12px;
+  font-weight: 900;
+  color: #2f3e36;
+  background: #eaf0ea;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+.more {
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  color: #8b877c;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.more:hover {
+  background: #f4f2ec;
+}
+
+.title {
+  margin: 10px 0 6px;
+  font-size: 16px;
+  font-weight: 900;
+  color: #1e1d1a;
+}
+
+.notes {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: #6e6a5f;
+  line-height: 1.4;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.pill {
+  font-size: 12px;
+  background: #f4f2ec;
+  padding: 6px 8px;
+  border-radius: 10px;
+  color: #454137;
+}
+
+.tag {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 900;
+  color: #6e6a5f;
+  background: #faf8f2;
+  border: 1px solid #eee8d6;
+  padding: 6px 10px;
+  border-radius: 999px;
 }
 </style>

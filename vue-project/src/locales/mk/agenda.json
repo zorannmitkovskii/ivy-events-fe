@@ -1,0 +1,13 @@
+{
+  "title": "Агенда на настан",
+  "subtitle": "Управувај со распоредот за {event} • {dateRange}",
+  "dayView": "Дневен преглед",
+  "multiDay": "Повеќе денови",
+  "template": "Шаблон",
+  "addItem": "Додај ставка",
+  "totalDuration": "Вкупно времетраење: {duration}",
+  "editItem": "Измени ставка",
+  "saveChanges": "Зачувај промени",
+  "cancel": "Откажи",
+  "delete": "Избриши"
+}

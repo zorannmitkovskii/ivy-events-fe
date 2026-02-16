@@ -18,33 +18,34 @@
       :name="userName"
       :role="userRole"
       :avatarUrl="avatarUrl"
-      :to="accountLink"
+      @settings="goToSettings"
+      @sign-out="signOut"
     />
   </aside>
 </template>
 
 <script setup>
 import { computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import SidebarBrand from "@/components/sidebar/SidebarBrand.vue";
 import SidebarNavItem from "@/components/sidebar/SidebarNavItem.vue";
 import SidebarAccount from "@/components/sidebar/SidebarAccount.vue";
-import {Icons} from "@/utils/icons.js";
+import { Icons } from "@/utils/icons.js";
+import { getFullName, logout } from "@/services/auth.service";
+import { onboardingStore, clearOnboarding } from "@/store/onboarding.store";
 
 
 const { t } = useI18n();
 const route = useRoute();
 
 const lang = computed(() => route.params.lang || "mk");
-const eventId = computed(() => String(route.params.eventId || "demo"));
 
 const link = (section) =>
-  `/${lang.value}/dashboard/events/${eventId.value}/${section}`;
+  `/${lang.value}/dashboard/events/${section}`;
 
 const isActive = (section) => {
-  // exact match per section
-  const p = `/dashboard/events/${eventId.value}/${section}`;
+  const p = `/dashboard/events/${section}`;
   return String(route.path || "").includes(p);
 };
 
@@ -61,11 +62,21 @@ const navItems = computed(() => [
   { key: "settings", path: "settings", labelKey: "sidebar.settings", icon: Icons.settings }
 ]);
 
-// Demo account block (replace with auth user store)
-const userName = computed(() => "Sarah Jenkins");
+const router = useRouter();
+
+const userName = computed(() => getFullName() || "User");
 const userRole = computed(() => t("sidebar.eventPlanner"));
-const avatarUrl = computed(() => ""); // optional
-const accountLink = computed(() => `/${lang.value}/account`);
+const avatarUrl = computed(() => "");
+
+function goToSettings() {
+  router.push(`/${lang.value}/dashboard/events/settings`);
+}
+
+function signOut() {
+  logout();
+  clearOnboarding();
+  router.push(`/${lang.value}/auth/login`);
+}
 </script>
 
 <style scoped>
@@ -76,6 +87,8 @@ const accountLink = computed(() => `/${lang.value}/account`);
   padding: 18px 14px;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  height: 100%;
+  overflow-y: auto;
 }
 .brand { padding: 8px 10px 14px; }
 .logo { font-family: var(--font-family), serif; font-size: 22px; letter-spacing: .4px; }

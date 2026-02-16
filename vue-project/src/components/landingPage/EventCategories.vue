@@ -2,6 +2,7 @@
   <section class="categories-section" :class="bgClass">
     <div class="container">
       <SectionHeader
+        v-if="showHeader"
         :title="$t('eventCategories.section.title')"
         :subtitle="$t('eventCategories.section.subtitle')"
       />
@@ -9,6 +10,7 @@
       <CategoryGrid
         :items="categories"
         v-model="selectedId"
+        :disable-navigation="disableNavigation"
       />
     </div>
   </section>
@@ -17,11 +19,13 @@
 <script setup>
 import SectionHeader from "@/components/ui/SectionHeader.vue";
 import CategoryGrid from "@/components/grids/CategoryGrid.vue";
-import {computed} from "vue";
+import { computed } from "vue";
 
 const props = defineProps({
   bgClass: { type: String, default: "bg-white" },
-  modelValue: { type: [String, Number, null], default: null }
+  modelValue: { type: [String, Number, null], default: null },
+  showHeader: { type: Boolean, default: true },
+  disableNavigation: { type: Boolean, default: false }
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -47,6 +51,7 @@ const categories = [
 .categories-section { padding: 6rem 0; }
 .bg-white { background: var(--bg-white); }
 .bg-main { background: var(--bg-main); }
+.bg-transparent { background: transparent; padding: 2rem 0; }
 
 .container {
   max-width: 1180px;

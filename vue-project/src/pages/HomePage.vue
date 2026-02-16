@@ -6,13 +6,14 @@
   <template v-if="isTest || isLocal">
     <Header />
     <HeroSection />
+    <SocialProofStrip />
     <EventCategories bgClass="bg-white"/>
     <HowItWorks />
     <CoreFeatures id="features" />
     <TemplatesGallery id="templates" />
     <PricingSection id="pricing" />
     <WhyChooseUs />
-<!--    <TestimonialsSection />-->
+    <TestimonialsSection />
     <FaqSection id="faq" />
     <FinalCtaSection />
     <Footer />
@@ -25,6 +26,7 @@
 import ComingSoon from '@/components/ComingSoon.vue'
 import Header from '@/components/header/Header.vue'
 import HeroSection from "@/components/landingPage/HeroSection.vue";
+import SocialProofStrip from "@/components/landingPage/SocialProofStrip.vue";
 import HowItWorks from "@/components/landingPage/HowItWorks.vue";
 import { detectDefaultEnvFromLocation } from '@/services/env'
 import EventCategories from "@/components/landingPage/EventCategories.vue";

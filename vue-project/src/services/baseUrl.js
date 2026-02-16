@@ -47,39 +47,32 @@ const appEnv = isUnresolvedTemplate(rawAppEnv)
 
 const runtimeUrl = runtimeEnv.VITE_API_BASE_URL;
 let effectiveUrl;
-if (!runtimeUrl || isUnresolvedTemplate(runtimeUrl)) {
+if (appEnv !== 'local') {
+  // In test/prod, always derive the API URL from the current hostname.
+  // This prevents a prod URL baked at build time from being used on test.
   effectiveUrl = computeDefaultApiBaseUrl(appEnv);
-} else {
-  // In non-local environments, never use a localhost API URL; fall back to a safe default mapping.
-  if (appEnv !== 'local') {
-    if (isLocalhostUrl(runtimeUrl)) {
-      effectiveUrl = computeDefaultApiBaseUrl(appEnv);
+} else if (!runtimeUrl || isUnresolvedTemplate(runtimeUrl)) {
+  effectiveUrl = computeDefaultApiBaseUrl(appEnv);
+} else if (typeof window !== 'undefined') {
+  // Special handling for local dev when accessing the app via LAN IP/hostname.
+  // If Vite provided a localhost URL but the current page host is not localhost,
+  // prefer the current host so real devices can reach the backend.
+  try {
+    const { protocol, hostname } = window.location || {};
+    const pageHost = (hostname || '').toLowerCase();
+    const isLocalPageHost = pageHost === 'localhost' || pageHost === '127.0.0.1';
+    if (!isLocalPageHost && isLocalhostUrl(runtimeUrl)) {
+      const usedProtocol = protocol || 'http:';
+      effectiveUrl = `${usedProtocol}//${pageHost}:8081`;
     } else {
       effectiveUrl = runtimeUrl;
     }
-  } else if (typeof window !== 'undefined') {
-    // Special handling for local dev when accessing the app via LAN IP/hostname.
-    // If Vite provided a localhost URL but the current page host is not localhost,
-    // prefer the current host so real devices can reach the backend.
-    try {
-      const { protocol, hostname } = window.location || {};
-      const pageHost = (hostname || '').toLowerCase();
-      const isLocalPageHost = pageHost === 'localhost' || pageHost === '127.0.0.1';
-      if (!isLocalPageHost && isLocalhostUrl(runtimeUrl)) {
-        const usedProtocol = protocol || 'http:';
-        effectiveUrl = `${usedProtocol}//${pageHost}:8081`;
-      } else {
-        effectiveUrl = runtimeUrl;
-      }
-    } catch (_) {
-      effectiveUrl = runtimeUrl;
-    }
-  } else {
+  } catch (_) {
     effectiveUrl = runtimeUrl;
   }
+} else {
+  effectiveUrl = runtimeUrl;
 }
-
-// Diagnostics: log effective API base URL and warn if overriding an unsafe localhost value in non-local envs
 
 const baseUrl = String(effectiveUrl).replace(/\/$/, '');
 
