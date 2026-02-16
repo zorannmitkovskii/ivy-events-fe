@@ -27,7 +27,7 @@ import { cpayService } from "@/services/cpay.service";
 import { redirectToCpay } from "@/utils/redirectToCpay";
 
 const props = defineProps({
-  packageType: { type: String, default: "" }, // INV_BASIC | INV_PRO | IVY_PREMIUM | GALLERY | ORGANIZER
+  packageType: { type: String, default: "INV_BASIC" }, // INV_BASIC | INV_PRO | IVY_PREMIUM | GALLERY | ORGANIZER
   eventId: { type: String, default: "" },
   label: { type: String, default: "" },
   variant: { type: String, default: "default" } // "default" | "gold"
@@ -46,7 +46,7 @@ async function payWithCpay() {
 
   try {
     const payload = {
-      amount: 10,
+      amount: 1,
       currency: "MKD",
       description: "Payment",
       email: user.value?.email || "",
@@ -54,8 +54,9 @@ async function payWithCpay() {
       eventId: props.eventId || authEventId.value,
       userId: getUserId(),
     };
+    console.log("payload", payload);
     if (props.packageType) payload.packageType = props.packageType;
-
+    console.log("payload", payload);
     const res = await cpayService.initPayment(payload);
     const data = res?.data ?? res;
     const paymentUrl = data.paymentUrl;
