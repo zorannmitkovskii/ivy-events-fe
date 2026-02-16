@@ -656,34 +656,34 @@
     "PROPOSAL": "Proposal"
   },
   "ourStory": {
-    "title": "Our Story",
-    "subtitle": "Share the story of your journey together",
-    "addStory": "Add Story",
-    "emptyTitle": "No stories yet",
-    "emptyMessage": "Add your first story to share your journey with guests.",
-    "totalItems": "{count} stories",
+    "title": "Historia Jon\u00eb",
+    "subtitle": "Ndani historin\u00eb e udh\u00ebtimit tuaj s\u00eb bashku",
+    "addStory": "Shto Histori",
+    "emptyTitle": "Nuk ka histori ende",
+    "emptyMessage": "Shtoni historin\u00eb e par\u00eb p\u00ebr ta ndar\u00eb me mysafir\u00ebt.",
+    "totalItems": "{count} histori",
     "th": {
-      "title": "Title",
-      "type": "Type",
-      "actions": "Actions"
+      "title": "Titulli",
+      "type": "Lloji",
+      "actions": "Veprimet"
     },
     "form": {
-      "title": "Title",
-      "type": "Type",
-      "description": "Description"
+      "title": "Titulli",
+      "type": "Lloji",
+      "description": "P\u00ebrshkrimi"
     },
     "addDialog": {
-      "title": "Add Story",
-      "create": "Create",
-      "titlePh": "e.g. How We Met",
-      "descriptionPh": "Tell your story..."
+      "title": "Shto Histori",
+      "create": "Krijo",
+      "titlePh": "p.sh. Si u njohem",
+      "descriptionPh": "Tregoni historin\u00eb tuaj..."
     },
     "editDialog": {
-      "title": "Edit Story"
+      "title": "Ndrysho Historin\u00eb"
     },
     "errors": {
-      "titleRequired": "Title is required",
-      "typeRequired": "Type is required"
+      "titleRequired": "Titulli \u00ebsht\u00eb i detyruesh\u00ebm",
+      "typeRequired": "Lloji \u00ebsht\u00eb i detyruesh\u00ebm"
     }
   },
   "sidebar": {
@@ -694,15 +694,15 @@
     "seating": "Seating",
     "agenda": "Agenda",
     "gallery": "Gallery",
-    "ourStory": "Our Story",
+    "ourStory": "Historia Jon\u00eb",
     "team": "Team",
     "settings": "Settings",
     "premium": "PREMIUM",
     "eventPlanner": "Event Planner",
     "eventSettings": "Event Settings",
     "signOut": "Sign Out",
-    "addGuest": "Add Guest",
-    "addTask": "Add Task"
+    "addGuest": "Shto Mysafir",
+    "addTask": "Shto Detyrë"
   },
   "overview": {
     "daysToGo": "days to go",

@@ -17,12 +17,12 @@
         <div class="d-flex gap-3 flex-wrap">
           <ButtonMain
             :label="$t('home.hero.primaryCta')"
-            :to="primaryTo"
+            :to="resolvedPrimaryTo"
             variant="main"
           />
           <ButtonMain
             :label="$t('home.hero.secondaryCta')"
-            :to="secondaryTo"
+            :to="resolvedSecondaryTo"
             variant="outline"
           />
         </div>
@@ -42,9 +42,14 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 
-defineProps({
+const route = useRoute();
+const lang = computed(() => route.params.lang || "mk");
+
+const props = defineProps({
   imageSrc: {
     type: String,
     default:
@@ -56,13 +61,21 @@ defineProps({
   },
   primaryTo: {
     type: [String, Object],
-    default: "/invitation/create"
+    default: null
   },
   secondaryTo: {
     type: [String, Object],
-    default: "/templates"
+    default: null
   }
 });
+
+const resolvedPrimaryTo = computed(() =>
+  props.primaryTo || { name: 'signup', params: { lang: lang.value } }
+);
+
+const resolvedSecondaryTo = computed(() =>
+  props.secondaryTo || { name: 'EventInvitationsPage', params: { lang: lang.value } }
+);
 </script>
 
 <style scoped>

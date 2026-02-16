@@ -38,6 +38,13 @@ watch(() => route.path, () => {
   background: var(--bg-main);
 }
 
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 100;
+}
+
 .main {
   display: grid;
   grid-template-rows: var(--header-height) 1fr;
@@ -62,6 +69,7 @@ watch(() => route.path, () => {
     top: 0;
     left: 0;
     bottom: 0;
+    height: 100vh;
     width: 280px;
     z-index: 1000;
     transform: translateX(-100%);

@@ -8,7 +8,7 @@
 
     <div class="promo__content">
       <div class="promo__logo" aria-hidden="true">
-        <span class="promo__logo-text">IVY</span>
+        <img src="/iconInv.svg" alt="" class="promo__logo-img" />
       </div>
 
       <h2 class="promo__title">{{ title }}</h2>
@@ -99,11 +99,10 @@ const bgStyle = computed(() =>
   box-shadow: 0 10px 30px rgba(0,0,0,0.12);
 }
 
-.promo__logo-text {
-  font-weight: 800;
-  letter-spacing: 2px;
-  font-size: 12px;
-  color: rgba(255,255,255,0.85);
+.promo__logo-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
 }
 
 .promo__title {

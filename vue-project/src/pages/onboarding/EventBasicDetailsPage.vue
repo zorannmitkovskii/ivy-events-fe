@@ -96,6 +96,7 @@ import OnboardingFooterLinks from '@/components/onboarding/OnboardingFooterLinks
 import { onboardingStore, setEventDetails, setEventId } from '@/store/onboarding.store';
 import { eventsService } from '@/services/events.service';
 import { getUsername } from '@/services/auth.service';
+import { INVITATION_REGISTRY } from '@/data/invitationRegistry';
 
 const router = useRouter();
 const route = useRoute();
@@ -162,6 +163,20 @@ async function createEventAndNavigate() {
     const res = await eventsService.create(payload);
     const eventId = res?.id || res?.eventId;
     setEventId(eventId);
+
+    // Pre-selected invitation from guest browsing — save it and skip to dashboard
+    if (onboardingStore.invitationName) {
+      const allInvitations = Object.values(INVITATION_REGISTRY).flat();
+      const selected = allInvitations.find(inv => inv.id === onboardingStore.invitationName);
+      const slug = selected?.slug || onboardingStore.invitationName;
+
+      await eventsService.updateInvitation(eventId, {
+        invitationName: `invitations/${slug}`
+      });
+
+      router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
+      return;
+    }
 
     router.push({ name: 'EventInvitationsPage', params: { lang: lang.value } });
   } catch (e) {

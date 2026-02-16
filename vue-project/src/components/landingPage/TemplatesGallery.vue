@@ -11,7 +11,7 @@
       <div class="templates-cta">
         <ButtonMain
           :label="$t('home.templates.cta')"
-          :to="ctaTo"
+          :to="resolvedCtaTo"
           variant="outline"
         />
       </div>
@@ -21,42 +21,51 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 import SectionHeader from "@/components/ui/SectionHeader.vue";
 import TemplatesGrid from "@/components/grids/TemplatesGrid.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import { t } from '@/i18n'
 
-defineProps({
+const route = useRoute();
+const lang = computed(() => route.params.lang || "mk");
+
+const props = defineProps({
   id: {type: String, default: "templates"},
-  ctaTo: {type: [String, Object], default: "/templates"}
+  ctaTo: {type: [String, Object], default: null}
 });
 
-const templates = [
+const resolvedCtaTo = computed(() =>
+  props.ctaTo || { name: 'EventInvitationsPage', params: { lang: lang.value } }
+);
+
+const templates = computed(() => [
   {
     image: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=900&fit=crop",
     title: t('home.templates.items.elegantWedding.title'),
     subtitle: t('home.templates.items.elegantWedding.subtitle'),
-    useTo: "/login"
+    useTo: { name: 'persianWedding', params: { lang: lang.value } }
   },
   {
     image: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&h=900&fit=crop",
     title: t('home.templates.items.birthday.title'),
     subtitle: t('home.templates.items.birthday.subtitle'),
-    useTo: "/login"
+    useTo: { name: 'parisianWedding', params: { lang: lang.value } }
   },
   {
     image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=900&fit=crop",
     title: t('home.templates.items.corporate.title'),
     subtitle: t('home.templates.items.corporate.subtitle'),
-    useTo: "/login"
+    useTo: { name: 'coastalBreeze', params: { lang: lang.value } }
   },
   {
     image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&h=900&fit=crop",
     title: t('home.templates.items.babyShower.title'),
     subtitle: t('home.templates.items.babyShower.subtitle'),
-    useTo: "/login"
+    useTo: { name: 'sunsetGlass', params: { lang: lang.value } }
   }
-];
+]);
 </script>
 
 <style scoped>
@@ -98,11 +107,5 @@ const templates = [
   max-width: 1180px;
   margin: 0 auto;
   padding: 0 24px;
-}
-
-.templates-cta {
-  display: flex;
-  justify-content: center;
-  margin-top: 34px;
 }
 </style>

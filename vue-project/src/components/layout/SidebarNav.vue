@@ -14,6 +14,17 @@
       />
     </nav>
 
+    <div class="sidebar-actions">
+      <button class="sidebar-action-btn" @click="goToGuests">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+        {{ t("sidebar.addGuest") }}
+      </button>
+      <button class="sidebar-action-btn" @click="goToTasks">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+        {{ t("sidebar.addTask") }}
+      </button>
+    </div>
+
     <SidebarAccount
       :name="userName"
       :role="userRole"
@@ -58,6 +69,7 @@ const navItems = computed(() => [
   { key: "tables", path: "tables", labelKey: "sidebar.seating", icon: Icons.grid2 },
   { key: "agenda", path: "agenda", labelKey: "sidebar.agenda", icon: Icons.calendar },
   { key: "gallery", path: "gallery", labelKey: "sidebar.gallery", icon: Icons.image },
+  { key: "our-story", path: "our-story", labelKey: "sidebar.ourStory", icon: Icons.heart },
   { key: "team", path: "team", labelKey: "sidebar.team", icon: Icons.userPlus, badge: "sidebar.premium" },
   { key: "settings", path: "settings", labelKey: "sidebar.settings", icon: Icons.settings }
 ]);
@@ -70,6 +82,14 @@ const avatarUrl = computed(() => "");
 
 function goToSettings() {
   router.push(`/${lang.value}/dashboard/events/settings`);
+}
+
+function goToGuests() {
+  router.push(`/${lang.value}/dashboard/events/guests?action=add`);
+}
+
+function goToTasks() {
+  router.push(`/${lang.value}/dashboard/events/tasks?action=add`);
 }
 
 function signOut() {
@@ -86,7 +106,7 @@ function signOut() {
   color: var(--neutral-100);
   padding: 18px 14px;
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr auto auto;
   height: 100%;
   overflow-y: auto;
 }
@@ -111,4 +131,33 @@ function signOut() {
 }
 .footer { padding: 14px 10px 8px; }
 .account { color: var(--neutral-100); text-decoration: none; opacity: .9; }
+
+/* Sidebar action buttons */
+.sidebar-actions {
+  display: grid;
+  gap: 8px;
+  padding: 14px 0;
+}
+
+.sidebar-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--neutral-100);
+  background: var(--brand-dark);
+  color: var(--neutral-100);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.sidebar-action-btn:hover {
+  background: var(--brand-light);
+  color: var(--brand-main);
+}
 </style>

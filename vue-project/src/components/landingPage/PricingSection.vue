@@ -1,6 +1,7 @@
 <template>
   <section class="pricing" id="pricing">
     <div class="pricing__container">
+      <!-- Invitation Packages -->
       <header class="pricing__header">
         <h2 class="pricing__title">{{$t('pricing.section.title')}}</h2>
         <p class="pricing__subtitle">
@@ -15,19 +16,37 @@
             v-bind="plan"
         />
       </div>
+
+      <!-- Gallery Packages -->
+      <header class="pricing__header pricing__header--gallery">
+        <h2 class="pricing__title">{{$t('pricing.gallery.title')}}</h2>
+        <p class="pricing__subtitle">
+          {{$t('pricing.gallery.subtitle')}}
+        </p>
+      </header>
+
+      <div class="pricing__grid pricing__grid--gallery">
+        <PricingCard
+            v-for="(plan, i) in galleryPlans"
+            :key="'gallery-' + i"
+            v-bind="plan"
+        />
+      </div>
     </div>
   </section>
 </template>
 
 <script setup>
-
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 import PricingCard from "@/components/cards/PricingCard.vue";
 
-/**
- * Keep data HERE (not in LandingPage) so it’s clean and reusable.
- * You can also move to a separate `pricingPlans.js` later if needed.
- */
-const plans = [
+const route = useRoute();
+const lang = computed(() => route.params.lang || "mk");
+
+const signupRoute = computed(() => ({ name: 'signup', params: { lang: lang.value } }));
+
+const plans = computed(() => [
   {
     nameKey: 'pricing.plans.free.name',
     price: "$0",
@@ -42,7 +61,7 @@ const plans = [
       { labelKey: 'pricing.plans.free.features.prioritySupport', included: false }
     ],
     ctaLabelKey: 'pricing.cta.getStarted',
-    ctaTo: "/register",
+    ctaTo: signupRoute.value,
     ctaVariant: "outline"
   },
   {
@@ -61,7 +80,7 @@ const plans = [
       { labelKey: 'pricing.plans.pro.features.prioritySupport', included: false }
     ],
     ctaLabelKey: 'pricing.cta.getStarted',
-    ctaTo: "/register",
+    ctaTo: signupRoute.value,
     ctaVariant: "main"
   },
   {
@@ -78,10 +97,47 @@ const plans = [
       { labelKey: 'pricing.plans.wedding.features.prioritySupport', included: true }
     ],
     ctaLabelKey: 'pricing.cta.getStarted',
-    ctaTo: "/register",
+    ctaTo: signupRoute.value,
     ctaVariant: "gold"
   }
-];
+]);
+
+const galleryPlans = computed(() => [
+  {
+    nameKey: 'pricing.gallery.plans.basic.name',
+    price: "$9",
+    descKey: 'pricing.gallery.plans.basic.description',
+    features: [
+      { labelKey: 'pricing.gallery.plans.basic.features.storage', included: true },
+      { labelKey: 'pricing.gallery.plans.basic.features.photos', included: true },
+      { labelKey: 'pricing.gallery.plans.basic.features.guestUpload', included: true },
+      { labelKey: 'pricing.gallery.plans.basic.features.download', included: true },
+      { labelKey: 'pricing.gallery.plans.basic.features.access', included: true }
+    ],
+    ctaLabelKey: 'pricing.cta.getStarted',
+    ctaTo: signupRoute.value,
+    ctaVariant: "outline"
+  },
+  {
+    nameKey: 'pricing.gallery.plans.premium.name',
+    price: "$29",
+    descKey: 'pricing.gallery.plans.premium.description',
+    featured: true,
+    badgeLabel: '',
+    features: [
+      { labelKey: 'pricing.gallery.plans.premium.features.storage', included: true },
+      { labelKey: 'pricing.gallery.plans.premium.features.photos', included: true },
+      { labelKey: 'pricing.gallery.plans.premium.features.guestUpload', included: true },
+      { labelKey: 'pricing.gallery.plans.premium.features.download', included: true },
+      { labelKey: 'pricing.gallery.plans.premium.features.access', included: true },
+      { labelKey: 'pricing.gallery.plans.premium.features.hd', included: true },
+      { labelKey: 'pricing.gallery.plans.premium.features.video', included: true }
+    ],
+    ctaLabelKey: 'pricing.cta.getStarted',
+    ctaTo: signupRoute.value,
+    ctaVariant: "main"
+  }
+]);
 </script>
 
 <style scoped>
@@ -98,6 +154,10 @@ const plans = [
 .pricing__header {
   text-align: center;
   margin-bottom: 34px;
+}
+
+.pricing__header--gallery {
+  margin-top: 72px;
 }
 
 .pricing__title {
@@ -121,11 +181,22 @@ const plans = [
   align-items: stretch;
 }
 
+.pricing__grid--gallery {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 760px;
+  margin: 0 auto;
+}
+
 @media (max-width: 980px) {
   .pricing__grid {
     grid-template-columns: 1fr;
     max-width: 560px;
     margin: 0 auto;
+  }
+
+  .pricing__grid--gallery {
+    grid-template-columns: 1fr;
+    max-width: 560px;
   }
 
   .pricing__title {

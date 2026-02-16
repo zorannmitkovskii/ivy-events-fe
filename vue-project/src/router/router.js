@@ -29,6 +29,7 @@ import OverviewPage from "@/pages/dashboard/OverviewPage.vue";
 import GuestsPage from "@/pages/dashboard/GuestsPage.vue";
 import TablesSeatingPage from "@/pages/dashboard/TablesSeatingPage.vue";
 import AgendaPage from "@/pages/dashboard/AgendaPage.vue";
+import OurStoryPage from "@/pages/dashboard/OurStoryPage.vue";
 import GalleryPage from "@/pages/dashboard/GalleryPage.vue";
 import NotificationsPage from "@/pages/dashboard/NotificationsPage.vue";
 import TeamPage from "@/pages/dashboard/TeamPage.vue";
@@ -46,7 +47,7 @@ const routes = [
 
   // All localized routes under /:lang
   {
-    path: "/:lang(mk|en)",
+    path: "/:lang(mk|en|sq)",
     children: [
       // MARKETING
       { path: "", name: "home", component: HomePage },
@@ -102,6 +103,7 @@ const routes = [
           { path: "events/tables", name: "dashboard.tables", component: TablesSeatingPage },
           { path: "events/agenda", name: "dashboard.agenda", component: AgendaPage },
           { path: "events/budget", name: "dashboard.budget", component: BudgetPage },
+          { path: "events/our-story", name: "dashboard.our-story", component: OurStoryPage },
           { path: "events/gallery", name: "dashboard.gallery", component: GalleryPage },
           { path: "events/notifications", name: "dashboard.notifications", component: NotificationsPage },
           { path: "events/team", name: "dashboard.team", component: TeamPage },
@@ -119,7 +121,7 @@ const routes = [
 
   // alias name for overview to satisfy onboarding requirement
   {
-    path: "/:lang(mk|en)/event-overview",
+    path: "/:lang(mk|en|sq)/event-overview",
     name: "EventOverviewPage",
     redirect: (to) => `/${to.params.lang}/dashboard/events/overview`
   },
@@ -171,8 +173,9 @@ router.beforeEach((to, from, next) => {
 
   // Block invitations page until category selected and event created
   // Skip guard if user already has an event (coming from dashboard)
+  // Allow unauthenticated users to browse freely (guest invitation flow)
   const isInvitationsPage = to.name === 'EventInvitationsPage';
-  if (isInvitationsPage && !onboardingStore.eventId) {
+  if (isInvitationsPage && !onboardingStore.eventId && isAuthenticated()) {
     if (!onboardingStore.selectedCategory) {
       next({ name: 'EventCategoryPage', params: { lang } });
       return;
