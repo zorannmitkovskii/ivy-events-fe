@@ -1,43 +1,17 @@
-import apiClient from './api';
+import { api } from "@/services/api";
 
-/**
- * Fetch all users
- * @returns {Promise<User[]>}
- */
-function getUsers() {
-  return apiClient.get('/users').then(response => response.data);
+export function getUsers() {
+  return api.get("/users");
 }
 
-/**
- * Fetch a user by ID
- * @param {number} id
- * @returns {Promise<User>}
- */
-function getUser(id) {
-  return apiClient.get(`/users/${id}`).then(response => response.data);
+export function getUser(id) {
+  return api.get(`/users/${encodeURIComponent(id)}`);
 }
 
-/**
- * Create a new user
- * @param {CreateUserRequest} data
- * @returns {Promise<User>}
- */
-function createUser(data) {
-  return apiClient.post('/users', data).then(response => response.data);
+export function createUser(data) {
+  return api.post("/users", data);
 }
 
-/**
- * Create a new user
- * @param {CreateUserRequest} data
- * @returns {Promise<User>}
- */
-function deleteUser(data) {
-  return apiClient.post('/users', data).then(response => response.data);
+export function deleteUser(id) {
+  return api.del(`/users/${encodeURIComponent(id)}`);
 }
-
-export default {
-  getUsers,
-  getUser,
-  createUser,
-  deleteUser
-};

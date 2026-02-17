@@ -23,7 +23,7 @@
       </span>
     </button>
 
-    <div class="faq-answer " :style="answerStyle">
+    <div class="faq-answer">
       <div class="faq-answer-inner">
         {{ answer }}
       </div>

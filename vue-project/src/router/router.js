@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { setLocale } from "@/i18n";
-import { isAuthenticated } from "@/services/auth.service";
+import { isAuthenticated, hasRole } from "@/services/auth.service";
 import { onboardingStore } from "@/store/onboarding.store";
 
 // Marketing / Auth / Onboarding
@@ -41,6 +41,12 @@ import PersianWedding from "@/pages/invitaitons/wedding/PersianWedding.vue";
 import ParisianWedding from "@/pages/invitaitons/wedding/ParisianWedding.vue";
 import CoastalBreeze from "@/pages/invitaitons/wedding/CoastalBreeze.vue";
 
+// Admin Dashboard
+import AdminDashboardLayout from "@/layouts/AdminDashboardLayout.vue";
+import AdminEventPage from "@/pages/adminDashboard/AdminEventPage.vue";
+import AdminPackagesPage from "@/pages/adminDashboard/AdminPackagesPage.vue";
+import AdminUsersPage from "@/pages/adminDashboard/AdminUsersPage.vue";
+
 const routes = [
   // Redirect root to /mk
   { path: "/", redirect: "/mk" },
@@ -55,6 +61,11 @@ const routes = [
       { path: "features/rsvp", name: "features-rsvp", component: FeatureRSVPPage },
       { path: "features/invitations", name: "features-invitations", component: FeatureInvitationsPage },
       { path: "pricing", name: "pricing", component: PricingPage },
+      { path: "packages", name: "packages", component: () => import("@/pages/PackagesPage.vue") },
+      { path: "about", name: "about", component: () => import("@/pages/AboutUsPage.vue") },
+      { path: "terms", name: "terms", component: () => import("@/pages/TermsAndConditionsPage.vue") },
+      { path: "contact", name: "contact", component: () => import("@/pages/ContactPage.vue") },
+      { path: "feedback", name: "feedback", component: () => import("@/pages/FeedbackPage.vue") },
 
       // ONBOARDING
       { path: "event-category", name: "EventCategoryPage", component: EventCategoryPage },
@@ -108,11 +119,32 @@ const routes = [
           { path: "events/notifications", name: "dashboard.notifications", component: NotificationsPage },
           { path: "events/team", name: "dashboard.team", component: TeamPage },
           { path: "events/settings", name: "dashboard.settings", component: EventSettingsPage },
+          { path: "events/support", name: "dashboard.support", component: () => import("@/pages/dashboard/SupportPage.vue") },
 
           // default dashboard redirect (if someone opens /mk/dashboard)
           {
             path: "",
             redirect: (to) => `/${to.params.lang}/dashboard/events/overview`
+          }
+        ]
+      },
+
+      // ADMIN DASHBOARD
+      {
+        path: "admin",
+        component: AdminDashboardLayout,
+        meta: { requiresAuth: true, requiresAdmin: true },
+        children: [
+          { path: "events", name: "admin.events", component: AdminEventPage },
+          { path: "packages", name: "admin.packages", component: AdminPackagesPage },
+          { path: "users", name: "admin.users", component: AdminUsersPage },
+          { path: "reviews", name: "admin.reviews", component: () => import("@/pages/adminDashboard/AdminReviewsPage.vue") },
+          { path: "contacts", name: "admin.contacts", component: () => import("@/pages/adminDashboard/AdminContactsPage.vue") },
+
+          // default admin redirect
+          {
+            path: "",
+            redirect: (to) => `/${to.params.lang}/admin/events`
           }
         ]
       }
@@ -148,9 +180,19 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  // Guest-only routes (if logged in, send to dashboard)
-  if (to.meta.guestOnly && isAuthenticated()) {
+  // Admin-only routes
+  if (to.meta.requiresAdmin && !hasRole("ADMIN")) {
     next(`/${lang}/dashboard/events/overview`);
+    return;
+  }
+
+  // Guest-only routes (if logged in, send to appropriate dashboard)
+  if (to.meta.guestOnly && isAuthenticated()) {
+    if (hasRole("ADMIN")) {
+      next(`/${lang}/admin/events`);
+    } else {
+      next(`/${lang}/dashboard/events/overview`);
+    }
     return;
   }
 

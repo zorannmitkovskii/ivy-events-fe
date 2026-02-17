@@ -3,8 +3,8 @@
     <!-- Header -->
     <div class="page-header">
       <div>
-        <h2 class="page-title">Events</h2>
-        <p class="page-subtitle">Manage and monitor all events on the platform</p>
+        <h2 class="page-title">Users</h2>
+        <p class="page-subtitle">Manage and monitor all user accounts</p>
       </div>
     </div>
 
@@ -13,11 +13,11 @@
       <div class="toolbar-left">
         <div class="search-box">
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input type="text" v-model="searchQuery" placeholder="Search events..." class="search-input" />
+          <input type="text" v-model="searchQuery" placeholder="Search users..." class="search-input" />
         </div>
-        <select v-model="selectedCategory" class="filter-select">
-          <option value="">All Categories</option>
-          <option v-for="cat in categoryOptions" :key="cat" :value="cat">{{ cat }}</option>
+        <select v-model="roleFilter" class="filter-select">
+          <option value="">All Roles</option>
+          <option v-for="role in roleOptions" :key="role" :value="role">{{ role }}</option>
         </select>
       </div>
     </div>
@@ -25,7 +25,7 @@
     <!-- Loading -->
     <div v-if="loading" class="loading">
       <div class="spinner"></div>
-      <span>Loading events...</span>
+      <span>Loading users...</span>
     </div>
 
     <!-- Table Card -->
@@ -34,33 +34,31 @@
         <table class="table">
           <thead>
             <tr>
-              <th>Event Name</th>
-              <th>Category</th>
-              <th>Date</th>
+              <th>User</th>
+              <th>Role</th>
               <th>Status</th>
               <th class="th-right">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr v-if="paginated.length === 0">
-              <td colspan="5" class="empty">No events found</td>
+              <td colspan="4" class="empty">No users found</td>
             </tr>
             <tr v-for="row in paginated" :key="row.id" class="row-hover">
               <td>
                 <div class="cell-main">
-                  <div class="icon-box icon-box--indigo">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  <div class="avatar" :class="avatarColor(row)">
+                    {{ initials(row) }}
                   </div>
                   <div>
-                    <div class="text-primary">{{ row.name || '—' }}</div>
-                    <div class="text-sub">ID: {{ row.id }}</div>
+                    <div class="text-primary">{{ row.firstName }} {{ row.lastName }}</div>
+                    <div class="text-sub">{{ row.email || '—' }}</div>
                   </div>
                 </div>
               </td>
               <td>
-                <span class="pill pill--blue">{{ row.eventCategory || '—' }}</span>
+                <span class="pill" :class="row.role === 'ADMIN' ? 'pill--purple' : 'pill--blue'">{{ row.role || '—' }}</span>
               </td>
-              <td class="text-muted">{{ formatDate(row.eventDate) }}</td>
               <td>
                 <span class="status" :class="row.active !== false ? 'status--green' : 'status--red'">
                   <span class="status-dot"></span>
@@ -102,42 +100,45 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
-import { eventsService } from "@/services/events.service";
-import { EventCategoryEnum } from "@/enums/EventCategory";
+import { getUsers, deleteUser } from "@/services/userService";
 
-const categoryOptions = Object.values(EventCategoryEnum);
-const events = ref([]);
+const roleOptions = ["ADMIN", "USER"];
+const users = ref([]);
 const loading = ref(true);
 
-async function fetchEvents() {
+async function fetchUsers() {
   loading.value = true;
   try {
-    const data = await eventsService.getAll();
-    events.value = Array.isArray(data) ? data : [];
+    const data = await getUsers();
+    users.value = Array.isArray(data) ? data : [];
   } catch (e) {
-    console.error("Failed to load events:", e);
-    events.value = [];
+    console.error("Failed to load users:", e);
+    users.value = [];
   } finally {
     loading.value = false;
   }
 }
 
-onMounted(fetchEvents);
+onMounted(fetchUsers);
 
 /* ---- filters ---- */
 const searchQuery = ref("");
-const selectedCategory = ref("");
+const roleFilter = ref("");
 
-watch([searchQuery, selectedCategory], () => { page.value = 1; });
+watch([searchQuery, roleFilter], () => { page.value = 1; });
 
 const filtered = computed(() => {
-  let result = events.value;
+  let result = users.value;
   if (searchQuery.value) {
     const q = searchQuery.value.toLowerCase();
-    result = result.filter(e => (e.name || "").toLowerCase().includes(q));
+    result = result.filter(u => {
+      const name = `${u.firstName || ""} ${u.lastName || ""}`.toLowerCase();
+      const email = (u.email || "").toLowerCase();
+      return name.includes(q) || email.includes(q);
+    });
   }
-  if (selectedCategory.value) {
-    result = result.filter(e => e.eventCategory === selectedCategory.value);
+  if (roleFilter.value) {
+    result = result.filter(u => u.role === roleFilter.value);
   }
   return result;
 });
@@ -161,20 +162,29 @@ function next() { if (page.value < totalPages.value) page.value++; }
 function prev() { if (page.value > 1) page.value--; }
 function goto(n) { page.value = n; }
 
-/* ---- actions ---- */
-async function remove(event) {
-  if (!confirm(`Delete event "${event.name}"?`)) return;
-  try {
-    await eventsService.remove(event.id);
-    events.value = events.value.filter(e => e.id !== event.id);
-  } catch (e) {
-    console.error("Failed to delete event:", e);
-  }
+/* ---- helpers ---- */
+const avatarColors = ["avatar--indigo", "avatar--teal", "avatar--rose", "avatar--amber"];
+
+function initials(user) {
+  const f = (user.firstName || "")[0] || "";
+  const l = (user.lastName || "")[0] || "";
+  return (f + l).toUpperCase() || "?";
 }
 
-function formatDate(d) {
-  if (!d) return "—";
-  return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+function avatarColor(user) {
+  const hash = (user.id || 0) % avatarColors.length;
+  return avatarColors[hash];
+}
+
+/* ---- actions ---- */
+async function remove(user) {
+  if (!confirm(`Delete user "${user.firstName} ${user.lastName}"?`)) return;
+  try {
+    await deleteUser(user.id);
+    users.value = users.value.filter(u => u.id !== user.id);
+  } catch (e) {
+    console.error("Failed to delete user:", e);
+  }
 }
 </script>
 
@@ -185,7 +195,6 @@ function formatDate(d) {
 .page-title { font-size: 24px; font-weight: 700; color: var(--neutral-900); margin: 0; }
 .page-subtitle { font-size: 14px; color: #64748b; margin: 4px 0 0; }
 
-/* Toolbar */
 .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
 .toolbar-left { display: flex; gap: 12px; flex: 1; flex-wrap: wrap; }
 
@@ -194,25 +203,21 @@ function formatDate(d) {
 .search-input {
   width: 100%; padding: 9px 14px 9px 38px;
   border: 1px solid #e2e8f0; border-radius: 10px;
-  font-size: 14px; background: #fff;
+  font-size: 14px; background: #fff; outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
-  outline: none;
 }
-.search-input:focus { border-color: var(--brand-main); box-shadow: 0 0 0 3px rgba(var(--brand-main-rgb, 79, 70, 229), 0.1); }
+.search-input:focus { border-color: var(--brand-main); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
 
 .filter-select {
   padding: 9px 14px; border: 1px solid #e2e8f0; border-radius: 10px;
-  font-size: 14px; background: #fff; cursor: pointer; outline: none;
-  min-width: 160px;
+  font-size: 14px; background: #fff; cursor: pointer; outline: none; min-width: 140px;
 }
 .filter-select:focus { border-color: var(--brand-main); }
 
-/* Loading */
 .loading { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 60px 0; color: #64748b; font-size: 14px; }
 .spinner { width: 20px; height: 20px; border: 2.5px solid #e2e8f0; border-top-color: var(--brand-main); border-radius: 50%; animation: spin 0.6s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Table card */
 .table-card { background: #fff; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); overflow: hidden; }
 .table-wrap { overflow-x: auto; }
 
@@ -225,22 +230,27 @@ function formatDate(d) {
 
 .row-hover { transition: background 0.15s; }
 .row-hover:hover { background: #f8fafc; }
-
 .empty { text-align: center; color: #94a3b8; padding: 40px 20px !important; }
 
-/* Cell styles */
 .cell-main { display: flex; align-items: center; gap: 12px; }
-.icon-box { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.icon-box svg { width: 18px; height: 18px; }
-.icon-box--indigo { background: #eef2ff; color: #4f46e5; }
+
+.avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+.avatar--indigo { background: #4f46e5; }
+.avatar--teal { background: #0d9488; }
+.avatar--rose { background: #e11d48; }
+.avatar--amber { background: #d97706; }
 
 .text-primary { font-weight: 600; color: #0f172a; }
 .text-sub { font-size: 12px; color: #94a3b8; margin-top: 2px; }
-.text-muted { color: #64748b; }
 
-/* Pills & status */
 .pill { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
 .pill--blue { background: #eff6ff; color: #2563eb; }
+.pill--purple { background: #f3e8ff; color: #7c3aed; }
 
 .status { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
 .status-dot { width: 6px; height: 6px; border-radius: 50%; }
@@ -249,7 +259,6 @@ function formatDate(d) {
 .status--red { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
 .status--red .status-dot { background: #ef4444; }
 
-/* Actions */
 .td-actions { text-align: right; }
 .actions { display: flex; justify-content: flex-end; gap: 6px; opacity: 0; transition: opacity 0.15s; }
 .row-hover:hover .actions { opacity: 1; }
@@ -262,7 +271,6 @@ function formatDate(d) {
 .action-btn svg { width: 16px; height: 16px; }
 .action-btn--danger:hover { background: #fef2f2; color: #dc2626; }
 
-/* Pagination */
 .pagination-bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-top: 1px solid #e2e8f0; flex-wrap: wrap; gap: 12px; }
 .pagination-info { font-size: 13px; color: #64748b; }
 .pagination-info strong { color: #0f172a; }

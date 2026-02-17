@@ -55,7 +55,7 @@ import AuthCardTitle from "@/components/auth/AuthCardTitle.vue";
 import AuthCard from "@/components/auth/AuthCard.vue";
 import AuthInput from "@/components/auth/AuthInput.vue";
 import { onboardingStore, setEmailVerified, setEventId, getTempPassword, getTempUsername, clearTempCredentials } from "@/store/onboarding.store";
-import { verifyEmail, exchangeOAuthCode, assignRole, refreshAccessToken, getEventId, loginWithCredentials } from "@/services/auth.service";
+import { verifyEmail, exchangeOAuthCode, assignRole, refreshAccessToken, getEventId, hasRole, loginWithCredentials } from "@/services/auth.service";
 
 const router = useRouter();
 const route = useRoute();
@@ -78,10 +78,15 @@ onMounted(async () => {
     const redirectUri = `${window.location.origin}/${lang.value}/auth/verify-email`;
     await exchangeOAuthCode(route.query.code, redirectUri);
 
-    // Assign USER role to the Google-created user, then refresh token so role is in JWT
+    // Assign USER role only if user has no meaningful role yet
     try {
       const claims = JSON.parse(atob(localStorage.getItem("access_token").split(".")[1]));
-      await assignRole(claims.email, "USER");
+      const existingRoles = claims?.realm_access?.roles || [];
+      const hasExistingRole = ["ADMIN", "VENDOR", "ORGANIZER"].some(r => existingRoles.includes(r));
+
+      if (!hasExistingRole) {
+        await assignRole(claims.email, "USER");
+      }
       await refreshAccessToken();
     } catch (e) {
       console.warn("[google-assign-role]", e?.message);
@@ -95,7 +100,11 @@ onMounted(async () => {
     sessionStorage.removeItem("google_oauth_intent");
 
     if (intent === "login") {
-      await router.replace({ name: "dashboard.overview", params: { lang: lang.value } });
+      if (hasRole("ADMIN")) {
+        await router.replace({ name: "admin.events", params: { lang: lang.value } });
+      } else {
+        await router.replace({ name: "dashboard.overview", params: { lang: lang.value } });
+      }
     } else {
       await router.replace({ name: "EventCategoryPage", params: { lang: lang.value } });
     }

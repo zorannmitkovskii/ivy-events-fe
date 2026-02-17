@@ -1,117 +1,117 @@
 {
   "comingSoon": {
     "bgBrand": "IVY EVENTS",
-    "title": "Coming Soon",
-    "subtitle": "We’re preparing something truly special",
-    "description": "We’re building a modern event planning platform designed to save you time and give you full control over every detail.",
-    "emailPlaceholder": "Enter your email",
+    "title": "S\u00eb shpejti",
+    "subtitle": "Po p\u00ebrgasim di\u00e7ka v\u00ebrtet t\u00eb ve\u00e7ant\u00eb",
+    "description": "Po nd\u00ebrtojm\u00eb nj\u00eb platform\u00eb moderne p\u00ebr planifikimin e ngjarjeve, e krijuar p\u00ebr t\u00eb kursyer koh\u00ebn tuaj dhe p\u00ebr t\u00eb dh\u00ebn\u00eb kontroll t\u00eb plot\u00eb mbi \u00e7do detaj.",
+    "emailPlaceholder": "Shkruani email-in tuaj",
     "button": {
-      "default": "Sign up and get <b>20% off</b>",
-      "loading": "Sending...",
-      "success": "Subscribed ✔"
+      "default": "Regjistrohu dhe merr <b>20% zbritje</b>",
+      "loading": "Duke d\u00ebrguar...",
+      "success": "Regjistruar \u2714"
     },
     "privacy": {
-      "line1": "The code will be sent via email.",
-      "line2": "Your email is safe. We only send important updates."
+      "line1": "Kodi do t\u00eb d\u00ebrgohet me email.",
+      "line2": "Email-i juaj \u00ebsht\u00eb i sigurt. D\u00ebrgojm\u00eb vet\u00ebm njoftime t\u00eb r\u00eand\u00ebsishme."
     },
-    "successNote": "You’ve successfully subscribed! Check your email for the code.",
+    "successNote": "Jeni regjistruar me sukses! Kontrolloni email-in p\u00ebr kodin.",
     "errors": {
-      "invalidEmail": "Please enter a valid email.",
-      "alreadyRegistered": "This email is already registered.",
-      "badRequest": "Invalid request. Check your email and try again.",
-      "generic": "Something went wrong. Please try again later."
+      "invalidEmail": "Ju lutem shkruani nj\u00eb email t\u00eb vlefsh\u00ebm.",
+      "alreadyRegistered": "Ky email \u00ebsht\u00eb regjistruar tashm\u00eb.",
+      "badRequest": "K\u00ebrkes\u00eb e pavlefshme. Kontrolloni email-in dhe provoni p\u00ebrs\u00ebri.",
+      "generic": "Di\u00e7ka shkoi gabim. Provoni p\u00ebrs\u00ebri m\u00eb von\u00eb."
     },
     "benefits": {
-      "earlyAccess": "Early access",
-      "exclusivePerks": "Exclusive perks",
-      "priorityUpdates": "Priority updates"
+      "earlyAccess": "Qasje e hershme",
+      "exclusivePerks": "P\u00ebrfitime ekskluzive",
+      "priorityUpdates": "Njoftime prioritare"
     },
     "social": {
-      "instagram": "Open Ivy Events Instagram",
-      "facebook": "Open Ivy Events Facebook"
+      "instagram": "Hap Instagram e Ivy Events",
+      "facebook": "Hap Facebook e Ivy Events"
     },
-    "footer": "© 2026 Ivy Events. All rights reserved."
+    "footer": "\u00a9 2026 Ivy Events. T\u00eb gjitha t\u00eb drejtat e rezervuara."
   },
   "pricing": {
     "section": {
-      "title": "Choose Your Perfect Plan",
-      "subtitle": "Flexible pricing for individuals and professional organizers"
+      "title": "Zgjidhni Planin Tuaj t\u00eb P\u00ebrsosur",
+      "subtitle": "\u00c7mime fleksib\u00ebl p\u00ebr individ\u00eb dhe organizator\u00eb profesionist\u00eb"
     },
-    "perMonth": "/month",
+    "perMonth": "/muaj",
     "badge": {
-      "mostPopular": "Most Popular"
+      "mostPopular": "M\u00eb Popullorja"
     },
     "cta": {
-      "getStarted": "Get Started"
+      "getStarted": "Fillo"
     },
     "gallery": {
-      "title": "Gallery Packages",
-      "subtitle": "Store and share your event memories with guests",
+      "title": "Paketat e Galeris\u00eb",
+      "subtitle": "Ruani dhe ndani kujtimet e ngjarjes me mysafir\u00ebt",
       "plans": {
         "basic": {
-          "name": "Basic Gallery",
-          "description": "Essential photo sharing for your event",
+          "name": "Galeria Baz\u00eb",
+          "description": "Ndarja baz\u00eb e fotove p\u00ebr ngjarjen tuaj",
           "features": {
-            "storage": "5 GB storage",
-            "photos": "Up to 500 photos",
-            "guestUpload": "Guest photo upload",
-            "download": "Photo download",
-            "access": "30-day access"
+            "storage": "5 GB hap\u00ebsir\u00eb",
+            "photos": "Deri n\u00eb 500 foto",
+            "guestUpload": "Ngarkim nga mysafir\u00ebt",
+            "download": "Shkarkim fotosh",
+            "access": "Qasje 30-dit\u00ebshe"
           }
         },
         "premium": {
-          "name": "Premium Gallery",
-          "description": "Unlimited memories, forever",
+          "name": "Galeria Premium",
+          "description": "Kujtime pa kufij, p\u00ebrgjithmon\u00eb",
           "features": {
-            "storage": "Unlimited storage",
-            "photos": "Unlimited photos",
-            "guestUpload": "Guest photo upload",
-            "download": "Photo & video download",
-            "access": "1-year access",
-            "hd": "HD quality",
-            "video": "Video support"
+            "storage": "Hap\u00ebsir\u00eb pa kufij",
+            "photos": "Foto pa kufij",
+            "guestUpload": "Ngarkim nga mysafir\u00ebt",
+            "download": "Shkarkim foto dhe video",
+            "access": "Qasje 1-vje\u00e7are",
+            "hd": "Cil\u00ebsi HD",
+            "video": "Mb\u00ebshtetje video"
           }
         }
       }
     },
     "plans": {
       "free": {
-        "name": "Free",
-        "description": "Perfect for small, personal events",
+        "name": "Falas",
+        "description": "Perfekte p\u00ebr ngjarje t\u00eb vogla, personale",
         "features": {
-          "upTo50Guests": "Up to 50 guests",
-          "oneEvent": "1 event at a time",
-          "basicTemplates": "Basic templates",
-          "rsvpTracking": "RSVP tracking",
-          "emailInvites": "Email invitations",
-          "customBranding": "Custom branding",
-          "prioritySupport": "Priority support"
+          "upTo50Guests": "Deri n\u00eb 50 mysafir\u00eb",
+          "oneEvent": "1 ngjarje nj\u00ebkoh\u00ebsisht",
+          "basicTemplates": "Shabllone baz\u00eb",
+          "rsvpTracking": "Gjurmim RSVP",
+          "emailInvites": "Ftesa me email",
+          "customBranding": "Brendim i personalizuar",
+          "prioritySupport": "Mb\u00ebshtetje prioritare"
         }
       },
       "pro": {
         "name": "Pro",
-        "description": "Ideal for frequent event planners",
+        "description": "Ideale p\u00ebr organizator\u00eb t\u00eb shpesht\u00eb",
         "features": {
-          "upTo300Guests": "Up to 300 guests",
-          "fiveEvents": "5 events at a time",
-          "premiumTemplates": "Premium templates",
-          "advancedRsvp": "Advanced RSVP tracking",
-          "emailSmsInvites": "Email & SMS invitations",
-          "customBranding": "Custom branding",
-          "prioritySupport": "Priority support"
+          "upTo300Guests": "Deri n\u00eb 300 mysafir\u00eb",
+          "fiveEvents": "5 ngjarje nj\u00ebkoh\u00ebsisht",
+          "premiumTemplates": "Shabllone premium",
+          "advancedRsvp": "Gjurmim i avancuar RSVP",
+          "emailSmsInvites": "Ftesa me email dhe SMS",
+          "customBranding": "Brendim i personalizuar",
+          "prioritySupport": "Mb\u00ebshtetje prioritare"
         }
       },
       "wedding": {
-        "name": "Premium Wedding",
-        "description": "Complete wedding planning suite",
+        "name": "Dasma Premium",
+        "description": "Paketa e plot\u00eb p\u00ebr planifikimin e dasmave",
         "features": {
-          "unlimitedGuests": "Unlimited guests",
-          "unlimitedEvents": "Unlimited events",
-          "allPremiumTemplates": "All premium templates",
-          "advancedAnalytics": "Advanced analytics",
-          "allInvitationMethods": "All invitation methods",
-          "customBranding": "Custom branding",
-          "prioritySupport": "Priority support"
+          "unlimitedGuests": "Mysafir\u00eb pa kufij",
+          "unlimitedEvents": "Ngjarje pa kufij",
+          "allPremiumTemplates": "T\u00eb gjitha shabllonet premium",
+          "advancedAnalytics": "Analitik\u00eb e avancuar",
+          "allInvitationMethods": "T\u00eb gjitha metodat e ftesave",
+          "customBranding": "Brendim i personalizuar",
+          "prioritySupport": "Mb\u00ebshtetje prioritare"
         }
       }
     }
@@ -119,541 +119,557 @@
   "footer": {
     "brand": {
       "logo": "IvyEvents",
-      "tagline": "Create beautiful invitations. Plan unforgettable events."
+      "tagline": "Krijoni ftesa t\u00eb bukura. Planifikoni ngjarje t\u00eb paharrueshme."
     },
     "columns": {
-      "product": "Product",
-      "company": "Company",
-      "support": "Support",
-      "connect": "Connect"
+      "product": "Produkti",
+      "company": "Kompania",
+      "support": "Mb\u00ebshtetja",
+      "connect": "Lidhuni"
     },
     "links": {
-      "templates": "Templates",
-      "features": "Features",
-      "pricing": "Pricing",
-      "faq": "FAQ",
-      "about": "About Us",
+      "templates": "Shabllone",
+      "features": "Ve\u00e7ori",
+      "pricing": "\u00c7mimet",
+      "faq": "Pyetje t\u00eb shpeshta",
+      "about": "Rreth nesh",
       "blog": "Blog",
-      "careers": "Careers",
-      "contact": "Contact",
-      "help": "Help Center",
-      "terms": "Terms",
-      "privacy": "Privacy",
-      "security": "Security"
+      "careers": "Karrier\u00eb",
+      "contact": "Kontakt",
+      "help": "Qendra e ndihm\u00ebs",
+      "terms": "Kushtet",
+      "privacy": "Privat\u00ebsia",
+      "security": "Siguria"
     },
-    "copyright": "All rights reserved."
+    "copyright": "T\u00eb gjitha t\u00eb drejtat e rezervuara."
   },
   "header": {
     "logo": "IvyEvents",
     "actions": {
-      "signIn": "Sign In",
-      "getStartedFree": "Get Started Free",
-      "myDashboard": "My Dashboard"
+      "signIn": "Hyr",
+      "getStartedFree": "Fillo falas",
+      "myDashboard": "Paneli im"
     },
     "menu": {
-      "templates": "Templates",
-      "features": "Features",
-      "pricing": "Pricing",
-      "faq": "FAQ",
-      "openMenu": "Open menu"
+      "templates": "Shabllone",
+      "features": "Veçori",
+      "pricing": "Çmimet",
+      "faq": "Pyetje të shpeshta",
+      "openMenu": "Hap menynë",
+      "packages": "Paketat",
+      "categories": "Kategoritë",
+      "organizer": "Organizator",
+      "invitationPlanner": "Ftesë (Planifikues)",
+      "onlineGallery": "Galeri Online",
+      "weddings": "Dasma",
+      "birthdaysParties": "Ditëlindje dhe Festa",
+      "corporate": "Ngjarje Korporative",
+      "conferences": "Konferenca",
+      "privateDinners": "Darka Private",
+      "babyShowers": "Baby Shower",
+      "graduations": "Diplomime",
+      "anniversaries": "Përvjetore",
+      "about": "Rreth Nesh",
+      "terms": "Kushtet dhe Rregullat",
+      "contact": "Kontakti"
     }
   },
   "nav": {
-    "weddings": "Weddings",
-    "business": "Business",
-    "baby": "Baby",
-    "holiday": "Holiday",
-    "invitation": "Invitation",
-    "dashboard": "Dashboard",
+    "weddings": "Dasma",
+    "business": "Biznes",
+    "baby": "Fëmijë",
+    "holiday": "Festë",
+    "invitation": "Ftesë",
+    "dashboard": "Paneli",
     "admin": "Admin",
-    "upload": "Upload"
+    "upload": "Ngarko"
   },
   "eventCategories": {
     "section": {
-      "title": "Perfect for Every Celebration",
-      "subtitle": "Beautiful invitations for all your special moments",
-      "continue": "Continue",
-      "description": "You can change this later in settings"
+      "title": "Perfekte p\u00ebr \u00c7do Festim",
+      "subtitle": "Ftesa t\u00eb bukura p\u00ebr t\u00eb gjitha momentet tuaja t\u00eb ve\u00e7anta",
+      "continue": "Vazhdo",
+      "description": "Mund ta ndryshoni m\u00eb von\u00eb n\u00eb cil\u00ebsimet"
     },
     "items": {
       "weddings": {
-        "title": "Weddings",
-        "description": "Elegant invitations for your special day"
+        "title": "Dasma",
+        "description": "Ftesa elegante p\u00ebr dit\u00ebn tuaj t\u00eb ve\u00e7ant\u00eb"
       },
       "birthdaysParties": {
-        "title": "Birthdays & Parties",
-        "description": "Celebrate milestones in style"
+        "title": "Dit\u00eblindje dhe Festa",
+        "description": "Festoni momentet e r\u00eand\u00ebsishme me stil"
       },
       "corporate": {
-        "title": "Corporate Events",
-        "description": "Professional invitations for business"
+        "title": "Ngjarje Korporative",
+        "description": "Ftesa profesionale p\u00ebr biznes"
       },
       "conferences": {
-        "title": "Conferences",
-        "description": "Streamline event registration"
+        "title": "Konferenca",
+        "description": "Thjeshtoni regjistrimin e ngjarjeve"
       },
       "privateDinners": {
-        "title": "Private Dinners",
-        "description": "Intimate gatherings made easy"
+        "title": "Darka Private",
+        "description": "Mbledhje intime t\u00eb lehta"
       },
       "babyShowers": {
-        "title": "Baby Showers",
-        "description": "Welcome the new arrival"
+        "title": "Baby Shower",
+        "description": "Mir\u00ebsevini an\u00ebtarin e ri"
       },
       "graduations": {
-        "title": "Graduations",
-        "description": "Celebrate achievements"
+        "title": "Diplomime",
+        "description": "Festoni arritjet"
       },
       "anniversaries": {
-        "title": "Anniversaries",
-        "description": "Honor years of love"
+        "title": "P\u00ebrvjetore",
+        "description": "Nderoni vitet e dashuris\u00eb"
       }
     }
   },
   "weddingsPage": {
     "templates": {
-      "title": "Trending Wedding Invitations",
-      "subtitle": "Most popular themes"
+      "title": "Ftesat m\u00eb n\u00eb Trend p\u00ebr Dasma",
+      "subtitle": "Temat m\u00eb t\u00eb populluara"
     },
     "packages": {
-      "title": "Wedding Packages"
+      "title": "Paketat e Dasmave"
     }
   },
   "auth": {
     "brand": "Ivy Events",
     "common": {
-      "orContinue": "or continue with",
-      "continueWithGoogle": "Continue with Google",
-      "terms": "Terms of Service",
-      "privacy": "Privacy Policy"
+      "orContinue": "ose vazhdo me",
+      "continueWithGoogle": "Vazhdo me Google",
+      "terms": "Kushtet e Sh\u00ebrbimit",
+      "privacy": "Politika e Privat\u00ebsis\u00eb"
     },
     "placeholders": {
-      "email": "your{'@'}email.com",
-      "password": "Enter your password",
-      "fullName": "Jane Doe",
-      "confirmPassword": "Repeat your password"
+      "email": "juaj{'@'}email.com",
+      "password": "Shkruani fjal\u00ebkalimin",
+      "fullName": "Emri Mbiemri",
+      "confirmPassword": "P\u00ebrs\u00ebritni fjal\u00ebkalimin"
     },
     "login": {
-      "title": "Welcome Back",
-      "subtitle": "Sign in to continue planning your perfect event",
-      "signIn": "Sign In",
-      "forgotPassword": "Forgot password?",
-      "noAccount": "Don't have an account?",
-      "createAccount": "Create account"
+      "title": "Mir\u00ebsevini p\u00ebrs\u00ebri",
+      "subtitle": "Hyni p\u00ebr t\u00eb vazhduar planifikimin e ngjarjes suaj t\u00eb p\u00ebrsosur",
+      "signIn": "Hyr",
+      "forgotPassword": "Keni harruar fjal\u00ebkalimin?",
+      "noAccount": "Nuk keni llogari?",
+      "createAccount": "Krijo llogari"
     },
     "register": {
-      "title": "Create your account",
-      "subtitle": "Begin planning your unforgettable celebration",
-      "createAccount": "Create Account",
-      "haveAccount": "Already have an account?",
-      "signIn": "Sign in",
-      "agree": "I agree to the Terms of Service and Privacy Policy"
+      "title": "Krijoni llogarinë tuaj",
+      "subtitle": "Filloni planifikimin e festimit tuaj t\u00eb paharruesh\u00ebm",
+      "createAccount": "Krijo Llogari",
+      "haveAccount": "Keni tashm\u00eb nj\u00eb llogari?",
+      "signIn": "Hyni",
+      "agree": "Jam dakord me Kushtet e Sh\u00ebrbimit dhe Politik\u00ebn e Privat\u00ebsis\u00eb"
     },
     "fields": {
-      "email": "Email Address",
-      "emailPlaceholder": "your{'@'}email.com",
-      "password": "Password",
-      "passwordPlaceholder": "Enter your password",
-      "newPassword": "New Password",
-      "confirmPassword": "Confirm Password"
+      "email": "Adresa e Email-it",
+      "emailPlaceholder": "juaj{'@'}email.com",
+      "password": "Fjal\u00ebkalimi",
+      "passwordPlaceholder": "Shkruani fjal\u00ebkalimin tuaj",
+      "newPassword": "Fjal\u00ebkalimi i Ri",
+      "confirmPassword": "Konfirmo Fjal\u00ebkalimin"
     },
     "verify": {
-      "title": "Verify your email",
-      "subtitle": "We’ve sent a verification code to {email}. Please enter it below to continue.",
-      "cta": "Verify email",
-      "resend": "Resend code",
-      "changeEmail": "Change email address"
+      "title": "Verifikoni email-in tuaj",
+      "subtitle": "Kemi d\u00ebrguar nj\u00eb kod verifikimi n\u00eb {email}. Ju lutem shkruajeni m\u00eb posht\u00eb p\u00ebr t\u00eb vazhduar.",
+      "cta": "Verifiko email-in",
+      "resend": "Rid\u00ebrgo kodin",
+      "changeEmail": "Ndrysho adres\u00ebn e email-it"
     },
     "forgot": {
-      "title": "Forgot your password?",
-      "subtitle": "Enter your email address and we’ll send you a reset link.",
-      "cta": "Send reset link",
-      "backToLogin": "Back to login"
+      "title": "Keni harruar fjal\u00ebkalimin?",
+      "subtitle": "Shkruani adres\u00ebn tuaj t\u00eb email-it dhe do t\u2019ju d\u00ebrgojm\u00eb nj\u00eb link rivendosjeje.",
+      "cta": "D\u00ebrgo linkun e rivendosjes",
+      "backToLogin": "Kthehu te hyrja"
     },
     "reset": {
-      "title": "Create a new password",
-      "subtitle": "Please choose a secure password for your account.",
-      "cta": "Reset password",
-      "backToLogin": "Back to login"
+      "title": "Krijoni nj\u00eb fjal\u00ebkalim t\u00eb ri",
+      "subtitle": "Ju lutem zgjidhni nj\u00eb fjal\u00ebkalim t\u00eb sigurt p\u00ebr llogarinë tuaj.",
+      "cta": "Rivendos fjal\u00ebkalimin",
+      "backToLogin": "Kthehu te hyrja"
     }
   },
   "onboarding": {
     "eventBasics": {
-      "title": "Event Basics",
-      "subtitle": "Let's start with the broad strokes. You can always change these details later.",
+      "title": "Detajet Baz\u00eb t\u00eb Ngjarjes",
+      "subtitle": "Le t\u00eb fillojm\u00eb me gjerat kryesore. K\u00ebto detaje mund t\u2019i ndryshoni m\u00eb von\u00eb.",
       "fields": {
-        "brideName": "Bride's Name",
-        "groomName": "Groom's Name",
-        "weddingDate": "Wedding Date (Optional)",
-        "location": "Location (Optional)"
+        "brideName": "Emri i Nus\u00ebs",
+        "groomName": "Emri i Dh\u00ebnd\u00ebrrit",
+        "weddingDate": "Data e Dasm\u00ebs (Opsionale)",
+        "location": "Vendndodhja (Opsionale)"
       },
       "placeholders": {
-        "brideName": "e.g. Sarah",
-        "groomName": "e.g. Michael",
-        "location": "e.g. Napa Valley, CA"
+        "brideName": "p.sh. Sara",
+        "groomName": "p.sh. Mihaeli",
+        "location": "p.sh. Tiran\u00eb, Shqip\u00ebri"
       },
       "hints": {
-        "weddingDate": "Don't have a date yet? No worries.",
-        "location": "TBD is perfectly fine at this stage."
+        "weddingDate": "Nuk keni dat\u00eb ende? S\u2019ka problem.",
+        "location": "\"Pa p\u00ebrcaktuar\" \u00ebsht\u00eb n\u00eb rregull n\u00eb k\u00ebt\u00eb faz\u00eb."
       },
       "actions": {
-        "continue": "Continue",
-        "skip": "Skip for now"
+        "continue": "Vazhdo",
+        "skip": "Kalo p\u00ebr tani"
       },
       "protip": {
-        "label": "Pro tip:",
-        "text": "You can invite collaborators after you’ve set up the basics. We’ll remind you later."
+        "label": "K\u00ebshilla:",
+        "text": "Mund t\u00eb ftoni bashk\u00ebpun\u00ebtor\u00eb pasi t\u00eb keni vendosur detajet baz\u00eb. Do t\u2019ju kujtojm\u00eb m\u00eb von\u00eb."
       }
     },
     "invitations": {
-      "title": "Choose Your Invitation",
-      "subtitle": "Pick a design that matches your style. You can customize it later.",
-      "selected": "Selected",
-      "preview": "Preview",
-      "continue": "Continue",
-      "back": "Back to details",
-      "emptyState": "No invitation designs available for this category yet. We're working on it!"
+      "title": "Zgjidhni Ftes\u00ebn Tuaj",
+      "subtitle": "Zgjidhni nj\u00eb dizajn q\u00eb p\u00ebrputhet me stilin tuaj. Mund ta personalizoni m\u00eb von\u00eb.",
+      "selected": "Zgjedhur",
+      "preview": "Parashiko",
+      "continue": "Vazhdo",
+      "back": "Kthehu te detajet",
+      "emptyState": "Asnj\u00eb dizajn ftesash nuk \u00ebsht\u00eb i disponuesh\u00ebm p\u00ebr k\u00ebt\u00eb kategori ende. Po punojm\u00eb p\u00ebr k\u00ebt\u00eb!"
     },
     "footer": {
-      "help": "Help Center",
-      "privacy": "Privacy"
+      "help": "Qendra e Ndihm\u00ebs",
+      "privacy": "Privat\u00ebsia"
     }
   },
   "checkout": {
     "header": {
-      "title": "Complete Your Purchase",
-      "subtitle": "Secure payment powered by Stripe"
+      "title": "P\u00ebrfundoni Blerjen Tuaj",
+      "subtitle": "Pages\u00eb e sigurt e mundësuar nga Stripe"
     },
     "payment": {
-      "title": "Payment Information",
-      "email": "Email Address",
-      "emailPh": "userexample.com",
-      "cardNumber": "Card Number",
-      "expiry": "Expiry Date",
+      "title": "Informacionet e Pages\u00ebs",
+      "email": "Adresa e Email-it",
+      "emailPh": "perdoruesi@shembull.com",
+      "cardNumber": "Numri i Kart\u00ebs",
+      "expiry": "Data e Skadimit",
       "cvc": "CVC",
-      "country": "Billing Country",
-      "countryPh": "Select your country",
-      "note": "Your payment information is encrypted and secure. We never store your full card details."
+      "country": "Shteti i Faturimit",
+      "countryPh": "Zgjidhni shtetin tuaj",
+      "note": "Informacionet e pages\u00ebs suaj jan\u00eb t\u00eb enkriptuara dhe t\u00eb sigurta. Asnj\u00ebher\u00eb nuk i ruajm\u00eb detajet e plota t\u00eb kart\u00ebs."
     },
     "summary": {
-      "title": "Order Summary",
-      "selected": "SELECTED",
-      "duration": "Duration",
-      "annual": "Annual",
-      "yearly": "Yearly",
-      "subtotal": "Subtotal",
-      "savings": "Savings (2 months free)",
-      "total": "Total",
-      "pay": "Pay & Activate Event",
-      "ssl": "256-bit SSL encrypted payment",
-      "legalPrefix": "By completing this purchase, you agree to our",
-      "terms": "Terms of Service",
-      "and": "and",
-      "privacy": "Privacy Policy",
-      "couponLabel": "Coupon Code",
-      "couponPh": "Enter coupon (e.g. IVY-WELCOME20)",
-      "couponValidating": "Validating coupon...",
-      "discount": "Discount"
+      "title": "P\u00ebrmbledhja e Porosisë",
+      "selected": "ZGJEDHUR",
+      "duration": "Koh\u00ebzgjatja",
+      "annual": "Vjetore",
+      "yearly": "Vjetore",
+      "subtotal": "N\u00ebn-totali",
+      "savings": "Kursime (2 muaj falas)",
+      "total": "Totali",
+      "pay": "Paguaj dhe Aktivo Ngjarjen",
+      "ssl": "Pages\u00eb e enkriptuar me SSL 256-bit",
+      "legalPrefix": "Duke p\u00ebrfunduar k\u00ebt\u00eb blerje, ju pranoni",
+      "terms": "Kushtet e Sh\u00ebrbimit",
+      "and": "dhe",
+      "privacy": "Politik\u00ebn e Privat\u00ebsis\u00eb",
+      "couponLabel": "Kodi i Kuponit",
+      "couponPh": "Shkruani kuponin (p.sh. IVY-WELCOME20)",
+      "couponValidating": "Duke verifikuar kuponin...",
+      "discount": "Zbritja"
     },
     "plan": {
       "pro": {
-        "name": "Pro Plan",
-        "tagline": "Up to 300 guests"
+        "name": "Plani Pro",
+        "tagline": "Deri n\u00eb 300 mysafir\u00eb"
       }
     }
   },
   "eventLive": {
-    "title": "Your Event Is Live",
-    "subtitle": "Congratulations! Your event has been successfully published and is now visible to attendees.",
+    "title": "Ngjarja Juaj \u00cbsht\u00eb Aktive",
+    "subtitle": "Urime! Ngjarja juaj \u00ebsht\u00eb publikuar me sukses dhe tani \u00ebsht\u00eb e dukshme p\u00ebr pjes\u00ebmarr\u00ebsit.",
     "event": {
-      "statusActive": "Active & Registration Open"
+      "statusActive": "Aktive dhe e Hapur p\u00ebr Regjistrim"
     },
     "actions": {
-      "shareInvitation": "Share Invitation",
-      "sendRsvp": "Send RSVP Email",
-      "goToOverview": "Go to Event Overview"
+      "shareInvitation": "Ndaj Ftes\u00ebn",
+      "sendRsvp": "D\u00ebrgo RSVP me Email",
+      "goToOverview": "Shko te P\u00ebrmbledhja e Ngjarjes"
     },
     "footer": {
-      "text": "Need to make changes?",
-      "editDetails": "Edit event details"
+      "text": "Doni t\u00eb b\u00ebni ndryshime?",
+      "editDetails": "Ndrysho detajet e ngjarjes"
     }
   },
   "home": {
     "hero": {
-      "titleLine1": "Create beautiful",
-      "titleLine2": "invitations. Plan",
-      "titleLine3": "unforgettable events.",
-      "subtitle": "The all-in-one platform for elegant digital invitations, seamless RSVP tracking, and stress-free event management.",
-      "primaryCta": "Get Started",
-      "secondaryCta": "View Templates"
+      "titleLine1": "Krijoni ftesa",
+      "titleLine2": "t\u00eb bukura. Planifikoni",
+      "titleLine3": "ngjarje t\u00eb paharrueshme.",
+      "subtitle": "Platforma gj\u00ebthp\u00ebrfshir\u00ebse p\u00ebr ftesa dixhitale elegante, gjurmim t\u00eb leht\u00eb t\u00eb RSVP dhe menaxhim pa stres t\u00eb ngjarjeve.",
+      "primaryCta": "Fillo",
+      "secondaryCta": "Shiko Shabllonet"
     },
     "howItWorks": {
-      "title": "How It Works",
-      "subtitle": "Four simple steps to your perfect event",
+      "title": "Si Funksionon",
+      "subtitle": "Kat\u00ebr hapa t\u00eb thjesht\u00eb p\u00ebr ngjarjen tuaj t\u00eb p\u00ebrsosur",
       "steps": {
         "chooseTemplate": {
-          "title": "Choose a Template",
-          "description": "Browse our collection of elegant, customizable invitation designs"
+          "title": "Zgjidh nj\u00eb Shabllon",
+          "description": "Shfletoni koleksionin ton\u00eb t\u00eb dizajneve elegante dhe t\u00eb personalizueshme"
         },
         "customizeEvent": {
-          "title": "Customize Your Event",
-          "description": "Add your details, photos, and personal touches with our easy editor"
+          "title": "Personalizo Ngjarjen",
+          "description": "Shtoni detajet, fotot dhe prekjet tuaja personale me redaktorin ton\u00eb t\u00eb leht\u00eb"
         },
         "sendInvitations": {
-          "title": "Send Invitations",
-          "description": "Share via email, text, or social media with one click"
+          "title": "D\u00ebrgo Ftesat",
+          "description": "Ndani me email, SMS ose rrjete sociale me nj\u00eb klikim"
         },
         "trackRsvps": {
-          "title": "Track RSVPs",
-          "description": "Monitor responses and manage your guest list in real-time"
+          "title": "Gjurmo RSVP",
+          "description": "Monitoroni p\u00ebrgjigjet dhe menaxhoni list\u00ebn e mysafir\u00ebve n\u00eb koh\u00eb reale"
         }
       }
     },
     "whyChoose": {
-      "title": "Why Choose IvyEvents?",
-      "subtitle": "The complete solution for modern event planning",
+      "title": "Pse t\u00eb Zgjidhni IvyEvents?",
+      "subtitle": "Zgjidhja e plot\u00eb p\u00ebr planifikimin modern t\u00eb ngjarjeve",
       "items": {
         "allInOne": {
-          "title": "All-in-One Platform",
-          "description": "Invitations, RSVPs, guest management, and more in one place"
+          "title": "Platform\u00eb Gj\u00ebthp\u00ebrfshir\u00ebse",
+          "description": "Ftesa, RSVP, menaxhim mysafir\u00ebsh dhe m\u00eb shum\u00eb n\u00eb nj\u00eb vend"
         },
         "noAds": {
-          "title": "No Ads on Invitations",
-          "description": "Keep your invitations clean and professional without distractions"
+          "title": "Pa Reklama n\u00eb Ftesa",
+          "description": "Mbani ftesat tuaja t\u00eb pastra dhe profesionale pa shp\u00ebrqendrime"
         },
         "unlimitedGuests": {
-          "title": "Unlimited Guests",
-          "description": "Invite as many people as you need without restrictions"
+          "title": "Mysafir\u00eb pa Kufij",
+          "description": "Ftoni aq njer\u00ebz sa ju duhen pa kufizime"
         },
         "designedForEvents": {
-          "title": "Designed for Weddings & Events",
-          "description": "Purpose-built features for every type of celebration"
+          "title": "Dizajnuar p\u00ebr Dasma dhe Ngjarje",
+          "description": "Ve\u00e7ori t\u00eb nd\u00ebrtuara enkas p\u00ebr \u00e7do lloj festimi"
         }
       }
     },
     "templates": {
-      "title": "Stunning Templates for Every Occasion",
-      "subtitle": "Professionally designed, fully customizable invitations",
-      "cta": "View Templates",
+      "title": "Shabllone Mahnitëse p\u00ebr \u00c7do Rast",
+      "subtitle": "T\u00eb dizajnuara profesionalisht, plot\u00ebsisht t\u00eb personalizueshme",
+      "cta": "Shiko Shabllonet",
       "items": {
         "elegantWedding": {
-          "title": "Elegant Wedding",
-          "subtitle": "Classic & Timeless"
+          "title": "Dasm\u00eb Elegante",
+          "subtitle": "Klasike dhe e P\u00ebrjetshme"
         },
         "birthday": {
-          "title": "Birthday Celebration",
-          "subtitle": "Fun & Festive"
+          "title": "Festim Dit\u00eblindjeje",
+          "subtitle": "Arg\u00ebtuese dhe Festive"
         },
         "corporate": {
-          "title": "Corporate Event",
-          "subtitle": "Professional & Modern"
+          "title": "Ngjarje Korporative",
+          "subtitle": "Profesionale dhe Moderne"
         },
         "babyShower": {
           "title": "Baby Shower",
-          "subtitle": "Sweet & Charming"
+          "subtitle": "E \u00cbmb\u00ebl dhe Tërheqëse"
         }
       }
     },
     "features": {
-      "title": "Features for Every Stage of Event Management",
-      "subtitle": "Everything you need to plan, manage, and celebrate",
+      "title": "Ve\u00e7ori p\u00ebr \u00c7do Faz\u00eb t\u00eb Menaxhimit t\u00eb Ngjarjeve",
+      "subtitle": "Gjith\u00e7ka q\u00eb ju nevojitet p\u00ebr t\u00eb planifikuar, menaxhuar dhe festuar",
       "items": {
         "beautifulDesigns": {
-          "title": "Beautiful Invitation Designs",
-          "description": "Choose from hundreds of professionally designed templates or create your own custom design"
+          "title": "Dizajne t\u00eb Bukura Ftesash",
+          "description": "Zgjidhni nga qindra shabllone t\u00eb dizajnuara profesionalisht ose krijoni dizajnin tuaj"
         },
         "rsvpManagement": {
-          "title": "RSVP & Guest Management",
-          "description": "Track responses, manage guest lists, and send automated reminders effortlessly"
+          "title": "RSVP dhe Menaxhim Mysafir\u00ebsh",
+          "description": "Gjurmoni p\u00ebrgjigjet, menaxhoni listat e mysafir\u00ebve dhe d\u00ebrgoni kujtesa automatikisht"
         },
         "automatedReminders": {
-          "title": "Automated Reminders",
-          "description": "Send timely reminders to guests automatically so you never miss an RSVP"
+          "title": "Kujtesa Automatike",
+          "description": "D\u00ebrgoni kujtesa n\u00eb koh\u00eb automatikisht q\u00eb t\u00eb mos humbni asnj\u00eb RSVP"
         },
         "mobileFriendly": {
-          "title": "Mobile-Friendly Experience",
-          "description": "Perfect viewing on any device - your guests can RSVP from anywhere"
+          "title": "P\u00ebrshtatur p\u00ebr Celular",
+          "description": "Shfaqje perfekte n\u00eb \u00e7do pajisje - mysafir\u00ebt mund t\u00eb p\u00ebrgjigjen nga kudo"
         },
         "eventDetails": {
-          "title": "Event Details & Schedule",
-          "description": "Share venue information, directions, schedule, and important details in one place"
+          "title": "Detajet dhe Orari i Ngjarjes",
+          "description": "Ndani informacionin e vendit, udhëzimet, orarin dhe detaje t\u00eb r\u00eand\u00ebsishme n\u00eb nj\u00eb vend"
         },
         "analytics": {
-          "title": "Real-Time Analytics",
-          "description": "Get insights into guest responses, attendance rates, and engagement metrics"
+          "title": "Analitik\u00eb n\u00eb Koh\u00eb Reale",
+          "description": "Merrni njohuri mbi p\u00ebrgjigjet e mysafir\u00ebve, normat e pjes\u00ebmarrjes dhe metrikat e angazhimit"
         }
       }
     },
     "faq": {
-      "title": "Frequently Asked Questions",
-      "subtitle": "Everything you need to know about IvyEvents",
+      "title": "Pyetjet m\u00eb t\u00eb Shpeshta",
+      "subtitle": "Gjith\u00e7ka q\u00eb duhet t\u00eb dini p\u00ebr IvyEvents",
       "items": {
         "q1": {
-          "question": "How do I create an invitation?",
-          "answer": "Creating an invitation is simple! Just sign up for free, choose a template from our gallery, customize it with your event details and photos, then share it via email, text, or social media. The entire process takes less than 10 minutes."
+          "question": "Si t\u00eb krijoj nj\u00eb ftes\u00eb?",
+          "answer": "Krijimi i nj\u00eb ftese \u00ebsht\u00eb i thjesht\u00eb! Regjistrohuni falas, zgjidhni nj\u00eb shabllon, personalizojeni me detajet e ngjarjes dhe fotot tuaja, pastaj ndajeni me email, SMS ose rrjete sociale. I gjith\u00eb procesi z\u00eb m\u00eb pak se 10 minuta."
         },
         "q2": {
-          "question": "Can I customize the invitation templates?",
-          "answer": "Absolutely! All templates are fully customizable. You can change colors, fonts, images, text, and layout."
+          "question": "A mund t\u2019i personalizoj shabllonet e ftesave?",
+          "answer": "Absolutisht! T\u00eb gjitha shabllonet jan\u00eb plot\u00ebsisht t\u00eb personalizueshme. Mund t\u00eb ndryshoni ngjyrat, fontet, imazhet, tekstin dhe paraqitjen."
         },
         "q3": {
-          "question": "How does RSVP tracking work?",
-          "answer": "Guests RSVP with one click. You'll see responses in real-time and can send reminders to guests who haven't replied."
+          "question": "Si funksionon gjurmimi i RSVP?",
+          "answer": "Mysafir\u00ebt p\u00ebrgjigjen me nj\u00eb klikim. Do t\u2019i shihni p\u00ebrgjigjet n\u00eb koh\u00eb reale dhe mund t\u00eb d\u00ebrgoni kujtesa p\u00ebr ata q\u00eb nuk kan\u00eb p\u00ebrgjigjer."
         },
         "q4": {
-          "question": "Is IvyEvents free to use?",
-          "answer": "Yes! We offer a free plan for small events. Pro and Premium plans unlock advanced features for larger events."
+          "question": "A \u00ebsht\u00eb IvyEvents falas?",
+          "answer": "Po! Ofrojm\u00eb nj\u00eb plan falas p\u00ebr ngjarje t\u00eb vogla. Planet Pro dhe Premium hapin ve\u00e7ori t\u00eb avancuara p\u00ebr ngjarje m\u00eb t\u00eb m\u00ebdha."
         },
         "q5": {
-          "question": "Can I use IvyEvents for professional event planning?",
-          "answer": "Definitely. You can manage multiple events, use premium templates, and keep everything organized for clients."
+          "question": "A mund ta p\u00ebrdor IvyEvents p\u00ebr planifikim profesional?",
+          "answer": "Pa dyshim. Mund t\u00eb menaxhoni ngjarje t\u00eb shumta, t\u00eb p\u00ebrdorni shabllone premium dhe t\u00eb mbani gjith\u00e7ka t\u00eb organizuar p\u00ebr klient\u00ebt."
         },
         "q6": {
-          "question": "Are the invitations mobile-friendly?",
-          "answer": "Yes! All invitations are responsive and work beautifully on desktop, tablet, and mobile."
+          "question": "A jan\u00eb ftesat t\u00eb p\u00ebrshtatura p\u00ebr celular?",
+          "answer": "Po! T\u00eb gjitha ftesat jan\u00eb responsive dhe funksionojn\u00eb bukur n\u00eb kompjuter, tablet dhe celular."
         },
         "q7": {
-          "question": "What if I need help or have questions?",
-          "answer": "We offer a help center and email support. Pro and Premium users get priority support with faster response times."
+          "question": "\u00c7far\u00eb n\u00ebse kam nevoj\u00eb p\u00ebr ndihm\u00eb?",
+          "answer": "Ofrojm\u00eb qendr\u00eb ndihme dhe mb\u00ebshtetje me email. P\u00ebrdoruesit Pro dhe Premium kan\u00eb mb\u00ebshtetje prioritare me p\u00ebrgjigje m\u00eb t\u00eb shpejta."
         }
       }
     },
     "socialProof": {
-      "rating": "4.9/5 Rating",
-      "eventsCreated": "50,000+ Events Created",
-      "trustedBy": "Trusted by 25,000+ Couples",
-      "satisfaction": "98% Customer Satisfaction"
+      "rating": "4.9/5 Vler\u00ebsim",
+      "eventsCreated": "50,000+ Ngjarje t\u00eb Krijuara",
+      "trustedBy": "Besuar nga 25,000+ \u00c7ifte",
+      "satisfaction": "98% K\u00ebnaq\u00ebsi e Klient\u00ebve"
     },
     "testimonials": {
-      "title": "Loved by Thousands of Happy Couples",
-      "subtitle": "Real stories from real celebrations"
+      "title": "Dashuruar nga Mij\u00ebra \u00c7ifte t\u00eb Lumtura",
+      "subtitle": "Histori reale nga festime reale"
     },
     "finalCta": {
-      "title": "Ready to Create Your Perfect Event?",
-      "subtitle": "Join thousands of happy couples and event planners who trust IvyEvents. Start planning your unforgettable celebration today – it's free to get started!",
-      "primaryCta": "Start Planning Your Event",
-      "secondaryCta": "View Templates"
+      "title": "Gati p\u00ebr t\u00eb Krijuar Ngjarjen Tuaj t\u00eb P\u00ebrsosur?",
+      "subtitle": "Bashkohuni me mij\u00ebra \u00e7ifte dhe organizator\u00eb q\u00eb i besojn\u00eb IvyEvents. Filloni planifikimin e festimit tuaj t\u00eb paharruesh\u00ebm sot \u2013 \u00ebsht\u00eb falas p\u00ebr t\u00eb filluar!",
+      "primaryCta": "Fillo Planifikimin e Ngjarjes",
+      "secondaryCta": "Shiko Shabllonet"
     }
   },
   "guests": {
-    "title": "Guests",
-    "subtitle": "Manage your event guests and table assignments",
-    "addGuest": "Add Guest",
-    "importGuests": "Import Guests",
-    "sendReminder": "Send Reminder",
-    "searchPlaceholder": "Search by name or email...",
-    "allRsvp": "All RSVP Status",
-    "allTables": "All Tables",
-    "unassigned": "Unassigned",
-    "thGuestName": "Guest Name",
-    "thRsvp": "RSVP Status",
-    "thPlus": "Guests",
-    "thTable": "Assigned Table",
-    "thDietary": "Dietary",
-    "thActions": "Actions",
-    "edit": "Edit",
-    "remove": "Remove",
-    "confirmed": "Confirmed",
-    "pending": "Pending",
-    "declined": "Declined",
-    "loading": "Loading guests...",
-    "errorTitle": "Could not load guests",
-    "retry": "Retry",
-    "emptyTitle": "No guests yet",
-    "emptyMessage": "Add guests or import a list to start managing RSVPs.",
-    "editGuest": "Edit Guest",
-    "dietary": "Dietary",
-    "noDietaryRestrictions": "No restrictions",
-    "dietaryDescription": "Description",
-    "dietaryDescriptionPh": "e.g. allergic to nuts",
+    "title": "Mysafir\u00ebt",
+    "subtitle": "Menaxhoni mysafir\u00ebt e ngjarjes dhe caktimet e tavolinave",
+    "addGuest": "Shto Mysafir",
+    "importGuests": "Importo Mysafir\u00eb",
+    "sendReminder": "D\u00ebrgo Kujtesë",
+    "searchPlaceholder": "K\u00ebrko sipas emrit ose email-it...",
+    "allRsvp": "T\u00eb gjitha statuset RSVP",
+    "allTables": "T\u00eb gjitha tavolinat",
+    "unassigned": "Pa caktuar",
+    "thGuestName": "Emri i Mysafirit",
+    "thRsvp": "Statusi RSVP",
+    "thPlus": "Mysafir\u00eb",
+    "thTable": "Tavolina e Caktuar",
+    "thDietary": "Ushqimore",
+    "thActions": "Veprimet",
+    "edit": "Ndrysho",
+    "remove": "Fshi",
+    "confirmed": "Konfirmuar",
+    "pending": "N\u00eb pritje",
+    "declined": "Refuzuar",
+    "loading": "Duke ngarkuar mysafir\u00ebt...",
+    "errorTitle": "Nuk mund t\u00eb ngarkoheshin mysafir\u00ebt",
+    "retry": "Provo p\u00ebrs\u00ebri",
+    "emptyTitle": "Asnj\u00eb mysafir ende",
+    "emptyMessage": "Shtoni mysafir\u00eb ose importoni nj\u00eb list\u00eb p\u00ebr t\u00eb filluar menaxhimin e RSVP.",
+    "editGuest": "Ndrysho Mysafirin",
+    "dietary": "Ushqimore",
+    "noDietaryRestrictions": "Pa kufizime",
+    "dietaryDescription": "P\u00ebrshkrimi",
+    "dietaryDescriptionPh": "p.sh. alergjik ndaj arrave",
     "dietaryOptions": {
-      "vegetarian": "Vegetarian",
+      "vegetarian": "Vegjetarian",
       "vegan": "Vegan",
-      "glutenFree": "Gluten Free",
-      "fish": "Fish",
-      "chicken": "Chicken",
-      "other": "Other"
+      "glutenFree": "Pa Gluten",
+      "fish": "Peshk",
+      "chicken": "Pul\u00eb",
+      "other": "Tjet\u00ebr"
     },
-    "isChild": "Child",
-    "adults": "Adults",
-    "children": "Children",
-    "note": "Note",
-    "notePh": "Optional note..."
+    "isChild": "F\u00ebmij\u00eb",
+    "adults": "T\u00eb rritur",
+    "children": "F\u00ebmij\u00eb",
+    "note": "Sh\u00ebnim",
+    "notePh": "Sh\u00ebnim opsional..."
   },
-   "agenda": {
-    "title": "Agenda",
-    "subtitle": "Manage the schedule for {event} • {dateRange}",
-    "dayView": "Day",
-    "multiDay": "Multi-day",
-    "template": "Template",
-    "addItem": "Add Item",
-    "totalDuration": "Total duration: {duration}",
-    "editItem": "Edit Item",
-    "emptyTitle": "No agenda items yet",
-    "emptyMessage": "Add your first agenda item to start building your schedule.",
-    "totalItems": "{count} items",
+  "agenda": {
+    "title": "Axhenda",
+    "subtitle": "Menaxhoni orarin p\u00ebr {event} \u2022 {dateRange}",
+    "dayView": "Ditor",
+    "multiDay": "Shum\u00eb-ditor",
+    "template": "Shabllon",
+    "addItem": "Shto Artikull",
+    "totalDuration": "Koh\u00ebzgjatja totale: {duration}",
+    "editItem": "Ndrysho Artikullin",
+    "emptyTitle": "Asnj\u00eb artikull n\u00eb axhend\u00eb ende",
+    "emptyMessage": "Shtoni artikullin e par\u00eb p\u00ebr t\u00eb filluar nd\u00ebrtimin e orarit.",
+    "totalItems": "{count} artikuj",
     "th": {
-      "title": "Title",
-      "type": "Type",
-      "dateTime": "Date & Time",
-      "location": "Location",
-      "visibility": "Visibility",
-      "actions": "Actions"
+      "title": "Titulli",
+      "type": "Lloji",
+      "dateTime": "Data dhe Ora",
+      "location": "Vendndodhja",
+      "visibility": "Dukshmëria",
+      "actions": "Veprimet"
     },
     "form": {
-      "title": "Title",
-      "type": "Type",
-      "dateTime": "Date & Time",
-      "location": "Location",
-      "locationName": "Venue Name",
-      "addressLine": "Address",
-      "city": "City",
-      "postalCode": "Postal Code",
+      "title": "Titulli",
+      "type": "Lloji",
+      "dateTime": "Data dhe Ora",
+      "location": "Vendndodhja",
+      "locationName": "Emri i Vendit",
+      "addressLine": "Adresa",
+      "city": "Qyteti",
+      "postalCode": "Kodi Postar",
       "googleMapsUrl": "Google Maps URL",
-      "description": "Description",
-      "visibility": "Visibility",
-      "status": "Status"
+      "description": "P\u00ebrshkrimi",
+      "visibility": "Dukshmëria",
+      "status": "Statusi"
     },
     "status": {
-      "completed": "Completed",
-      "inProgress": "In Progress",
-      "upcoming": "Upcoming",
-      "break": "Break"
+      "completed": "P\u00ebrfunduar",
+      "inProgress": "N\u00eb Progres",
+      "upcoming": "N\u00eb Ardhje",
+      "break": "Pushim"
     },
     "visibility": {
-      "EVERYONE": "Everyone",
-      "TEAM": "Team only",
-      "CLOSE_FRIENDS": "Close Friends"
+      "EVERYONE": "T\u00eb gjith\u00eb",
+      "TEAM": "Vet\u00ebm ekipi",
+      "CLOSE_FRIENDS": "Miq t\u00eb Ngusht\u00eb"
     },
     "addDialog": {
-      "title": "Add Agenda Item",
-      "create": "Create",
-      "titlePh": "e.g. Welcome Reception",
-      "locationPh": "Search for a venue or address...",
-      "addressPh": "e.g. 123 Main Street",
-      "descriptionPh": "Describe this agenda item..."
+      "title": "Shto Artikull n\u00eb Axhend\u00eb",
+      "create": "Krijo",
+      "titlePh": "p.sh. Pritja e Mir\u00ebseardhjes",
+      "locationPh": "K\u00ebrkoni nj\u00eb vend ose adres\u00eb...",
+      "addressPh": "p.sh. Rruga Kryesore nr. 1",
+      "descriptionPh": "P\u00ebrshkruani k\u00ebt\u00eb artikull t\u00eb axhend\u00ebs..."
     },
     "editDialog": {
-      "title": "Edit Agenda Item"
+      "title": "Ndrysho Artikullin e Axhend\u00ebs"
     },
     "errors": {
-      "titleRequired": "Title is required",
-      "typeRequired": "Type is required",
-      "dateTimeRequired": "Date and time is required"
+      "titleRequired": "Titulli \u00ebsht\u00eb i detyruesh\u00ebm",
+      "typeRequired": "Lloji \u00ebsht\u00eb i detyruesh\u00ebm",
+      "dateTimeRequired": "Data dhe ora jan\u00eb t\u00eb detyrueshme"
     },
     "types": {
-      "CHURCH": "Church",
-      "CEREMONY": "Ceremony",
-      "RECEPTION": "Reception",
-      "FIRST_DANCE": "First Dance",
-      "START_GROOM": "Start Groom",
-      "START_BRIDE": "Start Bride"
+      "CHURCH": "Kish\u00eb",
+      "CEREMONY": "Ceremoni",
+      "RECEPTION": "Pritje",
+      "FIRST_DANCE": "Valli e Par\u00eb",
+      "START_GROOM": "Fillim Dh\u00ebnd\u00ebrri",
+      "START_BRIDE": "Fillim Nusja"
     }
   },
   "storyTypes": {
-    "HOW_WE_MET": "How We Met",
-    "FIRST_DATE": "First Date",
-    "PROPOSAL": "Proposal"
+    "HOW_WE_MET": "Si u Njohem",
+    "FIRST_DATE": "Takimi i Par\u00eb",
+    "PROPOSAL": "Propozimi"
   },
   "ourStory": {
     "title": "Historia Jon\u00eb",
@@ -687,250 +703,420 @@
     }
   },
   "sidebar": {
-    "overview": "Overview",
-    "guests": "Guests",
-    "tasks": "Tasks",
-    "budget": "Budget",
-    "seating": "Seating",
-    "agenda": "Agenda",
-    "gallery": "Gallery",
+    "overview": "P\u00ebrmbledhje",
+    "guests": "Mysafir\u00ebt",
+    "tasks": "Detyrat",
+    "budget": "Buxheti",
+    "seating": "Vendosja",
+    "agenda": "Axhenda",
+    "gallery": "Galeria",
     "ourStory": "Historia Jon\u00eb",
-    "team": "Team",
-    "settings": "Settings",
+    "team": "Ekipi",
+    "settings": "Cilësimet",
+    "support": "Mbështetje",
     "premium": "PREMIUM",
-    "eventPlanner": "Event Planner",
-    "eventSettings": "Event Settings",
-    "signOut": "Sign Out",
+    "eventPlanner": "Planifikues Ngjarjesh",
+    "eventSettings": "Cil\u00ebsimet e Ngjarjes",
+    "signOut": "Dil",
     "addGuest": "Shto Mysafir",
-    "addTask": "Shto Detyrë"
+    "addTask": "Shto Detyr\u00eb"
+  },
+  "admin": {
+    "sidebar": {
+      "events": "Ngjarjet",
+      "packages": "Paketat",
+      "users": "Përdoruesit",
+      "reviews": "Vlerësimet",
+      "contacts": "Kontaktet"
+    },
+    "reviews": {
+      "title": "Vlerësimet",
+      "subtitle": "Shikoni dhe menaxhoni komentet e mysafirëve",
+      "searchPh": "Kërko vlerësime...",
+      "allRatings": "Të gjitha vlerësimet",
+      "star": "Yll",
+      "stars": "Yje",
+      "loading": "Duke ngarkuar vlerësimet...",
+      "thGuest": "Mysafiri",
+      "thEvent": "Ngjarja",
+      "thRating": "Vlerësimi",
+      "thComment": "Komenti",
+      "thDate": "Data",
+      "empty": "Nuk u gjetën vlerësime"
+    },
+    "contacts": {
+      "title": "Mesazhet e Kontaktit",
+      "subtitle": "Menaxhoni mesazhet hyrëse të kontaktit dhe mbështetjes",
+      "searchPh": "Kërko kontakte...",
+      "allStatuses": "Të gjitha statuset",
+      "statusInReview": "Në shqyrtim",
+      "statusResolved": "E zgjidhur",
+      "loading": "Duke ngarkuar kontaktet...",
+      "thContact": "Kontakti",
+      "thSubject": "Tema",
+      "thMessage": "Mesazhi",
+      "thStatus": "Statusi",
+      "thDate": "Data",
+      "thActions": "Veprimet",
+      "empty": "Nuk u gjetën mesazhe kontakti",
+      "view": "Shiko",
+      "resolve": "Zgjidh",
+      "reopen": "Rihap",
+      "viewTitle": "Detajet e Mesazhit"
+    }
   },
   "overview": {
-    "daysToGo": "days to go",
-    "editInvitation": "Edit Invitation",
-    "manageGuests": "Manage Guests",
-    "sendUpdate": "Send Update",
-    "sending": "Sending...",
-    "totalGuests": "Total Guests",
-    "tablesAssigned": "Tables Assigned",
-    "tablesSeated": "of tables seated",
-    "budgetStatus": "Budget Status",
-    "of": "of",
-    "budget": "budget",
-    "remaining": "Remaining",
-    "used": "Used",
-    "rsvpSummary": "RSVP Summary",
-    "viewDetails": "View Details",
-    "total": "TOTAL",
-    "coming": "Coming",
-    "maybe": "Maybe",
-    "declined": "Declined",
-    "waiting": "Waiting",
-    "upcomingTasks": "Upcoming Tasks",
-    "daysUntilEvent": "Days Until Event",
-    "days": "Days",
-    "hours": "Hours",
-    "minutes": "Minutes",
-    "seconds": "Seconds",
-    "galleryPreview": "Gallery Preview",
-    "noPhotosYet": "No photos uploaded yet",
-    "guestAssignment": "Guest Assignment",
-    "guestsAssigned": "guests assigned",
-    "viewAllTasks": "View All Tasks",
-    "onTrackTitle": "Everything is on track!",
-    "viewTimeline": "View Timeline"
+    "daysToGo": "dit\u00eb deri n\u00eb ngjarje",
+    "editInvitation": "Ndrysho Ftes\u00ebn",
+    "manageGuests": "Menaxho Mysafir\u00ebt",
+    "sendUpdate": "D\u00ebrgo Njoftim",
+    "sending": "Duke d\u00ebrguar...",
+    "totalGuests": "Totali i Mysafir\u00ebve",
+    "tablesAssigned": "Tavolina t\u00eb Caktuara",
+    "tablesSeated": "e tavolinave t\u00eb mbushura",
+    "budgetStatus": "Statusi i Buxhetit",
+    "of": "nga",
+    "budget": "buxheti",
+    "remaining": "Mbetur",
+    "used": "P\u00ebrdorur",
+    "rsvpSummary": "P\u00ebrmbledhja RSVP",
+    "viewDetails": "Shiko Detajet",
+    "total": "TOTALI",
+    "coming": "Vin\u00eb",
+    "maybe": "Ndoshta",
+    "declined": "Refuzuar",
+    "waiting": "N\u00eb pritje",
+    "upcomingTasks": "Detyrat e Ardhshme",
+    "daysUntilEvent": "Dit\u00eb Deri n\u00eb Ngjarje",
+    "days": "Dit\u00eb",
+    "hours": "Or\u00eb",
+    "minutes": "Minuta",
+    "seconds": "Sekonda",
+    "galleryPreview": "Parashikim i Galeris\u00eb",
+    "noPhotosYet": "Asnj\u00eb foto e ngarkuar ende",
+    "guestAssignment": "Caktimi i Mysafir\u00ebve",
+    "guestsAssigned": "mysafir\u00eb t\u00eb caktuar",
+    "viewAllTasks": "Shiko t\u00eb Gjitha Detyrat",
+    "onTrackTitle": "Gjith\u00e7ka \u00ebsht\u00eb n\u00eb rregull!",
+    "viewTimeline": "Shiko Kronologjin\u00eb"
   },
   "common": {
-    "delete": "Delete",
-    "cancel": "Cancel",
-    "save": "Save",
-    "saveChanges": "Save Changes",
-    "viewAll": "View All"
+    "delete": "Fshi",
+    "cancel": "Anulo",
+    "save": "Ruaj",
+    "saveChanges": "Ruaj Ndryshimet",
+    "viewAll": "Shiko t\u00eb Gjitha"
   },
   "tables": {
-    "title": "Tables & Seating",
-    "subtitle": "Manage seating assignments by table",
-    "addTable": "Add Table",
-    "printExport": "Print / Export",
-    "sendNotification": "Send Notification",
-    "tableList": "Table List",
-    "guestAssignment": "Guest Assignment",
-    "addGuest": "Add Guest",
-    "guestName": "Guest Name",
-    "assignedTable": "Assigned Table",
-    "status": "Status",
-    "action": "Action",
-    "remove": "Remove",
-    "selected": "Selected",
-    "capacity": "Capacity",
-    "guests": "guests",
-    "unassigned": "Unassigned",
-    "confirmed": "Confirmed",
-    "pending": "Pending",
+    "title": "Tavolinat dhe Vendosja",
+    "subtitle": "Menaxhoni caktimet e vendeve sipas tavolinave",
+    "addTable": "Shto Tavolin\u00eb",
+    "printExport": "Printo / Eksporto",
+    "sendNotification": "D\u00ebrgo Njoftim",
+    "tableList": "Lista e Tavolinave",
+    "guestAssignment": "Caktimi i Mysafir\u00ebve",
+    "addGuest": "Shto Mysafir",
+    "guestName": "Emri i Mysafirit",
+    "assignedTable": "Tavolina e Caktuar",
+    "status": "Statusi",
+    "action": "Veprimi",
+    "remove": "Fshi",
+    "selected": "Zgjedhur",
+    "capacity": "Kapaciteti",
+    "guests": "mysafir\u00eb",
+    "unassigned": "Pa caktuar",
+    "confirmed": "Konfirmuar",
+    "pending": "N\u00eb pritje",
     "form": {
-      "name": "Name",
-      "namePh": "Full name",
-      "phone": "Phone",
-      "phonePh": "+389…",
+      "name": "Emri",
+      "namePh": "Emri i plot\u00eb",
+      "phone": "Telefoni",
+      "phonePh": "+355\u2026",
       "email": "Email",
-      "emailPh": "nameemail.com",
-      "status": "Status"
+      "emailPh": "emri@email.com",
+      "status": "Statusi"
     },
     "errors": {
-      "nameRequired": "Name is required",
-      "statusRequired": "Status is required"
+      "nameRequired": "Emri \u00ebsht\u00eb i detyruesh\u00ebm",
+      "statusRequired": "Statusi \u00ebsht\u00eb i detyruesh\u00ebm"
     },
     "addTableDialog": {
-      "title": "Add Table",
-      "name": "Table Name",
-      "namePh": "e.g. Table 4",
-      "maxGuests": "Max Guests",
-      "maxGuestsPh": "e.g. 8",
-      "nameRequired": "Table name is required",
-      "maxGuestsRequired": "Max guests must be greater than 0"
+      "title": "Shto Tavolin\u00eb",
+      "name": "Emri i Tavolin\u00ebs",
+      "namePh": "p.sh. Tavolina 4",
+      "maxGuests": "Mysafir\u00eb Maksimum",
+      "maxGuestsPh": "p.sh. 8",
+      "nameRequired": "Emri i tavolin\u00ebs \u00ebsht\u00eb i detyruesh\u00ebm",
+      "maxGuestsRequired": "Numri i mysafir\u00ebve duhet t\u00eb jet\u00eb m\u00eb i madh se 0"
     },
     "tabs": {
-      "seating": "Tables & Seating",
-      "tasks": "Tasks"
+      "seating": "Tavolinat dhe Vendosja",
+      "tasks": "Detyrat"
     },
     "tasks": {
-      "title": "Tasks",
-      "addTask": "Add Task",
-      "editTask": "Edit Task",
-      "addReminder": "Add Reminder",
-      "setReminder": "Set Reminder",
-      "task": "Task",
-      "reminder": "Reminder",
-      "due": "Due",
-      "completed": "Completed",
-      "inProgress": "In Progress",
-      "pending": "Pending",
-      "empty": "No tasks yet. Add your first task to get started.",
+      "title": "Detyrat",
+      "addTask": "Shto Detyr\u00eb",
+      "editTask": "Ndrysho Detyr\u00ebn",
+      "addReminder": "Shto Kujtes\u00eb",
+      "setReminder": "Vendos Kujtes\u00eb",
+      "task": "Detyr\u00eb",
+      "reminder": "Kujtes\u00eb",
+      "due": "Afati",
+      "completed": "P\u00ebrfunduar",
+      "inProgress": "N\u00eb Progres",
+      "pending": "N\u00eb Pritje",
+      "empty": "Asnj\u00eb detyr\u00eb ende. Shtoni detyr\u00ebn e par\u00eb p\u00ebr t\u00eb filluar.",
       "form": {
-        "title": "Task Name",
-        "titlePh": "e.g. Book venue and confirm date",
-        "description": "Description",
-        "descriptionPh": "Add a description or notes...",
-        "dueDate": "Due Date",
-        "status": "Status",
-        "titleRequired": "Task name is required"
+        "title": "Emri i Detyr\u00ebs",
+        "titlePh": "p.sh. Rezervo vendin dhe konfirmo dat\u00ebn",
+        "description": "P\u00ebrshkrimi",
+        "descriptionPh": "Shtoni nj\u00eb p\u00ebrshkrim ose sh\u00ebnime...",
+        "dueDate": "Data e Afatit",
+        "status": "Statusi",
+        "titleRequired": "Emri i detyr\u00ebs \u00ebsht\u00eb i detyruesh\u00ebm"
       }
     }
   },
   "budget": {
-    "title": "Budget",
-    "export": "Export",
-    "addExpense": "Add Expense",
-    "categories": "Categories",
-    "overviewSubtitle": "{monthLabel} Overview",
-
-    "totalBudget": "Total Budget",
-    "totalSpent": "Total Spent",
-    "remaining": "Remaining",
-    "monthly": "Monthly",
-    "fixedAndVariable": "Fixed & Variable",
-    "safeToSpend": "Safe to spend",
-    "ofBudgetUsed": "{percent}% of budget used",
-    "createBudget": "Create Budget",
-    "emptyTitle": "No budget yet",
-    "emptyMessage": "Create a budget to start tracking your event expenses.",
+    "title": "Buxheti",
+    "export": "Eksporto",
+    "addExpense": "Shto Shpenzim",
+    "categories": "Kategorit\u00eb",
+    "overviewSubtitle": "P\u00ebrmbledhja e {monthLabel}",
+    "totalBudget": "Buxheti Total",
+    "totalSpent": "Totali i Shpenzuar",
+    "remaining": "Mbetur",
+    "monthly": "Mujore",
+    "fixedAndVariable": "Fikse dhe Variab\u00ebl",
+    "safeToSpend": "E sigurt p\u00ebr shpenzim",
+    "ofBudgetUsed": "{percent}% e buxhetit \u00ebsht\u00eb p\u00ebrdorur",
+    "createBudget": "Krijo Buxhet",
+    "emptyTitle": "Asnj\u00eb buxhet ende",
+    "emptyMessage": "Krijoni nj\u00eb buxhet p\u00ebr t\u00eb filluar gjurmimin e shpenzimeve t\u00eb ngjarjes.",
     "budgetDialog": {
-      "name": "Budget Name",
-      "namePh": "e.g. Wedding Budget",
-      "description": "Description",
-      "descriptionPh": "Optional description",
-      "amount": "Total Amount",
-      "nameRequired": "Budget name is required",
-      "amountRequired": "Amount must be greater than 0"
+      "name": "Emri i Buxhetit",
+      "namePh": "p.sh. Buxheti i Dasm\u00ebs",
+      "description": "P\u00ebrshkrimi",
+      "descriptionPh": "P\u00ebrshkrim opsional",
+      "amount": "Shuma Totale",
+      "nameRequired": "Emri i buxhetit \u00ebsht\u00eb i detyruesh\u00ebm",
+      "amountRequired": "Shuma duhet t\u00eb jet\u00eb m\u00eb e madhe se 0"
     },
     "expense": {
-      "date": "Date",
-      "category": "Category",
-      "categoryPh": "Select category",
-      "merchant": "Merchant",
-      "merchantPh": "e.g. Venue, Florist, Caterer",
-      "amount": "Amount",
-      "note": "Note",
-      "notePh": "Optional note",
-      "merchantRequired": "Merchant is required",
-      "amountRequired": "Amount must be greater than 0"
+      "date": "Data",
+      "category": "Kategoria",
+      "categoryPh": "Zgjidh kategorin\u00eb",
+      "merchant": "Tregtari",
+      "merchantPh": "p.sh. Restoranti, Lulishte, Katering",
+      "amount": "Shuma",
+      "note": "Sh\u00ebnim",
+      "notePh": "Sh\u00ebnim opsional",
+      "merchantRequired": "Tregtari \u00ebsht\u00eb i detyruesh\u00ebm",
+      "amountRequired": "Shuma duhet t\u00eb jet\u00eb m\u00eb e madhe se 0"
     }
   },
   "gallery": {
-    "title": "Gallery",
-    "subtitle": "Browse and manage your event photos",
-    "loading": "Loading images...",
-    "loadingMore": "Loading more...",
-    "errorTitle": "Failed to load gallery",
-    "empty": "No images yet. Upload your first photo to get started.",
-    "noMore": "All images loaded",
-    "download": "Download",
-    "downloadAll": "Download All",
-    "downloadSelected": "Download Selected",
-    "downloading": "Downloading...",
-    "selectMode": "Select",
-    "cancelSelect": "Cancel",
-    "selected": "{count} selected"
+    "title": "Galeria",
+    "subtitle": "Shfletoni dhe menaxhoni fotot e ngjarjes",
+    "loading": "Duke ngarkuar imazhet...",
+    "loadingMore": "Duke ngarkuar m\u00eb shum\u00eb...",
+    "errorTitle": "D\u00ebshtoi ngarkimi i galeris\u00eb",
+    "empty": "Asnj\u00eb imazh ende. Ngarkoni foton e par\u00eb p\u00ebr t\u00eb filluar.",
+    "noMore": "T\u00eb gjitha imazhet u ngarkuan",
+    "download": "Shkarko",
+    "downloadAll": "Shkarko t\u00eb Gjitha",
+    "downloadSelected": "Shkarko t\u00eb Zgjedhurat",
+    "downloading": "Duke shkarkuar...",
+    "selectMode": "Zgjidh",
+    "cancelSelect": "Anulo",
+    "selected": "{count} t\u00eb zgjedhura"
   },
   "settings": {
-    "title": "Event Settings",
-    "subtitle": "View and manage your event configuration",
-    "loading": "Loading event details...",
-    "errorTitle": "Could not load event",
-    "retry": "Retry",
-    "save": "Save",
-    "saving": "Saving...",
-    "saved": "Changes saved!",
-    "saveError": "Failed to save changes",
-    "eventDetails": "Event Details",
-    "eventName": "Event Name",
-    "eventDate": "Event Date",
-    "eventLocation": "Location",
-    "eventCategory": "Category",
-    "language": "Language",
-    "showAgenda": "Show Agenda",
-    "showOurStory": "Show Our Story",
-    "linksAndSharing": "Links & Sharing",
-    "invitationLink": "Invitation Link",
-    "invitationLinkDesc": "Share this link with your guests so they can view the invitation and RSVP.",
-    "noInvitationUrl": "No invitation link available yet.",
-    "galleryUrl": "Gallery URL",
-    "galleryUrlDesc": "Share this link so guests can upload photos from the event.",
-    "privateInvitationUrl": "Private Invitation URL",
-    "copy": "Copy",
-    "copied": "Copied!",
-    "changeInvitation": "Change Invitation",
-    "displayOptions": "Display Options",
-    "dangerZone": "Danger Zone",
-    "archiveDesc": "Archiving this event will hide it from your dashboard. This action can be reversed later.",
-    "archiveEvent": "Archive Event"
+    "title": "Cil\u00ebsimet e Ngjarjes",
+    "subtitle": "Shikoni dhe menaxhoni konfigurimin e ngjarjes",
+    "loading": "Duke ngarkuar detajet e ngjarjes...",
+    "errorTitle": "Nuk mund t\u00eb ngarkohej ngjarja",
+    "retry": "Provo p\u00ebrs\u00ebri",
+    "save": "Ruaj",
+    "saving": "Duke ruajtur...",
+    "saved": "Ndryshimet u ruajt\u00ebn!",
+    "saveError": "D\u00ebshtoi ruajtja e ndryshimeve",
+    "eventDetails": "Detajet e Ngjarjes",
+    "eventName": "Emri i Ngjarjes",
+    "eventDate": "Data e Ngjarjes",
+    "eventLocation": "Vendndodhja",
+    "eventCategory": "Kategoria",
+    "language": "Gjuha",
+    "showAgenda": "Shfaq Axhend\u00ebn",
+    "showOurStory": "Shfaq Historin\u00eb Ton\u00eb",
+    "linksAndSharing": "Linqe dhe Ndarja",
+    "invitationLink": "Linku i Ftes\u00ebs",
+    "invitationLinkDesc": "Ndani k\u00ebt\u00eb link me mysafir\u00ebt q\u00eb t\u00eb shikojn\u00eb ftes\u00ebn dhe t\u00eb konfirmojn\u00eb pjes\u00ebmarrjen.",
+    "noInvitationUrl": "Asnj\u00eb link ftese i disponuesh\u00ebm ende.",
+    "galleryUrl": "URL e Galeris\u00eb",
+    "galleryUrlDesc": "Ndani k\u00ebt\u00eb link q\u00eb mysafir\u00ebt t\u00eb ngarkojn\u00eb foto nga ngjarja.",
+    "privateInvitationUrl": "URL Private e Ftes\u00ebs",
+    "copy": "Kopjo",
+    "copied": "Kopjuar!",
+    "changeInvitation": "Ndrysho Ftes\u00ebn",
+    "displayOptions": "Opsionet e Shfaqjes",
+    "dangerZone": "Zona e Rrezikut",
+    "archiveDesc": "Arkivimi i k\u00ebsaj ngjarjeje do ta fsheh\u00eb nga paneli juaj. Ky veprim mund t\u00eb kthehet m\u00eb von\u00eb.",
+    "archiveEvent": "Arkivo Ngjarjen"
   },
   "cpay": {
-    "pay": "Pay with cPay",
-    "upgrade": "Upgrade",
-    "redirecting": "Redirecting...",
-    "initFailed": "Payment initialization failed",
-    "orderId": "Order",
-    "goToDashboard": "Go to Dashboard",
-    "successTitle": "Payment Successful",
-    "successDesc": "Your payment has been processed. Thank you!",
-    "failedTitle": "Payment Failed",
-    "failedDesc": "Your payment could not be processed. Please try again.",
-    "canceledTitle": "Payment Canceled",
-    "canceledDesc": "You canceled the payment.",
-    "expiredTitle": "Payment Expired",
-    "expiredDesc": "The payment session has expired. Please try again.",
-    "pendingTitle": "Confirming Payment",
-    "pendingDesc": "We are confirming your payment. Please wait...",
-    "unknownTitle": "Unknown Status"
+    "pay": "Paguaj me cPay",
+    "upgrade": "P\u00ebrmir\u00ebso",
+    "redirecting": "Duke ridrejtuar...",
+    "initFailed": "Inicializimi i pages\u00ebs d\u00ebshtoi",
+    "orderId": "Porosi",
+    "goToDashboard": "Shko te Paneli",
+    "successTitle": "Pagesa e Suksesshme",
+    "successDesc": "Pagesa juaj \u00ebsht\u00eb p\u00ebrpunuar. Faleminderit!",
+    "failedTitle": "Pagesa D\u00ebshtoi",
+    "failedDesc": "Pagesa juaj nuk mund t\u00eb p\u00ebrpunohej. Ju lutem provoni p\u00ebrs\u00ebri.",
+    "canceledTitle": "Pagesa u Anulua",
+    "canceledDesc": "Ju e anuluat pages\u00ebn.",
+    "expiredTitle": "Pagesa Skadoi",
+    "expiredDesc": "Sesioni i pages\u00ebs ka skaduar. Ju lutem provoni p\u00ebrs\u00ebri.",
+    "pendingTitle": "Duke Konfirmuar Pages\u00ebn",
+    "pendingDesc": "Po konfirmojm\u00eb pages\u00ebn tuaj. Ju lutem prisni...",
+    "unknownTitle": "Status i Panjohur"
+  },
+  "packages": {
+    "title": "Paketat Tona",
+    "subtitle": "Zgjidhni paketin e duhur p\u00ebr eventin tuaj",
+    "tabs": {
+      "invitation": "Ftesë (Planifikues)",
+      "organizer": "Organizator",
+      "gallery": "Galeri"
+    },
+    "choose": "Fillo",
+    "popular": "Popullore",
+    "empty": "Nuk ka paketa t\u00eb disponueshme n\u00eb k\u00ebt\u00eb kategori.",
+    "loadError": "Ngarkimi i paketave d\u00ebshtoi. Provo p\u00ebrs\u00ebri."
+  },
+  "about": {
+    "title": "Rreth Nesh",
+    "heroSubtitle": "Po ndërtojmë të ardhmen e planifikimit të ngjarjeve — e bukur, e thjeshtë dhe e aksesueshme për të gjithë.",
+    "missionTitle": "Misioni Ynë",
+    "missionText": "Të fuqizojmë individët dhe profesionistët për të krijuar ngjarje të paharrueshme me mjete dixhitale elegante që kursejnë kohë dhe kënaqin mysafirët.",
+    "visionTitle": "Vizioni Ynë",
+    "visionText": "Një botë ku çdo festim planifikohet pa mundim, paraqitet bukur dhe është thellësisht personal.",
+    "valuesTitle": "Vlerat Tona",
+    "valueSimplicity": "Thjeshtësia",
+    "valueSimplicityDesc": "Besojmë se mjetet e shkëlqyera duhet të jenë intuitive dhe të këndshme për t'u përdorur.",
+    "valueElegance": "Eleganca",
+    "valueEleganceDesc": "Çdo detaj ka rëndësi — nga ftesat deri te valli i fundit.",
+    "valueInclusion": "Përfshirja",
+    "valueInclusionDesc": "Ngjarje të bukura për çdo kulturë, buxhet dhe festim."
+  },
+  "terms": {
+    "title": "Kushtet dhe Rregullat",
+    "lastUpdated": "Përditësimi i fundit: Shkurt 2026",
+    "intro": "Ju lutem lexoni me kujdes këto kushte përpara se të përdorni platformën IvyEvents.",
+    "sections": {
+      "acceptance": {
+        "title": "1. Pranimi i Kushteve",
+        "text": "Duke aksesuar ose përdorur IvyEvents, ju pranoni këto Kushte dhe Rregulla. Nëse nuk jeni dakord, ju lutem mos i përdorni shërbimet tona."
+      },
+      "services": {
+        "title": "2. Përshkrimi i Shërbimeve",
+        "text": "IvyEvents ofron një platformë dixhitale për krijimin e ftesave, menaxhimin e listave të mysafirëve, gjurmimin e RSVP dhe organizimin e detajeve të ngjarjeve."
+      },
+      "accounts": {
+        "title": "3. Llogaritë e Përdoruesve",
+        "text": "Ju jeni përgjegjës për ruajtjen e konfidencialitetit të kredencialeve tuaja. Duhet të jepni informacion të saktë gjatë regjistrimit."
+      },
+      "payment": {
+        "title": "4. Pagesa dhe Abonimet",
+        "text": "Planet me pagesë faturohen sipas çmimeve të shfaqura në momentin e blerjes. Të gjitha pagesat përpunohen në mënyrë të sigurt përmes partnerëve tanë."
+      },
+      "content": {
+        "title": "5. Përmbajtja e Përdoruesit",
+        "text": "Ju ruani pronësinë mbi përmbajtjen që ngarkoni. Duke ngarkuar përmbajtje, ju i jepni IvyEvents licencë për ta shfaqur dhe përpunuar brenda platformës."
+      },
+      "liability": {
+        "title": "6. Kufizimi i Përgjegjësisë",
+        "text": "IvyEvents ofrohet \"siç është\" pa garanci të asnjë lloji. Ne nuk jemi përgjegjës për dëme të tërthorta, të rastësishme ose pasojore."
+      },
+      "changes": {
+        "title": "7. Ndryshimet e Kushteve",
+        "text": "Mund t'i përditësojmë këto kushte herë pas here. Përdorimi i vazhdueshëm i IvyEvents pas ndryshimeve përbën pranim të kushteve të reja."
+      },
+      "contact": {
+        "title": "8. Kontakti",
+        "text": "Për pyetje rreth këtyre kushteve, na kontaktoni në support@ivyevents.com."
+      }
+    }
+  },
+  "contact": {
+    "title": "Na Kontaktoni",
+    "subtitle": "Keni pyetje ose keni nevojë për ndihmë? Na shkruani me kënaqësi.",
+    "name": "Emri i plotë",
+    "namePh": "p.sh. Ana Krasniqi",
+    "email": "Adresa Email",
+    "emailPh": "email@juaj.com",
+    "phone": "Telefoni",
+    "phonePh": "+383...",
+    "subject": "Tema",
+    "subjectPh": "Për çfarë bëhet fjalë?",
+    "message": "Mesazhi",
+    "messagePh": "Na tregoni si mund t'ju ndihmojmë...",
+    "send": "Dërgo Mesazhin",
+    "sending": "Duke dërguar...",
+    "successTitle": "Mesazhi u Dërgua!",
+    "successText": "Faleminderit që na kontaktuat. Do t'ju përgjigjemi sa më shpejt të jetë e mundur."
+  },
+  "feedback": {
+    "title": "Ndani Mendimin Tuaj",
+    "subtitle": "Na ndihmoni të përmirësohemi duke ndarë përvojën tuaj",
+    "rating": "Vlerësimi",
+    "comment": "Komenti",
+    "commentPh": "Na tregoni për përvojën tuaj...",
+    "mediaUrl": "URL Media (opsionale)",
+    "mediaUrlPh": "https://...",
+    "send": "Dërgo Mendimin",
+    "sending": "Duke dërguar...",
+    "successTitle": "Faleminderit!",
+    "successText": "Mendimi juaj u dërgua me sukses. E vlerësojmë kohën tuaj!",
+    "noEvent": "Nuk është specifikuar asnjë ngjarje. Ju lutem përdorni linkun e mendimit nga ftesa juaj."
+  },
+  "support": {
+    "title": "Mbështetje",
+    "subtitle": "Shikoni mesazhet tuaja dhe kontaktoni ekipin tonë të mbështetjes",
+    "newMessage": "Mesazh i Ri",
+    "editMessage": "Ndrysho Mesazhin",
+    "loading": "Duke ngarkuar mesazhet...",
+    "emptyTitle": "Asnjë mesazh ende",
+    "emptyText": "Dërgoni një mesazh ekipit tonë të mbështetjes dhe ne do t'ju kthehemi.",
+    "name": "Emri i plotë",
+    "namePh": "p.sh. Ana Krasniqi",
+    "email": "Email",
+    "emailPh": "email@juaj.com",
+    "phone": "Telefoni",
+    "phonePh": "+383...",
+    "subject": "Tema",
+    "subjectPh": "p.sh. Pyetje rreth ngjarjes sime",
+    "message": "Mesazhi",
+    "messagePh": "Përshkruani pyetjen ose problemin tuaj...",
+    "send": "Dërgo",
+    "sending": "Duke dërguar...",
+    "thName": "Emri",
+    "thEmail": "Email",
+    "thPhone": "Telefoni",
+    "thSubject": "Tema",
+    "thMessage": "Mesazhi",
+    "thDate": "Data"
   },
   "galleryUpload": {
-    "title": "Share Your Moments",
-    "subtitle": "Upload photos and videos from the event",
-    "dropzone": "Drag & drop files here or tap to browse",
-    "formats": "JPG, PNG, HEIC, MP4 supported",
-    "upload": "Upload {count} file(s)",
-    "uploading": "Uploading...",
-    "success": "Photos uploaded successfully! Thank you!",
-    "error": "Upload failed. Please try again."
+    "title": "Ndani Momentet Tuaja",
+    "subtitle": "Ngarkoni foto dhe video nga ngjarja",
+    "dropzone": "T\u00ebrhiqni skedar\u00ebt k\u00ebtu ose prekni p\u00ebr t\u00eb shfletuar",
+    "formats": "JPG, PNG, HEIC, MP4 t\u00eb mb\u00ebshtetur",
+    "upload": "Ngarko {count} skedar(\u00eb)",
+    "uploading": "Duke ngarkuar...",
+    "success": "Fotot u ngarkuan me sukses! Faleminderit!",
+    "error": "Ngarkimi d\u00ebshtoi. Ju lutem provoni p\u00ebrs\u00ebri."
   }
 }

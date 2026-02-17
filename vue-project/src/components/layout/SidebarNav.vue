@@ -30,6 +30,7 @@
       :role="userRole"
       :avatarUrl="avatarUrl"
       @settings="goToSettings"
+      @support="goToSupport"
       @sign-out="signOut"
     />
   </aside>
@@ -82,6 +83,10 @@ const avatarUrl = computed(() => "");
 
 function goToSettings() {
   router.push(`/${lang.value}/dashboard/events/settings`);
+}
+
+function goToSupport() {
+  router.push(`/${lang.value}/dashboard/events/support`);
 }
 
 function goToGuests() {

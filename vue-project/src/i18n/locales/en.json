@@ -155,7 +155,23 @@
       "features": "Features",
       "pricing": "Pricing",
       "faq": "FAQ",
-      "openMenu": "Open menu"
+      "openMenu": "Open menu",
+      "packages": "Packages",
+      "categories": "Categories",
+      "organizer": "Organizer",
+      "invitationPlanner": "Invitation (Planner)",
+      "onlineGallery": "Online Gallery",
+      "weddings": "Weddings",
+      "birthdaysParties": "Birthdays & Parties",
+      "corporate": "Corporate Events",
+      "conferences": "Conferences",
+      "privateDinners": "Private Dinners",
+      "babyShowers": "Baby Showers",
+      "graduations": "Graduations",
+      "anniversaries": "Anniversaries",
+      "about": "About Us",
+      "terms": "Terms & Conditions",
+      "contact": "Contact"
     }
   },
   "nav": {
@@ -697,12 +713,57 @@
     "ourStory": "Our Story",
     "team": "Team",
     "settings": "Settings",
+    "support": "Support",
     "premium": "PREMIUM",
     "eventPlanner": "Event Planner",
     "eventSettings": "Event Settings",
     "signOut": "Sign Out",
     "addGuest": "Add Guest",
     "addTask": "Add Task"
+  },
+  "admin": {
+    "sidebar": {
+      "events": "Events",
+      "packages": "Packages",
+      "users": "Users",
+      "reviews": "Reviews",
+      "contacts": "Contacts"
+    },
+    "reviews": {
+      "title": "Reviews",
+      "subtitle": "View and manage guest feedback and ratings",
+      "searchPh": "Search reviews...",
+      "allRatings": "All Ratings",
+      "star": "Star",
+      "stars": "Stars",
+      "loading": "Loading reviews...",
+      "thGuest": "Guest",
+      "thEvent": "Event",
+      "thRating": "Rating",
+      "thComment": "Comment",
+      "thDate": "Date",
+      "empty": "No reviews found"
+    },
+    "contacts": {
+      "title": "Contact Messages",
+      "subtitle": "Manage incoming contact and support messages",
+      "searchPh": "Search contacts...",
+      "allStatuses": "All Statuses",
+      "statusInReview": "In Review",
+      "statusResolved": "Resolved",
+      "loading": "Loading contacts...",
+      "thContact": "Contact",
+      "thSubject": "Subject",
+      "thMessage": "Message",
+      "thStatus": "Status",
+      "thDate": "Date",
+      "thActions": "Actions",
+      "empty": "No contact messages found",
+      "view": "View",
+      "resolve": "Resolve",
+      "reopen": "Reopen",
+      "viewTitle": "Message Details"
+    }
   },
   "overview": {
     "daysToGo": "days to go",
@@ -922,6 +983,132 @@
     "pendingTitle": "Confirming Payment",
     "pendingDesc": "We are confirming your payment. Please wait...",
     "unknownTitle": "Unknown Status"
+  },
+  "packages": {
+    "title": "Our Packages",
+    "subtitle": "Choose the perfect package for your event needs",
+    "tabs": {
+      "invitation": "Invitation (Planner)",
+      "organizer": "Organizer",
+      "gallery": "Gallery"
+    },
+    "choose": "Get Started",
+    "popular": "Popular",
+    "empty": "No packages available in this category yet.",
+    "loadError": "Failed to load packages. Please try again."
+  },
+  "about": {
+    "title": "About Us",
+    "heroSubtitle": "We're building the future of event planning — beautiful, simple, and accessible to everyone.",
+    "missionTitle": "Our Mission",
+    "missionText": "To empower individuals and professionals to create unforgettable events with elegant digital tools that save time and delight guests.",
+    "visionTitle": "Our Vision",
+    "visionText": "A world where every celebration is effortlessly planned, beautifully presented, and deeply personal.",
+    "valuesTitle": "Our Values",
+    "valueSimplicity": "Simplicity",
+    "valueSimplicityDesc": "We believe great tools should be intuitive and joyful to use.",
+    "valueElegance": "Elegance",
+    "valueEleganceDesc": "Every detail matters — from invitations to the last dance.",
+    "valueInclusion": "Inclusion",
+    "valueInclusionDesc": "Beautiful events for every culture, budget, and celebration."
+  },
+  "terms": {
+    "title": "Terms & Conditions",
+    "lastUpdated": "Last updated: February 2026",
+    "intro": "Please read these terms and conditions carefully before using the IvyEvents platform.",
+    "sections": {
+      "acceptance": {
+        "title": "1. Acceptance of Terms",
+        "text": "By accessing or using IvyEvents, you agree to be bound by these Terms & Conditions. If you do not agree, please do not use our services."
+      },
+      "services": {
+        "title": "2. Description of Services",
+        "text": "IvyEvents provides a digital platform for creating event invitations, managing guest lists, tracking RSVPs, and organizing event details. Services are available through web browsers and mobile devices."
+      },
+      "accounts": {
+        "title": "3. User Accounts",
+        "text": "You are responsible for maintaining the confidentiality of your account credentials. You must provide accurate information during registration and keep it up to date."
+      },
+      "payment": {
+        "title": "4. Payment & Subscriptions",
+        "text": "Paid plans are billed according to the pricing displayed at the time of purchase. All payments are processed securely through our payment partners. Refunds are handled on a case-by-case basis."
+      },
+      "content": {
+        "title": "5. User Content",
+        "text": "You retain ownership of content you upload. By uploading content, you grant IvyEvents a license to display and process it within the platform. You must not upload illegal or harmful content."
+      },
+      "liability": {
+        "title": "6. Limitation of Liability",
+        "text": "IvyEvents is provided \"as is\" without warranties of any kind. We are not liable for any indirect, incidental, or consequential damages arising from use of the platform."
+      },
+      "changes": {
+        "title": "7. Changes to Terms",
+        "text": "We may update these terms from time to time. Continued use of IvyEvents after changes constitutes acceptance of the new terms."
+      },
+      "contact": {
+        "title": "8. Contact",
+        "text": "For questions about these terms, please contact us at support@ivyevents.com."
+      }
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Have a question or need help? We'd love to hear from you.",
+    "name": "Full Name",
+    "namePh": "e.g. Jane Doe",
+    "email": "Email Address",
+    "emailPh": "your@email.com",
+    "phone": "Phone",
+    "phonePh": "+389...",
+    "subject": "Subject",
+    "subjectPh": "What is this about?",
+    "message": "Message",
+    "messagePh": "Tell us how we can help...",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "successTitle": "Message Sent!",
+    "successText": "Thank you for reaching out. We'll get back to you as soon as possible."
+  },
+  "feedback": {
+    "title": "Share Your Feedback",
+    "subtitle": "Help us improve by sharing your experience",
+    "rating": "Rating",
+    "comment": "Comment",
+    "commentPh": "Tell us about your experience...",
+    "mediaUrl": "Media URL (optional)",
+    "mediaUrlPh": "https://...",
+    "send": "Submit Feedback",
+    "sending": "Submitting...",
+    "successTitle": "Thank You!",
+    "successText": "Your feedback has been submitted successfully. We appreciate your time!",
+    "noEvent": "No event specified. Please use the feedback link provided in your invitation."
+  },
+  "support": {
+    "title": "Support",
+    "subtitle": "View your messages and contact our support team",
+    "newMessage": "New Message",
+    "editMessage": "Edit Message",
+    "loading": "Loading messages...",
+    "emptyTitle": "No messages yet",
+    "emptyText": "Send a message to our support team and we'll get back to you.",
+    "name": "Full Name",
+    "namePh": "e.g. Jane Doe",
+    "email": "Email",
+    "emailPh": "your@email.com",
+    "phone": "Phone",
+    "phonePh": "+389...",
+    "subject": "Subject",
+    "subjectPh": "e.g. Question about my event",
+    "message": "Message",
+    "messagePh": "Describe your question or issue...",
+    "send": "Send",
+    "sending": "Sending...",
+    "thName": "Name",
+    "thEmail": "Email",
+    "thPhone": "Phone",
+    "thSubject": "Subject",
+    "thMessage": "Message",
+    "thDate": "Date"
   },
   "galleryUpload": {
     "title": "Share Your Moments",

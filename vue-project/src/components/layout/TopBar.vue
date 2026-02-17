@@ -42,6 +42,9 @@ const title = computed(() => {
     "dashboard.notifications": "Notifications",
     "dashboard.team": "Team & Co-hosts",
     "dashboard.settings": "Event Settings",
+    "admin.events": "Events",
+    "admin.packages": "Packages",
+    "admin.users": "Users",
   };
   return map[String(route.name)] ?? "Dashboard";
 });

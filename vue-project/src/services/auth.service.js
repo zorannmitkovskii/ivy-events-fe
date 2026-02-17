@@ -28,6 +28,15 @@ export function getEventId() {
   return parseToken()?.eventId || null;
 }
 
+export function getRoles() {
+  const claims = parseToken();
+  return claims?.realm_access?.roles || [];
+}
+
+export function hasRole(role) {
+  return getRoles().includes(role);
+}
+
 export function getFullName() {
   const claims = parseToken();
   if (!claims) return null;
