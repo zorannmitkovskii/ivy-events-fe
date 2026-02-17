@@ -28,7 +28,7 @@
     <div class="content">
       <CategoryFilterBar
         :categories="categoryOptions"
-        :model-value="onboardingStore.selectedCategory"
+        :model-value="displayCategory"
         :disabled="true"
       />
 
@@ -57,8 +57,9 @@ import ButtonMain from '@/components/generic/ButtonMain.vue';
 import OnboardingFooterLinks from '@/components/onboarding/OnboardingFooterLinks.vue';
 import { onboardingStore, setInvitationName } from '@/store/onboarding.store';
 import { eventsService } from '@/services/events.service';
-import { getUsername } from '@/services/auth.service';
+import { isAuthenticated } from '@/services/auth.service';
 import { EventCategoryEnum } from '@/enums/EventCategory';
+import { INVITATION_REGISTRY } from '@/data/invitationRegistry';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -69,14 +70,9 @@ const lang = computed(() => route.params.lang || 'mk');
 const loading = ref(false);
 const error = ref('');
 
-const INVITATION_REGISTRY = {
-  [EventCategoryEnum.WEDDING]: [
-    { id: 'persianWedding', slug: 'persian-wedding', name: 'Persian Wedding', subtitle: 'Glass & Gradient' },
-    { id: 'parisianWedding', slug: 'parisian-wedding', name: 'Parisian Wedding', subtitle: 'Elegant French' },
-    { id: 'coastalBreeze', slug: 'coastal-breeze', name: 'Coastal Breeze', subtitle: 'Modern Seaside' },
-    { id: 'sunsetGlass', slug: 'sunset-glass', name: 'Sunset Glass', subtitle: 'Sunset Glass' },
-  ],
-};
+const displayCategory = computed(() =>
+  onboardingStore.selectedCategory || EventCategoryEnum.WEDDING
+);
 
 const CATEGORY_LABEL_MAP = {
   [EventCategoryEnum.WEDDING]: 'eventCategories.items.weddings.title',
@@ -101,7 +97,7 @@ const categoryOptions = computed(() => {
 });
 
 const filteredInvitations = computed(() => {
-  return INVITATION_REGISTRY[onboardingStore.selectedCategory] || [];
+  return INVITATION_REGISTRY[displayCategory.value] || [];
 });
 
 function onSelectInvitation(designId) {
@@ -114,11 +110,22 @@ function onPreview(designId) {
 }
 
 function onBack() {
-  router.push({ name: 'EventBasicDetailsPage', params: { lang: lang.value } });
+  if (!isAuthenticated()) {
+    router.push({ name: 'home', params: { lang: lang.value } });
+  } else {
+    router.push({ name: 'EventBasicDetailsPage', params: { lang: lang.value } });
+  }
 }
 
 async function onContinue() {
   if (!onboardingStore.invitationName) return;
+
+  // Guest flow: save selection and redirect to signup
+  if (!isAuthenticated()) {
+    await router.push({ name: 'signup', params: { lang: lang.value } });
+    return;
+  }
+
   error.value = '';
   loading.value = true;
 

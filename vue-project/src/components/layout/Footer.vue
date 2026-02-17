@@ -3,7 +3,7 @@
     <div class="footer__container">
       <!-- Brand -->
       <div class="footer-brand">
-        <h3 class="footer-brand__logo">{{$t('footer.brand.logo')}}</h3>
+        <img src="/logoInv.svg" alt="IvyEvents" class="footer-brand__logo" />
         <p class="footer-brand__desc">
           {{$t('footer.brand.tagline')}}
         </p>
@@ -88,9 +88,10 @@ const socials = [
 }
 
 .footer-brand__logo {
-  font-size: 22px;
-  font-weight: 700;
+  height: 28px;
+  width: auto;
   margin: 0 0 12px;
+  display: block;
 }
 
 .footer-brand__desc {

@@ -2,7 +2,7 @@
   <AuthLayout>
     <template #left>
       <div>
-        <AuthBrand name="Lumière Events" />
+        <AuthBrand />
 
         <h1 class="title">{{ t('register.title') }}</h1>
         <p class="subtitle">{{ t('register.subtitle') }}</p>

@@ -1,19 +1,13 @@
 <template>
   <DashboardToolbar>
-    <template #actions>
-      <ButtonMain v-if="!hasBudget" variant="main" @click="emit('createBudget')">
-        + {{ createBudgetLabel }}
+    <template v-if="hasBudget" #actions>
+      <ButtonMain variant="main" @click="emit('add')">
+        + {{ addExpenseLabel }}
       </ButtonMain>
 
-      <template v-else>
-        <ButtonMain variant="ghost" @click="emit('export')">
-          {{ exportLabel }}
-        </ButtonMain>
-
-        <ButtonMain variant="gold" @click="emit('add')">
-          + {{ addExpenseLabel }}
-        </ButtonMain>
-      </template>
+      <ButtonMain variant="outline" @click="emit('export')">
+        {{ exportLabel }}
+      </ButtonMain>
     </template>
   </DashboardToolbar>
 </template>

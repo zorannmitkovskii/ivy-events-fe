@@ -19,14 +19,13 @@
 
 /* Logo */
 .logo {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--brand-main);
-  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
 }
 
-.logo span {
-  font-weight: 500;
+.logo__img {
+  height: 28px;
+  width: auto;
 }
 
 /* Desktop nav */

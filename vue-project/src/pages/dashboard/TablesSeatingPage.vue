@@ -10,11 +10,14 @@
         <ButtonMain variant="main" @click="tableModalOpen = true">
           {{ t("tables.addTable") }}
         </ButtonMain>
-        <ButtonMain variant="gold" @click="printExport">
-          {{ t("tables.printExport") }}
-        </ButtonMain>
         <ButtonMain variant="outline" @click="guestModalOpen = true">
           {{ t("tables.addGuest") }}
+        </ButtonMain>
+        <ButtonMain variant="outline" @click="printExport">
+          {{ t("tables.printExport") }}
+        </ButtonMain>
+        <ButtonMain variant="gold" :disabled="sending" @click="sendNotification">
+          {{ sending ? t("overview.sending") : t("tables.sendNotification") }}
         </ButtonMain>
       </template>
 
@@ -64,6 +67,8 @@ import { useI18n } from "vue-i18n";
 import { useTablesSeating } from "@/composables/useTablesSeating";
 
 import ButtonMain from "@/components/generic/ButtonMain.vue";
+import { guestsService } from "@/services/guests.service";
+import { onboardingStore } from "@/store/onboarding.store";
 import TablesLayout from "@/components/dashboard/tables/TablesLayout.vue";
 import TableListCard from "@/components/dashboard/tables/TableListCard.vue";
 import GuestAssignmentCard from "@/components/dashboard/tables/GuestAssignmentCard.vue";
@@ -74,6 +79,7 @@ const { t } = useI18n();
 const guestModalOpen = ref(false);
 const tableModalOpen = ref(false);
 const editingGuest = ref(null);
+const sending = ref(false);
 
 const {
   loading, error, tables, guests, selectedTableId,
@@ -125,5 +131,16 @@ function closeGuestModal() {
 
 function printExport() {
   window.print();
+}
+
+async function sendNotification() {
+  const eventId = onboardingStore.eventId;
+  if (sending.value || !eventId) return;
+  sending.value = true;
+  try {
+    await guestsService.sendNotification(eventId);
+  } finally {
+    sending.value = false;
+  }
 }
 </script>

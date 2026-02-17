@@ -13,15 +13,16 @@
 
     <div class="ov-actions">
       <CpayButton
+        v-if="event.status !== 'ACTIVE'"
         :event-id="eventId"
-        variant="gold"
+        variant="success"
         :label="t('cpay.upgrade')"
       />
-      <ButtonMain variant="outline" @click="goToInvitations">✉ {{ t("overview.editInvitation") }}</ButtonMain>
-      <ButtonMain variant="outline" @click="goToGuests">👥 {{ t("overview.manageGuests") }}</ButtonMain>
       <ButtonMain variant="main" :disabled="sending" @click="sendNotification">
         ➤ {{ sending ? t("overview.sending") : t("overview.sendUpdate") }}
       </ButtonMain>
+      <ButtonMain variant="outline" @click="goToGuests">👥 {{ t("overview.manageGuests") }}</ButtonMain>
+      <ButtonMain variant="outline" @click="goToInvitations">✉ {{ t("overview.editInvitation") }}</ButtonMain>
     </div>
   </div>
 </template>

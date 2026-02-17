@@ -9,7 +9,7 @@
         <ButtonMain variant="main" @click="openTaskModal">
           {{ t('tables.tasks.addTask') }}
         </ButtonMain>
-        <ButtonMain variant="gold" @click="openReminderModal">
+        <ButtonMain variant="outline" @click="openReminderModal">
           {{ t('tables.tasks.setReminder') }}
         </ButtonMain>
       </template>
@@ -33,8 +33,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
 import DashboardToolbar from '@/components/dashboard/DashboardToolbar.vue';
 import ButtonMain from '@/components/generic/ButtonMain.vue';
 import TasksPanel from '@/components/dashboard/tables/TasksPanel.vue';
@@ -42,6 +43,8 @@ import AddTaskModal from '@/components/dashboard/tables/AddTaskModal.vue';
 import { useTasks } from '@/composables/useTasks';
 
 const { t } = useI18n();
+const route = useRoute();
+const router = useRouter();
 const { tasks, load, createTask, updateTask, toggleTask, updateStatus } = useTasks();
 
 const modalOpen = ref(false);
@@ -49,6 +52,14 @@ const modalType = ref('TASK');
 const editingTask = ref(null);
 
 onMounted(load);
+
+// Auto-open modal when navigated with ?action=add
+watch(() => route.query.action, (action) => {
+  if (action === "add") {
+    openTaskModal();
+    router.replace({ ...route, query: {} });
+  }
+}, { immediate: true });
 
 function openTaskModal() {
   editingTask.value = null;

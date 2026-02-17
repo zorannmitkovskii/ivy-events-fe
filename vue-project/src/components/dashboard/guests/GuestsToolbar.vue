@@ -1,8 +1,8 @@
 <template>
   <DashboardToolbar>
-    <template #actions>
-      <ButtonMain variant="outline" @click="$emit('add')">{{ t("guests.addGuest") }}</ButtonMain>
-      <ButtonMain variant="main" :disabled="sending" @click="$emit('remind')">
+    <template v-if="hasGuests" #actions>
+      <ButtonMain variant="main" @click="$emit('add')">{{ t("guests.addGuest") }}</ButtonMain>
+      <ButtonMain variant="outline" :disabled="sending" @click="$emit('remind')">
         {{ sending ? t("overview.sending") : t("guests.sendReminder") }}
       </ButtonMain>
     </template>
@@ -45,7 +45,8 @@ const { t } = useI18n();
 const props = defineProps({
   modelValue: { type: Object, required: true },
   tables: { type: Array, default: () => [] },
-  sending: { type: Boolean, default: false }
+  sending: { type: Boolean, default: false },
+  hasGuests: { type: Boolean, default: false }
 });
 const emit = defineEmits(["update:modelValue", "add", "import", "remind", "apply"]);
 

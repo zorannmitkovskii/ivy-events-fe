@@ -2,11 +2,11 @@
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import { useAgenda } from "@/composables/useAgenda.js";
-import AddAgendaItemModal from "@/components/modals/AddAgendaItemModal.vue";
-import AgendaHeader from "@/components/dashboard/agenda/AgendaHeader.vue";
+import { useOurStory } from "@/composables/useOurStory.js";
+import AddOurStoryModal from "@/components/modals/AddOurStoryModal.vue";
+import OurStoryHeader from "@/components/dashboard/ourStory/OurStoryHeader.vue";
 import DashboardTable from "@/components/dashboard/DashboardTable.vue";
-import AgendaTableRow from "@/components/dashboard/agenda/AgendaTableRow.vue";
+import OurStoryTableRow from "@/components/dashboard/ourStory/OurStoryTableRow.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 
 const { t } = useI18n();
@@ -14,8 +14,8 @@ const { t } = useI18n();
 const {
   loading, error,
   items,
-  loadAgenda, createItem, updateItem, deleteItem,
-} = useAgenda();
+  loadStories, createItem, updateItem, deleteItem,
+} = useOurStory();
 
 // Modal state
 const modalOpen = ref(false);
@@ -37,7 +37,7 @@ function closeModal() {
 }
 
 onMounted(() => {
-  loadAgenda();
+  loadStories();
 });
 
 async function onSave(payload) {
@@ -58,12 +58,12 @@ async function onDelete(id) {
 <template>
   <div class="dash-page">
     <div class="dash-page-header">
-      <h1 class="dash-page-title">{{ t('agenda.title') }}</h1>
-      <p class="dash-page-subtitle">{{ t('agenda.subtitle', { event: '', dateRange: '' }) }}</p>
+      <h1 class="dash-page-title">{{ t('ourStory.title') }}</h1>
+      <p class="dash-page-subtitle">{{ t('ourStory.subtitle') }}</p>
     </div>
 
-    <AgendaHeader
-      :addLabel="t('agenda.addItem')"
+    <OurStoryHeader
+      :addLabel="t('ourStory.addStory')"
       :has-items="items.length > 0"
       @add="openCreateModal"
     />
@@ -72,25 +72,22 @@ async function onDelete(id) {
     <div v-else-if="error" class="error-msg">{{ error }}</div>
 
     <div v-else-if="items.length === 0" class="empty-card">
-      <div class="empty-title">{{ t('agenda.emptyTitle') }}</div>
-      <div class="empty-sub">{{ t('agenda.emptyMessage') }}</div>
+      <div class="empty-title">{{ t('ourStory.emptyTitle') }}</div>
+      <div class="empty-sub">{{ t('ourStory.emptyMessage') }}</div>
       <div style="margin-top:12px;">
-        <ButtonMain variant="main" @click="openCreateModal">{{ t('agenda.addItem') }}</ButtonMain>
+        <ButtonMain variant="main" @click="openCreateModal">{{ t('ourStory.addStory') }}</ButtonMain>
       </div>
     </div>
 
     <DashboardTable v-else>
       <template #head>
-        <th>{{ t("agenda.th.title") }}</th>
-        <th>{{ t("agenda.th.type") }}</th>
-        <th>{{ t("agenda.th.dateTime") }}</th>
-        <th>{{ t("agenda.th.location") }}</th>
-        <th>{{ t("agenda.th.visibility") }}</th>
-        <th>{{ t("agenda.th.actions") }}</th>
+        <th>{{ t("ourStory.th.title") }}</th>
+        <th>{{ t("ourStory.th.type") }}</th>
+        <th>{{ t("ourStory.th.actions") }}</th>
       </template>
 
       <template #body>
-        <AgendaTableRow
+        <OurStoryTableRow
           v-for="item in items"
           :key="item.id"
           :item="item"
@@ -100,11 +97,11 @@ async function onDelete(id) {
       </template>
 
       <template #footer>
-        <span>{{ t("agenda.totalItems", { count: items.length }) }}</span>
+        <span>{{ t("ourStory.totalItems", { count: items.length }) }}</span>
       </template>
     </DashboardTable>
 
-    <AddAgendaItemModal
+    <AddOurStoryModal
       :open="modalOpen"
       :item="editingItem"
       @close="closeModal"

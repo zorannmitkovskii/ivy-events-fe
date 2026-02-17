@@ -22,6 +22,7 @@
         v-model="filters"
         :tables="tables"
         :sending="sending"
+        :has-guests="items.length > 0"
         @add="openCreateModal"
         @import="onImport"
         @remind="onRemind"
@@ -58,8 +59,9 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRoute, useRouter } from "vue-router";
 import { useGuests } from "@/composables/useGuests";
 import { guestsService } from "@/services/guests.service";
 import { onboardingStore } from "@/store/onboarding.store";
@@ -70,6 +72,8 @@ import AddGuestModal from "@/components/dashboard/tables/AddGuestModal.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 
 const { t } = useI18n();
+const route = useRoute();
+const router = useRouter();
 const modalOpen = ref(false);
 const editingGuest = ref(null);
 const sending = ref(false);
@@ -89,6 +93,14 @@ const {
   updateTable,
   removeGuest
 } = useGuests();
+
+// Auto-open modal when navigated with ?action=add
+watch(() => route.query.action, (action) => {
+  if (action === "add") {
+    openCreateModal();
+    router.replace({ ...route, query: {} });
+  }
+}, { immediate: true });
 
 function openCreateModal() {
   editingGuest.value = null;

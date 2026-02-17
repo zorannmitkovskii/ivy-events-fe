@@ -12,12 +12,12 @@
       <div class="cta__actions">
         <ButtonMain
             :label="$t('home.finalCta.primaryCta')"
-            to="/register"
+            :to="{ name: 'signup', params: { lang } }"
             variant="outline"
         />
         <ButtonMain
             :label="$t('home.finalCta.secondaryCta')"
-            to="/templates"
+            :to="{ name: 'EventInvitationsPage', params: { lang } }"
             variant="secondary"
         />
       </div>
@@ -26,7 +26,12 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
+
+const route = useRoute();
+const lang = computed(() => route.params.lang || "mk");
 </script>
 
 <style scoped>

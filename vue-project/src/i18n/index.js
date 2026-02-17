@@ -1,8 +1,9 @@
 import { createI18n } from "vue-i18n";
 import mk from "./locales/mk.json";
 import en from "./locales/en.json";
+import sq from "./locales/sq.json";
 
-const messages = { mk, en };
+const messages = { mk, en, sq };
 
 function detectLocale() {
   try {

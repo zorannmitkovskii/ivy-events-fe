@@ -30,7 +30,7 @@ const props = defineProps({
   packageType: { type: String, default: "INV_BASIC" }, // INV_BASIC | INV_PRO | IVY_PREMIUM | GALLERY | ORGANIZER
   eventId: { type: String, default: "" },
   label: { type: String, default: "" },
-  variant: { type: String, default: "default" } // "default" | "gold"
+  variant: { type: String, default: "default" } // "default" | "gold" | "success" | "sidebar"
 });
 
 const { t } = useI18n();
@@ -46,7 +46,7 @@ async function payWithCpay() {
 
   try {
     const payload = {
-      amount: 1,
+      amount: 11,
       currency: "MKD",
       description: "Payment",
       email: user.value?.email || "",
@@ -54,9 +54,7 @@ async function payWithCpay() {
       eventId: props.eventId || authEventId.value,
       userId: getUserId(),
     };
-    console.log("payload", payload);
     if (props.packageType) payload.packageType = props.packageType;
-    console.log("payload", payload);
     const res = await cpayService.initPayment(payload);
     const data = res?.data ?? res;
     const paymentUrl = data.paymentUrl;
@@ -127,6 +125,18 @@ async function payWithCpay() {
 
 .cpay-btn.sidebar:hover:not(:disabled) {
   background: #d4af5c;
+}
+
+/* Success / light-green variant */
+.cpay-btn.success {
+  background: var(--success, #BFD2A4);
+  color: var(--brand-main, #2F3E36);
+  border-color: var(--success, #BFD2A4);
+}
+
+.cpay-btn.success:hover:not(:disabled) {
+  background: #adc48e;
+  border-color: #adc48e;
 }
 
 .cpay-spinner {
