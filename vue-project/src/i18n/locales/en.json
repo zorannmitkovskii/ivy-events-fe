@@ -963,7 +963,8 @@
     "displayOptions": "Display Options",
     "dangerZone": "Danger Zone",
     "archiveDesc": "Archiving this event will hide it from your dashboard. This action can be reversed later.",
-    "archiveEvent": "Archive Event"
+    "archiveEvent": "Archive Event",
+    "locationPh": "Search for a venue or address..."
   },
   "cpay": {
     "pay": "Pay with cPay",
@@ -1109,6 +1110,29 @@
     "thSubject": "Subject",
     "thMessage": "Message",
     "thDate": "Date"
+  },
+  "location": {
+    "type": "Location Type",
+    "types": {
+      "VENUE": "Venue",
+      "CHURCH": "Church",
+      "RESTAURANT": "Restaurant",
+      "HOTEL": "Hotel",
+      "OUTDOOR": "Outdoor",
+      "OTHER": "Other"
+    },
+    "postalCode": "Postal Code",
+    "city": "City",
+    "countryIso3": "Country (ISO3)",
+    "capacity": "Capacity",
+    "googleMapsUrl": "Google Maps URL",
+    "description": "Description",
+    "notes": "Notes",
+    "photoUrl": "Photo URL",
+    "contact": "Contact Person",
+    "contactName": "Contact Name",
+    "contactEmail": "Contact Email",
+    "contactPhone": "Contact Phone"
   },
   "galleryUpload": {
     "title": "Share Your Moments",

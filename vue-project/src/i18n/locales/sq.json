@@ -1109,6 +1109,29 @@
     "thMessage": "Mesazhi",
     "thDate": "Data"
   },
+  "location": {
+    "type": "Lloji i Vendndodhjes",
+    "types": {
+      "VENUE": "Sallë",
+      "CHURCH": "Kishë",
+      "RESTAURANT": "Restorant",
+      "HOTEL": "Hotel",
+      "OUTDOOR": "Në natyrë",
+      "OTHER": "Tjetër"
+    },
+    "postalCode": "Kodi Postar",
+    "city": "Qyteti",
+    "countryIso3": "Shteti (ISO3)",
+    "capacity": "Kapaciteti",
+    "googleMapsUrl": "Google Maps URL",
+    "description": "Përshkrimi",
+    "notes": "Shënime",
+    "photoUrl": "URL e Fotos",
+    "contact": "Personi i Kontaktit",
+    "contactName": "Emri i Kontaktit",
+    "contactEmail": "Email i Kontaktit",
+    "contactPhone": "Telefoni i Kontaktit"
+  },
   "galleryUpload": {
     "title": "Ndani Momentet Tuaja",
     "subtitle": "Ngarkoni foto dhe video nga ngjarja",

@@ -57,9 +57,24 @@
             <input id="s-date" v-model="form.date" type="date" class="detail-input" />
           </div>
 
-          <div class="detail-row">
-            <label class="detail-label" for="s-location">{{ t("settings.eventLocation") }}</label>
-            <input id="s-location" v-model="form.location" type="text" class="detail-input" />
+          <div class="detail-row detail-row--full">
+            <label class="detail-label">{{ t("settings.eventLocation") }}</label>
+            <div class="location-input-wrap">
+              <AuthLocationInput
+                v-model="form.locationObj"
+                :label="''"
+                :placeholder="t('settings.locationPh') || 'Search for a venue or address...'"
+                :types="[]"
+                :pickOnMapLabel="t('common.pickOnMap') || 'Pick on map'"
+                :cancelLabel="t('common.cancel')"
+                :useThisLocationLabel="t('common.useThisLocation') || 'Use this location'"
+                :searchPlaceholder="t('common.searchPlaces') || 'Search places'"
+                :locatingLabel="t('common.locateMe') || 'Locate me'"
+                :locatingLabelLoading="t('common.locating') || 'Locating...'"
+                :selectedLabel="t('common.selected') || 'Selected:'"
+                :loadingAddressLabel="t('common.loadingAddress') || 'Loading address...'"
+              />
+            </div>
           </div>
 
           <div class="detail-row">
@@ -185,6 +200,7 @@ import { onboardingStore, setSelectedCategory } from "@/store/onboarding.store";
 import { EventCategoryEnum } from "@/enums/EventCategory";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import CpayButton from "@/components/payment/CpayButton.vue";
+import AuthLocationInput from "@/components/auth/AuthLocationInput.vue";
 
 const { t, locale } = useI18n();
 const router = useRouter();
@@ -201,17 +217,26 @@ const copiedField = ref(null);
 const eventId = ref(onboardingStore.eventId);
 
 function buildForm(ev) {
+  const loc = ev.location || {};
+  const isObj = typeof loc === "object" && loc !== null;
+
   return {
     name: ev.name || "",
     date: formatDateForInput(ev.date || ev.eventDate),
-    location: ev.location || "",
     category: ev.categoryType || ev.category || "",
     lang: ev.lang || locale.value || "mk",
     showAgenda: ev.showAgenda ?? true,
     showOurStory: ev.showOurStory ?? true,
     invitationUrl: ev.invitationUrl || "",
     privateInvitationUrl: ev.privateInvitationUrl || "",
-    galleryUrl: ev.galleryUrl || ""
+    galleryUrl: ev.galleryUrl || "",
+    locationObj: {
+      name: isObj ? (loc.name || "") : (typeof loc === "string" ? loc : ""),
+      address: isObj ? (loc.addressLine || "") : "",
+      lat: isObj ? (loc.latitude ?? null) : null,
+      lng: isObj ? (loc.longitude ?? null) : null,
+      placeId: null,
+    },
   };
 }
 
@@ -274,10 +299,30 @@ async function saveEvent() {
   saveError.value = null;
 
   try {
+    const loc = form.value.locationObj || {};
+    const hasLocation = loc.address || loc.name || loc.lat != null;
+
     const payload = {
       name: form.value.name,
       date: form.value.date,
-      location: form.value.location,
+      location: hasLocation ? {
+        name: loc.name || loc.address || "",
+        type: null,
+        postalCode: null,
+        addressLine: loc.address || "",
+        city: null,
+        countryIso3: null,
+        latitude: loc.lat ?? null,
+        longitude: loc.lng ?? null,
+        photoUrl: null,
+        googleMapsUrl: null,
+        description: null,
+        capacity: null,
+        openingHours: null,
+        notes: null,
+        contact: null,
+        isActive: true,
+      } : null,
       lang: form.value.lang,
       showAgenda: form.value.showAgenda,
       showOurStory: form.value.showOurStory
@@ -419,6 +464,20 @@ onMounted(loadEvent);
 .detail-select {
   cursor: pointer;
   appearance: auto;
+}
+
+.detail-row--full {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.detail-row--full .location-input-wrap {
+  width: 100%;
+}
+
+.location-input-wrap {
+  width: 100%;
 }
 
 /* Toggle rows */

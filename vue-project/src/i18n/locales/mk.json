@@ -1111,6 +1111,29 @@
     "thMessage": "Порака",
     "thDate": "Датум"
   },
+  "location": {
+    "type": "Тип на локација",
+    "types": {
+      "VENUE": "Сала",
+      "CHURCH": "Црква",
+      "RESTAURANT": "Ресторан",
+      "HOTEL": "Хотел",
+      "OUTDOOR": "На отворено",
+      "OTHER": "Друго"
+    },
+    "postalCode": "Поштенски код",
+    "city": "Град",
+    "countryIso3": "Држава (ISO3)",
+    "capacity": "Капацитет",
+    "googleMapsUrl": "Google Maps URL",
+    "description": "Опис",
+    "notes": "Белешки",
+    "photoUrl": "URL на фотографија",
+    "contact": "Контакт лице",
+    "contactName": "Име на контакт",
+    "contactEmail": "Емаил на контакт",
+    "contactPhone": "Телефон на контакт"
+  },
   "galleryUpload": {
     "title": "Споделете ги вашите моменти",
     "subtitle": "Прикачете фотографии и видеа од настанот",
