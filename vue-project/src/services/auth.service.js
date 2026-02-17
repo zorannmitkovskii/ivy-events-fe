@@ -45,10 +45,40 @@ export function getFullName() {
 }
 
 export function logout() {
+  // Silently end the Keycloak session via hidden iframe before clearing tokens
+  silentKeycloakLogout();
+
   localStorage.removeItem("access_token");
   localStorage.removeItem("refresh_token");
+  localStorage.removeItem("id_token");
   localStorage.removeItem("onboarding_state_v1");
   sessionStorage.clear();
+}
+
+/**
+ * Silently ends the Keycloak SSO session using a hidden iframe.
+ * The id_token_hint lets Keycloak skip the confirmation screen.
+ */
+function silentKeycloakLogout() {
+  const idToken = localStorage.getItem("id_token");
+  if (!idToken) return;
+
+  const env = getRuntimeEnv();
+  const appEnv = (env.APP_ENV || detectDefaultEnvFromLocation()).toString().toLowerCase();
+  const keycloakUrl = appEnv !== 'local'
+    ? computeKeycloakBaseUrl(appEnv)
+    : (env.VITE_KEYCLOAK_URL || computeKeycloakBaseUrl(appEnv));
+  const realm = appEnv !== 'local' ? 'event-app' : (env.VITE_KEYCLOAK_REALM || 'event-app');
+
+  const logoutUrl =
+    `${keycloakUrl}/realms/${realm}/protocol/openid-connect/logout` +
+    `?id_token_hint=${encodeURIComponent(idToken)}`;
+
+  const iframe = document.createElement('iframe');
+  iframe.style.display = 'none';
+  iframe.src = logoutUrl;
+  document.body.appendChild(iframe);
+  setTimeout(() => { try { iframe.remove(); } catch (_) {} }, 5000);
 }
 
 // Register new user via public endpoint
@@ -74,13 +104,11 @@ export async function loginWithCredentials(username, password) {
   // Handle both snake_case (Keycloak) and camelCase (Spring) response fields
   const accessToken = data.access_token || data.accessToken;
   const refreshToken = data.refresh_token || data.refreshToken;
+  const idToken = data.id_token || data.idToken;
 
-  if (accessToken) {
-    localStorage.setItem('access_token', accessToken);
-  }
-  if (refreshToken) {
-    localStorage.setItem('refresh_token', refreshToken);
-  }
+  if (accessToken) localStorage.setItem('access_token', accessToken);
+  if (refreshToken) localStorage.setItem('refresh_token', refreshToken);
+  if (idToken) localStorage.setItem('id_token', idToken);
 
   return data;
 }
@@ -123,6 +151,7 @@ export async function refreshAccessToken() {
 
   if (data.access_token) localStorage.setItem('access_token', data.access_token);
   if (data.refresh_token) localStorage.setItem('refresh_token', data.refresh_token);
+  if (data.id_token) localStorage.setItem('id_token', data.id_token);
 
   return data;
 }
@@ -170,12 +199,9 @@ export async function exchangeOAuthCode(code, redirectUri) {
 
   const data = await response.json();
 
-  if (data.access_token) {
-    localStorage.setItem('access_token', data.access_token);
-  }
-  if (data.refresh_token) {
-    localStorage.setItem('refresh_token', data.refresh_token);
-  }
+  if (data.access_token) localStorage.setItem('access_token', data.access_token);
+  if (data.refresh_token) localStorage.setItem('refresh_token', data.refresh_token);
+  if (data.id_token) localStorage.setItem('id_token', data.id_token);
 
   return data;
 }

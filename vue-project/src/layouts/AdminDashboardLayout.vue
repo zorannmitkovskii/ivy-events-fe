@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-layout">
-    <aside class="sidebar" :class="{ open: drawerOpen }">
-      <AdminSidebarNav />
+    <aside class="dash-sidebar" :class="{ open: drawerOpen }">
+      <AdminSidebarNav @close="drawerOpen = false" />
     </aside>
 
     <div v-if="drawerOpen" class="backdrop" @click="drawerOpen = false"></div>
@@ -37,7 +37,7 @@ watch(() => route.path, () => {
   background: var(--bg-main);
 }
 
-.sidebar {
+.dash-sidebar {
   position: sticky;
   top: 0;
   height: 100vh;
@@ -63,20 +63,21 @@ watch(() => route.path, () => {
     grid-template-columns: 1fr;
   }
 
-  .sidebar {
+  .dash-sidebar {
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
-    height: 100vh;
-    width: 280px;
+    width: 100%;
     z-index: 1000;
     transform: translateX(-100%);
     transition: transform 0.25s ease;
-    overflow: hidden;
+    background: var(--brand-main);
+    display: flex;
+    flex-direction: column;
   }
 
-  .sidebar.open {
+  .dash-sidebar.open {
     transform: translateX(0);
   }
 

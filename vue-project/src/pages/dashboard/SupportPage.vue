@@ -49,7 +49,7 @@
               @click="openEdit(row)"
             >
               <td>
-                <div class="text-primary">{{ row.name || '—' }}</div>
+                <div class="cell-title">{{ row.name || '—' }}</div>
               </td>
               <td>
                 <div class="text-sub">{{ row.email || '—' }}</div>
@@ -58,7 +58,7 @@
                 <div class="text-sub">{{ row.phone || '—' }}</div>
               </td>
               <td>
-                <div class="text-primary">{{ row.subject || '—' }}</div>
+                <div class="cell-title">{{ row.subject || '—' }}</div>
               </td>
               <td>
                 <div class="text-sub text-sub--wide">{{ row.message || '—' }}</div>
@@ -275,7 +275,7 @@ function formatDate(d) {
 .row-hover:hover { background: #f8fafc; }
 .row-click { cursor: pointer; }
 
-.text-primary { font-weight: 600; color: #0f172a; }
+.cell-title { font-weight: 600; color: var(--brand-main); }
 .text-sub { font-size: 12px; color: #94a3b8; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .text-sub--wide { max-width: 300px; }
 

@@ -66,6 +66,7 @@ const routes = [
       { path: "terms", name: "terms", component: () => import("@/pages/TermsAndConditionsPage.vue") },
       { path: "contact", name: "contact", component: () => import("@/pages/ContactPage.vue") },
       { path: "feedback", name: "feedback", component: () => import("@/pages/FeedbackPage.vue") },
+      { path: "faq", name: "faq", component: () => import("@/pages/FaqPage.vue") },
 
       // ONBOARDING
       { path: "event-category", name: "EventCategoryPage", component: EventCategoryPage },

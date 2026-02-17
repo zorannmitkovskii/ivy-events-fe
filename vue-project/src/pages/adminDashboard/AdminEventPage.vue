@@ -52,7 +52,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                   </div>
                   <div>
-                    <div class="text-primary">{{ row.name || '—' }}</div>
+                    <div class="cell-title">{{ row.name || '—' }}</div>
                     <div class="text-sub">ID: {{ row.id }}</div>
                   </div>
                 </div>
@@ -234,7 +234,7 @@ function formatDate(d) {
 .icon-box svg { width: 18px; height: 18px; }
 .icon-box--indigo { background: #eef2ff; color: #4f46e5; }
 
-.text-primary { font-weight: 600; color: #0f172a; }
+.cell-title { font-weight: 600; color: var(--brand-main); }
 .text-sub { font-size: 12px; color: #94a3b8; margin-top: 2px; }
 .text-muted { color: #64748b; }
 

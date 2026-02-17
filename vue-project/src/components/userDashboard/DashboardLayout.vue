@@ -12,8 +12,8 @@
 
 
 <script setup>
-import DashboardSidebar from '../components/DashboardSidebar.vue'
-import DashboardHeader from '../components/DashboardHeader.vue'
+import DashboardSidebar from "@/components/userDashboard/dashboard/DashboardSidebar.vue";
+import DashboardHeader from "@/components/userDashboard/dashboard/DashboardHeader.vue";
 </script>
 
 
@@ -23,6 +23,7 @@ import DashboardHeader from '../components/DashboardHeader.vue'
   height: 100vh;
 }
 .sidebar {
+  height: 100vh;
   background: var(--logo-beige);
   border-right: 1px solid #d6c7b3;
 }

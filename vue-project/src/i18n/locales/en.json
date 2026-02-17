@@ -139,7 +139,9 @@
       "help": "Help Center",
       "terms": "Terms",
       "privacy": "Privacy",
-      "security": "Security"
+      "security": "Security",
+      "designs": "Designs",
+      "feedback": "Feedback"
     },
     "copyright": "All rights reserved."
   },
@@ -805,7 +807,14 @@
     "cancel": "Cancel",
     "save": "Save",
     "saveChanges": "Save Changes",
-    "viewAll": "View All"
+    "viewAll": "View All",
+    "pickOnMap": "Pick on map",
+    "useThisLocation": "Use this location",
+    "searchPlaces": "Search places",
+    "locateMe": "Locate me",
+    "locating": "Locating...",
+    "selected": "Selected:",
+    "loadingAddress": "Loading address..."
   },
   "tables": {
     "title": "Tables & Seating",

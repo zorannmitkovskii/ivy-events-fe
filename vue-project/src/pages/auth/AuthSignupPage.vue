@@ -376,6 +376,7 @@ function onGoogle() {
     `&redirect_uri=${redirectUri}` +
     `&response_type=code` +
     `&scope=openid` +
+    `&prompt=login` +
     `&kc_idp_hint=google`;
 
   window.location.href = googleLoginUrl;

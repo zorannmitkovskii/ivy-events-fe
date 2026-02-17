@@ -57,7 +57,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.89 1.45l8 4A2 2 0 0 1 22 7.24v9.53a2 2 0 0 1-1.11 1.79l-8 4a2 2 0 0 1-1.79 0l-8-4A2 2 0 0 1 2 16.76V7.24a2 2 0 0 1 1.11-1.79l8-4a2 2 0 0 1 1.78 0z"/><path d="M2.32 6.16L12 11l9.68-4.84"/><path d="M12 22.76V11"/></svg>
                   </div>
                   <div>
-                    <div class="text-primary">{{ row.name || '—' }}</div>
+                    <div class="cell-title">{{ row.name || '—' }}</div>
                     <div class="text-sub">{{ row.description || `ID: ${row.id}` }}</div>
                   </div>
                 </div>
@@ -431,7 +431,7 @@ async function remove(pkg) {
 .icon-box svg { width: 18px; height: 18px; }
 .icon-box--purple { background: #f3e8ff; color: #7c3aed; }
 
-.text-primary { font-weight: 600; color: #0f172a; }
+.cell-title { font-weight: 600; color: var(--brand-main); }
 .text-sub { font-size: 12px; color: #94a3b8; margin-top: 2px; max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .pill { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }

@@ -139,7 +139,9 @@
       "help": "Qendra e ndihm\u00ebs",
       "terms": "Kushtet",
       "privacy": "Privat\u00ebsia",
-      "security": "Siguria"
+      "security": "Siguria",
+      "designs": "Dizajne",
+      "feedback": "Reagime"
     },
     "copyright": "T\u00eb gjitha t\u00eb drejtat e rezervuara."
   },
@@ -805,7 +807,14 @@
     "cancel": "Anulo",
     "save": "Ruaj",
     "saveChanges": "Ruaj Ndryshimet",
-    "viewAll": "Shiko t\u00eb Gjitha"
+    "viewAll": "Shiko t\u00eb Gjitha",
+    "pickOnMap": "Zgjidh n\u00eb hart\u00eb",
+    "useThisLocation": "P\u00ebrdor k\u00ebt\u00eb vendndodhje",
+    "searchPlaces": "K\u00ebrko vende",
+    "locateMe": "Gjej pozicionin tim",
+    "locating": "Duke gjetur...",
+    "selected": "Zgjedhur:",
+    "loadingAddress": "Duke ngarkuar adres\u00ebn..."
   },
   "tables": {
     "title": "Tavolinat dhe Vendosja",

@@ -51,7 +51,7 @@
                     {{ initials(row) }}
                   </div>
                   <div>
-                    <div class="text-primary">{{ row.firstName }} {{ row.lastName }}</div>
+                    <div class="cell-title">{{ row.firstName }} {{ row.lastName }}</div>
                     <div class="text-sub">{{ row.email || '—' }}</div>
                   </div>
                 </div>
@@ -245,7 +245,7 @@ async function remove(user) {
 .avatar--rose { background: #e11d48; }
 .avatar--amber { background: #d97706; }
 
-.text-primary { font-weight: 600; color: #0f172a; }
+.cell-title { font-weight: 600; color: var(--brand-main); }
 .text-sub { font-size: 12px; color: #94a3b8; margin-top: 2px; }
 
 .pill { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }

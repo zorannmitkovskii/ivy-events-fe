@@ -1,6 +1,14 @@
 <template>
   <aside class="sidebar">
-    <SidebarBrand />
+    <div class="sidebar-head">
+      <SidebarBrand />
+      <button class="close-btn" @click="$emit('close')" aria-label="Close menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
 
     <nav class="nav">
       <SidebarNavItem
@@ -47,6 +55,8 @@ import { Icons } from "@/utils/icons.js";
 import { getFullName, logout } from "@/services/auth.service";
 import { onboardingStore, clearOnboarding } from "@/store/onboarding.store";
 
+
+defineEmits(["close", "navigate"]);
 
 const { t } = useI18n();
 const route = useRoute();
@@ -107,23 +117,51 @@ function signOut() {
 <style scoped>
 /* Use exactly your design */
 .sidebar {
+  height: 100vh;
   background: var(--brand-main);
   color: var(--neutral-100);
   padding: 18px 14px;
-  display: grid;
-  grid-template-rows: auto 1fr auto auto;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
 }
+.sidebar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.close-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--neutral-100);
+  cursor: pointer;
+  padding: 0;
+}
+.close-btn:hover { background: rgba(255,255,255,0.12); }
+
+@media (max-width: 1024px) {
+  .close-btn { display: inline-flex; }
+}
+
 .brand { padding: 8px 10px 14px; }
 .logo { font-family: var(--font-family), serif; font-size: 22px; letter-spacing: .4px; }
 
 .nav {
-  display: grid;
-  gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   margin-top: 12px;
-  max-height: 480px;
-  overflow: auto;
+  flex: 1;
+  overflow-y: auto;
 }
 
 /* item styles live in SidebarNavItem; keep here if you want global */

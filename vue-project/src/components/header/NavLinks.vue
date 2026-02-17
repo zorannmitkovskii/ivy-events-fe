@@ -1,9 +1,9 @@
 <template>
   <ul class="nav-links">
     <!-- Categories dropdown -->
-    <li class="nav-item dropdown" ref="categoriesRef">
+    <li class="nav-item has-submenu" ref="categoriesRef">
       <button
-        class="dropdown-toggle"
+        class="categories-toggle"
         :class="{ open: categoriesOpen }"
         @click="categoriesOpen = !categoriesOpen"
       >
@@ -12,9 +12,9 @@
           <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-      <ul v-show="categoriesOpen" class="dropdown-menu">
+      <ul v-show="categoriesOpen" class="categories-menu">
         <li v-for="item in categoryItems" :key="item.enumValue">
-          <a href="#" class="dropdown-item" @click.prevent="goToCategory(item.enumValue)">
+          <a href="#" class="categories-item" @click.prevent="goToCategory(item.enumValue)">
             {{ $t(item.labelKey) }}
           </a>
         </li>
@@ -108,7 +108,7 @@ onBeforeUnmount(() => {
   position: relative;
 }
 
-.dropdown-toggle {
+.categories-toggle {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -122,8 +122,8 @@ onBeforeUnmount(() => {
   transition: color 0.2s ease;
 }
 
-.dropdown-toggle:hover,
-.dropdown-toggle.open {
+.categories-toggle:hover,
+.categories-toggle.open {
   color: var(--brand-dark);
 }
 
@@ -135,7 +135,7 @@ onBeforeUnmount(() => {
   transform: rotate(180deg);
 }
 
-.dropdown-menu {
+.categories-menu {
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
@@ -149,7 +149,7 @@ onBeforeUnmount(() => {
   z-index: 100;
 }
 
-.dropdown-item {
+.categories-item {
   display: block;
   padding: 10px 14px;
   text-decoration: none;
@@ -160,7 +160,7 @@ onBeforeUnmount(() => {
   transition: background 0.15s ease, color 0.15s ease;
 }
 
-.dropdown-item:hover {
+.categories-item:hover {
   background: var(--neutral-100, #f3f4f6);
   color: var(--brand-dark);
 }

@@ -51,13 +51,13 @@
               <td>
                 <div class="cell-main">
                   <div>
-                    <div class="text-primary">{{ row.name || '—' }}</div>
+                    <div class="cell-title">{{ row.name || '—' }}</div>
                     <div class="text-sub">{{ row.email }}</div>
                   </div>
                 </div>
               </td>
               <td>
-                <div class="text-primary">{{ row.subject || '—' }}</div>
+                <div class="cell-title">{{ row.subject || '—' }}</div>
               </td>
               <td>
                 <div class="text-sub text-sub--wide">{{ row.message || '—' }}</div>
@@ -278,7 +278,7 @@ function formatDate(d) {
 .empty { text-align: center; color: #94a3b8; padding: 40px 20px !important; }
 
 .cell-main { display: flex; align-items: center; gap: 12px; }
-.text-primary { font-weight: 600; color: #0f172a; }
+.cell-title { font-weight: 600; color: var(--brand-main); }
 .text-sub { font-size: 12px; color: #94a3b8; margin-top: 2px; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .text-sub--wide { max-width: 300px; }
 
