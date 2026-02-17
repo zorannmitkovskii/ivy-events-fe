@@ -46,7 +46,7 @@ async function payWithCpay() {
 
   try {
     const payload = {
-      amount: 1,
+      amount: 11,
       currency: "MKD",
       description: "Payment",
       email: user.value?.email || "",
