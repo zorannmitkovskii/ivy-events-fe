@@ -1,6 +1,6 @@
 <template>
   <div class="ov-header">
-    <div>
+    <div style="width: 100%">
       <h1 class="ov-title">{{ event.name }}</h1>
 
       <div class="ov-subline">

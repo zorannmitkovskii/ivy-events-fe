@@ -11,7 +11,7 @@
     <HowItWorks />
     <CoreFeatures id="features" />
     <TemplatesGallery id="templates" />
-    <PricingSection id="pricing" />
+    <PackagesSection id="pricing" />
     <WhyChooseUs />
     <TestimonialsSection />
     <FaqSection id="faq" />
@@ -31,7 +31,7 @@ import HowItWorks from "@/components/landingPage/HowItWorks.vue";
 import { detectDefaultEnvFromLocation } from '@/services/env'
 import EventCategories from "@/components/landingPage/EventCategories.vue";
 import CoreFeatures from "@/components/landingPage/CoreFeatures.vue";
-import PricingSection from "@/components/landingPage/PricingSection.vue";
+import PackagesSection from "@/components/landingPage/PackagesSection.vue";
 import WhyChooseUs from "@/components/landingPage/WhyChooseUs.vue";
 import TestimonialsSection from "@/components/landingPage/TestimonialsSection.vue";
 import FaqSection from "@/components/landingPage/FaqSection.vue";

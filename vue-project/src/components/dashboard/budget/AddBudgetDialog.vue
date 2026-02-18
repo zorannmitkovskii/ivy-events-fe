@@ -20,17 +20,26 @@
         />
       </div>
 
-      <div class="field">
-        <label>{{ t("budget.budgetDialog.amount") }} *</label>
-        <input
-          class="input"
-          type="number"
-          v-model.number="draft.amount"
-          min="0"
-          step="0.01"
-          placeholder="0.00"
-          required
-        />
+      <div class="two">
+        <div class="field">
+          <label>{{ t("budget.budgetDialog.amount") }} *</label>
+          <input
+            class="input"
+            type="number"
+            v-model.number="draft.amount"
+            min="0"
+            step="0.01"
+            placeholder="0.00"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label>{{ t("budget.budgetDialog.currency") }} *</label>
+          <select class="input" v-model="draft.currency" required>
+            <option v-for="c in currencies" :key="c" :value="c">{{ c }}</option>
+          </select>
+        </div>
       </div>
 
       <div v-if="error" class="err">{{ error }}</div>
@@ -61,7 +70,8 @@ const props = defineProps({
 
 const emit = defineEmits(["close", "save"]);
 
-const draft = reactive({ name: "", description: "", amount: 0 });
+const currencies = ["MKD", "EUR", "USD"];
+const draft = reactive({ name: "", description: "", amount: 0, currency: "MKD" });
 const error = ref("");
 const saving = ref(false);
 
@@ -72,6 +82,7 @@ watch(
     draft.name = "";
     draft.description = "";
     draft.amount = 0;
+    draft.currency = "MKD";
     error.value = "";
   }
 );
@@ -96,6 +107,7 @@ function submit() {
     name: draft.name.trim(),
     description: draft.description.trim() || null,
     amount: draft.amount,
+    currency: draft.currency,
   });
 }
 </script>
@@ -124,6 +136,16 @@ function submit() {
 }
 .input:focus {
   border-color: var(--brand-gold);
+}
+
+.two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+  .two { grid-template-columns: 1fr; }
 }
 
 .err {

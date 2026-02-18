@@ -121,14 +121,42 @@
 
         <div class="dialog-body">
           <div class="form-grid">
-            <div class="form-group">
+            <div class="form-group form-group--full">
               <label>Name <span class="req">*</span></label>
               <input v-model="form.name" type="text" placeholder="e.g. Wedding Premium" class="form-input" />
+              <div class="i18n-group">
+                <div class="i18n-field">
+                  <span class="i18n-tag">EN</span>
+                  <input v-model="form.nameI18n.en" type="text" placeholder="English name" class="form-input" />
+                </div>
+                <div class="i18n-field">
+                  <span class="i18n-tag">MK</span>
+                  <input v-model="form.nameI18n.mk" type="text" placeholder="Македонски назив" class="form-input" />
+                </div>
+                <div class="i18n-field">
+                  <span class="i18n-tag">SQ</span>
+                  <input v-model="form.nameI18n.sq" type="text" placeholder="Emri shqip" class="form-input" />
+                </div>
+              </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group form-group--full">
               <label>Description</label>
               <input v-model="form.description" type="text" placeholder="Short description" class="form-input" />
+              <div class="i18n-group">
+                <div class="i18n-field">
+                  <span class="i18n-tag">EN</span>
+                  <input v-model="form.descriptionI18n.en" type="text" placeholder="English description" class="form-input" />
+                </div>
+                <div class="i18n-field">
+                  <span class="i18n-tag">MK</span>
+                  <input v-model="form.descriptionI18n.mk" type="text" placeholder="Опис на македонски" class="form-input" />
+                </div>
+                <div class="i18n-field">
+                  <span class="i18n-tag">SQ</span>
+                  <input v-model="form.descriptionI18n.sq" type="text" placeholder="Përshkrimi shqip" class="form-input" />
+                </div>
+              </div>
             </div>
 
             <div class="form-group">
@@ -180,10 +208,53 @@
               <label>Features</label>
               <button class="btn-add-feature" @click="addFeature">+ Add Feature</button>
             </div>
-            <div v-for="(feat, i) in form.features" :key="i" class="feature-row">
-              <input v-model="feat.name" type="text" placeholder="Feature name" class="form-input feature-input" />
-              <input v-model="feat.description" type="text" placeholder="Description (optional)" class="form-input feature-input" />
-              <button class="btn-remove-feature" @click="form.features.splice(i, 1)" title="Remove">&times;</button>
+            <div v-for="(feat, i) in form.features" :key="i" class="feature-card">
+              <div class="feature-card-head">
+                <span class="feature-num">#{{ i + 1 }}</span>
+                <label class="check-label check-label--sm">
+                  <input v-model="feat.included" type="checkbox" />
+                  Included
+                </label>
+                <button class="btn-remove-feature" @click="form.features.splice(i, 1)" title="Remove">&times;</button>
+              </div>
+              <div class="feature-fields">
+                <div class="form-group">
+                  <label>Name</label>
+                  <input v-model="feat.name" type="text" placeholder="Feature name" class="form-input" />
+                  <div class="i18n-group">
+                    <div class="i18n-field">
+                      <span class="i18n-tag">EN</span>
+                      <input v-model="feat.nameI18n.en" type="text" placeholder="EN" class="form-input" />
+                    </div>
+                    <div class="i18n-field">
+                      <span class="i18n-tag">MK</span>
+                      <input v-model="feat.nameI18n.mk" type="text" placeholder="MK" class="form-input" />
+                    </div>
+                    <div class="i18n-field">
+                      <span class="i18n-tag">SQ</span>
+                      <input v-model="feat.nameI18n.sq" type="text" placeholder="SQ" class="form-input" />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Description</label>
+                  <input v-model="feat.description" type="text" placeholder="Description (optional)" class="form-input" />
+                  <div class="i18n-group">
+                    <div class="i18n-field">
+                      <span class="i18n-tag">EN</span>
+                      <input v-model="feat.descriptionI18n.en" type="text" placeholder="EN" class="form-input" />
+                    </div>
+                    <div class="i18n-field">
+                      <span class="i18n-tag">MK</span>
+                      <input v-model="feat.descriptionI18n.mk" type="text" placeholder="MK" class="form-input" />
+                    </div>
+                    <div class="i18n-field">
+                      <span class="i18n-tag">SQ</span>
+                      <input v-model="feat.descriptionI18n.sq" type="text" placeholder="SQ" class="form-input" />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -271,9 +342,13 @@ const editingId = ref(null);
 const saving = ref(false);
 const formError = ref("");
 
+const emptyI18n = () => ({ en: "", mk: "", sq: "" });
+
 const defaultForm = () => ({
   name: "",
   description: "",
+  nameI18n: emptyI18n(),
+  descriptionI18n: emptyI18n(),
   price: null,
   currency: "MKD",
   discount: null,
@@ -292,23 +367,39 @@ function openCreate() {
   dialogOpen.value = true;
 }
 
-function openEdit(pkg) {
+async function openEdit(pkg) {
   editingId.value = pkg.id;
-  form.value = {
-    name: pkg.name || "",
-    description: pkg.description || "",
-    price: pkg.price ?? null,
-    currency: pkg.currency || "MKD",
-    discount: pkg.discount ?? null,
-    activeDiscount: !!pkg.activeDiscount,
-    packageType: pkg.packageType || "",
-    packageCategory: pkg.packageCategory || "",
-    features: Array.isArray(pkg.features)
-      ? pkg.features.map(f => ({ name: f.name || "", description: f.description || "" }))
-      : [],
-  };
   formError.value = "";
+  form.value = defaultForm();
   dialogOpen.value = true;
+
+  try {
+    const full = await packageService.getById(pkg.id);
+    form.value = {
+      name: full.name || "",
+      description: full.description || "",
+      nameI18n: { en: full.nameI18n?.en || "", mk: full.nameI18n?.mk || "", sq: full.nameI18n?.sq || "" },
+      descriptionI18n: { en: full.descriptionI18n?.en || "", mk: full.descriptionI18n?.mk || "", sq: full.descriptionI18n?.sq || "" },
+      price: full.price ?? null,
+      currency: full.currency || "MKD",
+      discount: full.discount ?? null,
+      activeDiscount: !!full.activeDiscount,
+      packageType: full.packageType || "",
+      packageCategory: full.packageCategory || "",
+      features: Array.isArray(full.features)
+        ? full.features.map(f => ({
+            id: f.id || null,
+            name: f.name || "",
+            description: f.description || "",
+            nameI18n: { en: f.nameI18n?.en || "", mk: f.nameI18n?.mk || "", sq: f.nameI18n?.sq || "" },
+            descriptionI18n: { en: f.descriptionI18n?.en || "", mk: f.descriptionI18n?.mk || "", sq: f.descriptionI18n?.sq || "" },
+            included: f.included ?? true,
+          }))
+        : [],
+    };
+  } catch (e) {
+    formError.value = "Failed to load package details";
+  }
 }
 
 function closeDialog() {
@@ -318,7 +409,13 @@ function closeDialog() {
 }
 
 function addFeature() {
-  form.value.features.push({ name: "", description: "" });
+  form.value.features.push({
+    name: "",
+    description: "",
+    nameI18n: emptyI18n(),
+    descriptionI18n: emptyI18n(),
+    included: true,
+  });
 }
 
 async function save() {
@@ -332,6 +429,8 @@ async function save() {
   const payload = {
     name: form.value.name.trim(),
     description: form.value.description.trim(),
+    nameI18n: form.value.nameI18n,
+    descriptionI18n: form.value.descriptionI18n,
     price: form.value.price,
     currency: form.value.currency,
     discount: form.value.discount ?? 0,
@@ -340,7 +439,14 @@ async function save() {
     packageCategory: form.value.packageCategory,
     features: form.value.features
       .filter(f => f.name.trim())
-      .map(f => ({ name: f.name.trim(), description: f.description.trim() })),
+      .map(f => ({
+        ...(f.id ? { id: f.id } : {}),
+        name: f.name.trim(),
+        description: f.description.trim(),
+        nameI18n: f.nameI18n,
+        descriptionI18n: f.descriptionI18n,
+        included: f.included,
+      })),
   };
 
   saving.value = true;
@@ -504,8 +610,16 @@ async function remove(pkg) {
 }
 
 .form-group { display: flex; flex-direction: column; gap: 4px; }
+.form-group--full { grid-column: 1 / -1; }
 .form-group label { font-size: 13px; font-weight: 600; color: #475569; }
 .req { color: #dc2626; }
+
+.i18n-group { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; padding-left: 10px; border-left: 2px solid #e2e8f0; }
+.i18n-field { display: flex; align-items: center; gap: 8px; }
+.i18n-tag {
+  font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase;
+  min-width: 22px; text-align: center;
+}
 
 .form-input {
   padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 8px;
@@ -536,13 +650,21 @@ async function remove(pkg) {
 }
 .btn-add-feature:hover { border-color: var(--brand-main); color: var(--brand-main); }
 
-.feature-row {
-  display: flex; gap: 8px; align-items: center; margin-bottom: 8px;
+.feature-card {
+  border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px;
+  margin-bottom: 10px; background: #fafbfc;
 }
-.feature-input { flex: 1; }
+.feature-card-head {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+}
+.feature-num { font-size: 12px; font-weight: 700; color: #94a3b8; }
+.feature-fields { display: flex; flex-direction: column; gap: 12px; }
+
+.check-label--sm { font-size: 13px; }
+
 .btn-remove-feature {
   background: none; border: none; font-size: 20px; color: #94a3b8;
-  cursor: pointer; line-height: 1; padding: 4px;
+  cursor: pointer; line-height: 1; padding: 4px; margin-left: auto;
 }
 .btn-remove-feature:hover { color: #dc2626; }
 

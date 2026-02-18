@@ -330,6 +330,7 @@
       "preview": "Parashiko",
       "continue": "Vazhdo",
       "back": "Kthehu te detajet",
+      "loading": "Duke ngarkuar ftesat...",
       "emptyState": "Asnj\u00eb dizajn ftesash nuk \u00ebsht\u00eb i disponuesh\u00ebm p\u00ebr k\u00ebt\u00eb kategori ende. Po punojm\u00eb p\u00ebr k\u00ebt\u00eb!"
     },
     "footer": {
@@ -704,15 +705,37 @@
       "typeRequired": "Lloji \u00ebsht\u00eb i detyruesh\u00ebm"
     }
   },
+  "weddingDetails": {
+    "title": "Detajet e Dasmës",
+    "subtitle": "Shtoni detaje si ceremonia, pritja, kodi i veshjes dhe më shumë",
+    "addBtn": "Shto detaj",
+    "loading": "Duke u ngarkuar...",
+    "emptyTitle": "Nuk ka detaje",
+    "emptyMessage": "Shtoni detaje që do të shfaqen në ftesën tuaj — ceremonia, veshja, dhuratat dhe më shumë.",
+    "createTitle": "Shto detaj",
+    "editTitle": "Ndrysho detajin",
+    "fields": {
+      "title": "Titulli",
+      "titlePh": "p.sh. Ceremonia",
+      "description": "Përshkrimi",
+      "descriptionPh": "p.sh. Na bashkohuni në kishën e Shën Klementit në orën 16:00",
+      "icon": "Ikona",
+      "displayOrder": "Radhitja"
+    },
+    "errors": {
+      "titleRequired": "Titulli është i detyrueshëm"
+    }
+  },
   "sidebar": {
-    "overview": "P\u00ebrmbledhje",
-    "guests": "Mysafir\u00ebt",
+    "overview": "Përmbledhje",
+    "guests": "Mysafirët",
     "tasks": "Detyrat",
     "budget": "Buxheti",
     "seating": "Vendosja",
     "agenda": "Axhenda",
     "gallery": "Galeria",
-    "ourStory": "Historia Jon\u00eb",
+    "ourStory": "Historia Jonë",
+    "weddingDetails": "Detajet e Dasmës",
     "team": "Ekipi",
     "settings": "Cilësimet",
     "support": "Mbështetje",
@@ -729,7 +752,9 @@
       "packages": "Paketat",
       "users": "Përdoruesit",
       "reviews": "Vlerësimet",
-      "contacts": "Kontaktet"
+      "contacts": "Kontaktet",
+      "faq": "FAQ",
+      "invitationTemplates": "Ftesat"
     },
     "reviews": {
       "title": "Vlerësimet",
@@ -765,6 +790,48 @@
       "resolve": "Zgjidh",
       "reopen": "Rihap",
       "viewTitle": "Detajet e Mesazhit"
+    },
+    "faq": {
+      "title": "Menaxhimi i FAQ",
+      "subtitle": "Krijoni dhe menaxhoni pyetjet e shpeshta",
+      "searchPh": "Kërko FAQ...",
+      "loading": "Duke ngarkuar FAQ...",
+      "empty": "Nuk u gjetën FAQ",
+      "addBtn": "Shto FAQ",
+      "editTitle": "Ndrysho FAQ",
+      "createTitle": "Krijo FAQ",
+      "question": "Pyetja",
+      "answer": "Përgjigja",
+      "displayOrder": "Renditja",
+      "active": "Aktive",
+      "thQuestion": "Pyetja",
+      "thAnswer": "Përgjigja",
+      "thOrder": "Renditja",
+      "thActive": "Statusi",
+      "thActions": "Veprimet"
+    },
+    "invitationTemplates": {
+      "title": "Shabllonet e Ftesave",
+      "subtitle": "Menaxhoni dizajnet dhe shabllonet e ftesave",
+      "searchPh": "K\u00ebrko shabllone...",
+      "allCategories": "T\u00eb gjitha kategorit\u00eb",
+      "loading": "Duke ngarkuar shabllonet...",
+      "empty": "Nuk u gjet\u00ebn shabllone ftesash",
+      "addBtn": "Shto Shabllon",
+      "editTitle": "Ndrysho Shabllon",
+      "createTitle": "Krijo Shabllon",
+      "name": "Emri",
+      "path": "Shtegu",
+      "pathHint": "Parashikimi i URL-s\u00eb s\u00eb plot\u00eb",
+      "thumbnailUrl": "URL e fotos",
+      "category": "Kategoria e ngjarjes",
+      "thThumbnail": "Foto",
+      "thName": "Emri",
+      "thPath": "Shtegu",
+      "thCategory": "Kategoria",
+      "thActive": "Statusi",
+      "thActions": "Veprimet",
+      "active": "Aktive"
     }
   },
   "overview": {
@@ -908,6 +975,7 @@
       "description": "P\u00ebrshkrimi",
       "descriptionPh": "P\u00ebrshkrim opsional",
       "amount": "Shuma Totale",
+      "currency": "Monedha",
       "nameRequired": "Emri i buxhetit \u00ebsht\u00eb i detyruesh\u00ebm",
       "amountRequired": "Shuma duhet t\u00eb jet\u00eb m\u00eb e madhe se 0"
     },

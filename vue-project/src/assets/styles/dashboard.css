@@ -10,6 +10,7 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: 14px;
+  flex-wrap: wrap;
 }
 
 .ov-title {
@@ -43,7 +44,7 @@
   border: 1px solid rgba(47,62,54,0.12);
 }
 
-.ov-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.ov-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-left: auto; }
 
 .btn-outline {
   background: rgba(255,255,255,0.65);
@@ -74,7 +75,6 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
-
 .middle-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

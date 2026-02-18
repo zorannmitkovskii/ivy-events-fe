@@ -32,7 +32,13 @@
         :disabled="true"
       />
 
+      <div v-if="fetchLoading" class="loading-state">
+        <span class="spinner" />
+        <p>{{ $t('onboarding.invitations.loading') }}</p>
+      </div>
+
       <InvitationGrid
+        v-else
         class="grid-section"
         :invitations="filteredInvitations"
         :selected-id="onboardingStore.invitationName"
@@ -49,7 +55,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import CategoryFilterBar from '@/components/onboarding/CategoryFilterBar.vue';
 import InvitationGrid from '@/components/onboarding/InvitationGrid.vue';
@@ -59,7 +65,7 @@ import { onboardingStore, setInvitationName } from '@/store/onboarding.store';
 import { eventsService } from '@/services/events.service';
 import { isAuthenticated } from '@/services/auth.service';
 import { EventCategoryEnum } from '@/enums/EventCategory';
-import { INVITATION_REGISTRY } from '@/data/invitationRegistry';
+import { invitationTemplateService } from '@/services/invitationTemplate.service';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -96,16 +102,37 @@ const categoryOptions = computed(() => {
   return items;
 });
 
+const templates = ref([]);
+const fetchLoading = ref(false);
+
 const filteredInvitations = computed(() => {
-  return INVITATION_REGISTRY[displayCategory.value] || [];
+  return templates.value.map(t => ({
+    id: t.id,
+    name: t.name,
+    thumbnailUrl: t.thumbnailImage || '',
+  }));
 });
 
-function onSelectInvitation(designId) {
-  setInvitationName(designId);
+onMounted(async () => {
+  fetchLoading.value = true;
+  try {
+    const data = await invitationTemplateService.listByCategory(displayCategory.value);
+    templates.value = (data || []).filter(t => t.active !== false);
+  } catch (e) {
+    console.error('Failed to load invitation templates:', e);
+  } finally {
+    fetchLoading.value = false;
+  }
+});
+
+function onSelectInvitation(id) {
+  setInvitationName(id);
 }
 
-function onPreview(designId) {
-  const resolved = router.resolve({ name: designId, params: { lang: lang.value } });
+function onPreview(id) {
+  const inv = templates.value.find(t => t.id === id);
+  if (!inv?.path) return;
+  const resolved = router.resolve(`/${lang.value}/${inv.path}`);
   window.open(resolved.href, '_blank');
 }
 
@@ -133,13 +160,11 @@ async function onContinue() {
     const eventId = onboardingStore.eventId;
 
     if (eventId) {
-      // Send full path (e.g. "invitations/sunset-glass")
-      const allInvitations = Object.values(INVITATION_REGISTRY).flat();
-      const selected = allInvitations.find(inv => inv.id === onboardingStore.invitationName);
-      const slug = selected?.slug || onboardingStore.invitationName;
+      const selected = templates.value.find(t => t.id === onboardingStore.invitationName);
+      const path = selected?.path || onboardingStore.invitationName;
 
       await eventsService.updateInvitation(eventId, {
-        invitationName: `invitations/${slug}`
+        invitationName: path
       });
     }
 
@@ -237,6 +262,29 @@ async function onContinue() {
 
 .grid-section {
   margin-top: 20px;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 16px;
+  color: var(--neutral-500, #6b7280);
+  font-size: 14px;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-color: var(--brand-gold, #c4956a);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .error {

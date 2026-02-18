@@ -330,6 +330,7 @@
       "preview": "Preview",
       "continue": "Continue",
       "back": "Back to details",
+      "loading": "Loading invitations...",
       "emptyState": "No invitation designs available for this category yet. We're working on it!"
     },
     "footer": {
@@ -704,6 +705,27 @@
       "typeRequired": "Type is required"
     }
   },
+  "weddingDetails": {
+    "title": "Wedding Details",
+    "subtitle": "Add details like ceremony, reception, dress code and more",
+    "addBtn": "Add Detail",
+    "loading": "Loading details...",
+    "emptyTitle": "No details yet",
+    "emptyMessage": "Add details to show on your invitation — ceremony, dress code, gifts and more.",
+    "createTitle": "Add Detail",
+    "editTitle": "Edit Detail",
+    "fields": {
+      "title": "Title",
+      "titlePh": "e.g. Ceremony",
+      "description": "Description",
+      "descriptionPh": "e.g. Join us at St. Clement Church at 4 PM",
+      "icon": "Icon",
+      "displayOrder": "Order"
+    },
+    "errors": {
+      "titleRequired": "Title is required"
+    }
+  },
   "sidebar": {
     "overview": "Overview",
     "guests": "Guests",
@@ -713,6 +735,7 @@
     "agenda": "Agenda",
     "gallery": "Gallery",
     "ourStory": "Our Story",
+    "weddingDetails": "Wedding Details",
     "team": "Team",
     "settings": "Settings",
     "support": "Support",
@@ -729,7 +752,9 @@
       "packages": "Packages",
       "users": "Users",
       "reviews": "Reviews",
-      "contacts": "Contacts"
+      "contacts": "Contacts",
+      "faq": "FAQ",
+      "invitationTemplates": "Invitations"
     },
     "reviews": {
       "title": "Reviews",
@@ -765,6 +790,48 @@
       "resolve": "Resolve",
       "reopen": "Reopen",
       "viewTitle": "Message Details"
+    },
+    "faq": {
+      "title": "FAQ Management",
+      "subtitle": "Create and manage frequently asked questions",
+      "searchPh": "Search FAQs...",
+      "loading": "Loading FAQs...",
+      "empty": "No FAQs found",
+      "addBtn": "Add FAQ",
+      "editTitle": "Edit FAQ",
+      "createTitle": "Create FAQ",
+      "question": "Question",
+      "answer": "Answer",
+      "displayOrder": "Display Order",
+      "active": "Active",
+      "thQuestion": "Question",
+      "thAnswer": "Answer",
+      "thOrder": "Order",
+      "thActive": "Status",
+      "thActions": "Actions"
+    },
+    "invitationTemplates": {
+      "title": "Invitation Templates",
+      "subtitle": "Manage invitation designs and templates",
+      "searchPh": "Search templates...",
+      "allCategories": "All Categories",
+      "loading": "Loading templates...",
+      "empty": "No invitation templates found",
+      "addBtn": "Add Template",
+      "editTitle": "Edit Template",
+      "createTitle": "Create Template",
+      "name": "Name",
+      "path": "Path",
+      "pathHint": "Full URL preview",
+      "thumbnailUrl": "Thumbnail URL",
+      "category": "Event Category",
+      "thThumbnail": "Thumbnail",
+      "thName": "Name",
+      "thPath": "Path",
+      "thCategory": "Category",
+      "thActive": "Status",
+      "thActions": "Actions",
+      "active": "Active"
     }
   },
   "overview": {
@@ -909,6 +976,7 @@
       "description": "Description",
       "descriptionPh": "Optional description",
       "amount": "Total Amount",
+      "currency": "Currency",
       "nameRequired": "Budget name is required",
       "amountRequired": "Amount must be greater than 0"
     },

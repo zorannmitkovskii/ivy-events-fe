@@ -62,6 +62,8 @@ const navItems = [
   { key: "users", path: "users", labelKey: "admin.sidebar.users", icon: Icons.users },
   { key: "reviews", path: "reviews", labelKey: "admin.sidebar.reviews", icon: Icons.star },
   { key: "contacts", path: "contacts", labelKey: "admin.sidebar.contacts", icon: Icons.mail },
+  { key: "faq", path: "faq", labelKey: "admin.sidebar.faq", icon: Icons.messageCircle },
+  { key: "invitationTemplates", path: "invitation-templates", labelKey: "admin.sidebar.invitationTemplates", icon: Icons.image },
 ];
 
 const userName = computed(() => getFullName() || "Admin");
@@ -84,6 +86,7 @@ function signOut() {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  height: 100vh;
 }
 
 .sidebar-head {

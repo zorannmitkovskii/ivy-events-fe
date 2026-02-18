@@ -34,6 +34,7 @@
 <script setup>
 
 import ButtonMain from "@/components/generic/ButtonMain.vue";
+import PricingBadge from "@/components/cards/PricingBadge.vue";
 import PricingFeature from "@/components/cards/PricingFeature.vue";
 import { t } from "@/i18n";
 
@@ -112,6 +113,7 @@ defineProps({
   border: 2px solid var(--brand-gold);
   box-shadow: var(--shadow-lg);
   transform: translateY(-6px);
+  overflow: visible;
 }
 
 @media (max-width: 980px) {

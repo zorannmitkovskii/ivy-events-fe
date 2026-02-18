@@ -42,9 +42,14 @@ const title = computed(() => {
     "dashboard.notifications": "Notifications",
     "dashboard.team": "Team & Co-hosts",
     "dashboard.settings": "Event Settings",
+    "dashboard.wedding-details": "Wedding Details",
     "admin.events": "Events",
     "admin.packages": "Packages",
     "admin.users": "Users",
+    "admin.reviews": "Reviews",
+    "admin.contacts": "Contacts",
+    "admin.faq": "FAQ",
+    "admin.invitationTemplates": "Invitation Templates",
   };
   return map[String(route.name)] ?? "Dashboard";
 });

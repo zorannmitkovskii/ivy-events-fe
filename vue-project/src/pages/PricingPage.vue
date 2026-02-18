@@ -1,18 +1,13 @@
 <template>
-  <div class="container mt-5">
-    <PricingSection id="pricing" />
+  <div>
+    <Header />
+    <PackagesSection />
+    <Footer />
   </div>
 </template>
 
-<script>
-import PricingSection from "@/components/landingPage/PricingSection.vue";
-
-export default {
-  name: 'EventCategoryPage',
-  components: {PricingSection}
-}
+<script setup>
+import Header from "@/components/header/Header.vue";
+import Footer from "@/components/layout/Footer.vue";
+import PackagesSection from "@/components/landingPage/PackagesSection.vue";
 </script>
-
-<style scoped>
-/* optional styling */
-</style>

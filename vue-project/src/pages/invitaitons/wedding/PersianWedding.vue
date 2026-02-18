@@ -1,5 +1,11 @@
 <template>
   <div class="persian-wedding">
+    <!-- Loading overlay -->
+    <div v-if="loading" class="loading-overlay">
+      <div class="loading-spinner"></div>
+    </div>
+
+    <div v-show="!loading">
     <!-- Hero -->
     <HeroSection
       :bride-name="config.brideName"
@@ -35,8 +41,34 @@
           />
         </div>
 
-        <!-- Detail Cards -->
-        <div class="details-grid">
+        <!-- Detail Cards (dynamic from backend) -->
+        <div class="details-grid" v-if="config.weddingDetails.length > 0">
+          <DetailCard
+            v-for="(detail, idx) in config.weddingDetails"
+            :key="idx"
+            :title="detail.title"
+            :accent-color="detailCardPalette[idx % 3].accent"
+            :bg-color="detailCardPalette[idx % 3].bg"
+            :icon-bg="detailCardPalette[idx % 3].iconBg"
+            :heading-font="fonts.heading"
+            :body-font="fonts.body"
+            :shadow="shadows.card"
+            :hover-shadow="shadows.cardHover"
+            border-width="0"
+            border-radius="16px"
+          >
+            <template #icon>
+              <span class="card-emoji">{{ iconMap[detail.icon] || '📋' }}</span>
+            </template>
+            <p v-if="detail.description">{{ detail.description }}</p>
+            <template #footer>
+              <a v-if="detail.mapUrl" :href="detail.mapUrl" target="_blank" rel="noopener" class="map-btn" :style="{ background: detailCardPalette[idx % 3].accent }">View Map</a>
+            </template>
+          </DetailCard>
+        </div>
+
+        <!-- Detail Cards (hardcoded fallback for preview mode) -->
+        <div class="details-grid" v-else>
           <DetailCard
             title="Ceremony"
             :accent-color="palette.pink"
@@ -174,13 +206,16 @@
         </div>
       </div>
     </section>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
+import { invitationPageService } from '@/services/invitationPage.service';
+import { onboardingStore } from '@/store/onboarding.store';
 import HeroSection from '@/components/invitations/wedding/PersianWedding/HeroSection.vue';
 import OurStorySection from '@/components/invitations/wedding/PersianWedding/OurStorySection.vue';
 import DetailCard from '@/components/invitations/shared/DetailCard.vue';
@@ -190,7 +225,15 @@ import RsvpForm from '@/components/invitations/shared/RsvpForm.vue';
 
 const route = useRoute();
 const router = useRouter();
-const eventId = route.query.eventId;
+const eventId = onboardingStore.eventId || route.query.eventId;
+const lang = computed(() => route.params.lang || 'mk');
+const loading = ref(!!eventId);
+const fetchError = ref(null);
+
+function localized(i18nObj, fallback) {
+  if (!i18nObj) return fallback || '';
+  return i18nObj[lang.value] || i18nObj.en || fallback || '';
+}
 
 const palette = {
   pink: '#F9A8D4',
@@ -239,6 +282,8 @@ const config = reactive({
   venueAddress: 'Santa Barbara, CA',
   venueMapUrl: '#',
 
+  weddingDetails: [],
+
   agendaEvents: [
     { time: '3:30 PM', title: 'Guest Arrival', subtitle: 'Guests arrive and are seated in the garden ceremony area.' },
     { time: '4:00 PM', title: 'Ceremony Begins', subtitle: 'The wedding ceremony starts with the processional.' },
@@ -269,6 +314,139 @@ const config = reactive({
   rsvpDeadline: 'May 1, 2024',
 });
 
+/* ---- helpers ---- */
+function formatDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+
+function formatTime(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+}
+
+const detailCardPalette = [
+  { accent: palette.pink, bg: palette.pinkBg, iconBg: palette.pinkIcon },
+  { accent: palette.purple, bg: palette.purpleBg, iconBg: palette.purpleIcon },
+  { accent: palette.teal, bg: palette.tealBg, iconBg: palette.tealIcon },
+];
+
+const iconMap = {
+  church: '⛪', party: '🎉', dresscode: '👔', rings: '💍',
+  cake: '🎂', music: '🎵', gift: '🎁', hotel: '🏨',
+  transport: '🚗', food: '🍽️', photo: '📷', flowers: '💐',
+};
+
+/* ---- fetch & apply ---- */
+async function fetchInvitationData() {
+  if (!eventId) {
+    loading.value = false;
+    return;
+  }
+  loading.value = true;
+  try {
+    const data = await invitationPageService.getByEventId(eventId);
+    applyBackendData(data);
+  } catch (e) {
+    console.error('Failed to fetch invitation data:', e);
+    fetchError.value = e;
+  } finally {
+    loading.value = false;
+  }
+}
+
+function applyBackendData(data) {
+  const ev = data.event;
+  if (!ev) return;
+
+  // Couple names: prefer coupleNames.partner1/partner2, fall back to event.name split
+  const p1 = ev.coupleNames?.partner1;
+  const p2 = ev.coupleNames?.partner2;
+  if (p1 || p2) {
+    config.brideName = p1 || config.brideName;
+    config.groomName = p2 || config.groomName;
+  } else if (ev.name) {
+    const raw = typeof ev.name === 'string' ? ev.name : localized(ev.nameI18n, ev.name);
+    if (raw && raw.includes(' & ')) {
+      const parts = raw.split(' & ');
+      config.brideName = parts[0]?.trim() || config.brideName;
+      config.groomName = parts[1]?.trim() || config.groomName;
+    }
+  }
+
+  // Date
+  if (ev.date) {
+    config.weddingDateTime = ev.date;
+    config.weddingDate = formatDate(ev.date);
+  }
+
+  // Subtitle
+  const subtitle = localized(ev.messageI18n, ev.message);
+  if (subtitle) {
+    config.subtitle = subtitle;
+  }
+
+  // Location
+  if (data.location) {
+    if (data.location.venueName) {
+      config.venue = data.location.venueName;
+      config.venueName = data.location.venueName;
+    }
+    const addressParts = [data.location.city, data.location.country].filter(Boolean);
+    if (addressParts.length) {
+      config.location = addressParts.join(', ');
+      config.venueAddress = addressParts.join(', ');
+    }
+    if (data.location.mapUrl) {
+      config.venueMapUrl = data.location.mapUrl;
+    }
+  }
+
+  // Wedding details
+  if (Array.isArray(data.weddingDetails) && data.weddingDetails.length) {
+    config.weddingDetails = [...data.weddingDetails]
+      .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
+      .map((d) => ({
+        title: localized(d.titleI18n, d.title),
+        description: localized(d.descriptionI18n, d.description),
+        icon: d.icon || null,
+        mapUrl: d.mapUrl || null,
+      }));
+  }
+
+  // Agenda
+  if (Array.isArray(data.agenda) && data.agenda.length) {
+    config.agendaEvents = [...data.agenda]
+      .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
+      .map((a) => ({
+        time: formatTime(a.startTime),
+        title: localized(a.titleI18n, a.title),
+        subtitle: localized(a.descriptionI18n, a.description),
+      }));
+  }
+
+  // Our Story
+  if (Array.isArray(data.ourStory) && data.ourStory.length) {
+    config.stories = data.ourStory.map((s) => ({
+      title: localized(s.titleI18n, s.title),
+      text: localized(s.textI18n, s.text),
+    }));
+    const photos = data.ourStory
+      .filter((s) => s.imageUrl)
+      .map((s) => ({ url: s.imageUrl, alt: localized(s.titleI18n, s.title) }));
+    if (photos.length) {
+      config.storyPhotos = photos;
+    }
+  }
+
+  // RSVP deadline
+  if (data.event?.rsvpDeadline) {
+    config.rsvpDeadline = formatDate(data.event.rsvpDeadline);
+  }
+}
+
 onMounted(() => {
   const fontLinks = [
     'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap',
@@ -282,6 +460,8 @@ onMounted(() => {
       document.head.appendChild(link);
     }
   });
+
+  fetchInvitationData();
 });
 
 async function onRsvpSubmit(payload) {
@@ -362,10 +542,32 @@ async function onRsvpSubmit(payload) {
   margin-bottom: 48px;
 }
 
+/* Loading overlay */
+.loading-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #FFE5EC 0%, #E5D4ED 50%, #D4F1E8 100%);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(200, 180, 220, 0.3);
+  border-top-color: #C4B5FD;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* Details grid */
 .details-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
 }
 
@@ -373,6 +575,11 @@ async function onRsvpSubmit(payload) {
 :deep(.card-svg) {
   width: 32px;
   height: 32px;
+}
+
+:deep(.card-emoji) {
+  font-size: 28px;
+  line-height: 1;
 }
 
 /* Map buttons in detail card footers */

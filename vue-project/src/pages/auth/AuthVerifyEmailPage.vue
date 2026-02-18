@@ -12,7 +12,7 @@
   <!-- Normal email verification flow -->
   <AuthShell v-else>
     <AuthCard>
-      <AuthBrandHeader :title="$t('auth.brand')" />
+      <AuthBrand />
 
       <AuthCardTitle
         :title="$t('auth.verify.title')"
@@ -53,6 +53,7 @@ import ButtonMain from "@/components/generic/ButtonMain.vue";
 import AuthShell from "@/components/auth/AuthShell.vue";
 import AuthCardTitle from "@/components/auth/AuthCardTitle.vue";
 import AuthCard from "@/components/auth/AuthCard.vue";
+import AuthBrand from "@/components/auth/AuthBrand.vue";
 import AuthInput from "@/components/auth/AuthInput.vue";
 import { onboardingStore, setEmailVerified, setEventId, getTempPassword, getTempUsername, clearTempCredentials } from "@/store/onboarding.store";
 import { verifyEmail, exchangeOAuthCode, assignRole, refreshAccessToken, getEventId, hasRole, loginWithCredentials } from "@/services/auth.service";

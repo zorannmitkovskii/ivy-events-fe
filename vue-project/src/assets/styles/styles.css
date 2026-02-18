@@ -107,6 +107,9 @@
   margin-bottom: 20px;
 }
 
+/* XL screens – 3 columns for charts */
+
+
 /* smaller screens */
 @media (max-width: 992px) {
   .stats-grid { grid-template-columns: repeat(2, 1fr); }

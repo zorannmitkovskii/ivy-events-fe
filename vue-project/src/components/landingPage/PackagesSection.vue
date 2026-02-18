@@ -1,106 +1,98 @@
 <template>
-  <div>
-    <Header />
-    <section class="packages-page">
-    <h2 class="packages-title">{{ $t("packages.title") }}</h2>
-    <p class="packages-subtitle">{{ $t("packages.subtitle") }}</p>
+  <section class="packages-section">
+    <div class="packages-container">
+      <header class="packages-header">
+        <h2 class="packages-title">{{ $t("packages.title") }}</h2>
+        <p class="packages-subtitle">{{ $t("packages.subtitle") }}</p>
+      </header>
 
-    <!-- Category Switch -->
-    <div class="switch-group">
-      <button
-        v-for="tab in tabs"
-        :key="tab.key"
-        class="switch-btn"
-        :class="{ active: activeTab === tab.key }"
-        @click="activeTab = tab.key"
-      >
-        {{ tab.label }}
-      </button>
-    </div>
-
-    <!-- Loading -->
-    <div v-if="loading" class="packages-loading">
-      <span class="spinner"></span>
-    </div>
-
-    <!-- Error -->
-    <p v-else-if="error" class="packages-error">{{ error }}</p>
-
-    <!-- Empty state -->
-    <p v-else-if="!packages.length" class="packages-empty">
-      {{ $t("packages.empty") }}
-    </p>
-
-    <!-- Package Cards -->
-    <div v-else class="packages-grid">
-      <div
-        v-for="pkg in packages"
-        :key="pkg.id"
-        class="package-card"
-        :class="{ featured: pkg.packageType === 'INV_PRO' || pkg.packageType === 'IVY_PREMIUM' }"
-      >
-        <span
-          v-if="pkg.packageType === 'INV_PRO' || pkg.packageType === 'IVY_PREMIUM'"
-          class="badge-popular"
+      <!-- Category Switch -->
+      <div class="switch-group">
+        <button
+          v-for="tab in tabs"
+          :key="tab.key"
+          class="switch-btn"
+          :class="{ active: activeTab === tab.key }"
+          @click="activeTab = tab.key"
         >
-          {{ $t("packages.popular") }}
-        </span>
+          {{ tab.label }}
+        </button>
+      </div>
 
-        <h4 class="package-name">{{ localized(pkg.nameI18n, pkg.name) }}</h4>
-        <p class="package-desc" v-if="localized(pkg.descriptionI18n, pkg.description)">
-          {{ localized(pkg.descriptionI18n, pkg.description) }}
-        </p>
+      <!-- Loading -->
+      <div v-if="loading" class="packages-loading">
+        <span class="spinner"></span>
+      </div>
 
-        <div class="package-price">
-          <template v-if="pkg.activeDiscount && pkg.discount">
-            <span class="price-old">{{ formatPrice(pkg.price, pkg.currency) }}</span>
-            <span class="price-amount">{{ formatPrice(pkg.currentPrice, pkg.currency) }}</span>
-            <span class="price-badge">-{{ pkg.discount }}%</span>
-          </template>
-          <span v-else class="price-amount">{{ formatPrice(pkg.currentPrice ?? pkg.price, pkg.currency) }}</span>
-        </div>
+      <!-- Error -->
+      <p v-else-if="error" class="packages-error">{{ error }}</p>
 
-        <!-- Features -->
-        <ul v-if="pkg.features && pkg.features.length" class="card__features">
-          <PricingFeature
-            v-for="feat in pkg.features"
-            :key="feat.id"
-            :included="feat.included"
+      <!-- Empty state -->
+      <p v-else-if="!packages.length" class="packages-empty">
+        {{ $t("packages.empty") }}
+      </p>
+
+      <!-- Package Cards -->
+      <div v-else class="packages-grid">
+        <div
+          v-for="pkg in packages"
+          :key="pkg.id"
+          class="package-card"
+          :class="{ featured: pkg.packageType === 'INV_PRO' || pkg.packageType === 'IVY_PREMIUM' }"
+        >
+          <span
+            v-if="pkg.packageType === 'INV_PRO' || pkg.packageType === 'IVY_PREMIUM'"
+            class="badge-popular"
           >
-            {{ localized(feat.nameI18n, feat.name) }}
-          </PricingFeature>
-        </ul>
+            {{ $t("packages.popular") }}
+          </span>
 
-        <CpayButton
-          :packageType="pkg.packageType"
-          :label="$t('packages.choose')"
-          variant="gold"
-        />
+          <h4 class="package-name">{{ localized(pkg.nameI18n, pkg.name) }}</h4>
+          <p class="package-desc" v-if="localized(pkg.descriptionI18n, pkg.description)">
+            {{ localized(pkg.descriptionI18n, pkg.description) }}
+          </p>
+
+          <div class="package-price">
+            <template v-if="pkg.activeDiscount && pkg.discount">
+              <span class="price-old">{{ formatPrice(pkg.price, pkg.currency) }}</span>
+              <span class="price-amount">{{ formatPrice(pkg.currentPrice, pkg.currency) }}</span>
+              <span class="price-badge">-{{ pkg.discount }}%</span>
+            </template>
+            <span v-else class="price-amount">{{ formatPrice(pkg.currentPrice ?? pkg.price, pkg.currency) }}</span>
+          </div>
+
+          <!-- Features -->
+          <ul v-if="pkg.features && pkg.features.length" class="card__features">
+            <PricingFeature
+              v-for="feat in pkg.features"
+              :key="feat.id"
+              :included="feat.included"
+            >
+              {{ localized(feat.nameI18n, feat.name) }}
+            </PricingFeature>
+          </ul>
+
+          <CpayButton
+            :packageType="pkg.packageType"
+            :label="$t('packages.choose')"
+            variant="gold"
+          />
+        </div>
       </div>
     </div>
   </section>
-    <Footer />
-  </div>
 </template>
 
 <script setup>
 import { ref, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute } from "vue-router";
 import { packageService } from "@/services/package.service";
 import CpayButton from "@/components/payment/CpayButton.vue";
 import PricingFeature from "@/components/cards/PricingFeature.vue";
-import Header from "@/components/header/Header.vue";
-import Footer from "@/components/layout/Footer.vue";
 
 const { t, locale } = useI18n();
-const route = useRoute();
 
-const validTabs = ["organizer", "invitation", "gallery"];
-const queryTab = route.query.tab;
-const initialTab = validTabs.includes(queryTab) ? queryTab : "organizer";
-
-const activeTab = ref(initialTab);
+const activeTab = ref("organizer");
 const packages = ref([]);
 const loading = ref(true);
 const error = ref(null);
@@ -149,24 +141,33 @@ onMounted(fetchPackages);
 </script>
 
 <style scoped>
-.packages-page {
-  max-width: 1100px;
+.packages-section {
+  background: var(--bg-main);
+  padding: 76px 20px;
+}
+
+.packages-container {
+  max-width: var(--container-max);
   margin: 0 auto;
-  padding: 48px 20px 80px;
   text-align: center;
 }
 
+.packages-header {
+  margin-bottom: 34px;
+}
+
 .packages-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--brand-dark, #2f3e36);
-  margin-bottom: 8px;
+  font-family: var(--font-family), serif;
+  font-size: 42px;
+  font-weight: 500;
+  margin: 0 0 10px;
+  color: var(--neutral-900);
 }
 
 .packages-subtitle {
-  color: var(--neutral-500, #6b7280);
-  font-size: 1rem;
-  margin-bottom: 32px;
+  margin: 0;
+  color: var(--neutral-700);
+  font-size: 16px;
 }
 
 /* ---- Switch Toggle ---- */
@@ -301,9 +302,7 @@ onMounted(fetchPackages);
 }
 
 /* ---- States ---- */
-.packages-loading {
-  padding: 60px 0;
-}
+.packages-loading { padding: 60px 0; }
 
 .spinner {
   display: inline-block;
@@ -315,9 +314,7 @@ onMounted(fetchPackages);
   animation: spin 0.6s linear infinite;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 .packages-error {
   color: var(--error, #c62828);
@@ -331,26 +328,13 @@ onMounted(fetchPackages);
   font-size: 15px;
 }
 
-/* ---- Responsive ---- */
-@media (max-width: 768px) {
-  .packages-page {
-    padding: 36px 16px 60px;
-  }
-
-  .packages-title {
-    font-size: 1.5rem;
-  }
-
-  .packages-subtitle {
-    font-size: 0.9375rem;
-    margin-bottom: 24px;
-  }
+@media (max-width: 980px) {
+  .packages-title { font-size: 32px; }
 
   .switch-group {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin-bottom: 28px;
   }
 
   .switch-btn {
@@ -360,15 +344,8 @@ onMounted(fetchPackages);
 
   .packages-grid {
     grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .package-card {
-    padding: 28px 20px 24px;
-  }
-
-  .price-amount {
-    font-size: 1.75rem;
+    max-width: 560px;
+    margin: 0 auto;
   }
 }
 </style>

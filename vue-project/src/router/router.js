@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { setLocale } from "@/i18n";
 import { isAuthenticated, hasRole } from "@/services/auth.service";
 import { onboardingStore } from "@/store/onboarding.store";
+import { startLoading, stopLoading } from "@/store/loading.store";
 
 // Marketing / Auth / Onboarding
 import HomePage from "@/pages/marketing/HomePage.vue";
@@ -116,6 +117,7 @@ const routes = [
           { path: "events/agenda", name: "dashboard.agenda", component: AgendaPage },
           { path: "events/budget", name: "dashboard.budget", component: BudgetPage },
           { path: "events/our-story", name: "dashboard.our-story", component: OurStoryPage },
+          { path: "events/wedding-details", name: "dashboard.wedding-details", component: () => import("@/pages/dashboard/WeddingDetailsPage.vue") },
           { path: "events/gallery", name: "dashboard.gallery", component: GalleryPage },
           { path: "events/notifications", name: "dashboard.notifications", component: NotificationsPage },
           { path: "events/team", name: "dashboard.team", component: TeamPage },
@@ -141,6 +143,8 @@ const routes = [
           { path: "users", name: "admin.users", component: AdminUsersPage },
           { path: "reviews", name: "admin.reviews", component: () => import("@/pages/adminDashboard/AdminReviewsPage.vue") },
           { path: "contacts", name: "admin.contacts", component: () => import("@/pages/adminDashboard/AdminContactsPage.vue") },
+          { path: "faq", name: "admin.faq", component: () => import("@/pages/adminDashboard/AdminFaqPage.vue") },
+          { path: "invitation-templates", name: "admin.invitationTemplates", component: () => import("@/pages/adminDashboard/AdminInvitationTemplatesPage.vue") },
 
           // default admin redirect
           {
@@ -165,10 +169,15 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) return savedPosition;
+    return { top: 0 };
+  },
 });
 
 router.beforeEach((to, from, next) => {
+  startLoading();
   const lang = to.params.lang || "mk";
   setLocale(lang);
 
@@ -228,6 +237,10 @@ router.beforeEach((to, from, next) => {
   }
 
   next();
+});
+
+router.afterEach(() => {
+  stopLoading();
 });
 
 export default router;

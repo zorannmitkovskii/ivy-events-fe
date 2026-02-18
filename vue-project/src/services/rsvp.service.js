@@ -1,4 +1,4 @@
-import { api } from '@/services/api';
+import publicApi from '@/services/backendApi';
 
 export const rsvpService = {
   async submitRsvp(eventId, formData) {
@@ -16,14 +16,19 @@ export const rsvpService = {
     const payload = {
       eventId,
       guests: guestEntries,
-      note: (formData.message || '').trim() || null,
       email: formData.email || null,
-      phone: formData.phone || null,
-      dietaryPreferences: formData.dietary ? formData.dietary.toUpperCase() : null,
+      phoneNumber: formData.phone || null,
+      note: (formData.message || '').trim() || null,
+      tableNumber: null,
       notificationType: formData.notificationType ? formData.notificationType.toUpperCase() : null,
       inviteStatus: isAccepted ? 'CONFIRMED' : 'DECLINED',
+      numOfGuests: guestEntries.length,
+      rsvpDate: null,
+      isVip: false,
+      checkInStatus: false,
     };
 
-    return api.post('/guests', payload);
+    const response = await publicApi.post('/public/guests', payload);
+    return response.data;
   },
 };

@@ -72,7 +72,6 @@ watch(() => route.path, () => {
     width: 100%;
     z-index: 1000;
     transform: translateX(-100%);
-    transition: transform 0.25s ease;
     background: var(--brand-main);
     display: flex;
     flex-direction: column;
@@ -80,6 +79,7 @@ watch(() => route.path, () => {
 
   .dash-sidebar.open {
     transform: translateX(0);
+    transition: transform 0.25s ease;
   }
 
   .backdrop {

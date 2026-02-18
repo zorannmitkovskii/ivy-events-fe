@@ -81,6 +81,7 @@ const navItems = computed(() => [
   { key: "agenda", path: "agenda", labelKey: "sidebar.agenda", icon: Icons.calendar },
   { key: "gallery", path: "gallery", labelKey: "sidebar.gallery", icon: Icons.image },
   { key: "our-story", path: "our-story", labelKey: "sidebar.ourStory", icon: Icons.heart },
+  { key: "wedding-details", path: "wedding-details", labelKey: "sidebar.weddingDetails", icon: Icons.clipboardList },
   { key: "team", path: "team", labelKey: "sidebar.team", icon: Icons.userPlus, badge: "sidebar.premium" },
   { key: "settings", path: "settings", labelKey: "sidebar.settings", icon: Icons.settings }
 ]);
