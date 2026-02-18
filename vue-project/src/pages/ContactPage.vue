@@ -238,6 +238,11 @@ async function submit() {
   margin: 0;
 }
 
+@media (max-width: 568px) {
+  .form-row {
+    grid-template-columns: 1fr!important;
+  }
+}
 @media (max-width: 768px) {
   .contact-hero {
     padding: 48px 16px 28px;
@@ -256,7 +261,7 @@ async function submit() {
   }
 
   .form-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 12px;
   }
 

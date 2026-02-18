@@ -96,9 +96,9 @@ import Footer from "@/components/layout/Footer.vue";
 const { t, locale } = useI18n();
 const route = useRoute();
 
-const validTabs = ["organizer", "invitation", "gallery"];
+const validTabs = ["invitation", "gallery"];
 const queryTab = route.query.tab;
-const initialTab = validTabs.includes(queryTab) ? queryTab : "organizer";
+const initialTab = validTabs.includes(queryTab) ? queryTab : "invitation";
 
 const activeTab = ref(initialTab);
 const packages = ref([]);
