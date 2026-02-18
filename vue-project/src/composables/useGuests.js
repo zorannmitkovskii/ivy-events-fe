@@ -3,6 +3,7 @@ import { guestsService } from "@/services/guests.service";
 import { tablesService } from "@/services/tables.service";
 import { getDemoGuests } from "@/demo/guests.demo";
 import { onboardingStore } from "@/store/onboarding.store";
+import { checkDraftLimit } from "@/utils/draftLimits";
 
 /**
  * Maps a BE guest DTO to the UI model used by GuestsTable / GuestsTableRow.
@@ -146,6 +147,11 @@ export function useGuests() {
   };
 
   const addGuest = async (payload) => {
+    const limitHit = checkDraftLimit("guests", rawList.value.length);
+    if (limitHit) {
+      error.value = `Draft limit: maximum ${limitHit.limit} guests. Upgrade your plan to add more.`;
+      return;
+    }
     if (isDemo.value) {
       const id = `demo-${Date.now()}`;
       const guest = {

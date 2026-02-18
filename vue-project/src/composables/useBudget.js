@@ -1,6 +1,7 @@
 import { ref, computed } from "vue";
 import { budgetsService } from "@/services/budgets.service";
 import { onboardingStore } from "@/store/onboarding.store";
+import { checkDraftLimit } from "@/utils/draftLimits";
 import { BUDGET_CATEGORIES } from "@/enums/BudgetCategory";
 
 export function useBudget() {
@@ -52,6 +53,11 @@ export function useBudget() {
   }
 
   async function createExpense(payload) {
+    const totalExpenses = categories.value.reduce((sum, c) => sum + (c.expenses?.length || 0), 0);
+    const limitHit = checkDraftLimit("budgetItems", totalExpenses);
+    if (limitHit) {
+      throw new Error(`Draft limit: maximum ${limitHit.limit} budget items. Upgrade your plan to add more.`);
+    }
     await budgetsService.createExpense({
       budgetId: budgetId.value,
       category: payload.category,

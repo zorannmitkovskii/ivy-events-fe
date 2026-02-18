@@ -38,10 +38,10 @@
           v-for="pkg in packages"
           :key="pkg.id"
           class="package-card"
-          :class="{ featured: pkg.packageType === 'INV_PRO' || pkg.packageType === 'IVY_PREMIUM' }"
+          :class="{ featured: pkg.packageType === 'INV_PRO' }"
         >
           <span
-            v-if="pkg.packageType === 'INV_PRO' || pkg.packageType === 'IVY_PREMIUM'"
+            v-if="pkg.packageType === 'INV_PRO'"
             class="badge-popular"
           >
             {{ $t("packages.popular") }}
@@ -116,7 +116,6 @@ const tabs = computed(() => [
 ]);
 
 const TAB_CATEGORY_MAP = {
-  organizer: "ORGANIZER",
   invitation: "WEDDING",
   gallery: "GALLERY",
 };

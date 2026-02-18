@@ -1,6 +1,7 @@
 import { ref, computed } from "vue";
 import { tasksService } from "@/services/tasks.service";
 import { onboardingStore } from "@/store/onboarding.store";
+import { checkDraftLimit } from "@/utils/draftLimits";
 
 export function useTasks() {
   const eventId = computed(() => onboardingStore.eventId);
@@ -26,6 +27,10 @@ export function useTasks() {
   }
 
   async function createTask(payload) {
+    const limitHit = checkDraftLimit("tasks", tasks.value.length);
+    if (limitHit) {
+      throw new Error(`Draft limit: maximum ${limitHit.limit} tasks. Upgrade your plan to add more.`);
+    }
     const created = await tasksService.create({ ...payload, eventId: eventId.value });
     tasks.value.push(created);
     return created;
