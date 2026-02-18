@@ -10,6 +10,7 @@
       :icon="item.icon"
       :chipClass="item.chipClass"
       :selected="item.id === modelValue"
+      :disabled="!!item.disabled"
       @select="$emit('update:modelValue', item.id)"
     />
   </div>

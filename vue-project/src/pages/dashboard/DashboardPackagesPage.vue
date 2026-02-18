@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { packageService } from "@/services/package.service";
 import { onboardingStore } from "@/store/onboarding.store";
+import publicApi from "@/services/backendApi";
 import CpayButton from "@/components/payment/CpayButton.vue";
 import PricingFeature from "@/components/cards/PricingFeature.vue";
 
@@ -15,6 +16,12 @@ const error = ref(null);
 const eventId = computed(() => onboardingStore.eventId);
 const category = computed(() => onboardingStore.selectedCategory || "WEDDING");
 
+// Discount code state
+const discountCode = ref("");
+const discountLoading = ref(false);
+const discountResult = ref(null); // { valid, message, discountPercent, promotionName }
+const discountError = ref(null);
+
 function localized(i18nObj, fallback) {
   if (!i18nObj) return fallback || "";
   return i18nObj[locale.value] || i18nObj.en || fallback || "";
@@ -25,6 +32,36 @@ function formatPrice(price, currency) {
   const num = Number(price);
   const formatted = Number.isInteger(num) ? num.toString() : num.toFixed(2);
   return `${formatted} ${currency || "MKD"}`;
+}
+
+function getDisplayPrice(pkg) {
+  const base = pkg.currentPrice ?? pkg.price;
+  if (!discountResult.value?.valid || !discountResult.value.discountPercent) return base;
+  return Math.round(base * (1 - discountResult.value.discountPercent / 100));
+}
+
+async function validateDiscount() {
+  if (!discountCode.value.trim()) return;
+  discountLoading.value = true;
+  discountError.value = null;
+  discountResult.value = null;
+  try {
+    const res = await publicApi.post("/public/discounts/validate", { code: discountCode.value.trim() });
+    discountResult.value = res.data;
+    if (!res.data.valid) {
+      discountError.value = res.data.message || t("packages.invalidCode");
+    }
+  } catch (e) {
+    discountError.value = e?.response?.data?.message || t("packages.invalidCode");
+  } finally {
+    discountLoading.value = false;
+  }
+}
+
+function clearDiscount() {
+  discountCode.value = "";
+  discountResult.value = null;
+  discountError.value = null;
 }
 
 async function fetchPackages() {
@@ -64,16 +101,43 @@ onMounted(fetchPackages);
       <div class="empty-title">{{ t("packages.empty") }}</div>
     </div>
 
-    <!-- Package Cards -->
-    <div v-else class="packages-grid">
+    <template v-else>
+      <!-- Discount Code -->
+      <div class="discount-section">
+        <div class="discount-input-row">
+          <input
+            v-model="discountCode"
+            type="text"
+            class="discount-input"
+            :placeholder="t('packages.codePh')"
+            :disabled="discountLoading"
+            @keydown.enter.prevent="validateDiscount"
+          />
+          <button
+            class="discount-btn"
+            :disabled="!discountCode.trim() || discountLoading"
+            @click="validateDiscount"
+          >
+            {{ discountLoading ? t('packages.validating') : t('packages.applyCode') }}
+          </button>
+        </div>
+        <div v-if="discountResult?.valid" class="discount-success">
+          <span>{{ discountResult.promotionName }} &mdash; -{{ discountResult.discountPercent }}%</span>
+          <button class="discount-clear" @click="clearDiscount">&times;</button>
+        </div>
+        <div v-if="discountError" class="discount-error">{{ discountError }}</div>
+      </div>
+
+      <!-- Package Cards -->
+      <div class="packages-grid">
       <div
         v-for="pkg in packages"
         :key="pkg.id"
         class="package-card"
-        :class="{ featured: pkg.packageType === 'INV_PRO' }"
+        :class="{ featured: pkg.packageType === 'INV_PRO' || pkg.packageType === 'GALLERY_PREMIUM' }"
       >
         <span
-          v-if="pkg.packageType === 'INV_PRO'"
+          v-if="pkg.packageType === 'INV_PRO' || pkg.packageType === 'GALLERY_PREMIUM'"
           class="badge-popular"
         >
           {{ t("packages.popular") }}
@@ -85,7 +149,12 @@ onMounted(fetchPackages);
         </p>
 
         <div class="package-price">
-          <template v-if="pkg.activeDiscount && pkg.discount">
+          <template v-if="discountResult?.valid && discountResult.discountPercent">
+            <span class="price-old">{{ formatPrice(pkg.currentPrice ?? pkg.price, pkg.currency) }}</span>
+            <span class="price-amount">{{ formatPrice(getDisplayPrice(pkg), pkg.currency) }}</span>
+            <span class="price-badge">-{{ discountResult.discountPercent }}%</span>
+          </template>
+          <template v-else-if="pkg.activeDiscount && pkg.discount">
             <span class="price-old">{{ formatPrice(pkg.price, pkg.currency) }}</span>
             <span class="price-amount">{{ formatPrice(pkg.currentPrice, pkg.currency) }}</span>
             <span class="price-badge">-{{ pkg.discount }}%</span>
@@ -111,7 +180,8 @@ onMounted(fetchPackages);
           variant="gold"
         />
       </div>
-    </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -252,6 +322,89 @@ onMounted(fetchPackages);
   margin: 8px 0 12px;
   width: 100%;
   text-align: left;
+}
+
+/* ---- Discount Code ---- */
+.discount-section {
+  background: #fff;
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 18px 24px;
+}
+
+.discount-input-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.discount-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--neutral-300, #ddd);
+  border-radius: var(--radius-md, 8px);
+  font-size: 14px;
+  background: var(--bg-main, #f8f6f1);
+  color: var(--neutral-900);
+  max-width: 320px;
+}
+
+.discount-input:focus {
+  outline: none;
+  border-color: var(--brand-gold, #C8A24D);
+  box-shadow: 0 0 0 2px rgba(200, 162, 77, 0.15);
+}
+
+.discount-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-md, 8px);
+  background: var(--brand-gold, #c8a24d);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+}
+
+.discount-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.discount-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.discount-success {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-radius: var(--radius-md, 8px);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.discount-clear {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #2e7d32;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.discount-error {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #c62828;
 }
 
 /* ---- Responsive ---- */

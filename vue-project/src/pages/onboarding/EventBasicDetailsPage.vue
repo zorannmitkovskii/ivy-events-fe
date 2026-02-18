@@ -8,7 +8,7 @@
       </div>
 
       <form class="form" @submit.prevent="onCreate">
-        <div class="grid">
+        <div v-if="!isGallery" class="grid">
           <AuthInput
             v-model="brideName"
             :label="$t('onboarding.eventBasics.fields.brideName')"
@@ -97,6 +97,7 @@ import { onboardingStore, setEventDetails, setEventId } from '@/store/onboarding
 import { eventsService } from '@/services/events.service';
 import { getUsername } from '@/services/auth.service';
 import { INVITATION_REGISTRY } from '@/data/invitationRegistry';
+import { EventCategoryEnum } from '@/enums/EventCategory.js';
 
 const router = useRouter();
 const route = useRoute();
@@ -115,7 +116,13 @@ const location = ref({
 const loading = ref(false);
 const error = ref('');
 
-const canSubmit = computed(() => (brideName.value.trim() || groomName.value.trim()) && !!onboardingStore.selectedCategory);
+const isGallery = computed(() => onboardingStore.selectedCategory === EventCategoryEnum.GALLERY);
+
+const canSubmit = computed(() => {
+  if (!onboardingStore.selectedCategory) return false;
+  if (isGallery.value) return true;
+  return !!(brideName.value.trim() || groomName.value.trim());
+});
 
 function composeEventName() {
   const b = brideName.value.trim();
@@ -123,6 +130,7 @@ function composeEventName() {
   if (b && g) return `${b} & ${g}`;
   if (b) return b;
   if (g) return g;
+  if (isGallery.value) return 'My Gallery';
   return 'New Event';
 }
 
@@ -176,6 +184,12 @@ async function createEventAndNavigate() {
     const eventId = res?.id || res?.eventId;
     setEventId(eventId);
 
+    // GALLERY events skip the invitation step entirely
+    if (isGallery.value) {
+      router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
+      return;
+    }
+
     // Pre-selected invitation from guest browsing — save it and skip to dashboard
     if (onboardingStore.invitationName) {
       const allInvitations = Object.values(INVITATION_REGISTRY).flat();
@@ -205,6 +219,10 @@ function onCreate() {
 
 function onSkip() {
   saveDetails();
+  if (isGallery.value) {
+    router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
+    return;
+  }
   router.push({ name: 'EventInvitationsPage', params: { lang: lang.value } });
 }
 </script>

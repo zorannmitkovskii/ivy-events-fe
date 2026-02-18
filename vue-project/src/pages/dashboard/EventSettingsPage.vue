@@ -139,21 +139,21 @@
         </div>
 
         <!-- Private Invitation URL -->
-        <div class="url-group">
-          <span class="url-label">{{ t("settings.privateInvitationUrl") }}</span>
-          <div class="url-box">
-            <span class="url-text">{{ form.privateInvitationUrl || "—" }}</span>
-            <button
-              v-if="form.privateInvitationUrl"
-              class="copy-btn"
-              type="button"
-              @click="copyToClipboard(form.privateInvitationUrl, 'private')"
-            >
-              <i :class="copiedField === 'private' ? 'bi bi-check-lg' : 'bi bi-clipboard'"></i>
-              {{ copiedField === 'private' ? t("settings.copied") : t("settings.copy") }}
-            </button>
-          </div>
-        </div>
+<!--        <div class="url-group">-->
+<!--          <span class="url-label">{{ t("settings.privateInvitationUrl") }}</span>-->
+<!--          <div class="url-box">-->
+<!--            <span class="url-text">{{ form.privateInvitationUrl || "—" }}</span>-->
+<!--            <button-->
+<!--              v-if="form.privateInvitationUrl"-->
+<!--              class="copy-btn"-->
+<!--              type="button"-->
+<!--              @click="copyToClipboard(form.privateInvitationUrl, 'private')"-->
+<!--            >-->
+<!--              <i :class="copiedField === 'private' ? 'bi bi-check-lg' : 'bi bi-clipboard'"></i>-->
+<!--              {{ copiedField === 'private' ? t("settings.copied") : t("settings.copy") }}-->
+<!--            </button>-->
+<!--          </div>-->
+<!--        </div>-->
 
         <!-- Gallery URL -->
         <div class="url-group">
@@ -173,7 +173,19 @@
           </div>
         </div>
 
-        <div class="invitation-actions">
+        <!-- QR Code for Gallery URL -->
+        <div v-if="form.galleryUrl" class="qr-group">
+          <span class="url-label">{{ t("settings.galleryQrCode") }}</span>
+          <p class="url-hint">{{ t("settings.galleryQrCodeDesc") }}</p>
+          <div class="qr-box">
+            <canvas ref="qrCanvas" class="qr-canvas"></canvas>
+          </div>
+          <ButtonMain variant="main" @click="downloadQrCode" style="margin-top: 10px">
+            {{ t("settings.downloadQrCode") }}
+          </ButtonMain>
+        </div>
+
+        <div v-if="!isGallery" class="invitation-actions">
           <ButtonMain variant="main" @click="goToInvitations">
             {{ t("settings.changeInvitation") }}
           </ButtonMain>
@@ -193,7 +205,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, nextTick, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { eventsService } from "@/services/events.service";
@@ -215,6 +227,32 @@ const saveError = ref(null);
 const copiedField = ref(null);
 
 const eventId = ref(onboardingStore.eventId);
+const qrCanvas = ref(null);
+
+const isGallery = computed(() => onboardingStore.selectedCategory === EventCategoryEnum.GALLERY);
+
+async function renderQrCode() {
+  await nextTick();
+  if (!qrCanvas.value || !form.value?.galleryUrl) return;
+  try {
+    const QRCode = await import("qrcode");
+    await QRCode.toCanvas(qrCanvas.value, form.value.galleryUrl, {
+      width: 200,
+      margin: 2,
+      color: { dark: "#2f3e36", light: "#ffffff" }
+    });
+  } catch (e) {
+    console.error("QR render failed", e);
+  }
+}
+
+function downloadQrCode() {
+  if (!qrCanvas.value) return;
+  const link = document.createElement("a");
+  link.download = "gallery-qr-code.png";
+  link.href = qrCanvas.value.toDataURL("image/png");
+  link.click();
+}
 
 function buildForm(ev) {
   const loc = ev.location || {};
@@ -272,6 +310,7 @@ async function loadEvent() {
       };
       event.value = demo;
       form.value = buildForm(demo);
+      renderQrCode();
       return;
     }
 
@@ -285,6 +324,8 @@ async function loadEvent() {
       const match = Object.values(EventCategoryEnum).find(v => v === upper);
       setSelectedCategory(match || cat);
     }
+
+    renderQrCode();
   } catch (e) {
     error.value = e?.message || "Failed to load event";
   } finally {
@@ -616,6 +657,24 @@ onMounted(loadEvent);
 
 .invitation-actions {
   margin-top: 16px;
+}
+
+.qr-group {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.qr-box {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-md);
+}
+
+.qr-canvas {
+  display: block;
 }
 
 /* Danger zone */

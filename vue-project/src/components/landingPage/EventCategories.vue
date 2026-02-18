@@ -37,13 +37,14 @@ const selectedId = computed({
 
 const categories = [
   { id: "weddings", titleKey: "eventCategories.items.weddings.title", descriptionKey: "eventCategories.items.weddings.description", icon: "💍", chipClass: "chip-pink", to: "/invitations/weddings" },
-  { id: "birthdays", titleKey: "eventCategories.items.birthdaysParties.title", descriptionKey: "eventCategories.items.birthdaysParties.description", icon: "🎂", chipClass: "chip-peach", to: "/invitations/birthdays" },
-  { id: "corporate", titleKey: "eventCategories.items.corporate.title", descriptionKey: "eventCategories.items.corporate.description", icon: "💼", chipClass: "chip-gold", to: "/invitations/corporate" },
-  { id: "conferences", titleKey: "eventCategories.items.conferences.title", descriptionKey: "eventCategories.items.conferences.description", icon: "👥", chipClass: "chip-green", to: "/invitations/conferences" },
-  { id: "dinners", titleKey: "eventCategories.items.privateDinners.title", descriptionKey: "eventCategories.items.privateDinners.description", icon: "🍽️", chipClass: "chip-blue", to: "/invitations/dinners" },
-  { id: "baby", titleKey: "eventCategories.items.babyShowers.title", descriptionKey: "eventCategories.items.babyShowers.description", icon: "👶", chipClass: "chip-purple", to: "/invitations/baby" },
-  { id: "graduations", titleKey: "eventCategories.items.graduations.title", descriptionKey: "eventCategories.items.graduations.description", icon: "🎓", chipClass: "chip-yellow", to: "/invitations/graduations" },
-  { id: "anniversaries", titleKey: "eventCategories.items.anniversaries.title", descriptionKey: "eventCategories.items.anniversaries.description", icon: "❤️", chipClass: "chip-pink", to: "/invitations/anniversaries" }
+  { id: "gallery", titleKey: "eventCategories.items.gallery.title", descriptionKey: "eventCategories.items.gallery.description", icon: "📷", chipClass: "chip-blue" },
+  { id: "birthdays", titleKey: "eventCategories.items.birthdaysParties.title", descriptionKey: "eventCategories.items.birthdaysParties.description", icon: "🎂", chipClass: "chip-peach", to: "/invitations/birthdays", disabled: true },
+  { id: "corporate", titleKey: "eventCategories.items.corporate.title", descriptionKey: "eventCategories.items.corporate.description", icon: "💼", chipClass: "chip-gold", to: "/invitations/corporate", disabled: true },
+  { id: "conferences", titleKey: "eventCategories.items.conferences.title", descriptionKey: "eventCategories.items.conferences.description", icon: "👥", chipClass: "chip-green", to: "/invitations/conferences", disabled: true },
+  { id: "dinners", titleKey: "eventCategories.items.privateDinners.title", descriptionKey: "eventCategories.items.privateDinners.description", icon: "🍽️", chipClass: "chip-blue", to: "/invitations/dinners", disabled: true },
+  { id: "baby", titleKey: "eventCategories.items.babyShowers.title", descriptionKey: "eventCategories.items.babyShowers.description", icon: "👶", chipClass: "chip-purple", to: "/invitations/baby", disabled: true },
+  { id: "graduations", titleKey: "eventCategories.items.graduations.title", descriptionKey: "eventCategories.items.graduations.description", icon: "🎓", chipClass: "chip-yellow", to: "/invitations/graduations", disabled: true },
+  { id: "anniversaries", titleKey: "eventCategories.items.anniversaries.title", descriptionKey: "eventCategories.items.anniversaries.description", icon: "❤️", chipClass: "chip-pink", to: "/invitations/anniversaries", disabled: true }
 ];
 </script>
 
