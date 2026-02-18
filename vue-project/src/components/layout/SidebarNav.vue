@@ -22,7 +22,7 @@
       />
     </nav>
 
-    <div class="sidebar-actions">
+    <div v-if="!isGallery" class="sidebar-actions">
       <button class="sidebar-action-btn" @click="goToGuests">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
         {{ t("sidebar.addGuest") }}
@@ -54,6 +54,7 @@ import SidebarAccount from "@/components/sidebar/SidebarAccount.vue";
 import { Icons } from "@/utils/icons.js";
 import { getFullName, logout } from "@/services/auth.service";
 import { onboardingStore, clearOnboarding } from "@/store/onboarding.store";
+import { EventCategoryEnum } from "@/enums/EventCategory.js";
 
 
 defineEmits(["close", "navigate"]);
@@ -71,20 +72,30 @@ const isActive = (section) => {
   return String(route.path || "").includes(p);
 };
 
-// ✅ You can later load this from BE or feature flags
-const navItems = computed(() => [
+const isGallery = computed(() => onboardingStore.selectedCategory === EventCategoryEnum.GALLERY);
+
+const GALLERY_NAV_KEYS = ['overview', 'gallery', 'packages', 'settings'];
+
+const allNavItems = [
   { key: "overview", path: "overview", labelKey: "sidebar.overview", icon: Icons.grid },
   { key: "guests", path: "guests", labelKey: "sidebar.guests", icon: Icons.users },
-  { key: "tasks", path: "tasks", labelKey: "sidebar.tasks", icon: Icons.check },     // add route later if needed
-  { key: "budget", path: "budget", labelKey: "sidebar.budget", icon: Icons.card },  // add route later if needed
+  { key: "tasks", path: "tasks", labelKey: "sidebar.tasks", icon: Icons.check },
+  { key: "budget", path: "budget", labelKey: "sidebar.budget", icon: Icons.card },
   { key: "tables", path: "tables", labelKey: "sidebar.seating", icon: Icons.grid2 },
   { key: "agenda", path: "agenda", labelKey: "sidebar.agenda", icon: Icons.calendar },
   { key: "gallery", path: "gallery", labelKey: "sidebar.gallery", icon: Icons.image },
   { key: "our-story", path: "our-story", labelKey: "sidebar.ourStory", icon: Icons.heart },
   { key: "wedding-details", path: "wedding-details", labelKey: "sidebar.weddingDetails", icon: Icons.clipboardList },
-  // { key: "team", path: "team", labelKey: "sidebar.team", icon: Icons.userPlus, badge: "sidebar.premium" },
+  { key: "packages", path: "packages", labelKey: "sidebar.packages", icon: Icons.package },
   { key: "settings", path: "settings", labelKey: "sidebar.settings", icon: Icons.settings }
-]);
+];
+
+const navItems = computed(() => {
+  if (isGallery.value) {
+    return allNavItems.filter(it => GALLERY_NAV_KEYS.includes(it.key));
+  }
+  return allNavItems;
+});
 
 const router = useRouter();
 

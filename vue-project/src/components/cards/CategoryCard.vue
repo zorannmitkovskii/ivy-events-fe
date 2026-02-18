@@ -1,13 +1,14 @@
 <template>
   <article
     class="category-card"
-    :class="{ 'is-selected': selected }"
+    :class="{ 'is-selected': selected, 'is-disabled': disabled }"
     role="button"
-    tabindex="0"
-    @click="$emit('select')"
-    @keydown.enter.prevent="$emit('select')"
-    @keydown.space.prevent="$emit('select')"
+    :tabindex="disabled ? -1 : 0"
+    @click="!disabled && $emit('select')"
+    @keydown.enter.prevent="!disabled && $emit('select')"
+    @keydown.space.prevent="!disabled && $emit('select')"
   >
+    <span v-if="disabled" class="coming-soon-badge">{{ $t('eventCategories.comingSoon') }}</span>
     <div class="icon-chip" :class="chipClass">
       <span class="icon-emoji" aria-hidden="true">{{ icon }}</span>
     </div>
@@ -28,8 +29,8 @@ defineProps({
   icon: { type: String, required: true },
   chipClass: { type: String, default: "" },
 
-  // NEW
-  selected: { type: Boolean, default: false }
+  selected: { type: Boolean, default: false },
+  disabled: { type: Boolean, default: false }
 });
 </script>
 
@@ -104,6 +105,27 @@ defineProps({
   color: var(--neutral-700);
   font-size: 14px;
   line-height: 1.5;
+}
+
+/* Disabled / Coming Soon */
+.category-card.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.coming-soon-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--neutral-200, #e5e7eb);
+  color: var(--neutral-600, #4b5563);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 10px;
+  border-radius: 20px;
 }
 
 /* chips */

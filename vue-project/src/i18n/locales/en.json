@@ -171,6 +171,7 @@
       "babyShowers": "Baby Showers",
       "graduations": "Graduations",
       "anniversaries": "Anniversaries",
+      "gallery": "Photo Gallery",
       "about": "About Us",
       "terms": "Terms & Conditions",
       "contact": "Contact"
@@ -225,8 +226,13 @@
       "anniversaries": {
         "title": "Anniversaries",
         "description": "Honor years of love"
+      },
+      "gallery": {
+        "title": "Photo Gallery",
+        "description": "Share event photos with guests"
       }
-    }
+    },
+    "comingSoon": "Coming Soon"
   },
   "weddingsPage": {
     "templates": {
@@ -782,6 +788,7 @@
     "ourStory": "Our Story",
     "weddingDetails": "Wedding Details",
     "team": "Team",
+    "packages": "Packages",
     "settings": "Settings",
     "support": "Support",
     "premium": "PREMIUM",
@@ -1082,6 +1089,9 @@
     "copy": "Copy",
     "copied": "Copied!",
     "changeInvitation": "Change Invitation",
+    "galleryQrCode": "Gallery QR Code",
+    "galleryQrCodeDesc": "Guests can scan this QR code to access the gallery and upload photos.",
+    "downloadQrCode": "Download QR Code",
     "displayOptions": "Display Options",
     "dangerZone": "Danger Zone",
     "archiveDesc": "Archiving this event will hide it from your dashboard. This action can be reversed later.",
@@ -1118,11 +1128,15 @@
     "choose": "Get Started",
     "popular": "Popular",
     "empty": "No packages available in this category yet.",
-    "loadError": "Failed to load packages. Please try again."
+    "loadError": "Failed to load packages. Please try again.",
+    "codePh": "Enter discount code",
+    "applyCode": "Apply",
+    "validating": "Validating...",
+    "invalidCode": "Invalid discount code"
   },
   "about": {
     "title": "About Us",
-    "heroSubtitle": "We're building the future of event planning — beautiful, simple, and accessible to everyone.",
+    "heroSubtitle": "We're building the future of event planning beautiful, simple, and accessible to everyone.",
     "missionTitle": "Our Mission",
     "missionText": "To empower individuals and professionals to create unforgettable events with elegant digital tools that save time and delight guests.",
     "visionTitle": "Our Vision",
@@ -1131,7 +1145,7 @@
     "valueSimplicity": "Simplicity",
     "valueSimplicityDesc": "We believe great tools should be intuitive and joyful to use.",
     "valueElegance": "Elegance",
-    "valueEleganceDesc": "Every detail matters — from invitations to the last dance.",
+    "valueEleganceDesc": "Every detail matters from invitations to the last dance.",
     "valueInclusion": "Inclusion",
     "valueInclusionDesc": "Beautiful events for every culture, budget, and celebration."
   },

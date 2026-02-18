@@ -16,7 +16,8 @@ export const CATEGORY_ID_TO_ENUM = {
   'dinners': EventCategoryEnum.DINNER,
   'baby': EventCategoryEnum.BABY_SHOWER,
   'graduations': EventCategoryEnum.GRADUATION,
-  'anniversaries': EventCategoryEnum.ANNIVERSARY
+  'anniversaries': EventCategoryEnum.ANNIVERSARY,
+  'gallery': EventCategoryEnum.GALLERY
 };
 
 /**
@@ -30,7 +31,8 @@ export const ENUM_TO_CATEGORY_ID = {
   [EventCategoryEnum.DINNER]: 'dinners',
   [EventCategoryEnum.BABY_SHOWER]: 'baby',
   [EventCategoryEnum.GRADUATION]: 'graduations',
-  [EventCategoryEnum.ANNIVERSARY]: 'anniversaries'
+  [EventCategoryEnum.ANNIVERSARY]: 'anniversaries',
+  [EventCategoryEnum.GALLERY]: 'gallery'
 };
 
 /**

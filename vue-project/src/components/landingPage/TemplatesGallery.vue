@@ -58,12 +58,6 @@ const templates = computed(() => [
     title: t('home.templates.items.corporate.title'),
     subtitle: t('home.templates.items.corporate.subtitle'),
     useTo: { name: 'coastalBreeze', params: { lang: lang.value } }
-  },
-  {
-    image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&h=900&fit=crop",
-    title: t('home.templates.items.babyShower.title'),
-    subtitle: t('home.templates.items.babyShower.subtitle'),
-    useTo: { name: 'sunsetGlass', params: { lang: lang.value } }
   }
 ]);
 </script>

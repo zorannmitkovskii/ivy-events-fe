@@ -113,6 +113,7 @@ const categoryItems = [
   { enumValue: EventCategoryEnum.BABY_SHOWER, labelKey: "header.menu.babyShowers" },
   { enumValue: EventCategoryEnum.GRADUATION, labelKey: "header.menu.graduations" },
   { enumValue: EventCategoryEnum.ANNIVERSARY, labelKey: "header.menu.anniversaries" },
+  { enumValue: EventCategoryEnum.GALLERY, labelKey: "header.menu.gallery" },
 ];
 
 function mobileRoute(path) {

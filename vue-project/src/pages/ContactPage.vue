@@ -240,19 +240,48 @@ async function submit() {
 
 @media (max-width: 768px) {
   .contact-hero {
-    padding: 48px 20px 36px;
+    padding: 48px 16px 28px;
   }
 
   .contact-hero__title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
+  }
+
+  .contact-hero__subtitle {
+    font-size: 0.9375rem;
   }
 
   .contact-section {
-    padding: 36px 20px;
+    padding: 28px 16px 48px;
   }
 
   .form-row {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .contact-form {
+    gap: 14px;
+  }
+
+  .input {
+    padding: 12px 14px;
+    font-size: 16px;
+  }
+
+  .textarea {
+    min-height: 140px;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 14px 28px;
+    font-size: 16px;
+    align-self: stretch;
+  }
+
+  .success-card {
+    padding: 36px 20px;
   }
 }
 </style>

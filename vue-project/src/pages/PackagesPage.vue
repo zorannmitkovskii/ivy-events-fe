@@ -118,13 +118,11 @@ function formatPrice(price, currency) {
 }
 
 const tabs = computed(() => [
-  { key: "organizer", label: t("packages.tabs.organizer") },
   { key: "invitation", label: t("packages.tabs.invitation") },
   { key: "gallery", label: t("packages.tabs.gallery") },
 ]);
 
 const TAB_CATEGORY_MAP = {
-  organizer: "ORGANIZER",
   invitation: "WEDDING",
   gallery: "GALLERY",
 };
