@@ -1,5 +1,11 @@
 <template>
   <div class="parisian-wedding">
+    <!-- Loading overlay -->
+    <div v-if="loading" class="loading-overlay">
+      <div class="loading-spinner"></div>
+    </div>
+
+    <div v-show="!loading">
     <!-- Hero -->
     <HeroSection
       :bride-name="config.brideName"
@@ -7,6 +13,7 @@
       :wedding-date="config.weddingDate"
       :invite-text="config.inviteText"
       :location="config.location"
+      :map-url="config.heroMapUrl"
       :photo-url="config.heroPhotoUrl"
       :cta-label="config.ctaLabel"
     />
@@ -158,13 +165,15 @@
     <footer class="footer">
       <p class="footer-text">{{ config.brideName.charAt(0) }} & {{ config.groomName.charAt(0) }} &copy; 2024</p>
     </footer>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
+import { useInvitationData } from '@/composables/useInvitationData';
 import HeroSection from '@/components/invitations/wedding/ParisianWedding/HeroSection.vue';
 import OurStorySection from '@/components/invitations/wedding/ParisianWedding/OurStorySection.vue';
 import AgendaTimeline from '@/components/invitations/wedding/ParisianWedding/AgendaTimeline.vue';
@@ -173,7 +182,7 @@ import RsvpForm from '@/components/invitations/shared/RsvpForm.vue';
 
 const route = useRoute();
 const router = useRouter();
-const eventId = route.query.eventId;
+const { eventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
 
 const palette = {
   blush50: '#fdf2f2',
@@ -203,6 +212,7 @@ const config = reactive({
   weddingDateTime: '2024-06-24T15:00:00',
   inviteText: 'You are invited to the wedding of',
   location: 'Paris, France',
+  heroMapUrl: '',
   ctaLabel: 'RSVP',
   heroPhotoUrl: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=2070&q=80',
 
@@ -232,7 +242,81 @@ const config = reactive({
   rsvpDeadline: 'May 1st',
 });
 
-onMounted(() => {
+function applyBackendData(data) {
+  const ev = data.event;
+  if (!ev) return;
+
+  if (ev.coupleNames?.bride) config.brideName = ev.coupleNames.bride;
+  if (ev.coupleNames?.groom) config.groomName = ev.coupleNames.groom;
+  if (ev.heroImageUrl) config.heroPhotoUrl = ev.heroImageUrl;
+
+  if (ev.date) {
+    config.weddingDateTime = ev.date;
+    config.weddingDate = formatDate(ev.date);
+  }
+
+  const subtitle = localized(ev.messageI18n, ev.message);
+  if (subtitle) config.inviteText = subtitle;
+
+  if (data.location) {
+    const loc = data.location;
+    const locationStr = [loc.city, loc.country].filter(Boolean).join(', ')
+      || loc.venueName || loc.address || '';
+    if (locationStr) config.location = locationStr;
+    const mapUrl = loc.mapUrl
+      || (loc.latitude != null && loc.longitude != null
+        ? `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`
+        : '');
+    if (mapUrl) config.heroMapUrl = mapUrl;
+  }
+
+  // Wedding details → ceremony/reception
+  if (Array.isArray(data.weddingDetails) && data.weddingDetails.length) {
+    const sorted = [...data.weddingDetails].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+    sorted.forEach((d) => {
+      const title = localized(d.titleI18n, d.title);
+      const desc = localized(d.descriptionI18n, d.description);
+      if (d.icon === 'church' || title?.toLowerCase().includes('ceremon')) {
+        if (d.startTime) config.ceremonyTime = d.startTime;
+        if (desc) config.ceremonyAddress = desc;
+        if (d.location?.mapUrl) config.ceremonyMapUrl = d.location.mapUrl;
+      } else if (d.icon === 'party' || title?.toLowerCase().includes('recept')) {
+        if (d.startTime) config.receptionTime = d.startTime;
+        if (desc) config.receptionAddress = desc;
+        if (d.location?.mapUrl) config.receptionMapUrl = d.location.mapUrl;
+      }
+    });
+  }
+
+  // Agenda
+  if (Array.isArray(data.agenda) && data.agenda.length) {
+    config.agendaEvents = [...data.agenda]
+      .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
+      .map((a) => ({
+        time: a.startTime || '',
+        title: localized(a.titleI18n, a.title),
+        venue: localized(a.descriptionI18n, a.description),
+        description: localized(a.descriptionI18n, a.description),
+      }));
+  }
+
+  // Our Story → paragraphs
+  if (Array.isArray(data.ourStory) && data.ourStory.length) {
+    config.storyParagraphs = data.ourStory.map((s) =>
+      localized(s.descriptionI18n, s.description)
+    );
+    if (Array.isArray(data.ourStoryImages) && data.ourStoryImages.length) {
+      config.storyImageUrl = data.ourStoryImages[0];
+    } else {
+      const firstImg = data.ourStory.find((s) => s.imageUrl);
+      if (firstImg) config.storyImageUrl = firstImg.imageUrl;
+    }
+  }
+
+  if (ev.rsvpDeadline) config.rsvpDeadline = formatDate(ev.rsvpDeadline);
+}
+
+onMounted(async () => {
   const fontLinks = [
     'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap',
     'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&display=swap',
@@ -245,6 +329,9 @@ onMounted(() => {
       document.head.appendChild(link);
     }
   });
+
+  const data = await fetchData();
+  if (data) applyBackendData(data);
 });
 
 async function onRsvpSubmit(payload) {
@@ -273,6 +360,28 @@ async function onRsvpSubmit(payload) {
   color: #374151;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Loading overlay */
+.loading-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #fdf2f2;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #dec69a;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 /* Sections */

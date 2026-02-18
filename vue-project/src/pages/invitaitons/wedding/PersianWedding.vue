@@ -14,6 +14,7 @@
       :subtitle="config.subtitle"
       :venue="config.venue"
       :location="config.location"
+      :map-url="config.heroMapUrl"
       :photo-url="config.heroPhotoUrl"
       :cta-label="config.ctaLabel"
       :accent-color="palette.pink"
@@ -211,11 +212,10 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed, onMounted } from 'vue';
+import { reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
-import { invitationPageService } from '@/services/invitationPage.service';
-import { onboardingStore } from '@/store/onboarding.store';
+import { useInvitationData } from '@/composables/useInvitationData';
 import HeroSection from '@/components/invitations/wedding/PersianWedding/HeroSection.vue';
 import OurStorySection from '@/components/invitations/wedding/PersianWedding/OurStorySection.vue';
 import DetailCard from '@/components/invitations/shared/DetailCard.vue';
@@ -225,15 +225,7 @@ import RsvpForm from '@/components/invitations/shared/RsvpForm.vue';
 
 const route = useRoute();
 const router = useRouter();
-const eventId = onboardingStore.eventId || route.query.eventId;
-const lang = computed(() => route.params.lang || 'mk');
-const loading = ref(!!eventId);
-const fetchError = ref(null);
-
-function localized(i18nObj, fallback) {
-  if (!i18nObj) return fallback || '';
-  return i18nObj[lang.value] || i18nObj.en || fallback || '';
-}
+const { eventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
 
 const palette = {
   pink: '#F9A8D4',
@@ -271,6 +263,7 @@ const config = reactive({
   location: 'Santa Barbara, California',
   ctaLabel: 'RSVP Now',
   heroPhotoUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=1000&fit=crop',
+  heroMapUrl: '',
 
   ceremonyDate: 'June 15, 2024',
   ceremonyTime: '4:00 PM',
@@ -314,19 +307,6 @@ const config = reactive({
   rsvpDeadline: 'May 1, 2024',
 });
 
-/* ---- helpers ---- */
-function formatDate(iso) {
-  if (!iso) return '';
-  const d = new Date(iso);
-  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-}
-
-function formatTime(iso) {
-  if (!iso) return '';
-  const d = new Date(iso);
-  return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-}
-
 const detailCardPalette = [
   { accent: palette.pink, bg: palette.pinkBg, iconBg: palette.pinkIcon },
   { accent: palette.purple, bg: palette.purpleBg, iconBg: palette.purpleIcon },
@@ -341,40 +321,20 @@ const iconMap = {
 
 /* ---- fetch & apply ---- */
 async function fetchInvitationData() {
-  if (!eventId) {
-    loading.value = false;
-    return;
-  }
-  loading.value = true;
-  try {
-    const data = await invitationPageService.getByEventId(eventId);
-    applyBackendData(data);
-  } catch (e) {
-    console.error('Failed to fetch invitation data:', e);
-    fetchError.value = e;
-  } finally {
-    loading.value = false;
-  }
+  const data = await fetchData();
+  if (data) applyBackendData(data);
 }
 
 function applyBackendData(data) {
   const ev = data.event;
   if (!ev) return;
 
-  // Couple names: prefer coupleNames.partner1/partner2, fall back to event.name split
-  const p1 = ev.coupleNames?.partner1;
-  const p2 = ev.coupleNames?.partner2;
-  if (p1 || p2) {
-    config.brideName = p1 || config.brideName;
-    config.groomName = p2 || config.groomName;
-  } else if (ev.name) {
-    const raw = typeof ev.name === 'string' ? ev.name : localized(ev.nameI18n, ev.name);
-    if (raw && raw.includes(' & ')) {
-      const parts = raw.split(' & ');
-      config.brideName = parts[0]?.trim() || config.brideName;
-      config.groomName = parts[1]?.trim() || config.groomName;
-    }
-  }
+  // Couple names
+  if (ev.coupleNames?.bride) config.brideName = ev.coupleNames.bride;
+  if (ev.coupleNames?.groom) config.groomName = ev.coupleNames.groom;
+
+  // Hero image
+  if (ev.heroImageUrl) config.heroPhotoUrl = ev.heroImageUrl;
 
   // Date
   if (ev.date) {
@@ -384,23 +344,27 @@ function applyBackendData(data) {
 
   // Subtitle
   const subtitle = localized(ev.messageI18n, ev.message);
-  if (subtitle) {
-    config.subtitle = subtitle;
-  }
+  if (subtitle) config.subtitle = subtitle;
 
   // Location
   if (data.location) {
-    if (data.location.venueName) {
-      config.venue = data.location.venueName;
-      config.venueName = data.location.venueName;
+    const loc = data.location;
+    if (loc.venueName) {
+      config.venue = loc.venueName;
+      config.venueName = loc.venueName;
     }
-    const addressParts = [data.location.city, data.location.country].filter(Boolean);
-    if (addressParts.length) {
-      config.location = addressParts.join(', ');
-      config.venueAddress = addressParts.join(', ');
+    const addressStr = [loc.city, loc.country].filter(Boolean).join(', ') || loc.address || '';
+    if (addressStr) {
+      config.location = addressStr;
+      config.venueAddress = addressStr;
     }
-    if (data.location.mapUrl) {
-      config.venueMapUrl = data.location.mapUrl;
+    const mapUrl = loc.mapUrl
+      || (loc.latitude != null && loc.longitude != null
+        ? `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`
+        : '');
+    if (mapUrl) {
+      config.venueMapUrl = mapUrl;
+      config.heroMapUrl = mapUrl;
     }
   }
 
@@ -412,7 +376,7 @@ function applyBackendData(data) {
         title: localized(d.titleI18n, d.title),
         description: localized(d.descriptionI18n, d.description),
         icon: d.icon || null,
-        mapUrl: d.mapUrl || null,
+        mapUrl: d.location?.mapUrl || null,
       }));
   }
 
@@ -431,20 +395,21 @@ function applyBackendData(data) {
   if (Array.isArray(data.ourStory) && data.ourStory.length) {
     config.stories = data.ourStory.map((s) => ({
       title: localized(s.titleI18n, s.title),
-      text: localized(s.textI18n, s.text),
+      text: localized(s.descriptionI18n, s.description),
     }));
-    const photos = data.ourStory
-      .filter((s) => s.imageUrl)
-      .map((s) => ({ url: s.imageUrl, alt: localized(s.titleI18n, s.title) }));
-    if (photos.length) {
-      config.storyPhotos = photos;
+    const imgSources = Array.isArray(data.ourStoryImages) && data.ourStoryImages.length
+      ? data.ourStoryImages
+      : data.ourStory.filter((s) => s.imageUrl).map((s) => s.imageUrl);
+    if (imgSources.length) {
+      config.storyPhotos = imgSources.map((url, i) => ({
+        url,
+        alt: 'Our Story ' + (i + 1),
+      }));
     }
   }
 
   // RSVP deadline
-  if (data.event?.rsvpDeadline) {
-    config.rsvpDeadline = formatDate(data.event.rsvpDeadline);
-  }
+  if (ev.rsvpDeadline) config.rsvpDeadline = formatDate(ev.rsvpDeadline);
 }
 
 onMounted(() => {

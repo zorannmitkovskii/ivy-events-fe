@@ -680,6 +680,7 @@
     "title": "Our Story",
     "subtitle": "Share the story of your journey together",
     "addStory": "Add Story",
+    "addImages": "Add Images",
     "emptyTitle": "No stories yet",
     "emptyMessage": "Add your first story to share your journey with guests.",
     "totalItems": "{count} stories",
@@ -691,7 +692,14 @@
     "form": {
       "title": "Title",
       "type": "Type",
-      "description": "Description"
+      "description": "Description",
+      "date": "Date",
+      "datePh": "e.g. Spring 2018",
+      "imageUrl": "Image",
+      "imageUrlPh": "https://example.com/photo.jpg",
+      "clickToUpload": "Click to upload image",
+      "changeImage": "Change",
+      "paragraph": "Paragraph"
     },
     "addDialog": {
       "title": "Add Story",
@@ -704,7 +712,24 @@
     },
     "errors": {
       "titleRequired": "Title is required",
-      "typeRequired": "Type is required"
+      "typeRequired": "Type is required",
+      "descriptionRequired": "Description is required",
+      "dateRequired": "Date is required",
+      "imageUrlRequired": "Image URL is required"
+    },
+    "uploadImages": {
+      "title": "Upload Images",
+      "existing": "Current Images",
+      "deleting": "Deleting..."
+    },
+    "images": {
+      "btn": "Images",
+      "title": "Story Images",
+      "clickToUpload": "Click to upload",
+      "pendingFiles": "{count} file(s) ready to upload",
+      "upload": "Upload",
+      "uploading": "Uploading...",
+      "removeImage": "Remove Image"
     }
   },
   "weddingDetails": {
@@ -722,11 +747,24 @@
       "description": "Description",
       "descriptionPh": "e.g. Join us at St. Clement Church at 4 PM",
       "icon": "Icon",
-      "displayOrder": "Order"
+      "displayOrder": "Order",
+      "location": "Location",
+      "locationPh": "Search for a venue or address",
+      "pickOnMap": "Pick on map",
+      "useThisLocation": "Use this location",
+      "searchPlaces": "Search places",
+      "locateMe": "Locate me",
+      "locating": "Locating…"
     },
+    "showOnMap": "Show on Map",
     "errors": {
       "titleRequired": "Title is required"
-    }
+    },
+    "heroImage": "Hero Image",
+    "heroImageDesc": "This image appears at the top of your invitation",
+    "uploadHeroImage": "Upload Image",
+    "changeHeroImage": "Change Image",
+    "heroUploading": "Uploading..."
   },
   "sidebar": {
     "overview": "Overview",

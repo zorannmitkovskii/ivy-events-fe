@@ -680,6 +680,7 @@
     "title": "Historia Jon\u00eb",
     "subtitle": "Ndani historin\u00eb e udh\u00ebtimit tuaj s\u00eb bashku",
     "addStory": "Shto Histori",
+    "addImages": "Shto Foto",
     "emptyTitle": "Nuk ka histori ende",
     "emptyMessage": "Shtoni historin\u00eb e par\u00eb p\u00ebr ta ndar\u00eb me mysafir\u00ebt.",
     "totalItems": "{count} histori",
@@ -691,7 +692,14 @@
     "form": {
       "title": "Titulli",
       "type": "Lloji",
-      "description": "P\u00ebrshkrimi"
+      "description": "P\u00ebrshkrimi",
+      "date": "Data",
+      "datePh": "p.sh. Pran\u00ebra 2018",
+      "imageUrl": "Foto",
+      "imageUrlPh": "https://example.com/photo.jpg",
+      "clickToUpload": "Kliko p\u00ebr t\u00eb ngarkuar foto",
+      "changeImage": "Ndrysho",
+      "paragraph": "Paragrafi"
     },
     "addDialog": {
       "title": "Shto Histori",
@@ -704,7 +712,24 @@
     },
     "errors": {
       "titleRequired": "Titulli \u00ebsht\u00eb i detyruesh\u00ebm",
-      "typeRequired": "Lloji \u00ebsht\u00eb i detyruesh\u00ebm"
+      "typeRequired": "Lloji \u00ebsht\u00eb i detyruesh\u00ebm",
+      "descriptionRequired": "P\u00ebrshkrimi \u00ebsht\u00eb i detyruesh\u00ebm",
+      "dateRequired": "Data \u00ebsht\u00eb e detyrueshme",
+      "imageUrlRequired": "URL e fotos \u00ebsht\u00eb e detyrueshme"
+    },
+    "uploadImages": {
+      "title": "Ngarko Foto",
+      "existing": "Fotot aktuale",
+      "deleting": "Duke fshir\u00eb..."
+    },
+    "images": {
+      "btn": "Foto",
+      "title": "Fotot e Historis\u00eb",
+      "clickToUpload": "Kliko p\u00ebr t\u00eb ngarkuar",
+      "pendingFiles": "{count} skedar(\u00eb) gati p\u00ebr ngarkim",
+      "upload": "Ngarko",
+      "uploading": "Duke ngarkuar...",
+      "removeImage": "Hiq foton"
     }
   },
   "weddingDetails": {
@@ -722,11 +747,24 @@
       "description": "Përshkrimi",
       "descriptionPh": "p.sh. Na bashkohuni në kishën e Shën Klementit në orën 16:00",
       "icon": "Ikona",
-      "displayOrder": "Radhitja"
+      "displayOrder": "Radhitja",
+      "location": "Vendndodhja",
+      "locationPh": "Kërko për një vend ose adresë",
+      "pickOnMap": "Zgjidh në hartë",
+      "useThisLocation": "Përdor këtë vendndodhje",
+      "searchPlaces": "Kërko vende",
+      "locateMe": "Gjej pozicionin tim",
+      "locating": "Duke gjetur…"
     },
+    "showOnMap": "Shiko në hartë",
     "errors": {
       "titleRequired": "Titulli është i detyrueshëm"
-    }
+    },
+    "heroImage": "Foto Kryesore",
+    "heroImageDesc": "Kjo foto shfaqet n\u00eb krye t\u00eb ftes\u00ebs suaj",
+    "uploadHeroImage": "Ngarko Foto",
+    "changeHeroImage": "Ndrysho Foton",
+    "heroUploading": "Duke ngarkuar..."
   },
   "sidebar": {
     "overview": "Përmbledhje",

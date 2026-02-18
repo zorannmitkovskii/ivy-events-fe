@@ -1,5 +1,11 @@
 <template>
   <div class="coastal-breeze">
+    <!-- Loading overlay -->
+    <div v-if="loading" class="loading-overlay">
+      <div class="loading-spinner"></div>
+    </div>
+
+    <div v-show="!loading">
     <!-- Hero -->
     <HeroSection
       :bride-name="config.brideName"
@@ -8,6 +14,7 @@
       :time="config.weddingTime"
       :venue="config.venue"
       :location="config.location"
+      :map-url="config.heroMapUrl"
       :photo-url="config.heroPhotoUrl"
       :label-text="config.heroLabel"
       :cta-label="config.ctaLabel"
@@ -46,6 +53,9 @@
             </template>
             <p>{{ config.ceremonyTime }}</p>
             <p class="muted">{{ config.ceremonyVenue }}</p>
+            <template #footer>
+              <a v-if="config.ceremonyMapUrl" :href="config.ceremonyMapUrl" target="_blank" rel="noopener" class="map-link">View Map</a>
+            </template>
           </DetailCard>
 
           <!-- Reception -->
@@ -67,6 +77,9 @@
             </template>
             <p>{{ config.receptionTime }}</p>
             <p class="muted">{{ config.receptionVenue }}</p>
+            <template #footer>
+              <a v-if="config.receptionMapUrl" :href="config.receptionMapUrl" target="_blank" rel="noopener" class="map-link">View Map</a>
+            </template>
           </DetailCard>
 
           <!-- Location -->
@@ -180,13 +193,15 @@
         <p class="footer-credits">{{ config.brideName }} &amp; {{ config.groomName }} &bull; {{ config.weddingDate }}</p>
       </div>
     </section>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
+import { useInvitationData } from '@/composables/useInvitationData';
 import HeroSection from '@/components/invitations/wedding/CoastalBreeze/HeroSection.vue';
 import ScheduleList from '@/components/invitations/wedding/CoastalBreeze/ScheduleList.vue';
 import StoryGallery from '@/components/invitations/wedding/CoastalBreeze/StoryGallery.vue';
@@ -196,7 +211,7 @@ import RsvpForm from '@/components/invitations/shared/RsvpForm.vue';
 
 const route = useRoute();
 const router = useRouter();
-const eventId = route.query.eventId;
+const { eventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
 
 const palette = {
   blue50: '#eff6ff',
@@ -233,8 +248,11 @@ const config = reactive({
 
   ceremonyTime: '4:00 PM - 5:00 PM',
   ceremonyVenue: 'Garden Terrace',
+  ceremonyMapUrl: '',
   receptionTime: '6:00 PM - 11:00 PM',
   receptionVenue: 'Grand Ballroom',
+  receptionMapUrl: '',
+  heroMapUrl: '',
   locationMapUrl: 'https://maps.google.com',
 
   scheduleTitle: 'Schedule',
@@ -273,7 +291,90 @@ const config = reactive({
   contactEmail: 'emma.lucas.wedding@email.com',
 });
 
-onMounted(() => {
+function applyBackendData(data) {
+  const ev = data.event;
+  if (!ev) return;
+
+  if (ev.coupleNames?.bride) config.brideName = ev.coupleNames.bride;
+  if (ev.coupleNames?.groom) config.groomName = ev.coupleNames.groom;
+  if (ev.heroImageUrl) config.heroPhotoUrl = ev.heroImageUrl;
+
+  if (ev.date) {
+    config.weddingDateTime = ev.date;
+    config.weddingDate = formatDate(ev.date);
+    config.weddingTime = formatTime(ev.date);
+  }
+
+  const subtitle = localized(ev.messageI18n, ev.message);
+  if (subtitle) config.heroLabel = subtitle;
+
+  if (data.location) {
+    const loc = data.location;
+    if (loc.venueName) config.venue = loc.venueName;
+    const addressStr = [loc.city, loc.country].filter(Boolean).join(', ') || loc.address || '';
+    if (addressStr) config.location = addressStr;
+    const mapUrl = loc.mapUrl
+      || (loc.latitude != null && loc.longitude != null
+        ? `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`
+        : '');
+    if (mapUrl) {
+      config.locationMapUrl = mapUrl;
+      config.heroMapUrl = mapUrl;
+    }
+  }
+
+  // Wedding details → ceremony/reception cards
+  if (Array.isArray(data.weddingDetails) && data.weddingDetails.length) {
+    const sorted = [...data.weddingDetails].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+    sorted.forEach((d) => {
+      const title = localized(d.titleI18n, d.title);
+      const desc = localized(d.descriptionI18n, d.description);
+      if (d.icon === 'church' || title?.toLowerCase().includes('ceremon')) {
+        config.ceremonyTime = d.startTime || desc || config.ceremonyTime;
+        config.ceremonyVenue = title || config.ceremonyVenue;
+        if (d.location?.mapUrl) config.ceremonyMapUrl = d.location.mapUrl;
+      } else if (d.icon === 'party' || title?.toLowerCase().includes('recept')) {
+        config.receptionTime = d.startTime || desc || config.receptionTime;
+        config.receptionVenue = title || config.receptionVenue;
+        if (d.location?.mapUrl) config.receptionMapUrl = d.location.mapUrl;
+      }
+    });
+  }
+
+  // Agenda → schedule
+  if (Array.isArray(data.agenda) && data.agenda.length) {
+    config.scheduleEvents = [...data.agenda]
+      .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
+      .map((a) => {
+        const time = a.startTime || '';
+        const parts = time.match(/^(\d+:\d+)\s*(AM|PM)?$/i);
+        return {
+          timeValue: parts ? parts[1] : time,
+          timePeriod: parts ? (parts[2] || '') : '',
+          title: localized(a.titleI18n, a.title),
+          description: localized(a.descriptionI18n, a.description),
+        };
+      });
+  }
+
+  // Our Story
+  if (Array.isArray(data.ourStory) && data.ourStory.length) {
+    const ourStoryImages = Array.isArray(data.ourStoryImages) ? data.ourStoryImages : [];
+    config.stories = data.ourStory.map((s, i) => ({
+      imageUrl: ourStoryImages[i] || s.imageUrl || '',
+      date: s.date || '',
+      title: localized(s.titleI18n, s.title),
+      description: localized(s.descriptionI18n, s.description),
+    }));
+  }
+
+  // RSVP
+  if (ev.rsvpDeadline) {
+    config.rsvpMessage = `Please respond by ${formatDate(ev.rsvpDeadline)}. We can't wait to celebrate with you!`;
+  }
+}
+
+onMounted(async () => {
   const fontLinks = [
     'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap',
     'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap',
@@ -286,6 +387,9 @@ onMounted(() => {
       document.head.appendChild(link);
     }
   });
+
+  const data = await fetchData();
+  if (data) applyBackendData(data);
 });
 
 async function onRsvpSubmit(payload) {
@@ -314,6 +418,28 @@ async function onRsvpSubmit(payload) {
   color: #374151;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Loading overlay */
+.loading-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #f9fafb;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #60a5fa;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 /* Sections */

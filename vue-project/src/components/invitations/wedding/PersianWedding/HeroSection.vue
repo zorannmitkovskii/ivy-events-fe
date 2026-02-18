@@ -18,6 +18,10 @@
         <p class="subtitle">{{ subtitle }}</p>
         <p class="wedding-date">{{ weddingDate }}</p>
         <p v-if="venue" class="venue">{{ venue }}<br v-if="location" />{{ location }}</p>
+        <a v-if="mapUrl" :href="mapUrl" target="_blank" rel="noopener" class="map-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          View on Map
+        </a>
         <a
           v-if="ctaLabel"
           href="#rsvp-section"
@@ -42,6 +46,7 @@ const props = defineProps({
   subtitle: { type: String, default: 'are getting married' },
   venue: { type: String, default: '' },
   location: { type: String, default: '' },
+  mapUrl: { type: String, default: '' },
   photoUrl: { type: String, default: '' },
   ctaLabel: { type: String, default: 'RSVP Now' },
   accentColor: { type: String, default: '#F9A8D4' },
@@ -145,8 +150,25 @@ function scrollToRsvp() {
   font-family: var(--font-body, 'Lato', sans-serif);
   font-size: 17px;
   color: #666;
-  margin: 0 0 32px;
+  margin: 0 0 12px;
   line-height: 1.6;
+}
+
+.map-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-body, 'Lato', sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  color: #F9A8D4;
+  text-decoration: none;
+  margin-bottom: 24px;
+  transition: color 0.2s;
+}
+
+.map-link:hover {
+  color: #ec4899;
 }
 
 .cta-btn {

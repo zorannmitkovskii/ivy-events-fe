@@ -716,6 +716,7 @@
     "title": "Нашата приказна",
     "subtitle": "Споделете ја приказната за вашето заедничко патување",
     "addStory": "Додади приказна",
+    "addImages": "Додади слики",
     "emptyTitle": "Нема приказни",
     "emptyMessage": "Додадете ја првата приказна за да ја споделите со гостите.",
     "totalItems": "{count} приказни",
@@ -727,7 +728,14 @@
     "form": {
       "title": "Наслов",
       "type": "Тип",
-      "description": "Опис"
+      "description": "Опис",
+      "date": "Датум",
+      "datePh": "пр. Пролет 2018",
+      "imageUrl": "Слика",
+      "imageUrlPh": "https://example.com/photo.jpg",
+      "clickToUpload": "Кликни за прикачување слика",
+      "changeImage": "Промени",
+      "paragraph": "Параграф"
     },
     "addDialog": {
       "title": "Додади приказна",
@@ -740,7 +748,24 @@
     },
     "errors": {
       "titleRequired": "Насловот е задолжителен",
-      "typeRequired": "Типот е задолжителен"
+      "typeRequired": "Типот е задолжителен",
+      "descriptionRequired": "Описот е задолжителен",
+      "dateRequired": "Датумот е задолжителен",
+      "imageUrlRequired": "URL на слика е задолжителен"
+    },
+    "uploadImages": {
+      "title": "Прикачи слики",
+      "existing": "Тековни слики",
+      "deleting": "Се брише..."
+    },
+    "images": {
+      "btn": "Слики",
+      "title": "Слики од приказна",
+      "clickToUpload": "Кликни за прикачување",
+      "pendingFiles": "{count} датотека(и) за прикачување",
+      "upload": "Прикачи",
+      "uploading": "Се прикачува...",
+      "removeImage": "Отстрани слика"
     }
   },
   "weddingDetails": {
@@ -758,11 +783,24 @@
       "description": "Опис",
       "descriptionPh": "пр. Придружете ни се во црквата Св. Климент во 16:00",
       "icon": "Икона",
-      "displayOrder": "Редослед"
+      "displayOrder": "Редослед",
+      "location": "Локација",
+      "locationPh": "Пребарај место или адреса",
+      "pickOnMap": "Избери на мапа",
+      "useThisLocation": "Користи ја оваа локација",
+      "searchPlaces": "Пребарај места",
+      "locateMe": "Лоцирај ме",
+      "locating": "Се лоцира…"
     },
+    "showOnMap": "Прикажи на мапа",
     "errors": {
       "titleRequired": "Насловот е задолжителен"
-    }
+    },
+    "heroImage": "Главна слика",
+    "heroImageDesc": "Оваа слика се прикажува на врвот на вашата покана",
+    "uploadHeroImage": "Прикачи слика",
+    "changeHeroImage": "Промени слика",
+    "heroUploading": "Се прикачува..."
   },
   "sidebar": {
     "overview": "Преглед",

@@ -5,12 +5,13 @@
       <div v-if="item.description" class="item-desc">{{ item.description }}</div>
     </td>
 
-    <td>
+    <td v-if="showType">
       <span class="type-pill">{{ t(`storyTypes.${item.type}`) }}</span>
     </td>
 
     <td>
       <div class="actions">
+        <button class="action-link action-images" type="button" @click.stop="$emit('images', item)">{{ t("ourStory.images.btn") }}</button>
         <button class="action-link" type="button" @click.stop="$emit('edit', item)">{{ t("common.edit") }}</button>
         <button class="action-link action-remove" type="button" @click.stop="$emit('delete', item.id)">{{ t("common.delete") }}</button>
       </div>
@@ -24,10 +25,11 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 
 defineProps({
-  item: { type: Object, required: true }
+  item: { type: Object, required: true },
+  showType: { type: Boolean, default: true },
 });
 
-defineEmits(["edit", "delete"]);
+defineEmits(["edit", "delete", "images"]);
 </script>
 
 <style scoped>
@@ -72,6 +74,14 @@ defineEmits(["edit", "delete"]);
 
 .action-link:hover {
   color: var(--brand-main);
+}
+
+.action-images {
+  color: var(--brand-gold, #c8a24d);
+}
+
+.action-images:hover {
+  color: #b08d3a;
 }
 
 .action-remove {
