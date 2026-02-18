@@ -27,10 +27,29 @@
         </div>
       </div>
 
-      <div class="field">
-        <label>{{ t("agenda.form.dateTime") }} *</label>
-        <input class="input" v-model="draft.dateTime" type="datetime-local" />
-        <div v-if="errors.dateTime" class="err">{{ errors.dateTime }}</div>
+      <div class="two">
+        <div class="field">
+          <label>{{ t("agenda.form.dateTime") }} *</label>
+          <input class="input" v-model="draft.date" type="date" />
+          <div v-if="errors.dateTime" class="err">{{ errors.dateTime }}</div>
+        </div>
+        <div class="field">
+          <label>{{ t("agenda.form.time") }} *</label>
+          <div class="time-selects">
+            <select class="input" v-model="draft.hour">
+              <option v-for="h in 24" :key="h-1" :value="String(h-1).padStart(2,'0')">
+                {{ String(h-1).padStart(2,'0') }}
+              </option>
+            </select>
+            <span class="time-sep">:</span>
+            <select class="input" v-model="draft.minute">
+              <option v-for="m in [0,5,10,15,20,25,30,35,40,45,50,55]" :key="m" :value="String(m).padStart(2,'0')">
+                {{ String(m).padStart(2,'0') }}
+              </option>
+            </select>
+          </div>
+          <div v-if="errors.time" class="err">{{ errors.time }}</div>
+        </div>
       </div>
 
       <div class="field">
@@ -104,12 +123,14 @@ const draft = reactive({
   title: "",
   type: AgendaType.CEREMONY,
   visibility: AgendaVisibility.EVERYONE,
-  dateTime: "",
+  date: "",
+  hour: "00",
+  minute: "00",
   description: "",
   location: { name: "", address: "", lat: null, lng: null, placeId: null },
 });
 
-const errors = reactive({ title: "", type: "", dateTime: "" });
+const errors = reactive({ title: "", type: "", dateTime: "", time: "" });
 const validationError = ref("");
 
 watch(
@@ -121,12 +142,16 @@ watch(
     errors.title = "";
     errors.type = "";
     errors.dateTime = "";
+    errors.time = "";
 
     if (props.item) {
       draft.title = props.item.title ?? "";
       draft.type = props.item.type ?? AgendaType.CEREMONY;
       draft.visibility = props.item.visibility ?? AgendaVisibility.EVERYONE;
-      draft.dateTime = toLocalInput(props.item.dateTime);
+      const { date, hour, minute } = splitDateTime(props.item.dateTime);
+      draft.date = date;
+      draft.hour = hour;
+      draft.minute = minute;
       draft.description = props.item.description ?? "";
 
       const loc = props.item.location ?? {};
@@ -141,7 +166,9 @@ watch(
       draft.title = "";
       draft.type = AgendaType.CEREMONY;
       draft.visibility = AgendaVisibility.EVERYONE;
-      draft.dateTime = "";
+      draft.date = "";
+      draft.hour = "00";
+      draft.minute = "00";
       draft.description = "";
       draft.location = { name: "", address: "", lat: null, lng: null, placeId: null };
     }
@@ -149,38 +176,32 @@ watch(
 );
 
 /**
- * Convert an ISO / OffsetDateTime string from BE to the value
- * expected by <input type="datetime-local"> ("YYYY-MM-DDTHH:mm").
+ * Split an ISO / OffsetDateTime string into date, hour, minute.
+ * Parses the string directly to avoid timezone conversion.
  */
-function toLocalInput(iso) {
-  if (!iso) return "";
-  const d = new Date(iso);
-  if (isNaN(d)) return "";
-  const pad = (n) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+function splitDateTime(iso) {
+  if (!iso) return { date: "", hour: "00", minute: "00" };
+  const match = String(iso).match(/^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2})/);
+  if (match) return { date: match[1], hour: match[2], minute: match[3] };
+  return { date: "", hour: "00", minute: "00" };
 }
 
 /**
- * Convert the "YYYY-MM-DDTHH:mm" value from <input type="datetime-local">
- * to an ISO-8601 string with the local UTC offset (OffsetDateTime-compatible).
+ * Combine date + hour + minute into "YYYY-MM-DDTHH:mm:00Z".
  */
-function toOffsetDateTime(local) {
-  if (!local) return null;
-  const d = new Date(local);
-  if (isNaN(d)) return null;
-  const off = -d.getTimezoneOffset();
-  const sign = off >= 0 ? "+" : "-";
-  const pad = (n) => String(Math.abs(n)).padStart(2, "0");
-  return `${local}:00${sign}${pad(Math.floor(Math.abs(off) / 60))}:${pad(Math.abs(off) % 60)}`;
+function combineDateTime(date, hour, minute) {
+  if (!date) return null;
+  return `${date}T${hour}:${minute}:00Z`;
 }
 
 function validate() {
   validationError.value = "";
-  errors.title = draft.title.trim() ? "" : t("agenda.errors.titleRequired");
-  errors.type = draft.type ? "" : t("agenda.errors.typeRequired");
-  errors.dateTime = draft.dateTime ? "" : t("agenda.errors.dateTimeRequired");
+  errors.title = draft.title.trim() ? "" : "Title is required";
+  errors.type = draft.type ? "" : "Type is required";
+  errors.dateTime = draft.date ? "" : "Date is required";
+  errors.time = "";
 
-  return !(errors.title || errors.type || errors.dateTime);
+  return !(errors.title || errors.type || errors.dateTime || errors.time);
 }
 
 function submit() {
@@ -189,12 +210,21 @@ function submit() {
   const loc = draft.location || {};
   const hasLocation = loc.name || loc.address || loc.lat != null;
 
+  const titleVal = draft.title.trim();
+  const descVal = draft.description.trim() || null;
+
   const payload = {
-    title: draft.title.trim(),
-    description: draft.description.trim() || null,
+    title: titleVal,
+    titleI18n: { en: titleVal, mk: titleVal, sq: titleVal },
+    description: descVal,
+    descriptionI18n: descVal ? { en: descVal, mk: descVal, sq: descVal } : null,
     type: draft.type,
     visibility: draft.visibility,
-    dateTime: toOffsetDateTime(draft.dateTime),
+    isPublic: draft.visibility === AgendaVisibility.EVERYONE,
+    dateTime: combineDateTime(draft.date, draft.hour, draft.minute),
+    startTime: `${draft.hour}:${draft.minute}`,
+    endTime: null,
+    displayOrder: null,
     location: hasLocation ? {
       name: loc.name || null,
       addressLine: loc.address || null,
@@ -254,6 +284,23 @@ function submit() {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+}
+
+.time-selects {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.time-selects .input {
+  flex: 1;
+  text-align: center;
+}
+
+.time-sep {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--neutral-500);
 }
 
 .err {

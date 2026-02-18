@@ -15,6 +15,10 @@
         <p class="hero-location">{{ location }}</p>
         <div class="hero-line"></div>
       </div>
+      <a v-if="mapUrl" :href="mapUrl" target="_blank" rel="noopener" class="hero-map-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        View on Map
+      </a>
       <p class="hero-date">{{ weddingDate }}</p>
       <a
         v-if="ctaLabel"
@@ -35,6 +39,7 @@ defineProps({
   weddingDate: { type: String, default: '' },
   inviteText: { type: String, default: 'You are invited to the wedding of' },
   location: { type: String, default: '' },
+  mapUrl: { type: String, default: '' },
   photoUrl: { type: String, default: '' },
   ctaLabel: { type: String, default: 'RSVP' },
 });
@@ -117,7 +122,24 @@ function scrollToRsvp() {
   align-items: center;
   justify-content: center;
   gap: 16px;
-  margin-bottom: 48px;
+  margin-bottom: 16px;
+}
+
+.hero-map-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: #c59053;
+  text-decoration: none;
+  margin-bottom: 32px;
+  transition: color 0.2s;
+}
+
+.hero-map-link:hover {
+  color: #b97645;
 }
 
 .hero-line {

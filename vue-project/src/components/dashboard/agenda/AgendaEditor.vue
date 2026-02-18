@@ -25,11 +25,11 @@
       <div class="row">
         <div class="field">
           <label class="label">Start time</label>
-          <input class="input" v-model="draft.startTime" type="time" required />
+          <input class="input" v-model="draft.startTime" type="time" lang="en-GB" required />
         </div>
         <div class="field">
           <label class="label">End time</label>
-          <input class="input" v-model="draft.endTime" type="time" required />
+          <input class="input" v-model="draft.endTime" type="time" lang="en-GB" required />
         </div>
       </div>
 

@@ -18,6 +18,10 @@
           <p class="detail-secondary">{{ time }}</p>
           <p class="detail-secondary">{{ venue }}</p>
           <p class="detail-muted">{{ location }}</p>
+          <a v-if="mapUrl" :href="mapUrl" target="_blank" rel="noopener" class="map-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            View on Map
+          </a>
         </div>
 
         <div class="hero-cta-wrap">
@@ -40,6 +44,7 @@ const props = defineProps({
   time: { type: String, default: '' },
   venue: { type: String, default: '' },
   location: { type: String, default: '' },
+  mapUrl: { type: String, default: '' },
   photoUrl: { type: String, default: '' },
   labelText: { type: String, default: "You're Invited" },
   ctaLabel: { type: String, default: 'RSVP' },
@@ -156,6 +161,23 @@ function scrollToRsvp() {
   font-size: 14px;
   color: #9ca3af;
   margin: 0;
+}
+
+.map-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--h-body-font);
+  font-size: 13px;
+  font-weight: 600;
+  color: #60a5fa;
+  text-decoration: none;
+  margin-top: 8px;
+  transition: color 0.2s;
+}
+
+.map-link:hover {
+  color: #3b82f6;
 }
 
 .hero-cta-wrap {

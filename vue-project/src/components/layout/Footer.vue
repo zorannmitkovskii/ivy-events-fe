@@ -39,34 +39,34 @@
 </template>
 
 <script setup>
-
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 import FooterColumn from "@/components/footer/FooterColumn.vue";
 import SocialIconLink from "@/components/footer/SocialIconLink.vue";
 
-const productLinks = [
-  { labelKey: "footer.links.templates", to: "/templates" },
-  { labelKey: "footer.links.features", to: "/#features" },
-  { labelKey: "footer.links.pricing", to: "/#pricing" },
-  { labelKey: "footer.links.faq", to: "/#faq" }
-];
+const route = useRoute();
+const lang = computed(() => route.params.lang || "mk");
 
-const companyLinks = [
-  { labelKey: "footer.links.about", to: "/about" },
-  { labelKey: "footer.links.blog", to: "/blog" },
-  { labelKey: "footer.links.careers", to: "/careers" },
-  { labelKey: "footer.links.contact", to: "/contact" }
-];
+const productLinks = computed(() => [
+  { labelKey: "footer.links.features", to: `/${lang.value}/features` },
+  { labelKey: "footer.links.pricing", to: `/${lang.value}/pricing` },
+  { labelKey: "footer.links.designs", to: `/${lang.value}/event-invitations` },
+  { labelKey: "footer.links.faq", to: `/${lang.value}/faq` }
+]);
 
-const supportLinks = [
-  { labelKey: "footer.links.help", to: "/help" },
-  { labelKey: "footer.links.terms", to: "/terms" },
-  { labelKey: "footer.links.privacy", to: "/privacy" },
-  { labelKey: "footer.links.security", to: "/security" }
-];
+const companyLinks = computed(() => [
+  { labelKey: "footer.links.about", to: `/${lang.value}/about` },
+  { labelKey: "footer.links.contact", to: `/${lang.value}/contact` }
+]);
+
+const supportLinks = computed(() => [
+  { labelKey: "footer.links.terms", to: `/${lang.value}/terms` },
+  { labelKey: "footer.links.feedback", to: `/${lang.value}/feedback` }
+]);
 
 const socials = [
-  { labelKey: 'comingSoon.social.facebook', href: "https://facebook.com", icon: "fab fa-facebook-f" },
-  { labelKey: 'comingSoon.social.instagram', href: "https://instagram.com", icon: "fab fa-instagram" }
+  { labelKey: 'comingSoon.social.facebook', href: "https://www.facebook.com/profile.php?id=61584269536071", icon: "fab fa-facebook-f" },
+  { labelKey: 'comingSoon.social.instagram', href: "https://www.instagram.com/ivyevents.mk/", icon: "fab fa-instagram" }
 ];
 </script>
 

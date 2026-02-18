@@ -139,7 +139,9 @@
       "help": "Help Center",
       "terms": "Terms",
       "privacy": "Privacy",
-      "security": "Security"
+      "security": "Security",
+      "designs": "Designs",
+      "feedback": "Feedback"
     },
     "copyright": "All rights reserved."
   },
@@ -155,7 +157,23 @@
       "features": "Features",
       "pricing": "Pricing",
       "faq": "FAQ",
-      "openMenu": "Open menu"
+      "openMenu": "Open menu",
+      "packages": "Packages",
+      "categories": "Categories",
+      "organizer": "Organizer",
+      "invitationPlanner": "Invitation (Planner)",
+      "onlineGallery": "Online Gallery",
+      "weddings": "Weddings",
+      "birthdaysParties": "Birthdays & Parties",
+      "corporate": "Corporate Events",
+      "conferences": "Conferences",
+      "privateDinners": "Private Dinners",
+      "babyShowers": "Baby Showers",
+      "graduations": "Graduations",
+      "anniversaries": "Anniversaries",
+      "about": "About Us",
+      "terms": "Terms & Conditions",
+      "contact": "Contact"
     }
   },
   "nav": {
@@ -312,6 +330,7 @@
       "preview": "Preview",
       "continue": "Continue",
       "back": "Back to details",
+      "loading": "Loading invitations...",
       "emptyState": "No invitation designs available for this category yet. We're working on it!"
     },
     "footer": {
@@ -603,7 +622,8 @@
     "form": {
       "title": "Title",
       "type": "Type",
-      "dateTime": "Date & Time",
+      "dateTime": "Date",
+      "time": "Time",
       "location": "Location",
       "locationName": "Venue Name",
       "addressLine": "Address",
@@ -639,7 +659,8 @@
     "errors": {
       "titleRequired": "Title is required",
       "typeRequired": "Type is required",
-      "dateTimeRequired": "Date and time is required"
+      "dateTimeRequired": "Date is required",
+      "timeRequired": "Time is required"
     },
     "types": {
       "CHURCH": "Church",
@@ -659,6 +680,7 @@
     "title": "Our Story",
     "subtitle": "Share the story of your journey together",
     "addStory": "Add Story",
+    "addImages": "Add Images",
     "emptyTitle": "No stories yet",
     "emptyMessage": "Add your first story to share your journey with guests.",
     "totalItems": "{count} stories",
@@ -670,7 +692,14 @@
     "form": {
       "title": "Title",
       "type": "Type",
-      "description": "Description"
+      "description": "Description",
+      "date": "Date",
+      "datePh": "e.g. Spring 2018",
+      "imageUrl": "Image",
+      "imageUrlPh": "https://example.com/photo.jpg",
+      "clickToUpload": "Click to upload image",
+      "changeImage": "Change",
+      "paragraph": "Paragraph"
     },
     "addDialog": {
       "title": "Add Story",
@@ -683,8 +712,59 @@
     },
     "errors": {
       "titleRequired": "Title is required",
-      "typeRequired": "Type is required"
+      "typeRequired": "Type is required",
+      "descriptionRequired": "Description is required",
+      "dateRequired": "Date is required",
+      "imageUrlRequired": "Image URL is required"
+    },
+    "uploadImages": {
+      "title": "Upload Images",
+      "existing": "Current Images",
+      "deleting": "Deleting..."
+    },
+    "images": {
+      "btn": "Images",
+      "title": "Story Images",
+      "clickToUpload": "Click to upload",
+      "pendingFiles": "{count} file(s) ready to upload",
+      "upload": "Upload",
+      "uploading": "Uploading...",
+      "removeImage": "Remove Image"
     }
+  },
+  "weddingDetails": {
+    "title": "Wedding Details",
+    "subtitle": "Add details like ceremony, reception, dress code and more",
+    "addBtn": "Add Detail",
+    "loading": "Loading details...",
+    "emptyTitle": "No details yet",
+    "emptyMessage": "Add details to show on your invitation — ceremony, dress code, gifts and more.",
+    "createTitle": "Add Detail",
+    "editTitle": "Edit Detail",
+    "fields": {
+      "title": "Title",
+      "titlePh": "e.g. Ceremony",
+      "description": "Description",
+      "descriptionPh": "e.g. Join us at St. Clement Church at 4 PM",
+      "icon": "Icon",
+      "displayOrder": "Order",
+      "location": "Location",
+      "locationPh": "Search for a venue or address",
+      "pickOnMap": "Pick on map",
+      "useThisLocation": "Use this location",
+      "searchPlaces": "Search places",
+      "locateMe": "Locate me",
+      "locating": "Locating…"
+    },
+    "showOnMap": "Show on Map",
+    "errors": {
+      "titleRequired": "Title is required"
+    },
+    "heroImage": "Hero Image",
+    "heroImageDesc": "This image appears at the top of your invitation",
+    "uploadHeroImage": "Upload Image",
+    "changeHeroImage": "Change Image",
+    "heroUploading": "Uploading..."
   },
   "sidebar": {
     "overview": "Overview",
@@ -695,14 +775,104 @@
     "agenda": "Agenda",
     "gallery": "Gallery",
     "ourStory": "Our Story",
+    "weddingDetails": "Wedding Details",
     "team": "Team",
     "settings": "Settings",
+    "support": "Support",
     "premium": "PREMIUM",
     "eventPlanner": "Event Planner",
     "eventSettings": "Event Settings",
     "signOut": "Sign Out",
     "addGuest": "Add Guest",
     "addTask": "Add Task"
+  },
+  "admin": {
+    "sidebar": {
+      "events": "Events",
+      "packages": "Packages",
+      "users": "Users",
+      "reviews": "Reviews",
+      "contacts": "Contacts",
+      "faq": "FAQ",
+      "invitationTemplates": "Invitations"
+    },
+    "reviews": {
+      "title": "Reviews",
+      "subtitle": "View and manage guest feedback and ratings",
+      "searchPh": "Search reviews...",
+      "allRatings": "All Ratings",
+      "star": "Star",
+      "stars": "Stars",
+      "loading": "Loading reviews...",
+      "thGuest": "Guest",
+      "thEvent": "Event",
+      "thRating": "Rating",
+      "thComment": "Comment",
+      "thDate": "Date",
+      "empty": "No reviews found"
+    },
+    "contacts": {
+      "title": "Contact Messages",
+      "subtitle": "Manage incoming contact and support messages",
+      "searchPh": "Search contacts...",
+      "allStatuses": "All Statuses",
+      "statusInReview": "In Review",
+      "statusResolved": "Resolved",
+      "loading": "Loading contacts...",
+      "thContact": "Contact",
+      "thSubject": "Subject",
+      "thMessage": "Message",
+      "thStatus": "Status",
+      "thDate": "Date",
+      "thActions": "Actions",
+      "empty": "No contact messages found",
+      "view": "View",
+      "resolve": "Resolve",
+      "reopen": "Reopen",
+      "viewTitle": "Message Details"
+    },
+    "faq": {
+      "title": "FAQ Management",
+      "subtitle": "Create and manage frequently asked questions",
+      "searchPh": "Search FAQs...",
+      "loading": "Loading FAQs...",
+      "empty": "No FAQs found",
+      "addBtn": "Add FAQ",
+      "editTitle": "Edit FAQ",
+      "createTitle": "Create FAQ",
+      "question": "Question",
+      "answer": "Answer",
+      "displayOrder": "Display Order",
+      "active": "Active",
+      "thQuestion": "Question",
+      "thAnswer": "Answer",
+      "thOrder": "Order",
+      "thActive": "Status",
+      "thActions": "Actions"
+    },
+    "invitationTemplates": {
+      "title": "Invitation Templates",
+      "subtitle": "Manage invitation designs and templates",
+      "searchPh": "Search templates...",
+      "allCategories": "All Categories",
+      "loading": "Loading templates...",
+      "empty": "No invitation templates found",
+      "addBtn": "Add Template",
+      "editTitle": "Edit Template",
+      "createTitle": "Create Template",
+      "name": "Name",
+      "path": "Path",
+      "pathHint": "Full URL preview",
+      "thumbnailUrl": "Thumbnail URL",
+      "category": "Event Category",
+      "thThumbnail": "Thumbnail",
+      "thName": "Name",
+      "thPath": "Path",
+      "thCategory": "Category",
+      "thActive": "Status",
+      "thActions": "Actions",
+      "active": "Active"
+    }
   },
   "overview": {
     "daysToGo": "days to go",
@@ -744,7 +914,14 @@
     "cancel": "Cancel",
     "save": "Save",
     "saveChanges": "Save Changes",
-    "viewAll": "View All"
+    "viewAll": "View All",
+    "pickOnMap": "Pick on map",
+    "useThisLocation": "Use this location",
+    "searchPlaces": "Search places",
+    "locateMe": "Locate me",
+    "locating": "Locating...",
+    "selected": "Selected:",
+    "loadingAddress": "Loading address..."
   },
   "tables": {
     "title": "Tables & Seating",
@@ -839,6 +1016,7 @@
       "description": "Description",
       "descriptionPh": "Optional description",
       "amount": "Total Amount",
+      "currency": "Currency",
       "nameRequired": "Budget name is required",
       "amountRequired": "Amount must be greater than 0"
     },
@@ -902,7 +1080,8 @@
     "displayOptions": "Display Options",
     "dangerZone": "Danger Zone",
     "archiveDesc": "Archiving this event will hide it from your dashboard. This action can be reversed later.",
-    "archiveEvent": "Archive Event"
+    "archiveEvent": "Archive Event",
+    "locationPh": "Search for a venue or address..."
   },
   "cpay": {
     "pay": "Pay with cPay",
@@ -922,6 +1101,155 @@
     "pendingTitle": "Confirming Payment",
     "pendingDesc": "We are confirming your payment. Please wait...",
     "unknownTitle": "Unknown Status"
+  },
+  "packages": {
+    "title": "Our Packages",
+    "subtitle": "Choose the perfect package for your event needs",
+    "tabs": {
+      "invitation": "Invitation (Planner)",
+      "organizer": "Organizer",
+      "gallery": "Gallery"
+    },
+    "choose": "Get Started",
+    "popular": "Popular",
+    "empty": "No packages available in this category yet.",
+    "loadError": "Failed to load packages. Please try again."
+  },
+  "about": {
+    "title": "About Us",
+    "heroSubtitle": "We're building the future of event planning — beautiful, simple, and accessible to everyone.",
+    "missionTitle": "Our Mission",
+    "missionText": "To empower individuals and professionals to create unforgettable events with elegant digital tools that save time and delight guests.",
+    "visionTitle": "Our Vision",
+    "visionText": "A world where every celebration is effortlessly planned, beautifully presented, and deeply personal.",
+    "valuesTitle": "Our Values",
+    "valueSimplicity": "Simplicity",
+    "valueSimplicityDesc": "We believe great tools should be intuitive and joyful to use.",
+    "valueElegance": "Elegance",
+    "valueEleganceDesc": "Every detail matters — from invitations to the last dance.",
+    "valueInclusion": "Inclusion",
+    "valueInclusionDesc": "Beautiful events for every culture, budget, and celebration."
+  },
+  "terms": {
+    "title": "Terms & Conditions",
+    "lastUpdated": "Last updated: February 2026",
+    "intro": "Please read these terms and conditions carefully before using the IvyEvents platform.",
+    "sections": {
+      "acceptance": {
+        "title": "1. Acceptance of Terms",
+        "text": "By accessing or using IvyEvents, you agree to be bound by these Terms & Conditions. If you do not agree, please do not use our services."
+      },
+      "services": {
+        "title": "2. Description of Services",
+        "text": "IvyEvents provides a digital platform for creating event invitations, managing guest lists, tracking RSVPs, and organizing event details. Services are available through web browsers and mobile devices."
+      },
+      "accounts": {
+        "title": "3. User Accounts",
+        "text": "You are responsible for maintaining the confidentiality of your account credentials. You must provide accurate information during registration and keep it up to date."
+      },
+      "payment": {
+        "title": "4. Payment & Subscriptions",
+        "text": "Paid plans are billed according to the pricing displayed at the time of purchase. All payments are processed securely through our payment partners. Refunds are handled on a case-by-case basis."
+      },
+      "content": {
+        "title": "5. User Content",
+        "text": "You retain ownership of content you upload. By uploading content, you grant IvyEvents a license to display and process it within the platform. You must not upload illegal or harmful content."
+      },
+      "liability": {
+        "title": "6. Limitation of Liability",
+        "text": "IvyEvents is provided \"as is\" without warranties of any kind. We are not liable for any indirect, incidental, or consequential damages arising from use of the platform."
+      },
+      "changes": {
+        "title": "7. Changes to Terms",
+        "text": "We may update these terms from time to time. Continued use of IvyEvents after changes constitutes acceptance of the new terms."
+      },
+      "contact": {
+        "title": "8. Contact",
+        "text": "For questions about these terms, please contact us at support@ivyevents.com."
+      }
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Have a question or need help? We'd love to hear from you.",
+    "name": "Full Name",
+    "namePh": "e.g. Jane Doe",
+    "email": "Email Address",
+    "emailPh": "your@email.com",
+    "phone": "Phone",
+    "phonePh": "+389...",
+    "subject": "Subject",
+    "subjectPh": "What is this about?",
+    "message": "Message",
+    "messagePh": "Tell us how we can help...",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "successTitle": "Message Sent!",
+    "successText": "Thank you for reaching out. We'll get back to you as soon as possible."
+  },
+  "feedback": {
+    "title": "Share Your Feedback",
+    "subtitle": "Help us improve by sharing your experience",
+    "rating": "Rating",
+    "comment": "Comment",
+    "commentPh": "Tell us about your experience...",
+    "mediaUrl": "Media URL (optional)",
+    "mediaUrlPh": "https://...",
+    "send": "Submit Feedback",
+    "sending": "Submitting...",
+    "successTitle": "Thank You!",
+    "successText": "Your feedback has been submitted successfully. We appreciate your time!",
+    "noEvent": "No event specified. Please use the feedback link provided in your invitation."
+  },
+  "support": {
+    "title": "Support",
+    "subtitle": "View your messages and contact our support team",
+    "newMessage": "New Message",
+    "editMessage": "Edit Message",
+    "loading": "Loading messages...",
+    "emptyTitle": "No messages yet",
+    "emptyText": "Send a message to our support team and we'll get back to you.",
+    "name": "Full Name",
+    "namePh": "e.g. Jane Doe",
+    "email": "Email",
+    "emailPh": "your@email.com",
+    "phone": "Phone",
+    "phonePh": "+389...",
+    "subject": "Subject",
+    "subjectPh": "e.g. Question about my event",
+    "message": "Message",
+    "messagePh": "Describe your question or issue...",
+    "send": "Send",
+    "sending": "Sending...",
+    "thName": "Name",
+    "thEmail": "Email",
+    "thPhone": "Phone",
+    "thSubject": "Subject",
+    "thMessage": "Message",
+    "thDate": "Date"
+  },
+  "location": {
+    "type": "Location Type",
+    "types": {
+      "VENUE": "Venue",
+      "CHURCH": "Church",
+      "RESTAURANT": "Restaurant",
+      "HOTEL": "Hotel",
+      "OUTDOOR": "Outdoor",
+      "OTHER": "Other"
+    },
+    "postalCode": "Postal Code",
+    "city": "City",
+    "countryIso3": "Country (ISO3)",
+    "capacity": "Capacity",
+    "googleMapsUrl": "Google Maps URL",
+    "description": "Description",
+    "notes": "Notes",
+    "photoUrl": "Photo URL",
+    "contact": "Contact Person",
+    "contactName": "Contact Name",
+    "contactEmail": "Contact Email",
+    "contactPhone": "Contact Phone"
   },
   "galleryUpload": {
     "title": "Share Your Moments",

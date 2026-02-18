@@ -6,6 +6,7 @@ export function useOurStory() {
   const loading = ref(false);
   const error = ref(null);
   const items = ref([]);
+  const images = ref([]);
 
   async function loadStories() {
     loading.value = true;
@@ -15,8 +16,9 @@ export function useOurStory() {
       const eventId = onboardingStore.eventId;
       if (!eventId) return;
 
-      const data = await ourStoryApi.list(eventId);
-      items.value = Array.isArray(data) ? data : [];
+      const data = await ourStoryApi.listWithImages(eventId);
+      items.value = Array.isArray(data.stories) ? data.stories : [];
+      images.value = Array.isArray(data.images) ? data.images : [];
     } catch (e) {
       error.value = e?.message ?? "Failed to load stories";
     } finally {
@@ -48,6 +50,7 @@ export function useOurStory() {
     loading,
     error,
     items,
+    images,
     loadStories,
     createItem,
     updateItem,

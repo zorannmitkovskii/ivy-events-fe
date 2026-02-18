@@ -7,6 +7,10 @@ export const ourStoryApi = {
     return api.get("/our-stories", { params });
   },
 
+  listWithImages(eventId) {
+    return api.get("/our-stories/with-images", { params: { eventId } });
+  },
+
   getById(id) {
     return api.get(`/our-stories/${encodeURIComponent(id)}`);
   },

@@ -12,45 +12,40 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import FaqItem from "@/components/cards/FaqItem.vue";
-import { t } from '@/i18n'
+import { faqService } from "@/services/faq.service";
+import { t } from '@/i18n';
 
 const props = defineProps({
-  defaultOpenIndex: { type: Number, default: 0 } // first open like screenshot
+  defaultOpenIndex: { type: Number, default: 0 }
 });
 
 const openIndex = ref(props.defaultOpenIndex);
-const faqItems = [
-  {
-    question: t('home.faq.items.q1.question'),
-    answer: t('home.faq.items.q1.answer')
-  },
-  {
-    question: t('home.faq.items.q2.question'),
-    answer: t('home.faq.items.q2.answer')
-  },
-  {
-    question: t('home.faq.items.q3.question'),
-    answer: t('home.faq.items.q3.answer')
-  },
-  {
-    question: t('home.faq.items.q4.question'),
-    answer: t('home.faq.items.q4.answer')
-  },
-  {
-    question: t('home.faq.items.q5.question'),
-    answer: t('home.faq.items.q5.answer')
-  },
-  {
-    question: t('home.faq.items.q6.question'),
-    answer: t('home.faq.items.q6.answer')
-  },
-  {
-    question: t('home.faq.items.q7.question'),
-    answer: t('home.faq.items.q7.answer')
-  }
+
+const i18nFallback = [
+  { question: t('home.faq.items.q1.question'), answer: t('home.faq.items.q1.answer') },
+  { question: t('home.faq.items.q2.question'), answer: t('home.faq.items.q2.answer') },
+  { question: t('home.faq.items.q3.question'), answer: t('home.faq.items.q3.answer') },
+  { question: t('home.faq.items.q4.question'), answer: t('home.faq.items.q4.answer') },
+  { question: t('home.faq.items.q5.question'), answer: t('home.faq.items.q5.answer') },
+  { question: t('home.faq.items.q6.question'), answer: t('home.faq.items.q6.answer') },
+  { question: t('home.faq.items.q7.question'), answer: t('home.faq.items.q7.answer') },
 ];
+
+const faqItems = ref(i18nFallback);
+
+onMounted(async () => {
+  try {
+    const data = await faqService.listActive();
+    if (Array.isArray(data) && data.length > 0) {
+      faqItems.value = data;
+    }
+  } catch {
+    // keep i18n fallback
+  }
+});
+
 function toggle(idx) {
   openIndex.value = openIndex.value === idx ? -1 : idx;
 }

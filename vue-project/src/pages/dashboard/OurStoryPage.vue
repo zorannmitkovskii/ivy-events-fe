@@ -1,19 +1,28 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { useOurStory } from "@/composables/useOurStory.js";
 import AddOurStoryModal from "@/components/modals/AddOurStoryModal.vue";
+import OurStoryImagesModal from "@/components/modals/OurStoryImagesModal.vue";
+import OurStoryUploadModal from "@/components/modals/OurStoryUploadModal.vue";
 import OurStoryHeader from "@/components/dashboard/ourStory/OurStoryHeader.vue";
 import DashboardTable from "@/components/dashboard/DashboardTable.vue";
 import OurStoryTableRow from "@/components/dashboard/ourStory/OurStoryTableRow.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
+import { onboardingStore } from "@/store/onboarding.store.js";
+import { OUR_STORY_FIELD_CONFIG, DEFAULT_FIELD_CONFIG } from "@/config/ourStoryFieldConfig.js";
 
 const { t } = useI18n();
 
+const fieldConfig = computed(() =>
+  OUR_STORY_FIELD_CONFIG[onboardingStore.invitationName] || DEFAULT_FIELD_CONFIG
+);
+const showType = computed(() => !!fieldConfig.value.type?.show);
+
 const {
   loading, error,
-  items,
+  items, images,
   loadStories, createItem, updateItem, deleteItem,
 } = useOurStory();
 
@@ -34,6 +43,39 @@ function openEditModal(item) {
 function closeModal() {
   modalOpen.value = false;
   editingItem.value = null;
+}
+
+const imagesModalOpen = ref(false);
+const imagesItem = ref(null);
+
+function openImagesModal(item) {
+  imagesItem.value = { ...item };
+  imagesModalOpen.value = true;
+}
+
+function closeImagesModal() {
+  imagesModalOpen.value = false;
+  imagesItem.value = null;
+}
+
+function onImagesUpdated({ id, imageUrl }) {
+  const idx = items.value.findIndex((x) => x.id === id);
+  if (idx !== -1) items.value[idx].imageUrl = imageUrl;
+}
+
+// Upload modal state
+const uploadModalOpen = ref(false);
+
+function openUploadModal() {
+  uploadModalOpen.value = true;
+}
+
+function closeUploadModal() {
+  uploadModalOpen.value = false;
+}
+
+function onUploaded() {
+  loadStories();
 }
 
 onMounted(() => {
@@ -64,8 +106,10 @@ async function onDelete(id) {
 
     <OurStoryHeader
       :addLabel="t('ourStory.addStory')"
+      :imagesLabel="t('ourStory.addImages')"
       :has-items="items.length > 0"
       @add="openCreateModal"
+      @add-images="openUploadModal"
     />
 
     <div v-if="loading" class="loading-msg">Loading...</div>
@@ -82,7 +126,7 @@ async function onDelete(id) {
     <DashboardTable v-else>
       <template #head>
         <th>{{ t("ourStory.th.title") }}</th>
-        <th>{{ t("ourStory.th.type") }}</th>
+        <th v-if="showType">{{ t("ourStory.th.type") }}</th>
         <th>{{ t("ourStory.th.actions") }}</th>
       </template>
 
@@ -91,8 +135,10 @@ async function onDelete(id) {
           v-for="item in items"
           :key="item.id"
           :item="item"
+          :show-type="showType"
           @edit="openEditModal"
           @delete="onDelete"
+          @images="openImagesModal"
         />
       </template>
 
@@ -107,6 +153,20 @@ async function onDelete(id) {
       @close="closeModal"
       @submit="onSave"
       @delete="onDelete"
+    />
+
+    <OurStoryImagesModal
+      :open="imagesModalOpen"
+      :item="imagesItem"
+      @close="closeImagesModal"
+      @updated="onImagesUpdated"
+    />
+
+    <OurStoryUploadModal
+      :open="uploadModalOpen"
+      :images="images"
+      @close="closeUploadModal"
+      @uploaded="onUploaded"
     />
   </div>
 </template>

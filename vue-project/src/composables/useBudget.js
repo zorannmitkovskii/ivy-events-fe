@@ -4,7 +4,7 @@ import { onboardingStore } from "@/store/onboarding.store";
 import { BUDGET_CATEGORIES } from "@/enums/BudgetCategory";
 
 export function useBudget() {
-  const currency = ref("EUR");
+  const currency = ref("MKD");
   const budgetId = ref(null);
 
   const summary = ref({
@@ -75,6 +75,7 @@ export function useBudget() {
       name: payload.name,
       description: payload.description || null,
       amount: payload.amount,
+      currency: payload.currency || "MKD",
       eventId,
     });
     budgetId.value = data?.id || data?.budgetId || null;

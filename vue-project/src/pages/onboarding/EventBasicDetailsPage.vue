@@ -3,24 +3,24 @@
     <div class="card">
       <div class="card-head">
         <div class="icon-badge" aria-hidden="true">💚</div>
-        <h1 class="title">{{ $t('onboarding.details.title') }}</h1>
-        <p class="subtitle">{{ $t('onboarding.details.subtitle')}}</p>
+        <h1 class="title">{{ $t('onboarding.eventBasics.title') }}</h1>
+        <p class="subtitle">{{ $t('onboarding.eventBasics.subtitle')}}</p>
       </div>
 
       <form class="form" @submit.prevent="onCreate">
         <div class="grid">
           <AuthInput
             v-model="brideName"
-            :label="$t('onboarding.details.fields.brideName')"
-            :placeholder="$t('onboarding.details.placeholders.brideName')"
+            :label="$t('onboarding.eventBasics.fields.brideName')"
+            :placeholder="$t('onboarding.eventBasics.placeholders.brideName')"
           >
             <template #icon>👰</template>
           </AuthInput>
 
           <AuthInput
             v-model="groomName"
-            :label="$t('onboarding.details.fields.groomName')"
-            :placeholder="$t('onboarding.details.placeholders.groomName')"
+            :label="$t('onboarding.eventBasics.fields.groomName')"
+            :placeholder="$t('onboarding.eventBasics.placeholders.groomName')"
           >
             <template #icon>🤵</template>
           </AuthInput>
@@ -30,20 +30,20 @@
           <div>
             <AuthInput
               v-model="date"
-              :label="`${$t('onboarding.details.fields.date')} (Optional)`"
+              :label="`${$t('onboarding.eventBasics.fields.weddingDate')}`"
               type="date"
             >
               <template #icon>📅</template>
             </AuthInput>
-            <p class="hint">{{ $t('onboarding.details.hints.noDate') }}</p>
+            <p class="hint">{{ $t('onboarding.eventBasics.hints.weddingDate') }}</p>
           </div>
 
           <div>
             <!-- ✅ Fixed: Empty types array to show ALL places (addresses + POIs) -->
             <AuthLocationInput
               v-model="location"
-              :label="$t('common.location')"
-              :placeholder="$t('common.locationPh')"
+              :label="$t('onboarding.eventBasics.fields.location')"
+              :placeholder="$t('onboarding.eventBasics.placeholders.location')"
               :types="[]"
               :pickOnMapLabel="$t('common.pickOnMap')"
               :cancelLabel="$t('common.cancel')"
@@ -56,7 +56,7 @@
             >
               <template #icon>📍</template>
             </AuthLocationInput>
-            <p class="hint">{{ $t('onboarding.details.hints.tbdOk')}}</p>
+            <p class="hint">{{ $t('onboarding.eventBasics.hints.location')}}</p>
           </div>
         </div>
 
@@ -64,7 +64,7 @@
 
         <ButtonMain
           class="w-100"
-          :label="$t('onboarding.details.actions.continue') || 'Continue'"
+          :label="$t('onboarding.eventBasics.actions.continue') || 'Continue'"
           variant="main"
           type="submit"
           :disabled="!canSubmit || loading"
@@ -72,13 +72,13 @@
         />
 
         <button type="button" class="link-btn" @click="onSkip" :disabled="loading">
-          {{ $t('onboarding.details.actions.skip') || 'Skip for now' }}
+          {{ $t('onboarding.eventBasics.actions.skip') || 'Skip for now' }}
         </button>
       </form>
 
       <div class="protip">
         <span class="protip-icon">💡</span>
-        <span>{{ $t('onboarding.details.protip') || `Pro tip: You can invite collaborators after you've set up the basics. We'll remind you later.` }}</span>
+        <span>{{ $t('onboarding.eventBasics.protip.text') || `Pro tip: You can invite collaborators after you've set up the basics. We'll remind you later.` }}</span>
       </div>
     </div>
 
@@ -150,9 +150,21 @@ async function createEventAndNavigate() {
       bride: brideName.value.trim() ? { name: brideName.value.trim() } : null,
       location: (loc.address || loc.name) ? {
         name: loc.name || loc.address || '',
+        type: null,
+        postalCode: null,
         addressLine: loc.address || '',
+        city: null,
+        countryIso3: null,
         latitude: loc.lat || null,
-        longitude: loc.lng || null
+        longitude: loc.lng || null,
+        photoUrl: null,
+        googleMapsUrl: null,
+        description: null,
+        capacity: null,
+        openingHours: null,
+        notes: null,
+        contact: null,
+        isActive: true,
       } : null,
       status: 'DRAFT',
       username: getUsername(),

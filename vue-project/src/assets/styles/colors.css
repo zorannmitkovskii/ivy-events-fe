@@ -48,7 +48,6 @@
 
 /* Optional layout helpers preserved (kept minimal here) */
 .app-shell { min-height: 100vh; }
-.sidebar { min-height: 100vh; position: sticky; top: 0; }
 .card-rounded { border-radius: 12px; }
 .stats-number { font-weight: 700; font-size: 1.8rem; }
 .vendor-card img { border-radius: 12px; height: 150px; object-fit: cover; }

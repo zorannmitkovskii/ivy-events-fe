@@ -18,7 +18,7 @@ export const eventsService = {
   },
 
   update(eventId, payload) {
-    return api.patch(`/events/${encodeURIComponent(eventId)}`, payload);
+    return api.put(`/events/${encodeURIComponent(eventId)}`, payload);
   },
 
   updateInvitation(eventId, payload) {

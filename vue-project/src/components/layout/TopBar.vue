@@ -1,7 +1,7 @@
 <template>
   <header class="top">
     <div class="left">
-      <button v-if="showHamburger" class="hamburger" @click="$emit('toggle-menu')" aria-label="Menu">
+      <button v-if="showHamburger" class="menu-toggle" @click="$emit('toggle-menu')" aria-label="Menu">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="3" y1="6" x2="21" y2="6" />
@@ -42,6 +42,15 @@ const title = computed(() => {
     "dashboard.notifications": "Notifications",
     "dashboard.team": "Team & Co-hosts",
     "dashboard.settings": "Event Settings",
+    "dashboard.packages": "Packages",
+    "dashboard.wedding-details": "Wedding Details",
+    "admin.events": "Events",
+    "admin.packages": "Packages",
+    "admin.users": "Users",
+    "admin.reviews": "Reviews",
+    "admin.contacts": "Contacts",
+    "admin.faq": "FAQ",
+    "admin.invitationTemplates": "Invitation Templates",
   };
   return map[String(route.name)] ?? "Dashboard";
 });
@@ -58,6 +67,14 @@ const title = computed(() => {
   padding: 0 18px;
 }
 
+@media (max-width: 1024px) {
+  .top {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+}
+
 .left {
   display: flex;
   align-items: center;
@@ -70,7 +87,7 @@ const title = computed(() => {
   color: var(--neutral-900);
 }
 
-.hamburger {
+.menu-toggle {
   display: none;
   align-items: center;
   justify-content: center;
@@ -84,12 +101,12 @@ const title = computed(() => {
   padding: 0;
 }
 
-.hamburger:hover {
+.menu-toggle:hover {
   background: rgba(0, 0, 0, 0.04);
 }
 
 @media (max-width: 1024px) {
-  .hamburger {
+  .menu-toggle {
     display: inline-flex;
   }
 }
