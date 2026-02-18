@@ -92,7 +92,7 @@ import PricingFeature from "@/components/cards/PricingFeature.vue";
 
 const { t, locale } = useI18n();
 
-const activeTab = ref("organizer");
+const activeTab = ref("invitation");
 const packages = ref([]);
 const loading = ref(true);
 const error = ref(null);
