@@ -76,10 +76,11 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { mediaService } from '@/services/media.service';
+import { DRAFT_LIMITS } from '@/utils/draftLimits';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -93,6 +94,8 @@ const isDragging = ref(false);
 const uploading = ref(false);
 const success = ref(false);
 const error = ref('');
+const existingImageCount = ref(0);
+const isDraft = ref(false);
 
 function addFiles(files) {
   const list = Array.from(files);
@@ -126,8 +129,29 @@ function removeFile(index) {
   previews.value.splice(index, 1);
 }
 
+onMounted(async () => {
+  if (!eventId.value) return;
+  try {
+    const data = await mediaService.list(eventId.value, { page: 0, size: 1 });
+    const inner = data?.data ?? data;
+    existingImageCount.value = inner?.totalElements ?? 0;
+    isDraft.value = inner?.eventStatus === "DRAFT";
+  } catch {
+    // proceed without limit info
+  }
+});
+
 async function upload() {
   if (!selectedFiles.value.length || !eventId.value) return;
+
+  if (isDraft.value) {
+    const total = existingImageCount.value + selectedFiles.value.length;
+    if (total > DRAFT_LIMITS.galleryImages) {
+      error.value = `Draft limit: maximum ${DRAFT_LIMITS.galleryImages} gallery images. Upgrade your plan to add more.`;
+      return;
+    }
+  }
+
   uploading.value = true;
   error.value = '';
   success.value = false;

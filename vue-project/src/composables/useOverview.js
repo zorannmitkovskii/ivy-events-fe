@@ -6,7 +6,7 @@ import { guestsService } from "@/services/guests.service";
 import { budgetsService } from "@/services/budgets.service";
 import { tablesService } from "@/services/tables.service";
 import { mediaService } from "@/services/media.service";
-import { onboardingStore, setSelectedCategory } from "@/store/onboarding.store";
+import { onboardingStore, setSelectedCategory, setEventStatus } from "@/store/onboarding.store";
 import { EventCategoryEnum } from "@/enums/EventCategory";
 
 export function useOverview() {
@@ -22,6 +22,7 @@ export function useOverview() {
       const ev = await eventsService.getById(eventId.value);
       event.value.name = ev.name || ev.title || "";
       event.value.status = ev.status || "PLANNING";
+      setEventStatus(ev.status || "PLANNING");
 
       const cat = ev.categoryType || ev.category || "";
       if (cat) {

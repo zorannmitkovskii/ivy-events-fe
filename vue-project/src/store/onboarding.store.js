@@ -13,7 +13,8 @@ const defaultState = () => ({
     location: ''
   },
   eventId: '',
-  invitationName: ''
+  invitationName: '',
+  eventStatus: ''
 });
 
 export const onboardingStore = reactive(defaultState());
@@ -94,6 +95,10 @@ export function setEventId(id) {
 export function setInvitationName(name) {
   onboardingStore.invitationName = name || '';
   persist();
+}
+
+export function setEventStatus(status) {
+  onboardingStore.eventStatus = status || '';
 }
 
 export function setEventDetails(details) {

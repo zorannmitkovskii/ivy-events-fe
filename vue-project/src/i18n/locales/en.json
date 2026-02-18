@@ -296,6 +296,11 @@
     }
   },
   "onboarding": {
+    "category": {
+      "title": "Choose Your Event Category",
+      "subtitle": "Select the type of event you're planning. You can change this later.",
+      "continue": "Continue"
+    },
     "eventBasics": {
       "title": "Event Basics",
       "subtitle": "Let's start with the broad strokes. You can always change these details later.",
