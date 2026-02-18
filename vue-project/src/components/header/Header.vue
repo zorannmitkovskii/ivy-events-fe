@@ -102,7 +102,7 @@ const fullName = computed(() => getFullName());
 const isMenuOpen = ref(false);
 const mobileCategoriesOpen = ref(false);
 
-const locales = ["mk", "en", "sq"];
+const locales = ["mk", "en"];
 
 const categoryItems = [
   { enumValue: EventCategoryEnum.WEDDING, labelKey: "header.menu.weddings" },

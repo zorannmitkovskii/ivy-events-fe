@@ -46,7 +46,7 @@ const lang = computed(() => route.params.lang || "mk");
 const loggedIn = computed(() => isAuthenticated());
 const fullName = computed(() => getFullName());
 
-const locales = ["mk", "en", "sq"];
+const locales = ["mk", "en"];
 
 function switchLang(newLang) {
   if (newLang === lang.value) return;
