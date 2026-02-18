@@ -622,7 +622,8 @@
     "form": {
       "title": "Titulli",
       "type": "Lloji",
-      "dateTime": "Data dhe Ora",
+      "dateTime": "Data",
+      "time": "Ora",
       "location": "Vendndodhja",
       "locationName": "Emri i Vendit",
       "addressLine": "Adresa",
@@ -658,7 +659,8 @@
     "errors": {
       "titleRequired": "Titulli \u00ebsht\u00eb i detyruesh\u00ebm",
       "typeRequired": "Lloji \u00ebsht\u00eb i detyruesh\u00ebm",
-      "dateTimeRequired": "Data dhe ora jan\u00eb t\u00eb detyrueshme"
+      "dateTimeRequired": "Data \u00ebsht\u00eb e detyrueshme",
+      "timeRequired": "Ora \u00ebsht\u00eb e detyrueshme"
     },
     "types": {
       "CHURCH": "Kish\u00eb",

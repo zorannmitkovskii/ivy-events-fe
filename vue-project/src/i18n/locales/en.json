@@ -622,7 +622,8 @@
     "form": {
       "title": "Title",
       "type": "Type",
-      "dateTime": "Date & Time",
+      "dateTime": "Date",
+      "time": "Time",
       "location": "Location",
       "locationName": "Venue Name",
       "addressLine": "Address",
@@ -658,7 +659,8 @@
     "errors": {
       "titleRequired": "Title is required",
       "typeRequired": "Type is required",
-      "dateTimeRequired": "Date and time is required"
+      "dateTimeRequired": "Date is required",
+      "timeRequired": "Time is required"
     },
     "types": {
       "CHURCH": "Church",

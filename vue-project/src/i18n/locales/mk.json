@@ -664,7 +664,8 @@
     "form": {
       "title": "Наслов",
       "type": "Тип",
-      "dateTime": "Датум и време",
+      "dateTime": "Датум",
+      "time": "Време",
       "location": "Локација",
       "locationName": "Име на место",
       "addressLine": "Адреса",
@@ -694,7 +695,8 @@
     "errors": {
       "titleRequired": "Насловот е задолжителен",
       "typeRequired": "Типот е задолжителен",
-      "dateTimeRequired": "Датумот и времето се задолжителни"
+      "dateTimeRequired": "Датумот е задолжителен",
+      "timeRequired": "Времето е задолжително"
     },
     "types": {
       "CHURCH": "Црква",

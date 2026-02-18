@@ -421,7 +421,7 @@ function applyBackendData(data) {
     config.agendaEvents = [...data.agenda]
       .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
       .map((a) => ({
-        time: formatTime(a.startTime),
+        time: a.startTime || formatTime(a.date),
         title: localized(a.titleI18n, a.title),
         subtitle: localized(a.descriptionI18n, a.description),
       }));
