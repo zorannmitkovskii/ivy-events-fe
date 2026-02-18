@@ -50,7 +50,7 @@ async function payWithCpay() {
       currency: "MKD",
       description: "Payment",
       email: user.value?.email || "",
-      telephone: "+38971234061",
+      telephone: user.value?.phone || "",
       eventId: props.eventId || authEventId.value,
       userId: getUserId(),
     };

@@ -42,6 +42,7 @@ const title = computed(() => {
     "dashboard.notifications": "Notifications",
     "dashboard.team": "Team & Co-hosts",
     "dashboard.settings": "Event Settings",
+    "dashboard.packages": "Packages",
     "dashboard.wedding-details": "Wedding Details",
     "admin.events": "Events",
     "admin.packages": "Packages",

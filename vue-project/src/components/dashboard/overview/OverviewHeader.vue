@@ -12,12 +12,13 @@
     </div>
 
     <div class="ov-actions">
-      <CpayButton
+      <ButtonMain
         v-if="event.status !== 'ACTIVE'"
-        :event-id="eventId"
         variant="success"
-        :label="t('cpay.upgrade')"
-      />
+        @click="goToPackages"
+      >
+        {{ t('cpay.upgrade') }}
+      </ButtonMain>
       <ButtonMain variant="main" :disabled="sending" @click="sendNotification">
         ➤ {{ sending ? t("overview.sending") : t("overview.sendUpdate") }}
       </ButtonMain>
@@ -32,7 +33,6 @@ import { ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
-import CpayButton from "@/components/payment/CpayButton.vue";
 import { guestsService } from "@/services/guests.service";
 import { onboardingStore } from "@/store/onboarding.store";
 
@@ -44,6 +44,10 @@ const route = useRoute();
 const lang = computed(() => route.params.lang || "mk");
 const eventId = computed(() => onboardingStore.eventId);
 const sending = ref(false);
+
+function goToPackages() {
+  router.push({ name: "dashboard.packages", params: { lang: lang.value } });
+}
 
 function goToInvitations() {
   router.push({ name: "EventInvitationsPage", params: { lang: lang.value } });

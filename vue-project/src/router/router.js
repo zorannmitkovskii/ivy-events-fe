@@ -123,6 +123,7 @@ const routes = [
           { path: "events/team", name: "dashboard.team", component: TeamPage },
           { path: "events/settings", name: "dashboard.settings", component: EventSettingsPage },
           { path: "events/support", name: "dashboard.support", component: () => import("@/pages/dashboard/SupportPage.vue") },
+          { path: "events/packages", name: "dashboard.packages", component: () => import("@/pages/dashboard/DashboardPackagesPage.vue") },
 
           // default dashboard redirect (if someone opens /mk/dashboard)
           {

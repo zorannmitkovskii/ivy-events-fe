@@ -6,11 +6,12 @@
         <p class="dash-page-subtitle">{{ t("settings.subtitle") }}</p>
       </div>
       <div v-if="event && !loading" class="header-actions">
-        <CpayButton
-          :event-id="eventId"
+        <ButtonMain
           variant="gold"
-          :label="t('cpay.upgrade')"
-        />
+          @click="goToPackages"
+        >
+          {{ t('cpay.upgrade') }}
+        </ButtonMain>
         <ButtonMain
           variant="main"
           :disabled="saving"
@@ -199,7 +200,6 @@ import { eventsService } from "@/services/events.service";
 import { onboardingStore, setSelectedCategory } from "@/store/onboarding.store";
 import { EventCategoryEnum } from "@/enums/EventCategory";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
-import CpayButton from "@/components/payment/CpayButton.vue";
 import AuthLocationInput from "@/components/auth/AuthLocationInput.vue";
 
 const { t, locale } = useI18n();
@@ -355,6 +355,10 @@ async function copyToClipboard(text, field) {
   }
   copiedField.value = field;
   setTimeout(() => { copiedField.value = null; }, 2000);
+}
+
+function goToPackages() {
+  router.push({ name: "dashboard.packages", params: { lang: locale.value } });
 }
 
 function goToInvitations() {
