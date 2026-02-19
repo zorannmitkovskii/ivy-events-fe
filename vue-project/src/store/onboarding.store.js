@@ -14,7 +14,8 @@ const defaultState = () => ({
   },
   eventId: '',
   invitationName: '',
-  eventStatus: ''
+  eventStatus: '',
+  selectedPackageType: ''
 });
 
 export const onboardingStore = reactive(defaultState());
@@ -30,6 +31,7 @@ export function initOnboarding() {
       onboardingStore.invitationName = saved.invitationName || '';
       onboardingStore.eventId = saved.eventId || '';
       onboardingStore.eventDetails = saved.eventDetails || defaultState().eventDetails;
+      onboardingStore.selectedPackageType = saved.selectedPackageType || '';
     }
   } catch (e) {
     console.warn('[onboarding] failed to parse saved state', e);
@@ -44,6 +46,7 @@ function persist() {
     invitationName: onboardingStore.invitationName,
     eventId: onboardingStore.eventId,
     eventDetails: onboardingStore.eventDetails,
+    selectedPackageType: onboardingStore.selectedPackageType,
   }));
 }
 
@@ -99,6 +102,11 @@ export function setInvitationName(name) {
 
 export function setEventStatus(status) {
   onboardingStore.eventStatus = status || '';
+}
+
+export function setSelectedPackageType(type) {
+  onboardingStore.selectedPackageType = type || '';
+  persist();
 }
 
 export function setEventDetails(details) {

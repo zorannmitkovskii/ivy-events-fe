@@ -1,84 +1,101 @@
 <template>
-  <main class="onboarding-page">
-    <div class="card">
-      <div class="card-head">
-        <div class="icon-badge" aria-hidden="true">💚</div>
-        <h1 class="title">{{ $t('onboarding.eventBasics.title') }}</h1>
-        <p class="subtitle">{{ $t('onboarding.eventBasics.subtitle')}}</p>
-      </div>
-
-      <form class="form" @submit.prevent="onCreate">
-        <div v-if="!isGallery" class="grid">
-          <AuthInput
-            v-model="brideName"
-            :label="$t('onboarding.eventBasics.fields.brideName')"
-            :placeholder="$t('onboarding.eventBasics.placeholders.brideName')"
-          >
-            <template #icon>👰</template>
-          </AuthInput>
-
-          <AuthInput
-            v-model="groomName"
-            :label="$t('onboarding.eventBasics.fields.groomName')"
-            :placeholder="$t('onboarding.eventBasics.placeholders.groomName')"
-          >
-            <template #icon>🤵</template>
-          </AuthInput>
-        </div>
-
-        <div class="grid">
-          <div>
-            <AuthInput
-              v-model="date"
-              :label="`${$t('onboarding.eventBasics.fields.weddingDate')}`"
-              type="date"
-            >
-              <template #icon>📅</template>
-            </AuthInput>
-            <p class="hint">{{ $t('onboarding.eventBasics.hints.weddingDate') }}</p>
-          </div>
-
-          <div>
-            <!-- ✅ Fixed: Empty types array to show ALL places (addresses + POIs) -->
-            <AuthLocationInput
-              v-model="location"
-              :label="$t('onboarding.eventBasics.fields.location')"
-              :placeholder="$t('onboarding.eventBasics.placeholders.location')"
-              :types="[]"
-              :pickOnMapLabel="$t('common.pickOnMap')"
-              :cancelLabel="$t('common.cancel')"
-              :useThisLocationLabel="$t('common.useThisLocation')"
-              :searchPlaceholder="$t('common.searchPlaces')"
-              :locatingLabel="$t('common.locateMe')"
-              :locatingLabelLoading="$t('common.locating')"
-              :selectedLabel="$t('common.selected')"
-              :loadingAddressLabel="$t('common.loadingAddress')"
-            >
-              <template #icon>📍</template>
-            </AuthLocationInput>
-            <p class="hint">{{ $t('onboarding.eventBasics.hints.location')}}</p>
-          </div>
-        </div>
-
-        <p v-if="error" class="error">{{ error }}</p>
-
-        <ButtonMain
-          class="w-100"
-          :label="$t('onboarding.eventBasics.actions.continue') || 'Continue'"
-          variant="main"
-          type="submit"
-          :disabled="!canSubmit || loading"
-          :loading="loading"
-        />
-
-        <button type="button" class="link-btn" @click="onSkip" :disabled="loading">
-          {{ $t('onboarding.eventBasics.actions.skip') || 'Skip for now' }}
+  <main class="details-page">
+    <!-- Fixed header -->
+    <header class="sticky-header">
+      <div class="header-inner">
+        <button class="back-btn" @click="onBack" :disabled="loading" aria-label="Back">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </button>
-      </form>
 
-      <div class="protip">
-        <span class="protip-icon">💡</span>
-        <span>{{ $t('onboarding.eventBasics.protip.text') || `Pro tip: You can invite collaborators after you've set up the basics. We'll remind you later.` }}</span>
+        <div class="header-center">
+          <h1 class="header-title">{{ $t('onboarding.eventBasics.title') }}</h1>
+          <p class="header-subtitle">{{ $t('onboarding.eventBasics.subtitle') }}</p>
+        </div>
+
+        <div class="header-actions">
+          <button type="button" class="skip-btn" @click="onSkip" :disabled="loading">
+            {{ $t('onboarding.eventBasics.actions.skip') || 'Skip' }}
+          </button>
+          <ButtonMain
+            :label="$t('onboarding.eventBasics.actions.continue') || 'Continue'"
+            variant="main"
+            :disabled="!canSubmit || loading"
+            :loading="loading"
+            @click="onCreate"
+          />
+        </div>
+      </div>
+    </header>
+
+    <!-- Scrollable content -->
+    <div class="content">
+      <div class="card">
+        <div class="card-head">
+          <div class="icon-badge" aria-hidden="true">💚</div>
+          <p class="card-desc">{{ $t('onboarding.eventBasics.subtitle') }}</p>
+        </div>
+
+        <form class="form" @submit.prevent="onCreate">
+          <div v-if="!isGallery" class="grid">
+            <AuthInput
+              v-model="brideName"
+              :label="$t('onboarding.eventBasics.fields.brideName')"
+              :placeholder="$t('onboarding.eventBasics.placeholders.brideName')"
+            >
+              <template #icon>👰</template>
+            </AuthInput>
+
+            <AuthInput
+              v-model="groomName"
+              :label="$t('onboarding.eventBasics.fields.groomName')"
+              :placeholder="$t('onboarding.eventBasics.placeholders.groomName')"
+            >
+              <template #icon>🤵</template>
+            </AuthInput>
+          </div>
+
+          <div class="grid">
+            <div>
+              <AuthInput
+                v-model="date"
+                :label="`${$t('onboarding.eventBasics.fields.weddingDate')}`"
+                type="date"
+              >
+                <template #icon>📅</template>
+              </AuthInput>
+              <p class="hint">{{ $t('onboarding.eventBasics.hints.weddingDate') }}</p>
+            </div>
+
+            <div>
+              <AuthLocationInput
+                v-model="location"
+                :label="$t('onboarding.eventBasics.fields.location')"
+                :placeholder="$t('onboarding.eventBasics.placeholders.location')"
+                :types="[]"
+                :pickOnMapLabel="$t('common.pickOnMap')"
+                :cancelLabel="$t('common.cancel')"
+                :useThisLocationLabel="$t('common.useThisLocation')"
+                :searchPlaceholder="$t('common.searchPlaces')"
+                :locatingLabel="$t('common.locateMe')"
+                :locatingLabelLoading="$t('common.locating')"
+                :selectedLabel="$t('common.selected')"
+                :loadingAddressLabel="$t('common.loadingAddress')"
+              >
+                <template #icon>📍</template>
+              </AuthLocationInput>
+              <p class="hint">{{ $t('onboarding.eventBasics.hints.location') }}</p>
+            </div>
+          </div>
+
+          <p v-if="error" class="error">{{ error }}</p>
+        </form>
+
+        <div class="protip">
+          <span class="protip-icon">💡</span>
+          <span>{{ $t('onboarding.eventBasics.protip.text') || `Pro tip: You can invite collaborators after you've set up the basics. We'll remind you later.` }}</span>
+        </div>
       </div>
     </div>
 
@@ -141,6 +158,10 @@ function saveDetails() {
     date: date.value || '',
     location: location.value,
   });
+}
+
+function onBack() {
+  router.push({ name: 'EventCategoryPage', params: { lang: lang.value } });
 }
 
 async function createEventAndNavigate() {
@@ -228,9 +249,109 @@ function onSkip() {
 </script>
 
 <style scoped>
-.onboarding-page {
+.details-page {
   min-height: 100vh;
-  background: var(--bg-main);
+  background: var(--bg-main, #f9fafb);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Fixed header ===== */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #fff;
+  border-bottom: 1px solid rgba(16, 24, 40, 0.08);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.04);
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(16, 24, 40, 0.1);
+  background: #fff;
+  color: var(--neutral-700, #374151);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.back-btn:hover:not(:disabled) {
+  background: var(--bg-main, #f9fafb);
+  border-color: rgba(16, 24, 40, 0.18);
+}
+
+.back-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.header-center {
+  flex: 1;
+  min-width: 0;
+}
+
+.header-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--neutral-900, #111827);
+  line-height: 1.3;
+}
+
+.header-subtitle {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--neutral-500, #6b7280);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.skip-btn {
+  background: none;
+  border: none;
+  color: var(--neutral-500, #6b7280);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 4px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.skip-btn:hover:not(:disabled) {
+  color: var(--neutral-700, #374151);
+}
+
+.skip-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== Scrollable content ===== */
+.content {
+  flex: 1;
   display: grid;
   place-items: center;
   padding: 40px 16px;
@@ -248,18 +369,13 @@ function onSkip() {
 
 .card-head { justify-content: center; text-align: center; display: grid; gap: 6px; margin-bottom: 16px; }
 .icon-badge { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: #EEF6ED; color: #2E7D32; margin: 0 auto 6px; font-size: 18px; }
-.title { margin: 0; font-size: 24px; color: var(--neutral-900); font-weight: 600; }
-.subtitle { margin: 0; font-size: 14px; color: var(--neutral-700); }
+.card-desc { margin: 0; font-size: 14px; color: var(--neutral-700); }
 
 .form { display: grid; gap: 12px; }
 .grid { display: grid; gap: 12px; }
 @media (min-width: 720px) { .grid { grid-template-columns: 1fr 1fr; } }
 
 .hint { margin: 4px 0 0; font-size: 12px; color: var(--neutral-700); }
-
-.w-100 { width: 100%; }
-.link-btn { margin-top: 8px; width: 100%; background: transparent; border: none; color: var(--neutral-700); text-decoration: underline; padding: 8px 0; cursor: pointer; }
-.link-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .protip { margin-top: 12px; display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--neutral-700); background: rgba(147, 162, 154, 0.08); border: 1px solid rgba(147, 162, 154, 0.18); padding: 10px 12px; border-radius: 12px; }
 .protip-icon { flex: 0 0 auto; }
@@ -272,5 +388,28 @@ function onSkip() {
   border: 1px solid rgba(180, 35, 24, 0.18);
   padding: 10px 12px;
   border-radius: 12px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 640px) {
+  .header-inner {
+    padding: 10px 16px;
+  }
+
+  .header-subtitle {
+    display: none;
+  }
+
+  .header-title {
+    font-size: 16px;
+  }
+
+  .skip-btn {
+    display: none;
+  }
+
+  .content {
+    padding: 24px 16px 32px;
+  }
 }
 </style>

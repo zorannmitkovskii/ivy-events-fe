@@ -279,7 +279,7 @@ const config = reactive({
       description: 'A sunset picnic by the beach where we talked for hours',
     },
     {
-      imageUrl: 'https://images.unsplash.com/photo-1529634597633-c4e6e1f2e4b7?w=600&h=400&fit=crop',
+      imageUrl: 'https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=600&h=400&fit=crop',
       date: 'Winter 2024',
       title: 'The Proposal',
       description: 'Under the northern lights in Iceland, he asked the question',

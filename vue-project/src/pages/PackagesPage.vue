@@ -71,10 +71,10 @@
           </PricingFeature>
         </ul>
 
-        <CpayButton
-          :packageType="pkg.packageType"
+        <ButtonMain
           :label="$t('packages.choose')"
           variant="gold"
+          @click="onChoosePackage(pkg.packageType)"
         />
       </div>
     </div>
@@ -86,15 +86,18 @@
 <script setup>
 import { ref, computed, watch, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { packageService } from "@/services/package.service";
-import CpayButton from "@/components/payment/CpayButton.vue";
+import ButtonMain from "@/components/generic/ButtonMain.vue";
 import PricingFeature from "@/components/cards/PricingFeature.vue";
 import Header from "@/components/header/Header.vue";
 import Footer from "@/components/layout/Footer.vue";
+import { setSelectedPackageType } from "@/store/onboarding.store";
 
 const { t, locale } = useI18n();
 const route = useRoute();
+const router = useRouter();
+const lang = computed(() => route.params.lang || 'mk');
 
 const validTabs = ["invitation", "gallery"];
 const queryTab = route.query.tab;
@@ -140,6 +143,11 @@ async function fetchPackages() {
   } finally {
     loading.value = false;
   }
+}
+
+function onChoosePackage(packageType) {
+  setSelectedPackageType(packageType);
+  router.push({ name: 'signup', params: { lang: lang.value } });
 }
 
 watch(activeTab, fetchPackages);
