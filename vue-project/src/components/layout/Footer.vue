@@ -48,7 +48,7 @@ const route = useRoute();
 const lang = computed(() => route.params.lang || "mk");
 
 const productLinks = computed(() => [
-  { labelKey: "footer.links.features", to: `/${lang.value}/features` },
+  // { labelKey: "footer.links.features", to: `/${lang.value}/features` },
   { labelKey: "footer.links.pricing", to: `/${lang.value}/pricing` },
   { labelKey: "footer.links.designs", to: `/${lang.value}/event-invitations` },
   { labelKey: "footer.links.faq", to: `/${lang.value}/faq` }

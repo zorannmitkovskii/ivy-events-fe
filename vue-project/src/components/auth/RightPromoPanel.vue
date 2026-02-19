@@ -79,6 +79,7 @@ const bgStyle = computed(() =>
 
 /* Content */
 .promo__content {
+  height: 100vh;
   position: relative;
   z-index: 2;
   max-width: 520px;

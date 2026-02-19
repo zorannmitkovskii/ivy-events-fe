@@ -1132,7 +1132,8 @@
     "codePh": "Enter discount code",
     "applyCode": "Apply",
     "validating": "Validating...",
-    "invalidCode": "Invalid discount code"
+    "invalidCode": "Invalid discount code",
+    "continuePayment": "Continue to Payment"
   },
   "about": {
     "title": "About Us",

@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { packageService } from "@/services/package.service";
-import { onboardingStore } from "@/store/onboarding.store";
+import { onboardingStore, setSelectedPackageType } from "@/store/onboarding.store";
 import publicApi from "@/services/backendApi";
 import CpayButton from "@/components/payment/CpayButton.vue";
 import PricingFeature from "@/components/cards/PricingFeature.vue";
@@ -15,6 +15,11 @@ const error = ref(null);
 
 const eventId = computed(() => onboardingStore.eventId);
 const category = computed(() => onboardingStore.selectedCategory || "WEDDING");
+const selectedPackageType = computed(() => onboardingStore.selectedPackageType);
+
+function selectPackage(packageType) {
+  setSelectedPackageType(packageType);
+}
 
 // Discount code state
 const discountCode = ref("");
@@ -84,8 +89,17 @@ onMounted(fetchPackages);
 <template>
   <div class="dash-page">
     <div class="dash-page-header">
-      <h1 class="dash-page-title">{{ t("packages.title") }}</h1>
-      <p class="dash-page-subtitle">{{ t("packages.subtitle") }}</p>
+      <div class="header-text">
+        <h1 class="dash-page-title">{{ t("packages.title") }}</h1>
+        <p class="dash-page-subtitle">{{ t("packages.subtitle") }}</p>
+      </div>
+      <CpayButton
+        v-if="selectedPackageType"
+        :package-type="selectedPackageType"
+        :event-id="eventId"
+        :label="t('packages.continuePayment')"
+        variant="gold"
+      />
     </div>
 
     <!-- Loading -->
@@ -134,7 +148,11 @@ onMounted(fetchPackages);
         v-for="pkg in packages"
         :key="pkg.id"
         class="package-card"
-        :class="{ featured: pkg.packageType === 'INV_PRO' || pkg.packageType === 'GALLERY_PREMIUM' }"
+        :class="{
+          featured: pkg.packageType === 'INV_PRO' || pkg.packageType === 'GALLERY_PREMIUM',
+          selected: pkg.packageType === selectedPackageType,
+        }"
+        @click="selectPackage(pkg.packageType)"
       >
         <span
           v-if="pkg.packageType === 'INV_PRO' || pkg.packageType === 'GALLERY_PREMIUM'"
@@ -186,6 +204,18 @@ onMounted(fetchPackages);
 </template>
 
 <style scoped>
+.dash-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.header-text {
+  flex: 1;
+  min-width: 0;
+}
+
 .packages-loading {
   padding: 60px 0;
   text-align: center;
@@ -252,9 +282,20 @@ onMounted(fetchPackages);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
 }
 
+.package-card {
+  cursor: pointer;
+}
+
 .package-card.featured {
   border-color: var(--brand-gold, #c8a24d);
   box-shadow: 0 4px 20px rgba(200, 162, 77, 0.15);
+}
+
+.package-card.selected {
+  border-color: var(--brand-gold, #c8a24d);
+  border-width: 2px;
+  box-shadow: 0 4px 20px rgba(200, 162, 77, 0.25);
+  background: #fffdf7;
 }
 
 .badge-popular {

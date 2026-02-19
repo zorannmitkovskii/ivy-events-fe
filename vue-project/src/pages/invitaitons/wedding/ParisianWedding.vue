@@ -228,8 +228,8 @@ const config = reactive({
     'It began with a chance encounter at a small caf\u00e9 in Montmartre. A shared table, a spilled espresso, and a conversation that lasted until the streetlights flickered on.',
     'Three years later, under the golden glow of the Eiffel Tower, Alexandre asked the question that would change our lives forever. We are thrilled to invite you back to the city where our hearts first met.',
   ],
-  storyImageUrl: 'https://images.unsplash.com/photo-1522673607200-1645062cd958?w=2070&q=80',
-  signatureUrl: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=687&q=80',
+  storyImageUrl: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=2070&q=80',
+  signatureUrl: '',
 
   agendaTitle: 'The Agenda',
   agendaEvents: [
