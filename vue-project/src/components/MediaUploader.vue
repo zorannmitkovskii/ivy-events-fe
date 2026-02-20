@@ -108,7 +108,7 @@ const uploadFiles = async () => {
 
   try {
     const response = await axios.post(
-      `${baseUrl}/api/media/upload`,
+      `${baseUrl}/public/media/upload`,
       formData,
       {
         headers: {

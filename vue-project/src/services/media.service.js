@@ -13,7 +13,7 @@ export const mediaService = {
     const fileList = Array.isArray(files) ? files : [files];
     fileList.forEach(f => formData.append("files", f));
 
-    const res = await backendApi.post("/api/media/upload", formData, {
+    const res = await backendApi.post("/public/media/upload", formData, {
       headers: { "Content-Type": undefined },
       params: { eventId }
     });
