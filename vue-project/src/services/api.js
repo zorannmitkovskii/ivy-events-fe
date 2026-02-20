@@ -58,6 +58,7 @@ async function refreshAccessToken() {
     localStorage.setItem("refresh_token", newRefresh);
   }
 
+  scheduleProactiveRefresh();
   return accessToken;
 }
 
@@ -101,6 +102,58 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// ── Proactive token refresh ─────────────────────────────────────────
+// Schedules a refresh ~60 s before the access token expires so the
+// refresh token stays alive as long as the user has the app open.
+let refreshTimer = null;
+
+function getTokenExp(token) {
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.exp ? payload.exp * 1000 : null; // ms
+  } catch {
+    return null;
+  }
+}
+
+function scheduleProactiveRefresh() {
+  clearTimeout(refreshTimer);
+
+  const token = getToken();
+  const exp = getTokenExp(token);
+  if (!exp) return;
+
+  const now = Date.now();
+  // Refresh 60 seconds before expiry, minimum 5 seconds from now
+  const delay = Math.max(exp - now - 60_000, 5_000);
+
+  refreshTimer = setTimeout(async () => {
+    if (isRefreshing) return;
+    try {
+      await refreshAccessToken();
+      scheduleProactiveRefresh(); // reschedule with new token
+    } catch {
+      // Refresh failed – the 401 interceptor will handle it on next request
+    }
+  }, delay);
+}
+
+// Start scheduling whenever tokens change
+function onTokensUpdated() {
+  scheduleProactiveRefresh();
+}
+
+// Initial schedule on module load
+scheduleProactiveRefresh();
+
+// Re-schedule when another tab updates tokens
+window.addEventListener("storage", (e) => {
+  if (e.key === "access_token") {
+    scheduleProactiveRefresh();
+  }
+});
 
 // Normalize errors so services/composables get a readable message
 function normalizeAxiosError(err) {
@@ -167,4 +220,5 @@ export const api = {
   }
 };
 
+export { scheduleProactiveRefresh };
 export default apiClient;

@@ -52,26 +52,26 @@
 
       <!-- Notification Type -->
       <div class="field-group">
-        <label class="field-label">{{ notificationLabel }}</label>
+        <label class="field-label">{{ resolvedNotificationLabel }}</label>
         <div class="attendance-row">
           <label class="radio-card" :class="{ 'radio-card--selected-accent': notificationType === 'email' }">
             <input v-model="notificationType" type="radio" value="email" class="sr-only" />
-            <span>{{ emailOptionLabel }}</span>
+            <span>{{ resolvedEmailOptionLabel }}</span>
           </label>
           <label class="radio-card" :class="{ 'radio-card--selected-accent': notificationType === 'sms' }">
             <input v-model="notificationType" type="radio" value="sms" class="sr-only" />
-            <span>{{ smsOptionLabel }}</span>
+            <span>{{ resolvedSmsOptionLabel }}</span>
           </label>
         </div>
       </div>
 
       <!-- Contact Info -->
       <div v-if="notificationType === 'email'" class="field-group">
-        <label class="field-label">{{ emailLabel }}</label>
+        <label class="field-label">{{ resolvedEmailLabel }}</label>
         <input v-model="contactEmail" type="email" class="field-input" :placeholder="emailPlaceholder" />
       </div>
       <div v-else-if="notificationType === 'sms'" class="field-group">
-        <label class="field-label">{{ phoneLabel }}</label>
+        <label class="field-label">{{ resolvedPhoneLabel }}</label>
         <input v-model="contactPhone" type="tel" class="field-input" :placeholder="phonePlaceholder" />
       </div>
 
@@ -92,9 +92,9 @@
 
       <!-- Dietary Preference -->
       <div class="field-group">
-        <label class="field-label">{{ dietaryLabel }}</label>
+        <label class="field-label">{{ resolvedDietaryLabel }}</label>
         <select v-model="dietary" class="field-input field-select">
-          <option v-for="opt in dietaryOptions" :key="opt.value" :value="opt.value" :disabled="!opt.value">
+          <option v-for="opt in resolvedDietaryOptions" :key="opt.value" :value="opt.value" :disabled="!opt.value">
             {{ opt.label }}
           </option>
         </select>
@@ -156,27 +156,15 @@ const props = defineProps({
   headingFont: { type: String, default: 'inherit' },
   bodyFont: { type: String, default: 'inherit' },
   borderRadius: { type: String, default: '12px' },
-  notificationLabel: { type: String, default: 'How should we contact you?' },
-  emailOptionLabel: { type: String, default: 'Email' },
-  smsOptionLabel: { type: String, default: 'SMS' },
-  emailLabel: { type: String, default: 'Email Address' },
+  notificationLabel: { type: String, default: '' },
+  emailOptionLabel: { type: String, default: '' },
+  smsOptionLabel: { type: String, default: '' },
+  emailLabel: { type: String, default: '' },
   emailPlaceholder: { type: String, default: 'your@email.com' },
-  phoneLabel: { type: String, default: 'Phone Number' },
-  phonePlaceholder: { type: String, default: '+1 (555) 123-4567' },
-  dietaryLabel: { type: String, default: 'Dietary Preference' },
-  dietaryOptions: {
-    type: Array,
-    default: () => [
-      { value: '', label: 'Select dietary preference' },
-      { value: 'no_restrictions', label: 'No Restrictions' },
-      { value: 'vegetarian', label: 'Vegetarian' },
-      { value: 'vegan', label: 'Vegan' },
-      { value: 'chicken', label: 'Chicken' },
-      { value: 'fish', label: 'Fish' },
-      { value: 'gluten_free', label: 'Gluten-Free' },
-      { value: 'other', label: 'Other' },
-    ],
-  },
+  phoneLabel: { type: String, default: '' },
+  phonePlaceholder: { type: String, default: '+389 7X XXX XXX' },
+  dietaryLabel: { type: String, default: '' },
+  dietaryOptions: { type: Array, default: null },
 });
 
 const emit = defineEmits(['submit']);
@@ -202,6 +190,24 @@ const cssVars = computed(() => ({
   '--rsvp-body-font': props.bodyFont,
   '--rsvp-radius': props.borderRadius,
 }));
+
+/* i18n fallbacks for props that may be empty */
+const resolvedNotificationLabel = computed(() => props.notificationLabel || t('invitation.howToContact'));
+const resolvedEmailOptionLabel = computed(() => props.emailOptionLabel || t('invitation.email'));
+const resolvedSmsOptionLabel = computed(() => props.smsOptionLabel || t('invitation.sms'));
+const resolvedEmailLabel = computed(() => props.emailLabel || t('invitation.emailAddress'));
+const resolvedPhoneLabel = computed(() => props.phoneLabel || t('invitation.phoneNumber'));
+const resolvedDietaryLabel = computed(() => props.dietaryLabel || t('invitation.dietaryPreference'));
+const resolvedDietaryOptions = computed(() => props.dietaryOptions || [
+  { value: '', label: t('invitation.selectDietary') },
+  { value: 'no_restrictions', label: t('invitation.noRestrictions') },
+  { value: 'vegetarian', label: t('invitation.vegetarian') },
+  { value: 'vegan', label: t('invitation.vegan') },
+  { value: 'chicken', label: t('invitation.chicken') },
+  { value: 'fish', label: t('invitation.fish') },
+  { value: 'gluten_free', label: t('invitation.glutenFree') },
+  { value: 'other', label: t('invitation.otherDietary') },
+]);
 
 function addGuest() {
   if (guests.value.length < props.maxGuests) {

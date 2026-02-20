@@ -74,6 +74,7 @@
 
           <CpayButton
             :packageType="pkg.packageType"
+            :price="pkg.currentPrice ?? pkg.price"
             :label="$t('packages.choose')"
             variant="gold"
           />

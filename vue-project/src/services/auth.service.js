@@ -1,4 +1,5 @@
 import apiPublic from "./backendApi";
+import { scheduleProactiveRefresh } from "./api";
 import { getRuntimeEnv, detectDefaultEnvFromLocation, computeKeycloakBaseUrl } from '@/services/env';
 
 export function isAuthenticated() {
@@ -110,6 +111,7 @@ export async function loginWithCredentials(username, password) {
   if (refreshToken) localStorage.setItem('refresh_token', refreshToken);
   if (idToken) localStorage.setItem('id_token', idToken);
 
+  scheduleProactiveRefresh();
   return data;
 }
 
@@ -153,6 +155,7 @@ export async function refreshAccessToken() {
   if (data.refresh_token) localStorage.setItem('refresh_token', data.refresh_token);
   if (data.id_token) localStorage.setItem('id_token', data.id_token);
 
+  scheduleProactiveRefresh();
   return data;
 }
 
@@ -203,5 +206,6 @@ export async function exchangeOAuthCode(code, redirectUri) {
   if (data.refresh_token) localStorage.setItem('refresh_token', data.refresh_token);
   if (data.id_token) localStorage.setItem('id_token', data.id_token);
 
+  scheduleProactiveRefresh();
   return data;
 }

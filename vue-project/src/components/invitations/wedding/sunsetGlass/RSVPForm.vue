@@ -39,14 +39,14 @@
         v-model="local.dietary"
         class="w-full px-4 py-3 border border-gray-300 rounded-small focus:outline-none focus:ring-2 focus:ring-pink-300 font-body appearance-none bg-white"
       >
-        <option value="" disabled>Select dietary preference</option>
-        <option value="no_restrictions">No Restrictions</option>
-        <option value="vegetarian">Vegetarian</option>
-        <option value="vegan">Vegan</option>
-        <option value="chicken">Chicken</option>
-        <option value="fish">Fish</option>
-        <option value="gluten_free">Gluten-Free</option>
-        <option value="other">Other</option>
+        <option value="" disabled>{{ t('invitation.selectDietary') }}</option>
+        <option value="no_restrictions">{{ t('invitation.noRestrictions') }}</option>
+        <option value="vegetarian">{{ t('invitation.vegetarian') }}</option>
+        <option value="vegan">{{ t('invitation.vegan') }}</option>
+        <option value="chicken">{{ t('invitation.chicken') }}</option>
+        <option value="fish">{{ t('invitation.fish') }}</option>
+        <option value="gluten_free">{{ t('invitation.glutenFree') }}</option>
+        <option value="other">{{ t('invitation.otherDietary') }}</option>
       </select>
     </BaseField>
 
