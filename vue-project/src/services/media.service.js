@@ -1,4 +1,6 @@
+import axios from "axios";
 import backendApi from "@/services/backendApi";
+import { baseUrl } from "@/services/baseUrl";
 
 export const mediaService = {
   async list(eventId, { page = 0, size = 30 } = {}) {
@@ -13,10 +15,13 @@ export const mediaService = {
     const fileList = Array.isArray(files) ? files : [files];
     fileList.forEach(f => formData.append("files", f));
 
-    const res = await backendApi.post("/public/media/upload", formData, {
-      headers: { "Content-Type": undefined },
-      params: { eventId }
-    });
+    // Use plain axios (no default Content-Type header) so the browser
+    // sets the correct multipart/form-data boundary on all platforms (iOS Safari included)
+    const res = await axios.post(
+      `${baseUrl}/public/media/upload`,
+      formData,
+      { params: { eventId } }
+    );
     return res.data;
   },
 
