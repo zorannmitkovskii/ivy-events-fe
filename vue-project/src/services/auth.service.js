@@ -98,8 +98,8 @@ export async function verifyEmail(code, email) {
 }
 
 // Login via BE – BE calls Keycloak token endpoint on our behalf
-export async function loginWithCredentials(username, password) {
-  const res = await apiPublic.post("/public/users/login", { username, password });
+export async function loginWithCredentials(email, password) {
+  const res = await apiPublic.post("/public/users/login", { email, password });
   const data = res?.data || res;
 
   // Handle both snake_case (Keycloak) and camelCase (Spring) response fields

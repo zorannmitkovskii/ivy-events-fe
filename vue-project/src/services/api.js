@@ -93,7 +93,12 @@ apiClient.interceptors.response.use(
         // Clear tokens and redirect to login
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
-        return Promise.reject(refreshError);
+        localStorage.removeItem("id_token");
+
+        // Redirect to login page
+        const lang = window.location.pathname.split("/")[1] || "mk";
+        window.location.href = `/${lang}/auth/login`;
+        return new Promise(() => {}); // never resolves – page is navigating away
       } finally {
         isRefreshing = false;
       }

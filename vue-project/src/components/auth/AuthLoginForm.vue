@@ -79,7 +79,7 @@ const route = useRoute();
 const router = useRouter();
 const lang = computed(() => route.params.lang || 'mk');
 
-const email = ref('');
+const email = ref(route.query.email || '');
 const password = ref('');
 const isLoading = ref(false);
 const formError = ref('');

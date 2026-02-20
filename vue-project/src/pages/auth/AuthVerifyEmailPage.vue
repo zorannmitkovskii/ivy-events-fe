@@ -56,7 +56,7 @@ import AuthCard from "@/components/auth/AuthCard.vue";
 import AuthBrand from "@/components/auth/AuthBrand.vue";
 import AuthInput from "@/components/auth/AuthInput.vue";
 import { onboardingStore, setEmailVerified, setEventId, getTempPassword, getTempUsername, clearTempCredentials } from "@/store/onboarding.store";
-import { verifyEmail, exchangeOAuthCode, assignRole, refreshAccessToken, getEventId, hasRole, loginWithCredentials } from "@/services/auth.service";
+import { verifyEmail, exchangeOAuthCode, assignRole, refreshAccessToken, getEventId, hasRole, loginWithCredentials, isAuthenticated } from "@/services/auth.service";
 
 const router = useRouter();
 const route = useRoute();
@@ -125,15 +125,21 @@ async function onVerify() {
 
     // Auto-login with credentials stored during registration
     const tempPw = getTempPassword();
-    const tempUser = getTempUsername();
-    if (tempPw && tempUser) {
+    if (tempPw && email.value) {
       try {
-        await loginWithCredentials(tempUser, tempPw);
+        await loginWithCredentials(email.value.trim(), tempPw);
       } catch (loginErr) {
         console.warn("[auto-login] failed after verify:", loginErr?.message);
       } finally {
         clearTempCredentials();
       }
+    }
+
+    // If we have no token (auto-login failed or credentials were lost),
+    // send user to login page so they can authenticate before onboarding
+    if (!isAuthenticated()) {
+      await router.push({ name: "login", params: { lang: lang.value }, query: { email: email.value } });
+      return;
     }
 
     await router.push({ name: "EventCategoryPage", params: { lang: lang.value } });
