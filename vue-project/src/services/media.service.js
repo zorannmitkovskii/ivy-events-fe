@@ -2,7 +2,7 @@ import backendApi from "@/services/backendApi";
 
 export const mediaService = {
   async list(eventId, { page = 0, size = 30 } = {}) {
-    const res = await backendApi.get("/api/media", {
+    const res = await backendApi.get("/public/media", {
       params: { eventId, page, size }
     });
     return res.data;
@@ -21,14 +21,14 @@ export const mediaService = {
   },
 
   async remove(path) {
-    const res = await backendApi.delete("/api/media", {
+    const res = await backendApi.delete("/public/media", {
       params: { path }
     });
     return res.data;
   },
 
   async downloadAll(eventId) {
-    const res = await backendApi.get("/api/media/download/all", {
+    const res = await backendApi.get("/public/media/download/all", {
       params: { eventId },
       responseType: "blob"
     });
@@ -36,7 +36,7 @@ export const mediaService = {
   },
 
   async downloadSelected(fileIds) {
-    const res = await backendApi.post("/api/media/download/selected", fileIds, {
+    const res = await backendApi.post("/public/media/download/selected", fileIds, {
       responseType: "blob"
     });
     return res.data;
