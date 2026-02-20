@@ -10,7 +10,7 @@
       <input
         ref="fileInput"
         type="file"
-        accept="image/*,video/*,.heic,.heif"
+        accept="image/*,video/*"
         multiple
         class="d-none"
         @change="handleSelect"
@@ -67,12 +67,9 @@
 </template>
 
 <script setup>
+import axios from "axios";
 import { ref } from "vue";
-import { mediaService } from "@/services/media.service";
-
-const props = defineProps({
-  eventId: { type: String, default: "" }
-});
+import { baseUrl } from "../services/baseUrl";
 
 const emit = defineEmits(["uploaded"]);
 
@@ -106,12 +103,17 @@ const handleDrop = (e) => {
 const uploadFiles = async () => {
   uploading.value = true;
 
+  const formData = new FormData();
+  files.value.forEach((f) => formData.append("files", f));
+
   try {
-    const data = await mediaService.upload(files.value, props.eventId);
-    emit("uploaded", data);
-    files.value = [];
-  } catch (e) {
-    console.error("Upload error:", e?.message || e);
+    const response = await axios.post(
+      `${baseUrl}/public/media/upload`,
+      formData
+    );
+
+    emit("uploaded", response.data);
+    files.value = []; // clear selection
   } finally {
     uploading.value = false;
   }
