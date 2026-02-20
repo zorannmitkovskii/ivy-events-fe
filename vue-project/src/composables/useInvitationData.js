@@ -6,7 +6,7 @@ import { onboardingStore } from "@/store/onboarding.store";
 export function useInvitationData() {
   const route = useRoute();
   const lang = computed(() => route.params.lang || "mk");
-  const eventId = onboardingStore.eventId || route.query.eventId;
+  const eventId = route.query.eventId || onboardingStore.eventId;
 
   const loading = ref(!!eventId);
   const error = ref(null);
