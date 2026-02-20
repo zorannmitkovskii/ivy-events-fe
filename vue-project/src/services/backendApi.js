@@ -18,4 +18,13 @@ export function subscribeToDiscounts(payload) {
   return api.post('/public/discounts/subscribe', payload)
 }
 
+/**
+ * Fetch table-info for guests (public endpoint)
+ * @param {string} eventId
+ * @returns {Promise<import('axios').AxiosResponse<Array<{name: string, tableNumber: string}>>>}
+ */
+export function getTableInfo(eventId) {
+  return api.get('/public/guests/table-info', { params: { eventId } })
+}
+
 export default api
