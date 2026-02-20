@@ -5,7 +5,7 @@
         <h1 class="dash-page-title">{{ t("settings.title") }}</h1>
         <p class="dash-page-subtitle">{{ t("settings.subtitle") }}</p>
       </div>
-      <div v-if="event && !loading" class="header-actions">
+      <div v-if="event && !loading && !isGallery" class="header-actions">
         <ButtonMain
           variant="gold"
           @click="goToPackages"
@@ -43,8 +43,8 @@
     </div>
 
     <template v-else-if="form">
-      <!-- Event Details -->
-      <div class="s-card">
+      <!-- Event Details (hidden for Gallery) -->
+      <div v-if="!isGallery" class="s-card">
         <h2 class="section-title">{{ t("settings.eventDetails") }}</h2>
 
         <div class="details-grid">
@@ -93,8 +93,8 @@
         </div>
       </div>
 
-      <!-- Display Options -->
-      <div class="s-card">
+      <!-- Display Options (hidden for Gallery) -->
+      <div v-if="!isGallery" class="s-card">
         <h2 class="section-title">{{ t("settings.displayOptions") }}</h2>
 
         <div class="toggle-grid">
@@ -121,8 +121,8 @@
         <h2 class="section-title">{{ t("settings.linksAndSharing") }}</h2>
         <p class="section-desc">{{ t("settings.invitationLinkDesc") }}</p>
 
-        <!-- Invitation URL -->
-        <div class="url-group">
+        <!-- Invitation URL (hidden for Gallery) -->
+        <div v-if="!isGallery" class="url-group">
           <span class="url-label">{{ t("settings.invitationLink") }}</span>
           <div class="url-box">
             <span class="url-text">{{ form.invitationUrl || t("settings.noInvitationUrl") }}</span>
@@ -192,8 +192,8 @@
         </div>
       </div>
 
-      <!-- Danger Zone -->
-      <div class="s-card danger-card">
+      <!-- Danger Zone (hidden for Gallery) -->
+      <div v-if="!isGallery" class="s-card danger-card">
         <h2 class="section-title danger-title">{{ t("settings.dangerZone") }}</h2>
         <p class="section-desc">{{ t("settings.archiveDesc") }}</p>
         <ButtonMain variant="danger" @click="archiveEvent">

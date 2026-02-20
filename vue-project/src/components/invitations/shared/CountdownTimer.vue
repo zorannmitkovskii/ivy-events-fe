@@ -15,6 +15,9 @@
 
 <script setup>
 import { reactive, computed, onMounted, onUnmounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   targetDate: { type: String, required: true },
@@ -27,10 +30,10 @@ const props = defineProps({
   separatorColor: { type: String, default: '#ccc' },
   labelColor: { type: String, default: '#777' },
   unitLabelColor: { type: String, default: '#999' },
-  daysLabel: { type: String, default: 'Days' },
-  hoursLabel: { type: String, default: 'Hours' },
-  minutesLabel: { type: String, default: 'Minutes' },
-  secondsLabel: { type: String, default: 'Seconds' },
+  daysLabel: { type: String, default: '' },
+  hoursLabel: { type: String, default: '' },
+  minutesLabel: { type: String, default: '' },
+  secondsLabel: { type: String, default: '' },
 });
 
 const countdown = reactive({ days: 0, hours: 0, mins: 0, secs: 0 });
@@ -46,12 +49,12 @@ function update() {
 
 const displayUnits = computed(() => {
   const units = [
-    { value: countdown.days, label: props.daysLabel },
-    { value: countdown.hours, label: props.hoursLabel },
-    { value: countdown.mins, label: props.minutesLabel },
+    { value: countdown.days, label: props.daysLabel || t('invitation.days') },
+    { value: countdown.hours, label: props.hoursLabel || t('invitation.hours') },
+    { value: countdown.mins, label: props.minutesLabel || t('invitation.minutes') },
   ];
   if (props.showSeconds) {
-    units.push({ value: countdown.secs, label: props.secondsLabel });
+    units.push({ value: countdown.secs, label: props.secondsLabel || t('invitation.seconds') });
   }
   return units;
 });
@@ -94,7 +97,6 @@ onUnmounted(() => {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 24px;
   flex-wrap: wrap;
 }
 

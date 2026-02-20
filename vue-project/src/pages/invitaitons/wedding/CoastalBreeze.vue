@@ -1,5 +1,5 @@
 <template>
-  <div class="coastal-breeze">
+  <div ref="rootRef" class="coastal-breeze">
     <!-- Loading overlay -->
     <div v-if="loading" class="loading-overlay">
       <div class="loading-spinner"></div>
@@ -26,17 +26,17 @@
     />
 
     <!-- Event Details -->
-    <section class="section section--gray">
+    <section class="section section--gray" data-reveal>
       <div class="section-inner">
         <div class="section-header">
-          <h2 class="section-title">Event Details</h2>
+          <h2 class="section-title">{{ t('invitation.eventDetails') }}</h2>
           <div class="section-divider"></div>
         </div>
 
         <div class="details-grid">
           <!-- Ceremony -->
           <DetailCard
-            title="Ceremony"
+            :title="t('invitation.ceremony')"
             bg-color="#fff"
             border-width="0"
             border-radius="24px"
@@ -54,13 +54,13 @@
             <p>{{ config.ceremonyTime }}</p>
             <p class="muted">{{ config.ceremonyVenue }}</p>
             <template #footer>
-              <a v-if="config.ceremonyMapUrl" :href="config.ceremonyMapUrl" target="_blank" rel="noopener" class="map-link">View Map</a>
+              <a v-if="config.ceremonyMapUrl" :href="config.ceremonyMapUrl" target="_blank" rel="noopener" class="map-link">{{ t('invitation.viewMap') }}</a>
             </template>
           </DetailCard>
 
           <!-- Reception -->
           <DetailCard
-            title="Reception"
+            :title="t('invitation.reception')"
             bg-color="#fff"
             border-width="0"
             border-radius="24px"
@@ -78,13 +78,13 @@
             <p>{{ config.receptionTime }}</p>
             <p class="muted">{{ config.receptionVenue }}</p>
             <template #footer>
-              <a v-if="config.receptionMapUrl" :href="config.receptionMapUrl" target="_blank" rel="noopener" class="map-link">View Map</a>
+              <a v-if="config.receptionMapUrl" :href="config.receptionMapUrl" target="_blank" rel="noopener" class="map-link">{{ t('invitation.viewMap') }}</a>
             </template>
           </DetailCard>
 
           <!-- Location -->
           <DetailCard
-            title="Location"
+            :title="t('invitation.location')"
             bg-color="#fff"
             border-width="0"
             border-radius="24px"
@@ -102,7 +102,7 @@
             </template>
             <p>{{ config.venue }}</p>
             <template #footer>
-              <a v-if="config.locationMapUrl" :href="config.locationMapUrl" target="_blank" rel="noopener" class="map-link">View Map</a>
+              <a v-if="config.locationMapUrl" :href="config.locationMapUrl" target="_blank" rel="noopener" class="map-link">{{ t('invitation.viewMap') }}</a>
             </template>
           </DetailCard>
         </div>
@@ -124,7 +124,7 @@
     </section>
 
     <!-- Schedule -->
-    <section class="section section--white">
+    <section class="section section--white" data-reveal>
       <div class="section-inner">
         <ScheduleList
           :title="config.scheduleTitle"
@@ -137,7 +137,7 @@
     </section>
 
     <!-- Our Story -->
-    <section class="section section--gray">
+    <section class="section section--gray" data-reveal>
       <div class="section-inner">
         <StoryGallery
           :title="config.storyTitle"
@@ -150,10 +150,10 @@
     </section>
 
     <!-- RSVP -->
-    <section id="rsvp-section" class="section section--white">
+    <section id="rsvp-section" class="section section--white" data-reveal>
       <div class="section-inner">
         <div class="rsvp-header">
-          <h2 class="section-title">RSVP</h2>
+          <h2 class="section-title">{{ t('invitation.rsvp') }}</h2>
           <div class="section-divider"></div>
           <p class="rsvp-subtitle">{{ config.rsvpMessage }}</p>
         </div>
@@ -161,14 +161,14 @@
         <div class="rsvp-wrapper">
           <RsvpForm
             title=""
-            name-label="Full Name"
-            name-placeholder="First & Last Name"
-            add-guest-label="Add another guest"
-            accept-label="Joyfully Accept"
-            decline-label="Regretfully Decline"
-            message-label="Message to the Couple"
-            message-placeholder="Dietary restrictions, well wishes, or song requests..."
-            submit-label="Send RSVP"
+            :name-label="t('invitation.fullName')"
+            :name-placeholder="t('invitation.namePlaceholder')"
+            :add-guest-label="t('invitation.addGuest')"
+            :accept-label="t('invitation.joyfullyAccept')"
+            :decline-label="t('invitation.regretfullyDecline')"
+            :message-label="t('invitation.yourMessage')"
+            :message-placeholder="t('invitation.messagePlaceholder')"
+            :submit-label="t('invitation.sendRsvp')"
             :accent-color="palette.blue200"
             :accept-color="palette.blue100"
             :decline-color="palette.rose100"
@@ -183,25 +183,17 @@
       </div>
     </section>
 
-    <!-- Footer -->
-    <section class="footer-section">
-      <div class="footer-inner">
-        <p class="footer-message">{{ config.footerMessage }}</p>
-        <div class="footer-divider"></div>
-        <p class="footer-contact-label">For questions or additional information, please contact us at</p>
-        <a v-if="config.contactEmail" :href="'mailto:' + config.contactEmail" class="footer-email">{{ config.contactEmail }}</a>
-        <p class="footer-credits">{{ config.brideName }} &amp; {{ config.groomName }} &bull; {{ config.weddingDate }}</p>
-      </div>
-    </section>
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, onMounted } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
 import { useInvitationData } from '@/composables/useInvitationData';
+import { useScrollReveal } from '@/composables/useScrollReveal';
 import HeroSection from '@/components/invitations/wedding/CoastalBreeze/HeroSection.vue';
 import ScheduleList from '@/components/invitations/wedding/CoastalBreeze/ScheduleList.vue';
 import StoryGallery from '@/components/invitations/wedding/CoastalBreeze/StoryGallery.vue';
@@ -209,9 +201,13 @@ import DetailCard from '@/components/invitations/shared/DetailCard.vue';
 import CountdownTimer from '@/components/invitations/shared/CountdownTimer.vue';
 import RsvpForm from '@/components/invitations/shared/RsvpForm.vue';
 
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const { eventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
+
+const rootRef = ref(null);
+useScrollReveal(rootRef);
 
 const palette = {
   blue50: '#eff6ff',
@@ -287,8 +283,6 @@ const config = reactive({
   ],
 
   rsvpMessage: "Please respond by May 1st, 2025. We can't wait to celebrate with you!",
-  footerMessage: "We can't wait to celebrate with you!",
-  contactEmail: 'emma.lucas.wedding@email.com',
 });
 
 function applyBackendData(data) {
@@ -546,59 +540,15 @@ async function onRsvpSubmit(payload) {
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* Footer */
-.footer-section {
-  background: #eff6ff;
-  padding: 64px 24px;
+/* Scroll Reveal */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
 }
-
-.footer-inner {
-  max-width: 640px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.footer-message {
-  font-family: var(--font-heading);
-  font-size: 28px;
-  color: #1f2937;
-  margin: 0 0 24px;
-}
-
-.footer-divider {
-  width: 64px;
-  height: 1px;
-  background: #fda4af;
-  margin: 0 auto 24px;
-}
-
-.footer-contact-label {
-  font-family: var(--font-body);
-  font-size: 15px;
-  color: #4b5563;
-  margin: 0 0 8px;
-}
-
-.footer-email {
-  display: inline-block;
-  font-family: var(--font-body);
-  font-size: 15px;
-  color: #60a5fa;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  margin-bottom: 32px;
-  transition: color 0.2s ease;
-}
-
-.footer-email:hover {
-  color: #3b82f6;
-}
-
-.footer-credits {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: #6b7280;
-  margin: 0;
+[data-reveal].revealed {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Responsive */
@@ -628,10 +578,6 @@ async function onRsvpSubmit(payload) {
 
   .rsvp-wrapper {
     padding: 24px;
-  }
-
-  .footer-message {
-    font-size: 24px;
   }
 }
 </style>

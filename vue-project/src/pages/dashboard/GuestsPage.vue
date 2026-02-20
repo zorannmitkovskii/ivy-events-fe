@@ -22,10 +22,12 @@
         v-model="filters"
         :tables="tables"
         :sending="sending"
+        :exporting="exporting"
         :has-guests="items.length > 0"
         @add="openCreateModal"
         @import="onImport"
         @remind="onRemind"
+        @export="onExport"
         @apply="applyFilters"
       />
 
@@ -77,6 +79,7 @@ const router = useRouter();
 const modalOpen = ref(false);
 const editingGuest = ref(null);
 const sending = ref(false);
+const exporting = ref(false);
 const eventId = computed(() => onboardingStore.eventId);
 
 const {
@@ -129,6 +132,26 @@ async function handleSubmit(payload) {
 
 function onImport() {
   console.log("Import guests");
+}
+
+async function onExport() {
+  if (exporting.value || !eventId.value) return;
+  exporting.value = true;
+  try {
+    const blob = await guestsService.exportPdf(eventId.value);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "guests.pdf";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    console.error("Export failed", e);
+  } finally {
+    exporting.value = false;
+  }
 }
 async function onRemind() {
   if (sending.value || !eventId.value) return;

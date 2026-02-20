@@ -28,6 +28,10 @@ export const tasksService = {
     return api.put(`/tasks/${encodeURIComponent(taskId)}/status`, payload);
   },
 
+  updatePriority(taskId, payload) {
+    return api.put(`/tasks/${encodeURIComponent(taskId)}/priority`, payload);
+  },
+
   getWeekCurrent(eventId) {
     return api.get("/tasks/week/current", { params: { eventId } });
   },

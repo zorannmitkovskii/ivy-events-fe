@@ -1,5 +1,5 @@
 <template>
-  <div class="persian-wedding">
+  <div ref="rootRef" class="persian-wedding">
     <!-- Loading overlay -->
     <div v-if="loading" class="loading-overlay">
       <div class="loading-spinner"></div>
@@ -24,9 +24,9 @@
     />
 
     <!-- Details Section -->
-    <section class="section section--white">
+    <section class="section section--white" data-reveal>
       <div class="section-inner">
-        <h2 class="section-title">Wedding Details</h2>
+        <h2 class="section-title">{{ t('invitation.weddingDetails') }}</h2>
 
         <!-- Countdown -->
         <div class="countdown-wrapper">
@@ -63,7 +63,7 @@
             </template>
             <p v-if="detail.description">{{ detail.description }}</p>
             <template #footer>
-              <a v-if="detail.mapUrl" :href="detail.mapUrl" target="_blank" rel="noopener" class="map-btn" :style="{ background: detailCardPalette[idx % 3].accent }">View Map</a>
+              <a v-if="detail.mapUrl" :href="detail.mapUrl" target="_blank" rel="noopener" class="map-btn" :style="{ background: detailCardPalette[idx % 3].accent }">{{ t('invitation.viewMap') }}</a>
             </template>
           </DetailCard>
         </div>
@@ -71,7 +71,7 @@
         <!-- Detail Cards (hardcoded fallback for preview mode) -->
         <div class="details-grid" v-else>
           <DetailCard
-            title="Ceremony"
+            :title="t('invitation.ceremony')"
             :accent-color="palette.pink"
             :bg-color="palette.pinkBg"
             :icon-bg="palette.pinkIcon"
@@ -90,12 +90,12 @@
             <p class="bold">{{ config.ceremonyDate }}</p>
             <p>{{ config.ceremonyTime }}</p>
             <template #footer>
-              <a v-if="config.ceremonyMapUrl" :href="config.ceremonyMapUrl" target="_blank" rel="noopener" class="map-btn" :style="{ background: palette.pink }">View Map</a>
+              <a v-if="config.ceremonyMapUrl" :href="config.ceremonyMapUrl" target="_blank" rel="noopener" class="map-btn" :style="{ background: palette.pink }">{{ t('invitation.viewMap') }}</a>
             </template>
           </DetailCard>
 
           <DetailCard
-            title="Reception"
+            :title="t('invitation.reception')"
             :accent-color="palette.purple"
             :bg-color="palette.purpleBg"
             :icon-bg="palette.purpleIcon"
@@ -114,12 +114,12 @@
             <p class="bold">{{ config.receptionDate }}</p>
             <p>{{ config.receptionTime }}</p>
             <template #footer>
-              <a v-if="config.receptionMapUrl" :href="config.receptionMapUrl" target="_blank" rel="noopener" class="map-btn" :style="{ background: palette.purple }">View Map</a>
+              <a v-if="config.receptionMapUrl" :href="config.receptionMapUrl" target="_blank" rel="noopener" class="map-btn" :style="{ background: palette.purple }">{{ t('invitation.viewMap') }}</a>
             </template>
           </DetailCard>
 
           <DetailCard
-            title="Venue"
+            :title="t('invitation.venue')"
             :accent-color="palette.teal"
             :bg-color="palette.tealBg"
             :icon-bg="palette.tealIcon"
@@ -139,7 +139,7 @@
             <p class="bold">{{ config.venueName }}</p>
             <p>{{ config.venueAddress }}</p>
             <template #footer>
-              <a v-if="config.venueMapUrl" :href="config.venueMapUrl" target="_blank" rel="noopener" class="map-btn" :style="{ background: palette.teal }">View Map</a>
+              <a v-if="config.venueMapUrl" :href="config.venueMapUrl" target="_blank" rel="noopener" class="map-btn" :style="{ background: palette.teal }">{{ t('invitation.viewMap') }}</a>
             </template>
           </DetailCard>
         </div>
@@ -147,7 +147,7 @@
     </section>
 
     <!-- Agenda Timeline -->
-    <section class="section section--gradient">
+    <section class="section section--gradient" data-reveal>
       <div class="section-inner section-inner--narrow">
         <VerticalTimeline
           title="Wedding Day Timeline"
@@ -162,7 +162,7 @@
     </section>
 
     <!-- Our Story -->
-    <section class="section section--white">
+    <section class="section section--white" data-reveal>
       <div class="section-inner">
         <OurStorySection
           :title="config.storyTitle"
@@ -178,10 +178,10 @@
     </section>
 
     <!-- RSVP -->
-    <section id="rsvp-section" class="section section--gradient">
+    <section id="rsvp-section" class="section section--gradient" data-reveal>
       <div class="section-inner section-inner--narrow">
-        <h2 class="section-title">RSVP</h2>
-        <p class="section-sub">Please respond by {{ config.rsvpDeadline }}</p>
+        <h2 class="section-title">{{ t('invitation.rsvp') }}</h2>
+        <p class="section-sub">{{ t('invitation.rsvpSubtitle', { date: config.rsvpDeadline }) }}</p>
 
         <div class="rsvp-wrapper">
           <RsvpForm
@@ -194,14 +194,14 @@
             :heading-font="fonts.heading"
             :body-font="fonts.body"
             border-radius="8px"
-            name-label="Full Name"
-            name-placeholder="Enter your full name"
-            add-guest-label="Add Guest"
-            accept-label="Joyfully Accept"
-            decline-label="Regretfully Decline"
-            message-label="Special Message (Optional)"
-            message-placeholder="Dietary restrictions, song requests, or well wishes..."
-            submit-label="Submit RSVP"
+            :name-label="t('invitation.fullName')"
+            :name-placeholder="t('invitation.namePlaceholder')"
+            :add-guest-label="t('invitation.addGuestShort')"
+            :accept-label="t('invitation.joyfullyAccept')"
+            :decline-label="t('invitation.regretfullyDecline')"
+            :message-label="t('invitation.specialMessage')"
+            :message-placeholder="t('invitation.messagePlaceholder')"
+            :submit-label="t('invitation.submitRsvp')"
             @submit="onRsvpSubmit"
           />
         </div>
@@ -212,10 +212,12 @@
 </template>
 
 <script setup>
-import { reactive, onMounted } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
 import { useInvitationData } from '@/composables/useInvitationData';
+import { useScrollReveal } from '@/composables/useScrollReveal';
 import HeroSection from '@/components/invitations/wedding/PersianWedding/HeroSection.vue';
 import OurStorySection from '@/components/invitations/wedding/PersianWedding/OurStorySection.vue';
 import DetailCard from '@/components/invitations/shared/DetailCard.vue';
@@ -223,9 +225,13 @@ import CountdownTimer from '@/components/invitations/shared/CountdownTimer.vue';
 import VerticalTimeline from '@/components/invitations/shared/VerticalTimeline.vue';
 import RsvpForm from '@/components/invitations/shared/RsvpForm.vue';
 
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const { eventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
+
+const rootRef = ref(null);
+useScrollReveal(rootRef);
 
 const palette = {
   pink: '#F9A8D4',
@@ -571,6 +577,17 @@ async function onRsvpSubmit(payload) {
   border-radius: 16px;
   box-shadow: 0px 4px 20px rgba(200, 180, 220, 0.15);
   padding: 40px 48px;
+}
+
+/* Scroll Reveal */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+[data-reveal].revealed {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Responsive */

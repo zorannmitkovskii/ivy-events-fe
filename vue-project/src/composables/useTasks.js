@@ -50,6 +50,12 @@ export function useTasks() {
     if (task) task.status = status;
   }
 
+  async function updatePriority(taskId, priority) {
+    await tasksService.updatePriority(taskId, { priority });
+    const task = tasks.value.find((t) => t.id === taskId);
+    if (task) task.priority = priority;
+  }
+
   async function updateTask(taskId, payload) {
     const updated = await tasksService.update(taskId, payload);
     const idx = tasks.value.findIndex((t) => t.id === taskId);
@@ -71,17 +77,18 @@ export function useTasks() {
     updateTask,
     toggleTask,
     updateStatus,
+    updatePriority,
     removeTask
   };
 }
 
 function getDemoTasks() {
   return [
-    { id: 1, title: "Book venue and confirm date", dueDate: "2025-01-15", status: "COMPLETED", type: "TASK" },
-    { id: 2, title: "Send invitations to guests", dueDate: "2025-01-20", status: "IN_PROGRESS", type: "TASK" },
-    { id: 3, title: "Finalize menu with catering service", dueDate: "2025-01-25", status: "PENDING", type: "TASK" },
-    { id: 4, title: "Order decorations and centerpieces", dueDate: "2025-01-18", status: "COMPLETED", type: "TASK" },
-    { id: 5, title: "Arrange transportation for guests", dueDate: "2025-02-01", status: "PENDING", type: "REMINDER" },
-    { id: 6, title: "Confirm photographer and videographer", dueDate: "2025-01-28", status: "IN_PROGRESS", type: "REMINDER" }
+    { id: 1, title: "Book venue and confirm date", dueDate: "2025-01-15", status: "COMPLETED", type: "TASK", priority: "HIGH" },
+    { id: 2, title: "Send invitations to guests", dueDate: "2025-01-20", status: "IN_PROGRESS", type: "TASK", priority: "HIGH" },
+    { id: 3, title: "Finalize menu with catering service", dueDate: "2025-01-25", status: "PENDING", type: "TASK", priority: "MEDIUM" },
+    { id: 4, title: "Order decorations and centerpieces", dueDate: "2025-01-18", status: "COMPLETED", type: "TASK", priority: "LOW" },
+    { id: 5, title: "Arrange transportation for guests", dueDate: "2025-02-01", status: "PENDING", type: "REMINDER", priority: "MEDIUM" },
+    { id: 6, title: "Confirm photographer and videographer", dueDate: "2025-01-28", status: "IN_PROGRESS", type: "REMINDER", priority: "HIGH" }
   ];
 }

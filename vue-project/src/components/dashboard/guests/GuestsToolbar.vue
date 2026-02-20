@@ -5,6 +5,10 @@
       <ButtonMain variant="outline" :disabled="sending" @click="$emit('remind')">
         {{ sending ? t("overview.sending") : t("guests.sendReminder") }}
       </ButtonMain>
+      <ButtonMain variant="outline" :disabled="exporting" @click="$emit('export')">
+        <i class="bi bi-file-earmark-pdf"></i>
+        {{ exporting ? t("guests.exporting") : t("guests.export") }}
+      </ButtonMain>
     </template>
 
     <template #filters>
@@ -46,9 +50,10 @@ const props = defineProps({
   modelValue: { type: Object, required: true },
   tables: { type: Array, default: () => [] },
   sending: { type: Boolean, default: false },
+  exporting: { type: Boolean, default: false },
   hasGuests: { type: Boolean, default: false }
 });
-const emit = defineEmits(["update:modelValue", "add", "import", "remind", "apply"]);
+const emit = defineEmits(["update:modelValue", "add", "import", "remind", "export", "apply"]);
 
 const tableOptions = computed(() => props.tables || []);
 

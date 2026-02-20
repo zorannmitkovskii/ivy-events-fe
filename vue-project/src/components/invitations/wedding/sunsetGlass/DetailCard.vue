@@ -12,12 +12,16 @@
       class="inline-block text-white font-body text-sm px-6 py-2 rounded-small transition-all duration-300"
       :class="buttonClass"
     >
-      View Map
+      {{ t('invitation.viewMap') }}
     </a>
   </div>
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
 defineProps({
   title: { type: String, required: true },
   bodyHtml: { type: String, default: "" },

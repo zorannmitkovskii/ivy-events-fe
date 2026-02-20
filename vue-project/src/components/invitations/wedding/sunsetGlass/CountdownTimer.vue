@@ -1,26 +1,29 @@
 <template>
   <div class="flex justify-center gap-6 flex-wrap">
     <div class="text-center">
-      <div class="font-heading text-4xl lg:text-5xl text-pink-400 mb-2">{{ t.days }}</div>
-      <div class="font-body text-sm text-gray-600">Days</div>
+      <div class="font-heading text-4xl lg:text-5xl text-pink-400 mb-2">{{ countdown.days }}</div>
+      <div class="font-body text-sm text-gray-600">{{ t('invitation.days') }}</div>
     </div>
     <div class="text-center">
-      <div class="font-heading text-4xl lg:text-5xl text-purple-300 mb-2">{{ t.hours }}</div>
-      <div class="font-body text-sm text-gray-600">Hours</div>
+      <div class="font-heading text-4xl lg:text-5xl text-purple-300 mb-2">{{ countdown.hours }}</div>
+      <div class="font-body text-sm text-gray-600">{{ t('invitation.hours') }}</div>
     </div>
     <div class="text-center">
-      <div class="font-heading text-4xl lg:text-5xl text-teal-300 mb-2">{{ t.minutes }}</div>
-      <div class="font-body text-sm text-gray-600">Minutes</div>
+      <div class="font-heading text-4xl lg:text-5xl text-teal-300 mb-2">{{ countdown.minutes }}</div>
+      <div class="font-body text-sm text-gray-600">{{ t('invitation.minutes') }}</div>
     </div>
     <div class="text-center">
-      <div class="font-heading text-4xl lg:text-5xl text-pink-300 mb-2">{{ t.seconds }}</div>
-      <div class="font-body text-sm text-gray-600">Seconds</div>
+      <div class="font-heading text-4xl lg:text-5xl text-pink-300 mb-2">{{ countdown.seconds }}</div>
+      <div class="font-body text-sm text-gray-600">{{ t('invitation.seconds') }}</div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   targetIso: { type: String, required: true }, // e.g. "2026-06-15T16:00:00"
@@ -34,7 +37,7 @@ onMounted(() => {
 });
 onBeforeUnmount(() => clearInterval(timer));
 
-const t = computed(() => {
+const countdown = computed(() => {
   const target = new Date(props.targetIso).getTime();
   const diff = Math.max(0, target - now.value);
 

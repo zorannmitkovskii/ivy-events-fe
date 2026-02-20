@@ -10,6 +10,6 @@ export const feedbackService = {
 
   /** Admin — list all feedback */
   listAll() {
-    return api.get("/admin/feedbacks");
+    return api.get("/feedbacks");
   },
 };

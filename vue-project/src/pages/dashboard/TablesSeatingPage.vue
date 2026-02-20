@@ -13,8 +13,8 @@
         <ButtonMain variant="outline" @click="guestModalOpen = true">
           {{ t("tables.addGuest") }}
         </ButtonMain>
-        <ButtonMain variant="outline" @click="printExport">
-          {{ t("tables.printExport") }}
+        <ButtonMain variant="outline" :disabled="exporting" @click="onExport">
+          {{ exporting ? t("guests.exporting") : t("tables.printExport") }}
         </ButtonMain>
         <ButtonMain variant="gold" :disabled="sending" @click="sendNotification">
           {{ sending ? t("overview.sending") : t("tables.sendNotification") }}
@@ -80,6 +80,7 @@ const guestModalOpen = ref(false);
 const tableModalOpen = ref(false);
 const editingGuest = ref(null);
 const sending = ref(false);
+const exporting = ref(false);
 
 const {
   loading, error, tables, guests, selectedTableId,
@@ -129,8 +130,25 @@ function closeGuestModal() {
   editingGuest.value = null;
 }
 
-function printExport() {
-  window.print();
+async function onExport() {
+  const eventId = onboardingStore.eventId;
+  if (exporting.value || !eventId) return;
+  exporting.value = true;
+  try {
+    const blob = await guestsService.exportPdf(eventId);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "guests.pdf";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    console.error("Export failed", e);
+  } finally {
+    exporting.value = false;
+  }
 }
 
 async function sendNotification() {

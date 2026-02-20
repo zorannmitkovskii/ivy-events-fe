@@ -16,18 +16,34 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { ref, computed, watch, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import SidebarNav from "@/components/layout/SidebarNav.vue";
 import TopBar from "@/components/layout/TopBar.vue";
+import { onboardingStore } from "@/store/onboarding.store";
+import { EventCategoryEnum } from "@/enums/EventCategory.js";
 
 const drawerOpen = ref(false);
 const route = useRoute();
+const router = useRouter();
+
+const isGallery = computed(() => onboardingStore.selectedCategory === EventCategoryEnum.GALLERY);
 
 // Close drawer on route change
 watch(() => route.path, () => {
   drawerOpen.value = false;
 });
+
+// Redirect Gallery events to gallery page
+function redirectGalleryIfNeeded() {
+  if (isGallery.value && !route.path.includes("/events/gallery") && !route.path.includes("/events/settings")) {
+    const lang = route.params.lang || "mk";
+    router.replace(`/${lang}/dashboard/events/gallery`);
+  }
+}
+
+onMounted(redirectGalleryIfNeeded);
+watch(isGallery, redirectGalleryIfNeeded);
 </script>
 
 <style scoped>

@@ -1,42 +1,54 @@
 <template>
-  <div class="font-body">
+  <div ref="rootRef" class="font-body">
     <div v-if="loading" style="display:flex;align-items:center;justify-content:center;min-height:100vh;">
       <div style="width:40px;height:40px;border:3px solid rgba(0,0,0,0.1);border-top-color:#a78bfa;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
     </div>
     <div v-show="!loading">
-    <InvitationHero
-      :image-url="data.heroImage"
-      :couple-name="data.coupleName"
-      :date-label="data.dateLabel"
-      :location-html="data.locationHtml"
-      :map-url="data.heroMapUrl"
-      @rsvp-click="scrollToRsvp"
-    />
+    <div data-reveal>
+      <InvitationHero
+        :image-url="data.heroImage"
+        :couple-name="data.coupleName"
+        :date-label="data.dateLabel"
+        :location-html="data.locationHtml"
+        :map-url="data.heroMapUrl"
+        @rsvp-click="scrollToRsvp"
+      />
+    </div>
 
-    <WeddingDetails
-      :countdown-target-iso="data.countdownTargetIso"
-      :ceremony-html="data.ceremonyHtml"
-      :ceremony-map-url="data.ceremonyMapUrl || data.mapUrl"
-      :reception-html="data.receptionHtml"
-      :reception-map-url="data.receptionMapUrl || data.mapUrl"
-      :venue-html="data.venueHtml"
-      :venue-map-url="data.venueMapUrl || data.mapUrl"
-    />
+    <div data-reveal>
+      <WeddingDetails
+        :countdown-target-iso="data.countdownTargetIso"
+        :ceremony-html="data.ceremonyHtml"
+        :ceremony-map-url="data.ceremonyMapUrl || data.mapUrl"
+        :reception-html="data.receptionHtml"
+        :reception-map-url="data.receptionMapUrl || data.mapUrl"
+        :venue-html="data.venueHtml"
+        :venue-map-url="data.venueMapUrl || data.mapUrl"
+      />
+    </div>
 
-    <TimelineSection :items="data.timeline" />
+    <div data-reveal>
+      <TimelineSection :items="data.timeline" />
+    </div>
 
-    <OurStorySection :left-cards="data.storyCards" :images="data.storyImages" />
+    <div data-reveal>
+      <OurStorySection :left-cards="data.storyCards" :images="data.storyImages" />
+    </div>
 
-    <RSVPSection v-model="rsvp" :respond-by-label="data.respondByLabel" @submit="onSubmitRsvp" />
+    <div data-reveal>
+      <RSVPSection v-model="rsvp" :respond-by-label="data.respondByLabel" @submit="onSubmitRsvp" />
+    </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { reactive, ref, onMounted } from "vue";
+import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
 import { useInvitationData } from '@/composables/useInvitationData';
+import { useScrollReveal } from '@/composables/useScrollReveal';
 import InvitationHero from "@/components/invitations/wedding/sunsetGlass/InvitationHero.vue";
 import WeddingDetails from "@/components/invitations/wedding/sunsetGlass/WeddingDetails.vue";
 import TimelineSection from "@/components/invitations/wedding/sunsetGlass/TimelineSection.vue";
@@ -44,7 +56,11 @@ import OurStorySection from "@/components/invitations/wedding/sunsetGlass/OurSto
 import RSVPSection from "@/components/invitations/wedding/sunsetGlass/RSVPSection.vue";
 import '@/styles/sunsetGlass.css';
 
+const { t } = useI18n();
 const { eventId: invEventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
+
+const rootRef = ref(null);
+useScrollReveal(rootRef);
 
 const data = reactive({
   coupleName: "Emily & James",

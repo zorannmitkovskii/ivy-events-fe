@@ -5,7 +5,10 @@
         v-for="task in tasks"
         :key="task.id"
         class="task-item clickable"
-        :class="{ 'task-completed': task.status === 'DONE' }"
+        :class="[
+          { 'task-completed': task.status === 'DONE' },
+          task.priority ? `border-${task.priority.toLowerCase()}` : ''
+        ]"
         @click="$emit('edit', task)"
       >
         <input
@@ -27,10 +30,25 @@
             <span v-if="task.type" class="task-type-badge" :class="typeBadgeClass(task.type)">
               {{ task.type === 'REMINDER' ? t('tables.tasks.reminder') : t('tables.tasks.task') }}
             </span>
+            <span v-if="task.priority" class="task-priority-badge" :class="priorityClass(task.priority)">
+              {{ t(`tables.tasks.priority${task.priority.charAt(0) + task.priority.slice(1).toLowerCase()}`) }}
+            </span>
           </div>
         </div>
 
-        <div class="task-status-wrap">
+        <div class="task-selects">
+          <select
+            class="priority-select"
+            :class="priorityClass(task.priority || 'MEDIUM')"
+            :value="task.priority || 'MEDIUM'"
+            @change="$emit('change-priority', task.id, $event.target.value)"
+            @click.stop
+          >
+            <option value="HIGH">{{ t('tables.tasks.priorityHigh') }}</option>
+            <option value="MEDIUM">{{ t('tables.tasks.priorityMedium') }}</option>
+            <option value="LOW">{{ t('tables.tasks.priorityLow') }}</option>
+          </select>
+
           <select
             class="status-select"
             :class="badgeClass(task.status)"
@@ -61,7 +79,7 @@ defineProps({
   tasks: { type: Array, default: () => [] }
 });
 
-defineEmits(['toggle-task', 'change-status', 'edit']);
+defineEmits(['toggle-task', 'change-status', 'change-priority', 'edit']);
 
 function formatDate(raw) {
   if (!raw) return '';
@@ -82,6 +100,12 @@ function badgeClass(status) {
 
 function typeBadgeClass(type) {
   return type === 'REMINDER' ? 'type-reminder' : 'type-task';
+}
+
+function priorityClass(priority) {
+  if (priority === 'HIGH') return 'priority-high';
+  if (priority === 'LOW') return 'priority-low';
+  return 'priority-medium';
 }
 </script>
 
@@ -195,12 +219,54 @@ function typeBadgeClass(type) {
   color: #854d0e;
 }
 
-/* Status dropdown */
-.task-status-wrap {
+/* Priority badges */
+.task-priority-badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.priority-high {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.priority-medium {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.priority-low {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+/* Priority left border colors */
+.task-item.border-high {
+  border-left-color: #b91c1c;
+}
+
+.task-item.border-medium {
+  border-left-color: #ca8a04;
+}
+
+.task-item.border-low {
+  border-left-color: #0369a1;
+}
+
+/* Status & Priority dropdowns */
+.task-selects {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   flex-shrink: 0;
 }
 
-.status-select {
+.status-select,
+.priority-select {
   border-radius: 999px;
   padding: 4px 10px;
   font-size: 12px;
@@ -252,10 +318,11 @@ function typeBadgeClass(type) {
     align-items: flex-start;
     gap: 6px;
   }
-  .task-status-wrap {
+  .task-selects {
     width: 100%;
   }
-  .status-select {
+  .status-select,
+  .priority-select {
     width: 100%;
   }
 }

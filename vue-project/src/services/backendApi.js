@@ -10,12 +10,12 @@ const api = axios.create({
 })
 
 /**
- * Subscribe email for discount notifications
- * @param {string} email
+ * Subscribe to discount notifications
+ * @param {{ name: string, email: string, phone?: string }} payload
  * @returns {Promise<import('axios').AxiosResponse<any>>}
  */
-export function subscribeToDiscounts(email) {
-  return api.post('/public/discounts/subscribe', { email })
+export function subscribeToDiscounts(payload) {
+  return api.post('/public/discounts/subscribe', payload)
 }
 
 export default api

@@ -19,6 +19,7 @@
       :tasks="tasks"
       @toggle-task="handleToggle"
       @change-status="handleChangeStatus"
+      @change-priority="handleChangePriority"
       @edit="openEditModal"
     />
 
@@ -45,7 +46,7 @@ import { useTasks } from '@/composables/useTasks';
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
-const { tasks, load, createTask, updateTask, toggleTask, updateStatus } = useTasks();
+const { tasks, load, createTask, updateTask, toggleTask, updateStatus, updatePriority } = useTasks();
 
 const modalOpen = ref(false);
 const modalType = ref('TASK');
@@ -99,5 +100,9 @@ async function handleToggle(taskId) {
 
 async function handleChangeStatus(taskId, status) {
   await updateStatus(taskId, status);
+}
+
+async function handleChangePriority(taskId, priority) {
+  await updatePriority(taskId, priority);
 }
 </script>
