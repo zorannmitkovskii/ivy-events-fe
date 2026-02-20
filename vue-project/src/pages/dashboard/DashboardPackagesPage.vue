@@ -21,6 +21,11 @@ function selectPackage(packageType) {
   setSelectedPackageType(packageType);
 }
 
+const selectedPackagePrice = computed(() => {
+  const pkg = packages.value.find(p => p.packageType === selectedPackageType.value);
+  return pkg ? getDisplayPrice(pkg) : 0;
+});
+
 // Discount code state
 const discountCode = ref("");
 const discountLoading = ref(false);
@@ -97,6 +102,7 @@ onMounted(fetchPackages);
         v-if="selectedPackageType"
         :package-type="selectedPackageType"
         :event-id="eventId"
+        :price="selectedPackagePrice"
         :label="t('packages.continuePayment')"
         variant="gold"
       />
@@ -194,6 +200,7 @@ onMounted(fetchPackages);
         <CpayButton
           :package-type="pkg.packageType"
           :event-id="eventId"
+          :price="getDisplayPrice(pkg)"
           :label="t('packages.choose')"
           variant="gold"
         />

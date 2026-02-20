@@ -78,9 +78,9 @@
 
           <AuthCheckbox v-model="agree">
             {{ t('register.agreeText') }}
-            <a href="/terms">{{ t('register.terms') }}</a>
+            <RouterLink :to="{ name: 'terms', params: { lang } }" target="_blank">{{ t('register.terms') }}</RouterLink>
             {{ t('register.and') }}
-            <a href="/privacy">{{ t('register.privacy') }}</a>
+            <RouterLink :to="{ name: 'terms', params: { lang } }" target="_blank">{{ t('register.privacy') }}</RouterLink>
           </AuthCheckbox>
 
           <!-- Error message -->
@@ -129,7 +129,7 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from "vue";
+import { computed, ref, onMounted, watch } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 import { register } from "@/services/auth.service";
 import { getRuntimeEnv, detectDefaultEnvFromLocation, computeKeycloakBaseUrl } from '@/services/env';
@@ -278,6 +278,13 @@ const validatePassword = () => {
   passwordErrors.value = errors;
   return errors.length === 0;
 };
+
+// Re-validate password in real-time as user types
+watch(password, () => {
+  if (passwordErrors.value.length > 0 || password.value) {
+    validatePassword();
+  }
+});
 
 const isPasswordValid = computed(() => {
   return password.value && passwordErrors.value.length === 0;

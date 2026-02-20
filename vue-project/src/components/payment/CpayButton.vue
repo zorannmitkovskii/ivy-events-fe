@@ -30,7 +30,8 @@ const props = defineProps({
   packageType: { type: String, default: "INV_BASIC" }, // INV_BASIC | INV_PRO | IVY_PREMIUM | GALLERY | ORGANIZER
   eventId: { type: String, default: "" },
   label: { type: String, default: "" },
-  variant: { type: String, default: "default" } // "default" | "gold" | "success" | "sidebar"
+  variant: { type: String, default: "default" }, // "default" | "gold" | "success" | "sidebar"
+  price: { type: Number, default: 0 },
 });
 
 const { t } = useI18n();
@@ -46,7 +47,7 @@ async function payWithCpay() {
 
   try {
     const payload = {
-      amount: 11,
+      amount: props.price,
       currency: "MKD",
       description: "Payment",
       email: user.value?.email || "",
