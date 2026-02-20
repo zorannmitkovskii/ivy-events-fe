@@ -109,12 +109,7 @@ const uploadFiles = async () => {
   try {
     const response = await axios.post(
       `${baseUrl}/public/media/upload`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
+      formData
     );
 
     emit("uploaded", response.data);

@@ -28,7 +28,7 @@
         ref="fileInput"
         type="file"
         multiple
-        accept="image/*,video/*"
+        accept="image/*,video/*,.heic,.heif"
         class="hidden"
         @change="onFileSelect"
       />
