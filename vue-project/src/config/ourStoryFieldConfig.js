@@ -27,6 +27,20 @@ export const OUR_STORY_FIELD_CONFIG = {
     date:        { show: false },
     imageUrl:    { show: true,  required: false },
   },
+  'modern-collage': {
+    title:       { show: true,  required: true },
+    type:        { show: false },
+    description: { show: true,  required: false },
+    date:        { show: true,  required: false },
+    imageUrl:    { show: true,  required: false },
+  },
+  'elegant-chateau': {
+    title:       { show: true,  required: true },
+    type:        { show: false },
+    description: { show: true,  required: false },
+    date:        { show: true,  required: false },
+    imageUrl:    { show: true,  required: false },
+  },
 };
 
 export const DEFAULT_FIELD_CONFIG = {

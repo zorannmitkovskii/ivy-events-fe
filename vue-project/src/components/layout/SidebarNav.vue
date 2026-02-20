@@ -74,8 +74,6 @@ const isActive = (section) => {
 
 const isGallery = computed(() => onboardingStore.selectedCategory === EventCategoryEnum.GALLERY);
 
-const GALLERY_NAV_KEYS = ['overview', 'gallery', 'packages', 'settings'];
-
 const allNavItems = [
   { key: "overview", path: "overview", labelKey: "sidebar.overview", icon: Icons.grid },
   { key: "guests", path: "guests", labelKey: "sidebar.guests", icon: Icons.users },
@@ -89,6 +87,8 @@ const allNavItems = [
   { key: "packages", path: "packages", labelKey: "sidebar.packages", icon: Icons.package },
   { key: "settings", path: "settings", labelKey: "sidebar.settings", icon: Icons.settings }
 ];
+
+const GALLERY_NAV_KEYS = ['settings'];
 
 const navItems = computed(() => {
   if (isGallery.value) {

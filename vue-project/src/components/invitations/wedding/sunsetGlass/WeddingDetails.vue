@@ -1,16 +1,16 @@
 <template>
   <section class="py-16 lg:py-20 px-6 bg-white">
     <div class="max-w-6xl mx-auto">
-      <h2 class="font-heading text-4xl lg:text-5xl text-center text-gray-800 mb-12">Wedding Details</h2>
+      <h2 class="font-heading text-4xl lg:text-5xl text-center text-gray-800 mb-12">{{ t('invitation.weddingDetails') }}</h2>
 
       <div class="rounded-large shadow-custom p-8 mb-12 text-center gradient-bg glass-panel">
-        <p class="font-body text-lg text-gray-700 mb-4">Countdown to Our Special Day</p>
+        <p class="font-body text-lg text-gray-700 mb-4">{{ t('invitation.countdownToSpecialDay') }}</p>
         <CountdownTimer :target-iso="countdownTargetIso" />
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <DetailCard
-          title="Ceremony"
+          :title="t('invitation.ceremony')"
           :body-html="ceremonyHtml"
           :map-url="ceremonyMapUrl"
           bg-class="bg-pink-50"
@@ -26,7 +26,7 @@
         </DetailCard>
 
         <DetailCard
-          title="Reception"
+          :title="t('invitation.reception')"
           :body-html="receptionHtml"
           :map-url="receptionMapUrl"
           bg-class="bg-purple-50"
@@ -42,7 +42,7 @@
         </DetailCard>
 
         <DetailCard
-          title="Venue"
+          :title="t('invitation.venue')"
           :body-html="venueHtml"
           :map-url="venueMapUrl"
           bg-class="bg-teal-50"
@@ -64,9 +64,11 @@
 </template>
 
 <script setup>
-
+import { useI18n } from 'vue-i18n';
 import DetailCard from "@/components/invitations/wedding/sunsetGlass/DetailCard.vue";
 import CountdownTimer from "@/components/invitations/wedding/sunsetGlass/CountdownTimer.vue";
+
+const { t } = useI18n();
 
 defineProps({
   countdownTargetIso: { type: String, required: true },

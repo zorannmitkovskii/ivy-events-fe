@@ -1,5 +1,5 @@
 <template>
-  <div class="parisian-wedding">
+  <div ref="rootRef" class="parisian-wedding">
     <!-- Loading overlay -->
     <div v-if="loading" class="loading-overlay">
       <div class="loading-spinner"></div>
@@ -19,11 +19,11 @@
     />
 
     <!-- Details Section -->
-    <section class="section section--blush">
+    <section class="section section--blush" data-reveal>
       <div class="section-inner">
         <div class="section-header">
-          <h2 class="section-title">The Details</h2>
-          <p class="section-subtitle">A celebration of love in the City of Light</p>
+          <h2 class="section-title">{{ t('invitation.theDetails') }}</h2>
+          <p class="section-subtitle">{{ t('invitation.celebrationOfLove') }}</p>
         </div>
 
         <div class="details-grid">
@@ -37,10 +37,10 @@
                 <path d="M10 12h4" />
               </svg>
             </div>
-            <h3 class="card-title">The Ceremony</h3>
+            <h3 class="card-title">{{ t('invitation.theCeremony') }}</h3>
             <p class="card-time">{{ config.ceremonyTime }}</p>
             <p class="card-address" v-html="config.ceremonyAddress"></p>
-            <a v-if="config.ceremonyMapUrl" :href="config.ceremonyMapUrl" target="_blank" rel="noopener" class="card-map-link">View Map</a>
+            <a v-if="config.ceremonyMapUrl" :href="config.ceremonyMapUrl" target="_blank" rel="noopener" class="card-map-link">{{ t('invitation.viewMap') }}</a>
           </div>
 
           <!-- Reception Card -->
@@ -54,15 +54,15 @@
                 <path d="M12 10V2" />
               </svg>
             </div>
-            <h3 class="card-title">The Reception</h3>
+            <h3 class="card-title">{{ t('invitation.theReception') }}</h3>
             <p class="card-time">{{ config.receptionTime }}</p>
             <p class="card-address" v-html="config.receptionAddress"></p>
-            <a v-if="config.receptionMapUrl" :href="config.receptionMapUrl" target="_blank" rel="noopener" class="card-map-link">View Map</a>
+            <a v-if="config.receptionMapUrl" :href="config.receptionMapUrl" target="_blank" rel="noopener" class="card-map-link">{{ t('invitation.viewMap') }}</a>
           </div>
 
           <!-- Countdown Card -->
           <div class="countdown-card">
-            <h3 class="countdown-heading">Countdown</h3>
+            <h3 class="countdown-heading">{{ t('invitation.countdown') }}</h3>
             <CountdownTimer
               :target-date="config.weddingDateTime"
               :show-seconds="false"
@@ -73,14 +73,14 @@
               :body-font="fonts.body"
               unit-label-color="#6b7280"
             />
-            <p class="countdown-tagline">Until we say "I do"</p>
+            <p class="countdown-tagline">{{ t('invitation.untilWeSayIDo') }}</p>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Our Story -->
-    <section class="section section--white">
+    <section class="section section--white" data-reveal>
       <div class="section-inner">
         <OurStorySection
           :title="config.storyTitle"
@@ -95,7 +95,7 @@
     </section>
 
     <!-- Agenda Timeline -->
-    <section class="section section--champagne">
+    <section class="section section--champagne" data-reveal>
       <div class="section-inner">
         <AgendaTimeline
           :title="config.agendaTitle"
@@ -133,20 +133,20 @@
     </section>
 
     <!-- RSVP -->
-    <section id="rsvp-section" class="section section--white">
+    <section id="rsvp-section" class="section section--white" data-reveal>
       <div class="section-inner section-inner--narrow">
         <div class="rsvp-wrapper">
           <RsvpForm
-            title="R.S.V.P."
-            :subtitle="'Kindly respond by ' + config.rsvpDeadline"
-            name-label="Guest Name"
-            name-placeholder="First & Last Name"
-            add-guest-label="Add another guest"
-            accept-label="Joyfully Accepts"
-            decline-label="Regretfully Declines"
-            message-label="Message to the Couple"
-            message-placeholder="Dietary restrictions or well wishes..."
-            submit-label="Submit Response"
+            :title="t('invitation.rsvpDot')"
+            :subtitle="t('invitation.rsvpKindlyRespond', { date: config.rsvpDeadline })"
+            :name-label="t('invitation.guestName')"
+            :name-placeholder="t('invitation.namePlaceholder')"
+            :add-guest-label="t('invitation.addGuest')"
+            :accept-label="t('invitation.joyfullyAccepts')"
+            :decline-label="t('invitation.regretfullyDeclines')"
+            :message-label="t('invitation.yourMessage')"
+            :message-placeholder="t('invitation.messagePlaceholder')"
+            :submit-label="t('invitation.submitResponse')"
             :accent-color="palette.champagne500"
             :accept-color="palette.champagne300"
             :decline-color="palette.blush300"
@@ -161,28 +161,30 @@
       </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-      <p class="footer-text">{{ config.brideName.charAt(0) }} & {{ config.groomName.charAt(0) }} &copy; 2024</p>
-    </footer>
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, onMounted } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
 import { useInvitationData } from '@/composables/useInvitationData';
+import { useScrollReveal } from '@/composables/useScrollReveal';
 import HeroSection from '@/components/invitations/wedding/ParisianWedding/HeroSection.vue';
 import OurStorySection from '@/components/invitations/wedding/ParisianWedding/OurStorySection.vue';
 import AgendaTimeline from '@/components/invitations/wedding/ParisianWedding/AgendaTimeline.vue';
 import CountdownTimer from '@/components/invitations/shared/CountdownTimer.vue';
 import RsvpForm from '@/components/invitations/shared/RsvpForm.vue';
 
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const { eventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
+
+const rootRef = ref(null);
+useScrollReveal(rootRef);
 
 const palette = {
   blush50: '#fdf2f2',
@@ -551,18 +553,15 @@ async function onRsvpSubmit(payload) {
   box-shadow: 0 4px 20px -2px rgba(120, 100, 100, 0.1);
 }
 
-/* Footer */
-.footer {
-  background: #fff;
-  padding: 32px 24px;
-  text-align: center;
+/* Scroll Reveal */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
 }
-
-.footer-text {
-  font-family: var(--font-heading);
-  font-size: 14px;
-  color: #9ca3af;
-  margin: 0;
+[data-reveal].revealed {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Responsive */

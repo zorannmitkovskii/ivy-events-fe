@@ -36,6 +36,15 @@
           </select>
         </div>
       </div>
+
+      <div class="field">
+        <label>{{ t("tables.tasks.form.priority") }}</label>
+        <select class="select" v-model="priority">
+          <option value="LOW">{{ t("tables.tasks.priorityLow") }}</option>
+          <option value="MEDIUM">{{ t("tables.tasks.priorityMedium") }}</option>
+          <option value="HIGH">{{ t("tables.tasks.priorityHigh") }}</option>
+        </select>
+      </div>
     </form>
 
     <template #footer>
@@ -71,6 +80,7 @@ const title = ref("");
 const description = ref("");
 const dueDate = ref("");
 const status = ref("PENDING");
+const priority = ref("MEDIUM");
 const errors = ref({ title: "" });
 
 const modalTitle = computed(() => {
@@ -89,11 +99,13 @@ watch(
         description.value = props.task.description || "";
         dueDate.value = props.task.dueDate ? props.task.dueDate.substring(0, 10) : "";
         status.value = props.task.status || "PENDING";
+        priority.value = props.task.priority || "MEDIUM";
       } else {
         title.value = "";
         description.value = "";
         dueDate.value = "";
         status.value = "PENDING";
+        priority.value = "MEDIUM";
       }
       errors.value = { title: "" };
     }
@@ -109,6 +121,7 @@ function submit() {
     description: description.value.trim() || null,
     dueDate: dueDate.value || null,
     status: status.value,
+    priority: priority.value,
     type: props.task?.type || props.type
   };
 

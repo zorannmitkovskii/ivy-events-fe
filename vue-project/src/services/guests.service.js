@@ -55,5 +55,12 @@ export const guestsService = {
     const params = { eventId };
     if (lang) params.lang = lang;
     return api.post("/guests/notification", null, { params });
+  },
+
+  exportPdf(eventId) {
+    return api.get("/guests/export", {
+      params: { eventId },
+      responseType: "blob"
+    });
   }
 };

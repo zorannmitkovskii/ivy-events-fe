@@ -129,6 +129,9 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   title: { type: String, default: 'RSVP' },
@@ -229,10 +232,10 @@ async function onSubmit() {
   try {
     emit('submit', payload);
     isSuccess.value = true;
-    submitMessage.value = 'Thank you! Your RSVP has been received.';
+    submitMessage.value = t('invitation.rsvpSuccess');
   } catch (e) {
     isSuccess.value = false;
-    submitMessage.value = 'Something went wrong. Please try again.';
+    submitMessage.value = t('invitation.rsvpError');
   } finally {
     isSubmitting.value = false;
   }

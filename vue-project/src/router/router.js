@@ -41,6 +41,8 @@ import SunsetGlass from "@/pages/invitaitons/wedding/SunsetGlass.vue";
 import PersianWedding from "@/pages/invitaitons/wedding/PersianWedding.vue";
 import ParisianWedding from "@/pages/invitaitons/wedding/ParisianWedding.vue";
 import CoastalBreeze from "@/pages/invitaitons/wedding/CoastalBreeze.vue";
+import ModernCollage from "@/pages/invitaitons/wedding/ModernCollage.vue";
+import ElegantChateau from "@/pages/invitaitons/wedding/ElegantChateau.vue";
 
 // Admin Dashboard
 import AdminDashboardLayout from "@/layouts/AdminDashboardLayout.vue";
@@ -90,6 +92,8 @@ const routes = [
       { path: "invitations/parisian-wedding", name: "parisianWedding", component: ParisianWedding },
       { path: "invitations/coastal-breeze", name: "coastalBreeze", component: CoastalBreeze },
       { path: "invitations/sunset-glass", name: "sunsetGlass", component: SunsetGlass },
+      { path: "invitations/modern-collage", name: "modernCollage", component: ModernCollage },
+      { path: "invitations/elegant-chateau", name: "elegantChateau", component: ElegantChateau },
 
       // AUTH
       {

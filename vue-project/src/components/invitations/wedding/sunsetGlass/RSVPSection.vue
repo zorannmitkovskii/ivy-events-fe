@@ -1,9 +1,9 @@
 <template>
   <section id="rsvp" class="py-16 lg:py-20 px-6 gradient-bg max-h-[900px] overflow-auto">
     <div class="max-w-2xl mx-auto">
-      <h2 class="font-heading text-4xl lg:text-5xl text-center text-gray-800 mb-4">RSVP</h2>
+      <h2 class="font-heading text-4xl lg:text-5xl text-center text-gray-800 mb-4">{{ t('invitation.rsvp') }}</h2>
       <p class="font-body text-center text-gray-600 mb-12">
-        Please respond by {{ respondByLabel }}
+        {{ t('invitation.rsvpSubtitle', { date: respondByLabel }) }}
       </p>
 
       <div class="bg-white rounded-large shadow-custom p-8 lg:p-12">
@@ -15,7 +15,10 @@
 
 <script setup>
 import { ref, watchEffect } from "vue";
+import { useI18n } from 'vue-i18n';
 import RSVPForm from "@/components/invitations/wedding/sunsetGlass/RSVPForm.vue";
+
+const { t } = useI18n();
 
 const props = defineProps({
   respondByLabel: { type: String, default: "May 1, 2024" },

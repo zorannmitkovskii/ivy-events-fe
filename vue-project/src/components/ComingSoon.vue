@@ -107,7 +107,7 @@ const onSubmit = async () => {
   loading.value = true
   try {
     // Centralized API call
-    await subscribeToDiscounts(email.value)
+    await subscribeToDiscounts({ name: '', email: email.value })
     success.value = true
   } catch (err) {
     const anyErr = err as any
