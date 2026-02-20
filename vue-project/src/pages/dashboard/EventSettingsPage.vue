@@ -185,6 +185,35 @@
           </ButtonMain>
         </div>
 
+        <!-- Table Lookup URL -->
+        <div v-if="!isGallery" class="url-group">
+          <span class="url-label">{{ t("settings.tableLookupUrl") }}</span>
+          <p class="url-hint">{{ t("settings.tableLookupUrlDesc") }}</p>
+          <div class="url-box">
+            <span class="url-text">{{ tableLookupUrl }}</span>
+            <button
+              class="copy-btn"
+              type="button"
+              @click="copyToClipboard(tableLookupUrl, 'tableLookup')"
+            >
+              <i :class="copiedField === 'tableLookup' ? 'bi bi-check-lg' : 'bi bi-clipboard'"></i>
+              {{ copiedField === 'tableLookup' ? t("settings.copied") : t("settings.copy") }}
+            </button>
+          </div>
+        </div>
+
+        <!-- QR Code for Table Lookup -->
+        <div v-if="!isGallery" class="qr-group">
+          <span class="url-label">{{ t("settings.tableLookupQrCode") }}</span>
+          <p class="url-hint">{{ t("settings.tableLookupQrCodeDesc") }}</p>
+          <div class="qr-box">
+            <canvas ref="tableQrCanvas" class="qr-canvas"></canvas>
+          </div>
+          <ButtonMain variant="main" @click="downloadTableQrCode" style="margin-top: 10px">
+            {{ t("settings.downloadTableQrCode") }}
+          </ButtonMain>
+        </div>
+
         <div v-if="!isGallery" class="invitation-actions">
           <ButtonMain variant="main" @click="goToInvitations">
             {{ t("settings.changeInvitation") }}
@@ -228,6 +257,12 @@ const copiedField = ref(null);
 
 const eventId = ref(onboardingStore.eventId);
 const qrCanvas = ref(null);
+const tableQrCanvas = ref(null);
+
+const tableLookupUrl = computed(() => {
+  if (!eventId.value) return '';
+  return `${window.location.origin}/${locale.value}/table-lookup?eventId=${eventId.value}`;
+});
 
 const isGallery = computed(() => onboardingStore.selectedCategory === EventCategoryEnum.GALLERY);
 
@@ -251,6 +286,29 @@ function downloadQrCode() {
   const link = document.createElement("a");
   link.download = "gallery-qr-code.png";
   link.href = qrCanvas.value.toDataURL("image/png");
+  link.click();
+}
+
+async function renderTableQrCode() {
+  await nextTick();
+  if (!tableQrCanvas.value || !tableLookupUrl.value) return;
+  try {
+    const QRCode = await import("qrcode");
+    await QRCode.toCanvas(tableQrCanvas.value, tableLookupUrl.value, {
+      width: 200,
+      margin: 2,
+      color: { dark: "#2f3e36", light: "#ffffff" }
+    });
+  } catch (e) {
+    console.error("Table QR render failed", e);
+  }
+}
+
+function downloadTableQrCode() {
+  if (!tableQrCanvas.value) return;
+  const link = document.createElement("a");
+  link.download = "table-lookup-qr-code.png";
+  link.href = tableQrCanvas.value.toDataURL("image/png");
   link.click();
 }
 
@@ -311,6 +369,7 @@ async function loadEvent() {
       event.value = demo;
       form.value = buildForm(demo);
       renderQrCode();
+      renderTableQrCode();
       return;
     }
 
@@ -326,6 +385,7 @@ async function loadEvent() {
     }
 
     renderQrCode();
+    renderTableQrCode();
   } catch (e) {
     error.value = e?.message || "Failed to load event";
   } finally {

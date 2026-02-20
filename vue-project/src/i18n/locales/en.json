@@ -970,6 +970,7 @@
       "nameRequired": "Name is required",
       "statusRequired": "Status is required"
     },
+    "defaultTableName": "Table {number}",
     "addTableDialog": {
       "title": "Add Table",
       "name": "Table Name",
@@ -1098,11 +1099,25 @@
     "galleryQrCode": "Gallery QR Code",
     "galleryQrCodeDesc": "Guests can scan this QR code to access the gallery and upload photos.",
     "downloadQrCode": "Download QR Code",
+    "tableLookupUrl": "Table Lookup URL",
+    "tableLookupUrlDesc": "Share this link so guests can look up their table assignment.",
+    "tableLookupQrCode": "Table Lookup QR Code",
+    "tableLookupQrCodeDesc": "Guests can scan this QR code to find their table number.",
+    "downloadTableQrCode": "Download QR Code",
     "displayOptions": "Display Options",
     "dangerZone": "Danger Zone",
     "archiveDesc": "Archiving this event will hide it from your dashboard. This action can be reversed later.",
     "archiveEvent": "Archive Event",
     "locationPh": "Search for a venue or address..."
+  },
+  "tableLookup": {
+    "title": "Find Your Table",
+    "subtitle": "Enter your name to find your table assignment",
+    "placeholder": "Start typing your name...",
+    "tableNumber": "Table {number}",
+    "noResults": "No guest found with that name",
+    "loading": "Looking up tables...",
+    "error": "Could not load table information. Please try again."
   },
   "cpay": {
     "pay": "Pay with cPay",

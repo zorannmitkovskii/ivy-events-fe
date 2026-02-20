@@ -58,7 +58,7 @@ watch(
   () => props.open,
   (v) => {
     if (v) {
-      name.value = `Table ${props.nextNumber}`;
+      name.value = t('tables.defaultTableName', { number: props.nextNumber });
       maxGuests.value = 8;
       errors.value = { name: "", maxGuests: "" };
     }

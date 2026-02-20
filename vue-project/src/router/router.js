@@ -87,6 +87,9 @@ const routes = [
       // PUBLIC GALLERY UPLOAD (link sent to guests)
       { path: "gallery", name: "GalleryUpload", component: () => import("@/pages/GalleryUpload.vue") },
 
+      // PUBLIC TABLE LOOKUP (guests find their table)
+      { path: "table-lookup", name: "TableLookup", component: () => import("@/pages/TableLookupPage.vue") },
+
       // INVITATION PREVIEWS
       { path: "invitations/persian-wedding", name: "persianWedding", component: PersianWedding },
       { path: "invitations/parisian-wedding", name: "parisianWedding", component: ParisianWedding },

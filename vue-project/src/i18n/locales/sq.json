@@ -958,6 +958,7 @@
       "nameRequired": "Emri është i detyrueshëm",
       "statusRequired": "Statusi është i detyrueshëm"
     },
+    "defaultTableName": "Tavolina {number}",
     "addTableDialog": {
       "title": "Shto Tavolinë",
       "name": "Emri i Tavolinës",
@@ -1082,10 +1083,27 @@
     "copy": "Kopjo",
     "copied": "Kopjuar!",
     "changeInvitation": "Ndrysho Ftesën",
+    "galleryQrCode": "Kodi QR i Galerisë",
+    "galleryQrCodeDesc": "Mysafirët mund të skanojnë këtë kod QR për të hyrë në galeri dhe për të ngarkuar foto.",
+    "downloadQrCode": "Shkarko Kodin QR",
+    "tableLookupUrl": "Linku për Gjetjen e Tavolinës",
+    "tableLookupUrlDesc": "Ndani këtë link që mysafirët të gjejnë tavolinën e tyre.",
+    "tableLookupQrCode": "Kodi QR për Tavolinën",
+    "tableLookupQrCodeDesc": "Mysafirët mund të skanojnë këtë kod QR për të gjetur numrin e tavolinës.",
+    "downloadTableQrCode": "Shkarko Kodin QR",
     "displayOptions": "Opsionet e Shfaqjes",
     "dangerZone": "Zona e Rrezikut",
     "archiveDesc": "Arkivimi i kësaj ngjarjeje do ta fshehë nga paneli juaj. Ky veprim mund të kthehet më vonë.",
     "archiveEvent": "Arkivo Ngjarjen"
+  },
+  "tableLookup": {
+    "title": "Gjeni Tavolinën Tuaj",
+    "subtitle": "Shkruani emrin tuaj për të gjetur tavolinën",
+    "placeholder": "Filloni të shkruani emrin...",
+    "tableNumber": "Tavolina {number}",
+    "noResults": "Nuk u gjet asnjë mysafir me atë emër",
+    "loading": "Duke kërkuar tavolina...",
+    "error": "Nuk mund të ngarkoheshin informacionet e tavolinës. Provoni përsëri."
   },
   "cpay": {
     "pay": "Paguaj me cPay",
