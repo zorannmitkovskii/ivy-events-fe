@@ -238,13 +238,10 @@ function onCreate() {
   createEventAndNavigate();
 }
 
-function onSkip() {
+async function onSkip() {
   saveDetails();
-  if (isGallery.value) {
-    router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
-    return;
-  }
-  router.push({ name: 'EventInvitationsPage', params: { lang: lang.value } });
+  // Still create a minimal event — the invitations page guard requires an eventId
+  await createEventAndNavigate();
 }
 </script>
 

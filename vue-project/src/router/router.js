@@ -72,8 +72,8 @@ const routes = [
       { path: "faq", name: "faq", component: () => import("@/pages/FaqPage.vue") },
 
       // ONBOARDING
-      { path: "event-category", name: "EventCategoryPage", component: EventCategoryPage },
-      { path: "event-details", name: "EventBasicDetailsPage", component: EventBasicDetailsPage },
+      { path: "event-category", name: "EventCategoryPage", component: EventCategoryPage, meta: { requiresAuth: true } },
+      { path: "event-details", name: "EventBasicDetailsPage", component: EventBasicDetailsPage, meta: { requiresAuth: true } },
       { path: "event-invitations", name: "EventInvitationsPage", component: EventInvitationsPage },
       { path: "checkout", name: "checkout", component: CheckoutPurchasePage, meta: { requiresAuth: true } },
       { path: "event-live", name: "event-live", component: EventLivePage, meta: { requiresAuth: true } },
@@ -219,8 +219,8 @@ router.beforeEach((to, from, next) => {
   const isCategoryPage = to.name === 'EventCategoryPage';
   const isDetailsPage = to.name === 'EventBasicDetailsPage';
 
-  // Block category page until email is verified
-  if (isCategoryPage && !onboardingStore.isEmailVerified) {
+  // Block category page until email is verified (authenticated users are implicitly verified)
+  if (isCategoryPage && !onboardingStore.isEmailVerified && !isAuthenticated()) {
     next({ name: 'AuthVerifyEmailPage', params: { lang } });
     return;
   }
