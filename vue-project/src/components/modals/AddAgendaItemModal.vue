@@ -27,14 +27,15 @@
         </div>
       </div>
 
+      <div class="field">
+        <label>{{ t("agenda.form.dateTime") }} *</label>
+        <input class="input" v-model="draft.date" type="date" />
+        <div v-if="errors.dateTime" class="err">{{ errors.dateTime }}</div>
+      </div>
+
       <div class="two">
         <div class="field">
-          <label>{{ t("agenda.form.dateTime") }} *</label>
-          <input class="input" v-model="draft.date" type="date" />
-          <div v-if="errors.dateTime" class="err">{{ errors.dateTime }}</div>
-        </div>
-        <div class="field">
-          <label>{{ t("agenda.form.time") }} *</label>
+          <label>{{ t("agenda.form.startTime") }} *</label>
           <div class="time-selects">
             <select class="input" v-model="draft.hour">
               <option v-for="h in 24" :key="h-1" :value="String(h-1).padStart(2,'0')">
@@ -49,6 +50,25 @@
             </select>
           </div>
           <div v-if="errors.time" class="err">{{ errors.time }}</div>
+        </div>
+        <div class="field">
+          <label>{{ t("agenda.form.endTime") }}</label>
+          <div class="time-selects">
+            <select class="input" v-model="draft.endHour">
+              <option value="">--</option>
+              <option v-for="h in 24" :key="h-1" :value="String(h-1).padStart(2,'0')">
+                {{ String(h-1).padStart(2,'0') }}
+              </option>
+            </select>
+            <span class="time-sep">:</span>
+            <select class="input" v-model="draft.endMinute">
+              <option value="">--</option>
+              <option v-for="m in [0,5,10,15,20,25,30,35,40,45,50,55]" :key="m" :value="String(m).padStart(2,'0')">
+                {{ String(m).padStart(2,'0') }}
+              </option>
+            </select>
+          </div>
+          <div v-if="errors.endTime" class="err">{{ errors.endTime }}</div>
         </div>
       </div>
 
@@ -126,11 +146,13 @@ const draft = reactive({
   date: "",
   hour: "00",
   minute: "00",
+  endHour: "",
+  endMinute: "",
   description: "",
   location: { name: "", address: "", lat: null, lng: null, placeId: null },
 });
 
-const errors = reactive({ title: "", type: "", dateTime: "", time: "" });
+const errors = reactive({ title: "", type: "", dateTime: "", time: "", endTime: "" });
 const validationError = ref("");
 
 watch(
@@ -143,6 +165,7 @@ watch(
     errors.type = "";
     errors.dateTime = "";
     errors.time = "";
+    errors.endTime = "";
 
     if (props.item) {
       draft.title = props.item.title ?? "";
@@ -152,6 +175,23 @@ watch(
       draft.date = date;
       draft.hour = hour;
       draft.minute = minute;
+
+      // Prefer explicit startTime over dateTime-derived values
+      if (props.item.startTime) {
+        const [sh, sm] = props.item.startTime.split(":");
+        draft.hour = (sh ?? "00").padStart(2, "0");
+        draft.minute = (sm ?? "00").padStart(2, "0");
+      }
+
+      if (props.item.endTime) {
+        const [eh, em] = props.item.endTime.split(":");
+        draft.endHour = (eh ?? "").padStart(2, "0");
+        draft.endMinute = (em ?? "").padStart(2, "0");
+      } else {
+        draft.endHour = "";
+        draft.endMinute = "";
+      }
+
       draft.description = props.item.description ?? "";
 
       const loc = props.item.location ?? {};
@@ -169,6 +209,8 @@ watch(
       draft.date = "";
       draft.hour = "00";
       draft.minute = "00";
+      draft.endHour = "";
+      draft.endMinute = "";
       draft.description = "";
       draft.location = { name: "", address: "", lat: null, lng: null, placeId: null };
     }
@@ -200,8 +242,25 @@ function validate() {
   errors.type = draft.type ? "" : "Type is required";
   errors.dateTime = draft.date ? "" : "Date is required";
   errors.time = "";
+  errors.endTime = "";
 
-  return !(errors.title || errors.type || errors.dateTime || errors.time);
+  // If one of endHour/endMinute is set, both must be set
+  const hasEndHour = draft.endHour !== "";
+  const hasEndMinute = draft.endMinute !== "";
+  if (hasEndHour !== hasEndMinute) {
+    errors.endTime = "Select both hour and minute";
+  }
+
+  // End time must be after start time
+  if (hasEndHour && hasEndMinute) {
+    const start = Number(draft.hour) * 60 + Number(draft.minute);
+    const end = Number(draft.endHour) * 60 + Number(draft.endMinute);
+    if (end <= start) {
+      errors.endTime = "End time must be after start time";
+    }
+  }
+
+  return !(errors.title || errors.type || errors.dateTime || errors.time || errors.endTime);
 }
 
 function submit() {
@@ -210,23 +269,21 @@ function submit() {
   const loc = draft.location || {};
   const hasLocation = loc.name || loc.address || loc.lat != null;
 
-  const titleVal = draft.title.trim();
-  const descVal = draft.description.trim() || null;
+  const hasEnd = draft.endHour !== "" && draft.endMinute !== "";
 
   const payload = {
-    title: titleVal,
-    titleI18n: { en: titleVal, mk: titleVal, sq: titleVal },
-    description: descVal,
-    descriptionI18n: descVal ? { en: descVal, mk: descVal, sq: descVal } : null,
+    title: draft.title.trim(),
+    description: draft.description.trim() || null,
     type: draft.type,
     visibility: draft.visibility,
     isPublic: draft.visibility === AgendaVisibility.EVERYONE,
     dateTime: combineDateTime(draft.date, draft.hour, draft.minute),
     startTime: `${draft.hour}:${draft.minute}`,
-    endTime: null,
+    endTime: hasEnd ? `${draft.endHour}:${draft.endMinute}` : null,
     displayOrder: null,
     location: hasLocation ? {
       name: loc.name || null,
+      type: "VENUE",
       addressLine: loc.address || null,
       latitude: loc.lat,
       longitude: loc.lng,

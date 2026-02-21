@@ -637,6 +637,8 @@
       "type": "Type",
       "dateTime": "Date",
       "time": "Time",
+      "startTime": "Start Time",
+      "endTime": "End Time",
       "location": "Location",
       "locationName": "Venue Name",
       "addressLine": "Address",

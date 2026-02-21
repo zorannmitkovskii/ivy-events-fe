@@ -43,7 +43,7 @@
           <p class="hero-details">{{ config.weddingDate }} &bull; {{ config.location }}</p>
 
           <div class="hero-actions">
-            <a href="#rsvp-section" class="hero-btn hero-btn--primary">{{ config.ctaLabel }}</a>
+            <a href="#rsvp-section" class="hero-btn hero-btn--primary">{{ t('invitation.rsvpNow') }}</a>
             <a v-if="config.heroMapUrl" :href="config.heroMapUrl" target="_blank" rel="noopener" class="hero-btn hero-btn--outline">{{ t('invitation.viewMap') }}</a>
           </div>
         </div>
@@ -129,7 +129,7 @@
       <section v-show="!showEntry" id="story-section" class="section section--cream" data-reveal>
         <div class="section-inner">
           <div class="section-header">
-            <h2 class="section-title">{{ config.storyTitle }}</h2>
+            <h2 class="section-title">{{ t('invitation.ourLoveStory') }}</h2>
             <div class="section-divider"></div>
           </div>
 
@@ -239,7 +239,6 @@ const config = reactive({
   inviteText: "We're getting married!",
   location: 'Napa Valley, CA',
   heroMapUrl: '',
-  ctaLabel: 'RSVP Now',
   heroPhotoUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1920&q=80',
 
   collagePhotos: [
@@ -267,7 +266,6 @@ const config = reactive({
     { time: '11:00 PM', title: 'Send Off', subtitle: 'Sparkler exit' },
   ],
 
-  storyTitle: 'Our Love Story',
   stories: [
     {
       date: 'June 2018',
@@ -302,6 +300,26 @@ function enterSite() {
   }, 600);
 }
 
+function buildLocationAddress(loc) {
+  if (!loc) return '';
+  return [loc.name, loc.addressLine, loc.city].filter(Boolean).join('<br>');
+}
+
+function buildMapUrl(loc) {
+  if (!loc) return '';
+  if (loc.googleMapsUrl) return loc.googleMapsUrl;
+  if (loc.latitude != null && loc.longitude != null) {
+    return `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`;
+  }
+  return '';
+}
+
+function formatTimeRange(startTime, endTime) {
+  if (!startTime) return '';
+  if (endTime) return `${startTime} - ${endTime}`;
+  return startTime;
+}
+
 function applyBackendData(data) {
   const ev = data.event;
   if (!ev) return;
@@ -323,38 +341,37 @@ function applyBackendData(data) {
     const locationStr = [loc.city, loc.country].filter(Boolean).join(', ')
       || loc.venueName || loc.address || '';
     if (locationStr) config.location = locationStr;
-    const mapUrl = loc.mapUrl
-      || (loc.latitude != null && loc.longitude != null
-        ? `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`
-        : '');
-    if (mapUrl) config.heroMapUrl = mapUrl;
+    config.heroMapUrl = buildMapUrl(loc);
   }
 
-  if (Array.isArray(data.weddingDetails) && data.weddingDetails.length) {
-    const sorted = [...data.weddingDetails].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
-    sorted.forEach((d) => {
-      const title = localized(d.titleI18n, d.title);
-      const desc = localized(d.descriptionI18n, d.description);
-      if (d.icon === 'church' || title?.toLowerCase().includes('ceremon')) {
-        if (d.startTime) config.ceremonyTime = d.startTime;
-        if (desc) config.ceremonyAddress = desc;
-        if (d.location?.mapUrl) config.ceremonyMapUrl = d.location.mapUrl;
-      } else if (d.icon === 'party' || title?.toLowerCase().includes('recept')) {
-        if (d.startTime) config.receptionTime = d.startTime;
-        if (desc) config.receptionAddress = desc;
-        if (d.location?.mapUrl) config.receptionMapUrl = d.location.mapUrl;
-      }
-    });
-  }
-
+  // Map agenda items to detail cards and timeline
   if (Array.isArray(data.agenda) && data.agenda.length) {
-    config.agendaEvents = [...data.agenda]
-      .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
-      .map((a) => ({
-        time: a.startTime || '',
-        title: localized(a.titleI18n, a.title),
-        subtitle: localized(a.descriptionI18n, a.description),
-      }));
+    const sorted = [...data.agenda].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+
+    // Populate ceremony & reception cards from agenda items by type
+    const ceremonyTypes = ['CEREMONY', 'CHURCH'];
+    const ceremonyItem = sorted.find((a) => ceremonyTypes.includes(a.type));
+    if (ceremonyItem) {
+      config.ceremonyTime = formatTimeRange(ceremonyItem.startTime, ceremonyItem.endTime);
+      config.ceremonyAddress = buildLocationAddress(ceremonyItem.location)
+        || ceremonyItem.description || '';
+      config.ceremonyMapUrl = buildMapUrl(ceremonyItem.location);
+    }
+
+    const receptionItem = sorted.find((a) => a.type === 'RECEPTION');
+    if (receptionItem) {
+      config.receptionTime = formatTimeRange(receptionItem.startTime, receptionItem.endTime);
+      config.receptionAddress = buildLocationAddress(receptionItem.location)
+        || receptionItem.description || '';
+      config.receptionMapUrl = buildMapUrl(receptionItem.location);
+    }
+
+    // Timeline events
+    config.agendaEvents = sorted.map((a) => ({
+      time: formatTimeRange(a.startTime, a.endTime),
+      title: a.title || '',
+      subtitle: a.description || '',
+    }));
   }
 
   if (Array.isArray(data.ourStory) && data.ourStory.length) {
@@ -372,6 +389,7 @@ function applyBackendData(data) {
   }
 
   if (ev.rsvpDeadline) config.rsvpDeadline = formatDate(ev.rsvpDeadline);
+  if (ev.dressCode) config.dressCode = ev.dressCode;
 }
 
 onMounted(async () => {
