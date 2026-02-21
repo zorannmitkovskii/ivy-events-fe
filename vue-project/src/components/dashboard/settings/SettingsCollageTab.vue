@@ -8,7 +8,7 @@ import ButtonMain from "@/components/generic/ButtonMain.vue";
 const { t } = useI18n();
 
 const eventId = onboardingStore.eventId;
-const { photos, loading, error, loadPhotos, uploadPhoto, deletePhoto } = useCollagePhotos();
+const { photos, loading, error, loadPhotos, uploadPhotos, deletePhoto } = useCollagePhotos();
 
 const fileInput = ref(null);
 const uploading = ref(false);
@@ -22,17 +22,15 @@ async function onFileChange(e) {
   if (!files?.length) return;
   uploading.value = true;
   try {
-    for (const file of files) {
-      await uploadPhoto(eventId, file);
-    }
+    await uploadPhotos(eventId, Array.from(files));
   } finally {
     uploading.value = false;
     if (fileInput.value) fileInput.value.value = "";
   }
 }
 
-async function onDelete(photoId) {
-  await deletePhoto(eventId, photoId);
+async function onDelete(url) {
+  await deletePhoto(eventId, url);
 }
 
 onMounted(() => {
@@ -65,9 +63,9 @@ onMounted(() => {
     </div>
 
     <div v-else class="collage-grid">
-      <div v-for="photo in photos" :key="photo.id" class="collage-item">
+      <div v-for="(photo, idx) in photos" :key="photo.url || idx" class="collage-item">
         <img :src="photo.url" alt="" class="collage-img" />
-        <button class="delete-btn" type="button" @click="onDelete(photo.id)">
+        <button class="delete-btn" type="button" @click="onDelete(photo.url)">
           <i class="bi bi-trash"></i>
         </button>
       </div>

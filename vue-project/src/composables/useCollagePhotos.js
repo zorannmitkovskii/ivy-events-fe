@@ -19,10 +19,14 @@ export function useCollagePhotos() {
     }
   }
 
-  async function uploadPhoto(eventId, file) {
+  async function uploadPhotos(eventId, files) {
     try {
-      const result = await invitationPhotosApi.upload(eventId, file, photos.value.length);
-      photos.value.push(result);
+      const result = await invitationPhotosApi.upload(eventId, files);
+      if (Array.isArray(result)) {
+        photos.value.push(...result);
+      } else if (result) {
+        photos.value.push(result);
+      }
       return result;
     } catch (e) {
       error.value = e?.message || "Upload failed";
@@ -30,15 +34,15 @@ export function useCollagePhotos() {
     }
   }
 
-  async function deletePhoto(eventId, photoId) {
+  async function deletePhoto(eventId, url) {
     try {
-      await invitationPhotosApi.remove(eventId, photoId);
-      photos.value = photos.value.filter((p) => p.id !== photoId);
+      await invitationPhotosApi.remove(eventId, url);
+      photos.value = photos.value.filter((p) => p.url !== url);
     } catch (e) {
       error.value = e?.message || "Delete failed";
       throw e;
     }
   }
 
-  return { photos, loading, error, loadPhotos, uploadPhoto, deletePhoto };
+  return { photos, loading, error, loadPhotos, uploadPhotos, deletePhoto };
 }

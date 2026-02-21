@@ -2,21 +2,22 @@ import { api } from "@/services/api";
 
 export const invitationPhotosApi = {
   list(eventId) {
-    return api.get(`/invitation-photos/${encodeURIComponent(eventId)}`);
+    return api.get(`/invitation-images/collage/${encodeURIComponent(eventId)}`);
   },
 
-  upload(eventId, file, displayOrder = 0) {
+  upload(eventId, files) {
     const formData = new FormData();
-    formData.append("file", file);
-    formData.append("displayOrder", displayOrder);
-    return api.post(`/invitation-photos/${encodeURIComponent(eventId)}`, formData, {
+    for (const file of files) {
+      formData.append("files", file);
+    }
+    return api.post(`/invitation-images/collage/${encodeURIComponent(eventId)}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
   },
 
-  remove(eventId, photoId) {
-    return api.del(
-      `/invitation-photos/${encodeURIComponent(eventId)}/${encodeURIComponent(photoId)}`
-    );
+  remove(eventId, url) {
+    return api.del(`/invitation-images/collage/${encodeURIComponent(eventId)}`, {
+      params: { url },
+    });
   },
 };
