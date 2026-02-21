@@ -1,9 +1,16 @@
 import { api } from "@/services/api";
+import backendApi from "@/services/backendApi";
 
 export const contactService = {
   /** Create a contact-us message (BaseController POST) */
   create(payload) {
     return api.post("/contact-us", payload);
+  },
+
+  /** Submit a public contact-us message (no auth required) */
+  async submitPublic(payload) {
+    const res = await backendApi.post("/public/contact-us", payload);
+    return res.data;
   },
 
   /** Get a single contact-us by id (BaseController GET /:id) */

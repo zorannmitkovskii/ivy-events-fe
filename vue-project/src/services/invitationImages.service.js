@@ -1,27 +1,34 @@
-import { api } from "@/services/api";
-
-const MULTIPART = { headers: { "Content-Type": "multipart/form-data" } };
+import axios from "axios";
+import backendApi from "@/services/backendApi";
+import { baseUrl } from "@/services/baseUrl";
 
 export const invitationImagesService = {
-  uploadOurStoryImages(eventId, files) {
+  async uploadOurStoryImages(eventId, files) {
     const fd = new FormData();
     for (const file of files) {
       fd.append("files", file);
     }
-    return api.post(`/invitation-images/our-story/${eventId}`, fd, MULTIPART);
+    // Use plain axios so the browser sets the correct multipart boundary
+    const res = await axios.post(`${baseUrl}/public/media/upload`, fd, {
+      params: { eventId },
+    });
+    return res.data;
   },
 
-  uploadHeroImage(eventId, file) {
+  async uploadHeroImage(eventId, file) {
     const fd = new FormData();
-    fd.append("file", file);
-    return api.post(`/invitation-images/hero/${eventId}`, fd, MULTIPART);
+    fd.append("files", file);
+    const res = await axios.post(`${baseUrl}/public/media/upload`, fd, {
+      params: { eventId },
+    });
+    return res.data;
   },
 
   deleteOurStoryImage(eventId, url) {
-    return api.del(`/invitation-images/our-story/${eventId}`, { params: { url } });
+    return backendApi.delete("/public/media", { params: { path: url } });
   },
 
   deleteHeroImage(eventId) {
-    return api.del(`/invitation-images/hero/${eventId}`);
+    return backendApi.delete("/public/media", { params: { eventId } });
   },
 };

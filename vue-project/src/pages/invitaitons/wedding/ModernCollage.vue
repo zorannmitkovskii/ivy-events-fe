@@ -187,8 +187,10 @@ import { reactive, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
+import { mediaService } from '@/services/media.service';
 import { useInvitationData } from '@/composables/useInvitationData';
 import { useScrollReveal } from '@/composables/useScrollReveal';
+import { buildLocationAddress, buildMapUrl, formatTimeRange } from '@/utils/invitation';
 import CountdownTimer from '@/components/invitations/shared/CountdownTimer.vue';
 import EventTimeline from '@/components/invitations/shared/EventTimeline.vue';
 import RsvpForm from '@/components/invitations/shared/RsvpForm.vue';
@@ -300,26 +302,6 @@ function enterSite() {
   }, 600);
 }
 
-function buildLocationAddress(loc) {
-  if (!loc) return '';
-  return [loc.name, loc.addressLine, loc.city].filter(Boolean).join('<br>');
-}
-
-function buildMapUrl(loc) {
-  if (!loc) return '';
-  if (loc.googleMapsUrl) return loc.googleMapsUrl;
-  if (loc.latitude != null && loc.longitude != null) {
-    return `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`;
-  }
-  return '';
-}
-
-function formatTimeRange(startTime, endTime) {
-  if (!startTime) return '';
-  if (endTime) return `${startTime} - ${endTime}`;
-  return startTime;
-}
-
 function applyBackendData(data) {
   const ev = data.event;
   if (!ev) return;
@@ -392,6 +374,31 @@ function applyBackendData(data) {
   if (ev.dressCode) config.dressCode = ev.dressCode;
 }
 
+async function loadGalleryImages() {
+  if (!eventId) return;
+  try {
+    const raw = await mediaService.list(eventId, { page: 0, size: 30 });
+    const items = Array.isArray(raw?.content) ? raw.content : Array.isArray(raw) ? raw : [];
+    const imageUrls = items
+      .filter((m) => m.fileType?.startsWith('image'))
+      .map((m) => m.fileUrl || m.url)
+      .filter(Boolean);
+    if (!imageUrls.length) return;
+
+    // Hero: use first gallery image if invitation didn't provide one
+    if (!config.heroPhotoUrl) {
+      config.heroPhotoUrl = imageUrls[0];
+    }
+
+    // Collage: use gallery images if invitation/stories didn't populate them
+    if (!config.collagePhotos.length) {
+      config.collagePhotos = imageUrls.slice(0, 6).map((url, i) => ({ url, alt: `Photo ${i + 1}` }));
+    }
+  } catch (e) {
+    console.error('Gallery fetch failed:', e);
+  }
+}
+
 onMounted(async () => {
   const fontLinks = [
     'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap',
@@ -407,7 +414,13 @@ onMounted(async () => {
   });
 
   const data = await fetchData();
-  if (data) applyBackendData(data);
+  if (data) {
+    // Clear default placeholder images so backend / gallery can take over
+    config.heroPhotoUrl = '';
+    config.collagePhotos = [];
+    applyBackendData(data);
+    await loadGalleryImages();
+  }
 });
 
 async function onRsvpSubmit(payload) {

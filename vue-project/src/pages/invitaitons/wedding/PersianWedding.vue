@@ -59,7 +59,7 @@
             border-radius="16px"
           >
             <template #icon>
-              <span class="card-emoji">{{ iconMap[detail.icon] || '📋' }}</span>
+              <span class="card-emoji">{{ iconMap[detail.icon] || typeToIcon[detail.icon] || '📋' }}</span>
             </template>
             <p v-if="detail.description">{{ detail.description }}</p>
             <template #footer>
@@ -216,8 +216,10 @@ import { reactive, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
+import { mediaService } from '@/services/media.service';
 import { useInvitationData } from '@/composables/useInvitationData';
 import { useScrollReveal } from '@/composables/useScrollReveal';
+import { buildLocationAddress, buildMapUrl, formatTimeRange } from '@/utils/invitation';
 import HeroSection from '@/components/invitations/wedding/PersianWedding/HeroSection.vue';
 import OurStorySection from '@/components/invitations/wedding/PersianWedding/OurStorySection.vue';
 import DetailCard from '@/components/invitations/shared/DetailCard.vue';
@@ -325,10 +327,21 @@ const iconMap = {
   transport: '🚗', food: '🍽️', photo: '📷', flowers: '💐',
 };
 
+const typeToIcon = {
+  CEREMONY: '⛪', CHURCH: '⛪', RECEPTION: '🎉',
+  COCKTAIL: '🍸', DINNER: '🍽️', DANCE: '🎵',
+  BRUNCH: '☕', WELCOME: '🥂',
+};
+
 /* ---- fetch & apply ---- */
 async function fetchInvitationData() {
   const data = await fetchData();
-  if (data) applyBackendData(data);
+  if (data) {
+    config.heroPhotoUrl = '';
+    config.storyPhotos = [];
+    applyBackendData(data);
+    await loadGalleryImages();
+  }
 }
 
 function applyBackendData(data) {
@@ -364,37 +377,34 @@ function applyBackendData(data) {
       config.location = addressStr;
       config.venueAddress = addressStr;
     }
-    const mapUrl = loc.mapUrl
-      || (loc.latitude != null && loc.longitude != null
-        ? `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`
-        : '');
+    const mapUrl = buildMapUrl(loc);
     if (mapUrl) {
       config.venueMapUrl = mapUrl;
       config.heroMapUrl = mapUrl;
     }
   }
 
-  // Wedding details
-  if (Array.isArray(data.weddingDetails) && data.weddingDetails.length) {
-    config.weddingDetails = [...data.weddingDetails]
-      .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
-      .map((d) => ({
-        title: localized(d.titleI18n, d.title),
-        description: localized(d.descriptionI18n, d.description),
-        icon: d.icon || null,
-        mapUrl: d.location?.mapUrl || null,
-      }));
-  }
-
-  // Agenda
+  // Agenda → dynamic detail cards + timeline
   if (Array.isArray(data.agenda) && data.agenda.length) {
-    config.agendaEvents = [...data.agenda]
-      .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
-      .map((a) => ({
-        time: a.startTime || formatTime(a.date),
-        title: localized(a.titleI18n, a.title),
-        subtitle: localized(a.descriptionI18n, a.description),
-      }));
+    const sorted = [...data.agenda].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+
+    // Dynamic detail cards from agenda items (PersianWedding uses typeToIcon mapping)
+    config.weddingDetails = sorted.map((a) => ({
+      title: a.title || '',
+      description: [
+        formatTimeRange(a.startTime, a.endTime),
+        buildLocationAddress(a.location) || a.description || '',
+      ].filter(Boolean).join(' — '),
+      icon: a.icon || a.type || null,
+      mapUrl: buildMapUrl(a.location),
+    }));
+
+    // Timeline events
+    config.agendaEvents = sorted.map((a) => ({
+      time: a.startTime || formatTime(a.date),
+      title: a.title || '',
+      subtitle: a.description || '',
+    }));
   }
 
   // Our Story
@@ -416,6 +426,29 @@ function applyBackendData(data) {
 
   // RSVP deadline
   if (ev.rsvpDeadline) config.rsvpDeadline = formatDate(ev.rsvpDeadline);
+}
+
+async function loadGalleryImages() {
+  if (!eventId) return;
+  try {
+    const raw = await mediaService.list(eventId, { page: 0, size: 30 });
+    const items = Array.isArray(raw?.content) ? raw.content : Array.isArray(raw) ? raw : [];
+    const imageUrls = items
+      .filter((m) => m.fileType?.startsWith('image'))
+      .map((m) => m.fileUrl || m.url)
+      .filter(Boolean);
+    if (!imageUrls.length) return;
+
+    if (!config.heroPhotoUrl) {
+      config.heroPhotoUrl = imageUrls[0];
+    }
+
+    if (!config.storyPhotos.length) {
+      config.storyPhotos = imageUrls.slice(0, 4).map((url, i) => ({ url, alt: `Photo ${i + 1}` }));
+    }
+  } catch (e) {
+    console.error('Gallery fetch failed:', e);
+  }
 }
 
 onMounted(() => {

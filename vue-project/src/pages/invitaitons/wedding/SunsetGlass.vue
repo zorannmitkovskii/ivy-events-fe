@@ -47,8 +47,10 @@ import { reactive, ref, onMounted } from "vue";
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
+import { mediaService } from '@/services/media.service';
 import { useInvitationData } from '@/composables/useInvitationData';
 import { useScrollReveal } from '@/composables/useScrollReveal';
+import { buildLocationAddress, buildMapUrl, formatTimeRange } from '@/utils/invitation';
 import InvitationHero from "@/components/invitations/wedding/sunsetGlass/InvitationHero.vue";
 import WeddingDetails from "@/components/invitations/wedding/sunsetGlass/WeddingDetails.vue";
 import TimelineSection from "@/components/invitations/wedding/sunsetGlass/TimelineSection.vue";
@@ -147,47 +149,55 @@ function applyBackendData(raw) {
     const parts = [loc.venueName, addressParts].filter(Boolean);
     data.locationHtml = parts.join('<br>');
 
-    const mapUrl = loc.mapUrl
-      || (loc.latitude != null && loc.longitude != null
-        ? `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`
-        : '');
+    const mapUrl = buildMapUrl(loc);
     if (mapUrl) {
       data.mapUrl = mapUrl;
       data.heroMapUrl = mapUrl;
     }
   }
 
-  // Wedding details → ceremony/reception/venue HTML
-  if (Array.isArray(raw.weddingDetails) && raw.weddingDetails.length) {
-    const sorted = [...raw.weddingDetails].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
-    sorted.forEach((d) => {
-      const title = localized(d.titleI18n, d.title);
-      const desc = localized(d.descriptionI18n, d.description);
-      const line = [title, desc].filter(Boolean).join('<br>');
-      if (d.icon === 'church' || title?.toLowerCase().includes('ceremon')) {
-        data.ceremonyHtml = line;
-        data.ceremonyMapUrl = d.location?.mapUrl || data.mapUrl;
-      } else if (d.icon === 'party' || title?.toLowerCase().includes('recept')) {
-        data.receptionHtml = line;
-        data.receptionMapUrl = d.location?.mapUrl || data.mapUrl;
-      } else if (d.icon === 'hotel' || title?.toLowerCase().includes('venue')) {
-        data.venueHtml = line;
-        data.venueMapUrl = d.location?.mapUrl || data.mapUrl;
-      }
-    });
-  }
-
-  // Agenda → timeline
+  // Agenda → ceremony/reception/venue HTML + timeline
   if (Array.isArray(raw.agenda) && raw.agenda.length) {
+    const sorted = [...raw.agenda].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+
+    // Populate ceremony & reception cards from agenda items by type (HTML strings for WeddingDetails)
+    const ceremonyTypes = ['CEREMONY', 'CHURCH'];
+    const ceremonyItem = sorted.find((a) => ceremonyTypes.includes(a.type));
+    if (ceremonyItem) {
+      const parts = [
+        formatTimeRange(ceremonyItem.startTime, ceremonyItem.endTime),
+        buildLocationAddress(ceremonyItem.location) || ceremonyItem.description || '',
+      ].filter(Boolean);
+      data.ceremonyHtml = parts.join('<br>');
+      data.ceremonyMapUrl = buildMapUrl(ceremonyItem.location) || data.mapUrl;
+    }
+
+    const receptionItem = sorted.find((a) => a.type === 'RECEPTION');
+    if (receptionItem) {
+      const parts = [
+        formatTimeRange(receptionItem.startTime, receptionItem.endTime),
+        buildLocationAddress(receptionItem.location) || receptionItem.description || '',
+      ].filter(Boolean);
+      data.receptionHtml = parts.join('<br>');
+      data.receptionMapUrl = buildMapUrl(receptionItem.location) || data.mapUrl;
+    }
+
+    // Venue card from event location
+    if (raw.location) {
+      const loc = raw.location;
+      const venueParts = [loc.venueName, buildLocationAddress(loc) || [loc.city, loc.country].filter(Boolean).join(', ')].filter(Boolean);
+      data.venueHtml = venueParts.join('<br>');
+      data.venueMapUrl = buildMapUrl(loc) || data.mapUrl;
+    }
+
+    // Timeline events
     const badgeClasses = ['bg-pink-300', 'bg-purple-300', 'bg-teal-300'];
-    data.timeline = [...raw.agenda]
-      .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
-      .map((a, i) => ({
-        time: a.startTime || '',
-        title: localized(a.titleI18n, a.title),
-        description: localized(a.descriptionI18n, a.description),
-        badgeClass: badgeClasses[i % 3],
-      }));
+    data.timeline = sorted.map((a, i) => ({
+      time: a.startTime || '',
+      title: a.title || '',
+      description: a.description || '',
+      badgeClass: badgeClasses[i % 3],
+    }));
   }
 
   // Our Story
@@ -209,9 +219,41 @@ function applyBackendData(raw) {
   }
 }
 
+async function loadGalleryImages() {
+  if (!invEventId) return;
+  try {
+    const raw = await mediaService.list(invEventId, { page: 0, size: 30 });
+    const items = Array.isArray(raw?.content) ? raw.content : Array.isArray(raw) ? raw : [];
+    const imageUrls = items
+      .filter((m) => m.fileType?.startsWith('image'))
+      .map((m) => m.fileUrl || m.url)
+      .filter(Boolean);
+    if (!imageUrls.length) return;
+
+    if (!data.heroImage) {
+      data.heroImage = imageUrls[0];
+    }
+
+    if (!data.storyImages.length) {
+      data.storyImages = imageUrls.slice(0, 4).map((src, i) => ({
+        src,
+        alt: `Photo ${i + 1}`,
+        className: i % 2 === 1 ? 'mt-8' : '',
+      }));
+    }
+  } catch (e) {
+    console.error('Gallery fetch failed:', e);
+  }
+}
+
 onMounted(async () => {
   const result = await fetchData();
-  if (result) applyBackendData(result);
+  if (result) {
+    data.heroImage = '';
+    data.storyImages = [];
+    applyBackendData(result);
+    await loadGalleryImages();
+  }
 });
 
 function scrollToRsvp() {

@@ -181,8 +181,10 @@ import { reactive, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
+ import { mediaService } from '@/services/media.service';
 import { useInvitationData } from '@/composables/useInvitationData';
 import { useScrollReveal } from '@/composables/useScrollReveal';
+import { buildLocationAddress, buildMapUrl, formatTimeRange } from '@/utils/invitation';
 import CountdownTimer from '@/components/invitations/shared/CountdownTimer.vue';
 import RsvpForm from '@/components/invitations/shared/RsvpForm.vue';
 
@@ -323,34 +325,36 @@ function applyBackendData(data) {
     const locationStr = [loc.city, loc.country].filter(Boolean).join(', ')
       || loc.venueName || loc.address || '';
     if (locationStr) config.location = locationStr;
-    const mapUrl = loc.mapUrl
-      || (loc.latitude != null && loc.longitude != null
-        ? `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`
-        : '');
+    const mapUrl = buildMapUrl(loc);
     if (mapUrl) config.heroMapUrl = mapUrl;
   }
 
-  if (Array.isArray(data.weddingDetails) && data.weddingDetails.length) {
-    const sorted = [...data.weddingDetails].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
-    config.weddingDetails = sorted.map((d, i) => ({
-      icon: d.icon || (i === 0 ? 'drinks' : i === 1 ? 'heart' : 'coffee'),
-      title: localized(d.titleI18n, d.title),
-      time: d.startTime || '',
-      description: localized(d.descriptionI18n, d.description),
-      mapUrl: d.location?.mapUrl || '',
-      highlight: i === 1,
-    }));
-  }
-
+  // Agenda → detail cards with highlight on ceremony-type items
+  const ceremonyTypes = ['CEREMONY', 'CHURCH'];
   if (Array.isArray(data.agenda) && data.agenda.length) {
     const sorted = [...data.agenda].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
-    config.stories = sorted.map((a) => ({
-      date: '',
-      title: localized(a.titleI18n, a.title),
-      text: localized(a.descriptionI18n, a.description),
+
+    // Icon mapping from agenda type
+    const typeToIcon = {
+      CEREMONY: 'heart', CHURCH: 'heart', RECEPTION: 'drinks',
+      COCKTAIL: 'drinks', DINNER: 'coffee', DANCE: 'heart',
+      BRUNCH: 'coffee', WELCOME: 'drinks',
+    };
+
+    config.weddingDetails = sorted.map((a) => ({
+      icon: a.icon || typeToIcon[a.type] || 'heart',
+      title: a.title || '',
+      time: formatTimeRange(a.startTime, a.endTime),
+      description: [
+        buildLocationAddress(a.location),
+        a.description || '',
+      ].filter(Boolean).join(' — ') || '',
+      mapUrl: buildMapUrl(a.location),
+      highlight: ceremonyTypes.includes(a.type),
     }));
   }
 
+  // Our Story (NOT from agenda — that was a bug)
   if (Array.isArray(data.ourStory) && data.ourStory.length) {
     const ourStoryImages = Array.isArray(data.ourStoryImages) ? data.ourStoryImages : [];
     config.stories = data.ourStory.map((s, i) => ({
@@ -368,6 +372,29 @@ function applyBackendData(data) {
   if (ev.rsvpDeadline) config.rsvpDeadline = formatDate(ev.rsvpDeadline);
 }
 
+async function loadGalleryImages() {
+  if (!eventId) return;
+  try {
+    const raw = await mediaService.list(eventId, { page: 0, size: 30 });
+    const items = Array.isArray(raw?.content) ? raw.content : Array.isArray(raw) ? raw : [];
+    const imageUrls = items
+      .filter((m) => m.fileType?.startsWith('image'))
+      .map((m) => m.fileUrl || m.url)
+      .filter(Boolean);
+    if (!imageUrls.length) return;
+
+    if (!config.heroPhotoUrl) {
+      config.heroPhotoUrl = imageUrls[0];
+    }
+
+    if (!config.collagePhotos.length) {
+      config.collagePhotos = imageUrls.slice(0, 3).map((url, i) => ({ url, alt: `Photo ${i + 1}` }));
+    }
+  } catch (e) {
+    console.error('Gallery fetch failed:', e);
+  }
+}
+
 onMounted(async () => {
   const fontLinks = [
     'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap',
@@ -383,7 +410,12 @@ onMounted(async () => {
   });
 
   const data = await fetchData();
-  if (data) applyBackendData(data);
+  if (data) {
+    config.heroPhotoUrl = '';
+    config.collagePhotos = [];
+    applyBackendData(data);
+    await loadGalleryImages();
+  }
 });
 
 async function onRsvpSubmit(payload) {

@@ -192,8 +192,10 @@ import { reactive, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
+import { mediaService } from '@/services/media.service';
 import { useInvitationData } from '@/composables/useInvitationData';
 import { useScrollReveal } from '@/composables/useScrollReveal';
+import { buildLocationAddress, buildMapUrl, formatTimeRange } from '@/utils/invitation';
 import HeroSection from '@/components/invitations/wedding/CoastalBreeze/HeroSection.vue';
 import ScheduleList from '@/components/invitations/wedding/CoastalBreeze/ScheduleList.vue';
 import StoryGallery from '@/components/invitations/wedding/CoastalBreeze/StoryGallery.vue';
@@ -307,48 +309,46 @@ function applyBackendData(data) {
     if (loc.venueName) config.venue = loc.venueName;
     const addressStr = [loc.city, loc.country].filter(Boolean).join(', ') || loc.address || '';
     if (addressStr) config.location = addressStr;
-    const mapUrl = loc.mapUrl
-      || (loc.latitude != null && loc.longitude != null
-        ? `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`
-        : '');
+    const mapUrl = buildMapUrl(loc);
     if (mapUrl) {
       config.locationMapUrl = mapUrl;
       config.heroMapUrl = mapUrl;
     }
   }
 
-  // Wedding details → ceremony/reception cards
-  if (Array.isArray(data.weddingDetails) && data.weddingDetails.length) {
-    const sorted = [...data.weddingDetails].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
-    sorted.forEach((d) => {
-      const title = localized(d.titleI18n, d.title);
-      const desc = localized(d.descriptionI18n, d.description);
-      if (d.icon === 'church' || title?.toLowerCase().includes('ceremon')) {
-        config.ceremonyTime = d.startTime || desc || config.ceremonyTime;
-        config.ceremonyVenue = title || config.ceremonyVenue;
-        if (d.location?.mapUrl) config.ceremonyMapUrl = d.location.mapUrl;
-      } else if (d.icon === 'party' || title?.toLowerCase().includes('recept')) {
-        config.receptionTime = d.startTime || desc || config.receptionTime;
-        config.receptionVenue = title || config.receptionVenue;
-        if (d.location?.mapUrl) config.receptionMapUrl = d.location.mapUrl;
-      }
-    });
-  }
-
-  // Agenda → schedule
+  // Agenda → ceremony/reception cards + schedule
   if (Array.isArray(data.agenda) && data.agenda.length) {
-    config.scheduleEvents = [...data.agenda]
-      .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
-      .map((a) => {
-        const time = a.startTime || '';
-        const parts = time.match(/^(\d+:\d+)\s*(AM|PM)?$/i);
-        return {
-          timeValue: parts ? parts[1] : time,
-          timePeriod: parts ? (parts[2] || '') : '',
-          title: localized(a.titleI18n, a.title),
-          description: localized(a.descriptionI18n, a.description),
-        };
-      });
+    const sorted = [...data.agenda].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+
+    // Populate ceremony & reception cards from agenda items by type
+    const ceremonyTypes = ['CEREMONY', 'CHURCH'];
+    const ceremonyItem = sorted.find((a) => ceremonyTypes.includes(a.type));
+    if (ceremonyItem) {
+      config.ceremonyTime = formatTimeRange(ceremonyItem.startTime, ceremonyItem.endTime);
+      config.ceremonyVenue = buildLocationAddress(ceremonyItem.location)
+        || ceremonyItem.location?.name || ceremonyItem.description || '';
+      config.ceremonyMapUrl = buildMapUrl(ceremonyItem.location);
+    }
+
+    const receptionItem = sorted.find((a) => a.type === 'RECEPTION');
+    if (receptionItem) {
+      config.receptionTime = formatTimeRange(receptionItem.startTime, receptionItem.endTime);
+      config.receptionVenue = buildLocationAddress(receptionItem.location)
+        || receptionItem.location?.name || receptionItem.description || '';
+      config.receptionMapUrl = buildMapUrl(receptionItem.location);
+    }
+
+    // Schedule timeline (CoastalBreeze splits time into timeValue/timePeriod)
+    config.scheduleEvents = sorted.map((a) => {
+      const time = a.startTime || '';
+      const parts = time.match(/^(\d+:\d+)\s*(AM|PM)?$/i);
+      return {
+        timeValue: parts ? parts[1] : time,
+        timePeriod: parts ? (parts[2] || '') : '',
+        title: a.title || '',
+        description: a.description || '',
+      };
+    });
   }
 
   // Our Story
@@ -368,6 +368,25 @@ function applyBackendData(data) {
   }
 }
 
+async function loadGalleryImages() {
+  if (!eventId) return;
+  try {
+    const raw = await mediaService.list(eventId, { page: 0, size: 30 });
+    const items = Array.isArray(raw?.content) ? raw.content : Array.isArray(raw) ? raw : [];
+    const imageUrls = items
+      .filter((m) => m.fileType?.startsWith('image'))
+      .map((m) => m.fileUrl || m.url)
+      .filter(Boolean);
+    if (!imageUrls.length) return;
+
+    if (!config.heroPhotoUrl) {
+      config.heroPhotoUrl = imageUrls[0];
+    }
+  } catch (e) {
+    console.error('Gallery fetch failed:', e);
+  }
+}
+
 onMounted(async () => {
   const fontLinks = [
     'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap',
@@ -383,7 +402,11 @@ onMounted(async () => {
   });
 
   const data = await fetchData();
-  if (data) applyBackendData(data);
+  if (data) {
+    config.heroPhotoUrl = '';
+    applyBackendData(data);
+    await loadGalleryImages();
+  }
 });
 
 async function onRsvpSubmit(payload) {
