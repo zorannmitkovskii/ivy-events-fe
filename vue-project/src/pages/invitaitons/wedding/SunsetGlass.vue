@@ -249,10 +249,14 @@ async function loadGalleryImages() {
 onMounted(async () => {
   const result = await fetchData();
   if (result) {
+    const defaultHero = data.heroImage;
+    const defaultStoryImages = [...data.storyImages];
     data.heroImage = '';
     data.storyImages = [];
     applyBackendData(result);
     await loadGalleryImages();
+    if (!data.heroImage) data.heroImage = defaultHero;
+    if (!data.storyImages.length) data.storyImages = defaultStoryImages;
   }
 });
 
