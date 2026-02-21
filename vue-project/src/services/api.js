@@ -131,6 +131,12 @@ function scheduleProactiveRefresh() {
   if (!exp) return;
 
   const now = Date.now();
+
+  // Token already expired — don't proactively refresh.
+  // The 401 interceptor will handle it when a real authenticated request is made.
+  // This prevents spurious refresh-token calls on public pages (e.g. invitations).
+  if (exp <= now) return;
+
   // Refresh 60 seconds before expiry, minimum 5 seconds from now
   const delay = Math.max(exp - now - 60_000, 5_000);
 

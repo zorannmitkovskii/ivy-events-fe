@@ -8,7 +8,12 @@
         Have questions? Fill out the form below and we will get back to you shortly.
       </p>
 
-      <form @submit.prevent="submitForm" class="p-4 rounded shadow-sm" style="background: white;">
+      <div v-if="success" class="p-4 rounded shadow-sm text-center" style="background: #ecfdf5; border: 1px solid #a7f3d0;">
+        <h3 class="fw-bold mb-2">Message Sent!</h3>
+        <p class="mb-0">Thank you for reaching out. We will get back to you shortly.</p>
+      </div>
+
+      <form v-else @submit.prevent="submitForm" class="p-4 rounded shadow-sm" style="background: white;">
 
         <div class="row mb-3">
           <div class="col-md-6 mb-3 mb-md-0">
@@ -67,9 +72,12 @@
           ></textarea>
         </div>
 
+        <p v-if="error" class="text-danger small mb-3">{{ error }}</p>
+
         <button class="btn px-4 py-2"
-                style="background-color: var(--logo-brown); color: white;">
-          Send Message
+                style="background-color: var(--logo-brown); color: white;"
+                :disabled="submitting">
+          {{ submitting ? 'Sending...' : 'Send Message' }}
         </button>
       </form>
 
@@ -78,7 +86,8 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
+import { contactService } from "@/services/contact.service";
 
 const form = reactive({
   firstName: "",
@@ -88,11 +97,26 @@ const form = reactive({
   message: ""
 });
 
-function submitForm() {
-  console.log("Form submitted:", form);
+const submitting = ref(false);
+const success = ref(false);
+const error = ref("");
 
-  // You can replace this with API call
-  alert("Your message has been sent!");
+async function submitForm() {
+  error.value = "";
+  submitting.value = true;
+  try {
+    await contactService.submitPublic({
+      name: `${form.firstName.trim()} ${form.lastName.trim()}`.trim(),
+      email: form.email.trim(),
+      subject: form.subject.trim(),
+      message: form.message.trim(),
+    });
+    success.value = true;
+  } catch (e) {
+    error.value = e.response?.data?.message || e.message || "Something went wrong. Please try again.";
+  } finally {
+    submitting.value = false;
+  }
 }
 </script>
 

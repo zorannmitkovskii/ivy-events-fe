@@ -170,8 +170,10 @@ import { reactive, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
+import { mediaService } from '@/services/media.service';
 import { useInvitationData } from '@/composables/useInvitationData';
 import { useScrollReveal } from '@/composables/useScrollReveal';
+import { buildLocationAddress, buildMapUrl, formatTimeRange } from '@/utils/invitation';
 import HeroSection from '@/components/invitations/wedding/ParisianWedding/HeroSection.vue';
 import OurStorySection from '@/components/invitations/wedding/ParisianWedding/OurStorySection.vue';
 import AgendaTimeline from '@/components/invitations/wedding/ParisianWedding/AgendaTimeline.vue';
@@ -265,41 +267,39 @@ function applyBackendData(data) {
     const locationStr = [loc.city, loc.country].filter(Boolean).join(', ')
       || loc.venueName || loc.address || '';
     if (locationStr) config.location = locationStr;
-    const mapUrl = loc.mapUrl
-      || (loc.latitude != null && loc.longitude != null
-        ? `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`
-        : '');
+    const mapUrl = buildMapUrl(loc);
     if (mapUrl) config.heroMapUrl = mapUrl;
   }
 
-  // Wedding details → ceremony/reception
-  if (Array.isArray(data.weddingDetails) && data.weddingDetails.length) {
-    const sorted = [...data.weddingDetails].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
-    sorted.forEach((d) => {
-      const title = localized(d.titleI18n, d.title);
-      const desc = localized(d.descriptionI18n, d.description);
-      if (d.icon === 'church' || title?.toLowerCase().includes('ceremon')) {
-        if (d.startTime) config.ceremonyTime = d.startTime;
-        if (desc) config.ceremonyAddress = desc;
-        if (d.location?.mapUrl) config.ceremonyMapUrl = d.location.mapUrl;
-      } else if (d.icon === 'party' || title?.toLowerCase().includes('recept')) {
-        if (d.startTime) config.receptionTime = d.startTime;
-        if (desc) config.receptionAddress = desc;
-        if (d.location?.mapUrl) config.receptionMapUrl = d.location.mapUrl;
-      }
-    });
-  }
-
-  // Agenda
+  // Agenda → ceremony/reception cards + timeline
   if (Array.isArray(data.agenda) && data.agenda.length) {
-    config.agendaEvents = [...data.agenda]
-      .sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
-      .map((a) => ({
-        time: a.startTime || '',
-        title: localized(a.titleI18n, a.title),
-        venue: localized(a.descriptionI18n, a.description),
-        description: localized(a.descriptionI18n, a.description),
-      }));
+    const sorted = [...data.agenda].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+
+    // Populate ceremony & reception cards from agenda items by type
+    const ceremonyTypes = ['CEREMONY', 'CHURCH'];
+    const ceremonyItem = sorted.find((a) => ceremonyTypes.includes(a.type));
+    if (ceremonyItem) {
+      config.ceremonyTime = formatTimeRange(ceremonyItem.startTime, ceremonyItem.endTime);
+      config.ceremonyAddress = buildLocationAddress(ceremonyItem.location)
+        || ceremonyItem.description || '';
+      config.ceremonyMapUrl = buildMapUrl(ceremonyItem.location);
+    }
+
+    const receptionItem = sorted.find((a) => a.type === 'RECEPTION');
+    if (receptionItem) {
+      config.receptionTime = formatTimeRange(receptionItem.startTime, receptionItem.endTime);
+      config.receptionAddress = buildLocationAddress(receptionItem.location)
+        || receptionItem.description || '';
+      config.receptionMapUrl = buildMapUrl(receptionItem.location);
+    }
+
+    // Agenda timeline (ParisianWedding uses venue field from location name or description)
+    config.agendaEvents = sorted.map((a) => ({
+      time: a.startTime || '',
+      title: a.title || '',
+      venue: a.location?.name || a.description || '',
+      description: a.description || '',
+    }));
   }
 
   // Our Story → paragraphs
@@ -318,6 +318,25 @@ function applyBackendData(data) {
   if (ev.rsvpDeadline) config.rsvpDeadline = formatDate(ev.rsvpDeadline);
 }
 
+async function loadGalleryImages() {
+  if (!eventId) return;
+  try {
+    const raw = await mediaService.list(eventId, { page: 0, size: 30 });
+    const items = Array.isArray(raw?.content) ? raw.content : Array.isArray(raw) ? raw : [];
+    const imageUrls = items
+      .filter((m) => m.fileType?.startsWith('image'))
+      .map((m) => m.fileUrl || m.url)
+      .filter(Boolean);
+    if (!imageUrls.length) return;
+
+    if (!config.heroPhotoUrl) {
+      config.heroPhotoUrl = imageUrls[0];
+    }
+  } catch (e) {
+    console.error('Gallery fetch failed:', e);
+  }
+}
+
 onMounted(async () => {
   const fontLinks = [
     'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap',
@@ -333,7 +352,11 @@ onMounted(async () => {
   });
 
   const data = await fetchData();
-  if (data) applyBackendData(data);
+  if (data) {
+    config.heroPhotoUrl = '';
+    applyBackendData(data);
+    await loadGalleryImages();
+  }
 });
 
 async function onRsvpSubmit(payload) {

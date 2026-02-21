@@ -83,7 +83,7 @@ async function submit() {
   error.value = "";
   submitting.value = true;
   try {
-    await contactService.create({
+    await contactService.submitPublic({
       name: form.value.name.trim(),
       email: form.value.email.trim(),
       phone: form.value.phone.trim() || undefined,
