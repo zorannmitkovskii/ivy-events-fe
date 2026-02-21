@@ -24,6 +24,19 @@
           </svg>
           {{ t("sidebar.eventSettings") }}
         </button>
+        <button class="popup-item" @click="onInvitationLinks">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+          {{ t("sidebar.invitationLinks") }}
+        </button>
+        <button class="popup-item" @click="onPackages">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
+          </svg>
+          {{ t("sidebar.packages") }}
+        </button>
         <button class="popup-item" @click="onSupport">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
@@ -53,7 +66,7 @@ const props = defineProps({
   avatarUrl: { type: String, default: "" },
 });
 
-const emit = defineEmits(["settings", "support", "signOut"]);
+const emit = defineEmits(["settings", "invitation-links", "packages", "support", "signOut"]);
 
 const menuOpen = ref(false);
 
@@ -65,6 +78,16 @@ const initials = computed(() => {
 function onSettings() {
   menuOpen.value = false;
   emit("settings");
+}
+
+function onInvitationLinks() {
+  menuOpen.value = false;
+  emit("invitation-links");
+}
+
+function onPackages() {
+  menuOpen.value = false;
+  emit("packages");
 }
 
 function onSupport() {

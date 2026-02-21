@@ -27,7 +27,12 @@
           <input class="input" type="date" v-model="dueDate" />
         </div>
 
-        <div class="field">
+        <div v-if="isReminder" class="field">
+          <label>{{ t("tables.tasks.form.time") }}</label>
+          <input class="input" type="time" v-model="dueTime" />
+        </div>
+
+        <div v-if="!isReminder" class="field">
           <label>{{ t("tables.tasks.form.status") }} *</label>
           <select class="select" v-model="status">
             <option value="PENDING">{{ t("tables.tasks.pending") }}</option>
@@ -37,7 +42,7 @@
         </div>
       </div>
 
-      <div class="field">
+      <div v-if="!isReminder" class="field">
         <label>{{ t("tables.tasks.form.priority") }}</label>
         <select class="select" v-model="priority">
           <option value="LOW">{{ t("tables.tasks.priorityLow") }}</option>
@@ -75,10 +80,12 @@ const props = defineProps({
 const emit = defineEmits(["close", "submit"]);
 
 const isEdit = computed(() => !!props.task);
+const isReminder = computed(() => props.type === "REMINDER");
 
 const title = ref("");
 const description = ref("");
 const dueDate = ref("");
+const dueTime = ref("");
 const status = ref("PENDING");
 const priority = ref("MEDIUM");
 const errors = ref({ title: "" });
@@ -98,12 +105,14 @@ watch(
         title.value = props.task.title || "";
         description.value = props.task.description || "";
         dueDate.value = props.task.dueDate ? props.task.dueDate.substring(0, 10) : "";
+        dueTime.value = props.task.dueTime || "";
         status.value = props.task.status || "PENDING";
         priority.value = props.task.priority || "MEDIUM";
       } else {
         title.value = "";
         description.value = "";
         dueDate.value = "";
+        dueTime.value = "";
         status.value = "PENDING";
         priority.value = "MEDIUM";
       }
@@ -120,6 +129,7 @@ function submit() {
     title: title.value.trim(),
     description: description.value.trim() || null,
     dueDate: dueDate.value || null,
+    dueTime: dueTime.value || null,
     status: status.value,
     priority: priority.value,
     type: props.task?.type || props.type

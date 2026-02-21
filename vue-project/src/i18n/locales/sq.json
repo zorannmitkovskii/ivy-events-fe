@@ -781,7 +781,8 @@
     "ourStory": "Historia Jonë",
     "weddingDetails": "Detajet e Dasmës",
     "team": "Ekipi",
-    "settings": "Cilësimet",
+    "invitationLinks": "Linqet e Ftesës",
+    "settings": "Detajet e Ngjarjes",
     "support": "Mbështetje",
     "premium": "PREMIUM",
     "eventPlanner": "Planifikues Ngjarjesh",
@@ -996,6 +997,7 @@
         "description": "Përshkrimi",
         "descriptionPh": "Shtoni një përshkrim ose shënime...",
         "dueDate": "Data e Afatit",
+        "time": "Ora",
         "status": "Statusi",
         "priority": "Prioriteti",
         "titleRequired": "Emri i detyrës është i detyrueshëm"
@@ -1096,7 +1098,30 @@
     "displayOptions": "Opsionet e Shfaqjes",
     "dangerZone": "Zona e Rrezikut",
     "archiveDesc": "Arkivimi i kësaj ngjarjeje do ta fshehë nga paneli juaj. Ky veprim mund të kthehet më vonë.",
-    "archiveEvent": "Arkivo Ngjarjen"
+    "archiveEvent": "Arkivo Ngjarjen",
+    "tabs": {
+      "details": "Detajet",
+      "agenda": "Axhenda",
+      "ourStory": "Historia Jonë",
+      "gallery": "Galeria e Historisë",
+      "collage": "Fotot e Kolazhit"
+    }
+  },
+  "invitationLinks": {
+    "title": "Linqet e Ftesës",
+    "subtitle": "Ndani këto linqe me mysafirët tuaj",
+    "regular": "Ftesa Standarde",
+    "regularDesc": "Ndani këtë link me mysafirët që të shikojnë ftesën dhe të konfirmojnë pjesëmarrjen.",
+    "closeFriends": "Miqtë e Ngushtë",
+    "closeFriendsDesc": "Ky link fsheh axhendën — ideal për miqtë e ngushtë që tashmë i dinë detajet.",
+    "gallery": "Ngarkim në Galeri",
+    "galleryDesc": "Ndani këtë link që mysafirët të ngarkojnë foto nga ngjarja.",
+    "tableLookup": "Gjetja e Tavolinës",
+    "tableLookupDesc": "Ndani këtë link që mysafirët të gjejnë tavolinën e tyre.",
+    "copyLink": "Kopjo",
+    "copied": "Kopjuar!",
+    "downloadQr": "Shkarko Kodin QR",
+    "noLink": "Asnjë link i disponueshëm ende."
   },
   "tableLookup": {
     "title": "Gjeni Tavolinën Tuaj",
@@ -1359,6 +1384,7 @@
     "and": "&",
     "tapToEnter": "Prekni një foto për të hyrë",
     "tapToOpen": "Prekni foton për të hapur",
+    "heroQuote": "Përgjithmonë fillon tani.",
     "weddingDetails": "Detajet e dasmës",
     "celebrationOfLove": "Një festim i dashurisë në Qytetin e Dritës",
     "storySubtitle": "Nga kafeja jonë e parë deri te \"Po\", këto janë momentet që na përcaktuan.",

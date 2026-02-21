@@ -129,6 +129,7 @@ const routes = [
           { path: "events/notifications", name: "dashboard.notifications", component: NotificationsPage },
           { path: "events/team", name: "dashboard.team", component: TeamPage },
           { path: "events/settings", name: "dashboard.settings", component: EventSettingsPage },
+          { path: "events/invitation-links", name: "dashboard.invitation-links", component: () => import("@/pages/dashboard/InvitationLinksPage.vue") },
           { path: "events/support", name: "dashboard.support", component: () => import("@/pages/dashboard/SupportPage.vue") },
           { path: "events/packages", name: "dashboard.packages", component: () => import("@/pages/dashboard/DashboardPackagesPage.vue") },
 

@@ -26,7 +26,6 @@ const {
   loadStories, createItem, updateItem, deleteItem,
 } = useOurStory();
 
-// Modal state
 const modalOpen = ref(false);
 const editingItem = ref(null);
 
@@ -63,7 +62,6 @@ function onImagesUpdated({ id, imageUrl }) {
   if (idx !== -1) items.value[idx].imageUrl = imageUrl;
 }
 
-// Upload modal state
 const uploadModalOpen = ref(false);
 
 function openUploadModal() {
@@ -99,12 +97,7 @@ async function onDelete(id) {
 </script>
 
 <template>
-  <div class="dash-page">
-    <div class="dash-page-header">
-      <h1 class="dash-page-title">{{ t('ourStory.title') }}</h1>
-      <p class="dash-page-subtitle">{{ t('ourStory.subtitle') }}</p>
-    </div>
-
+  <div>
     <OurStoryHeader
       :addLabel="t('ourStory.addStory')"
       :imagesLabel="t('ourStory.addImages')"
@@ -173,15 +166,8 @@ async function onDelete(id) {
 </template>
 
 <style scoped>
-.loading-msg {
-  padding: 18px 0;
-  color: var(--neutral-500);
-}
-
-.error-msg {
-  padding: 18px 0;
-  color: #b00020;
-}
+.loading-msg { padding: 18px 0; color: var(--neutral-500); }
+.error-msg { padding: 18px 0; color: #b00020; }
 
 .empty-card {
   background: #fff;
@@ -190,16 +176,6 @@ async function onDelete(id) {
   border: 1px solid rgba(0, 0, 0, 0.06);
   padding: 20px 24px;
 }
-
-.empty-title {
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--neutral-900);
-}
-
-.empty-sub {
-  margin-top: 6px;
-  font-size: 13px;
-  color: var(--neutral-500);
-}
+.empty-title { font-weight: 700; font-size: 15px; color: var(--neutral-900); }
+.empty-sub { margin-top: 6px; font-size: 13px; color: var(--neutral-500); }
 </style>

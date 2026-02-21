@@ -27,12 +27,6 @@
         </div>
       </div>
 
-      <div class="field">
-        <label>{{ t("agenda.form.dateTime") }} *</label>
-        <input class="input" v-model="draft.date" type="date" />
-        <div v-if="errors.dateTime" class="err">{{ errors.dateTime }}</div>
-      </div>
-
       <div class="two">
         <div class="field">
           <label>{{ t("agenda.form.startTime") }} *</label>
@@ -143,7 +137,6 @@ const draft = reactive({
   title: "",
   type: AgendaType.CEREMONY,
   visibility: AgendaVisibility.EVERYONE,
-  date: "",
   hour: "00",
   minute: "00",
   endHour: "",
@@ -152,7 +145,7 @@ const draft = reactive({
   location: { name: "", address: "", lat: null, lng: null, placeId: null },
 });
 
-const errors = reactive({ title: "", type: "", dateTime: "", time: "", endTime: "" });
+const errors = reactive({ title: "", type: "", time: "", endTime: "" });
 const validationError = ref("");
 
 watch(
@@ -163,7 +156,6 @@ watch(
     validationError.value = "";
     errors.title = "";
     errors.type = "";
-    errors.dateTime = "";
     errors.time = "";
     errors.endTime = "";
 
@@ -171,16 +163,15 @@ watch(
       draft.title = props.item.title ?? "";
       draft.type = props.item.type ?? AgendaType.CEREMONY;
       draft.visibility = props.item.visibility ?? AgendaVisibility.EVERYONE;
-      const { date, hour, minute } = splitDateTime(props.item.dateTime);
-      draft.date = date;
-      draft.hour = hour;
-      draft.minute = minute;
 
-      // Prefer explicit startTime over dateTime-derived values
       if (props.item.startTime) {
         const [sh, sm] = props.item.startTime.split(":");
         draft.hour = (sh ?? "00").padStart(2, "0");
         draft.minute = (sm ?? "00").padStart(2, "0");
+      } else {
+        const { hour, minute } = splitDateTime(props.item.dateTime);
+        draft.hour = hour;
+        draft.minute = minute;
       }
 
       if (props.item.endTime) {
@@ -206,7 +197,6 @@ watch(
       draft.title = "";
       draft.type = AgendaType.CEREMONY;
       draft.visibility = AgendaVisibility.EVERYONE;
-      draft.date = "";
       draft.hour = "00";
       draft.minute = "00";
       draft.endHour = "";
@@ -218,29 +208,20 @@ watch(
 );
 
 /**
- * Split an ISO / OffsetDateTime string into date, hour, minute.
+ * Split an ISO / OffsetDateTime string into hour, minute.
  * Parses the string directly to avoid timezone conversion.
  */
 function splitDateTime(iso) {
-  if (!iso) return { date: "", hour: "00", minute: "00" };
-  const match = String(iso).match(/^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2})/);
-  if (match) return { date: match[1], hour: match[2], minute: match[3] };
-  return { date: "", hour: "00", minute: "00" };
-}
-
-/**
- * Combine date + hour + minute into "YYYY-MM-DDTHH:mm:00Z".
- */
-function combineDateTime(date, hour, minute) {
-  if (!date) return null;
-  return `${date}T${hour}:${minute}:00Z`;
+  if (!iso) return { hour: "00", minute: "00" };
+  const match = String(iso).match(/T(\d{2}):(\d{2})/);
+  if (match) return { hour: match[1], minute: match[2] };
+  return { hour: "00", minute: "00" };
 }
 
 function validate() {
   validationError.value = "";
   errors.title = draft.title.trim() ? "" : "Title is required";
   errors.type = draft.type ? "" : "Type is required";
-  errors.dateTime = draft.date ? "" : "Date is required";
   errors.time = "";
   errors.endTime = "";
 
@@ -260,7 +241,7 @@ function validate() {
     }
   }
 
-  return !(errors.title || errors.type || errors.dateTime || errors.time || errors.endTime);
+  return !(errors.title || errors.type || errors.time || errors.endTime);
 }
 
 function submit() {
@@ -277,7 +258,6 @@ function submit() {
     type: draft.type,
     visibility: draft.visibility,
     isPublic: draft.visibility === AgendaVisibility.EVERYONE,
-    dateTime: combineDateTime(draft.date, draft.hour, draft.minute),
     startTime: `${draft.hour}:${draft.minute}`,
     endTime: hasEnd ? `${draft.endHour}:${draft.endMinute}` : null,
     displayOrder: null,

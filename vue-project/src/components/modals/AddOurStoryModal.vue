@@ -19,8 +19,8 @@
 
       <div class="field" v-if="fieldConfig.date?.show">
         <label>{{ t("ourStory.form.date") }} {{ fieldConfig.date.required ? '*' : '' }}</label>
-        <input class="input" v-model="draft.date" :placeholder="t('ourStory.form.datePh')" />
-        <div v-if="errors.date" class="err">{{ errors.date }}</div>
+        <input class="input" type="date" v-model="draft.storyDate" />
+        <div v-if="errors.storyDate" class="err">{{ errors.storyDate }}</div>
       </div>
 
       <div class="field" v-if="fieldConfig.imageUrl?.show">
@@ -99,7 +99,7 @@ import { onboardingStore } from "@/store/onboarding.store.js";
 import { OUR_STORY_FIELD_CONFIG, DEFAULT_FIELD_CONFIG } from "@/config/ourStoryFieldConfig.js";
 import { invitationImagesService } from "@/services/invitationImages.service.js";
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const props = defineProps({
   open: { type: Boolean, default: false },
@@ -118,10 +118,10 @@ const draft = reactive({
   title: "",
   type: StoryType.HOW_WE_MET,
   description: "",
-  date: "",
+  storyDate: "",
 });
 
-const errors = reactive({ title: "", type: "", description: "", date: "", imageUrl: "" });
+const errors = reactive({ title: "", type: "", description: "", storyDate: "", imageUrl: "" });
 const validationError = ref("");
 
 /* ---- image upload ---- */
@@ -171,7 +171,7 @@ watch(
     errors.title = "";
     errors.type = "";
     errors.description = "";
-    errors.date = "";
+    errors.storyDate = "";
     errors.imageUrl = "";
 
     uploading.value = false;
@@ -181,14 +181,14 @@ watch(
       draft.title = props.item.title ?? "";
       draft.type = props.item.type ?? StoryType.HOW_WE_MET;
       draft.description = props.item.description ?? "";
-      draft.date = props.item.date ?? "";
+      draft.storyDate = props.item.storyDate ?? props.item.date ?? "";
       imagePreviewUrl.value = props.item.imageUrl ?? "";
       imageS3Key.value = extractS3Key(props.item.imageUrl);
     } else {
       draft.title = "";
       draft.type = StoryType.HOW_WE_MET;
       draft.description = "";
-      draft.date = "";
+      draft.storyDate = "";
       imagePreviewUrl.value = "";
       imageS3Key.value = "";
     }
@@ -208,26 +208,34 @@ function validate() {
   errors.description = (cfg.description?.show && cfg.description?.required && !draft.description.trim())
     ? t("ourStory.errors.descriptionRequired") : "";
 
-  errors.date = (cfg.date?.show && cfg.date?.required && !draft.date.trim())
+  errors.storyDate = (cfg.date?.show && cfg.date?.required && !draft.storyDate)
     ? t("ourStory.errors.dateRequired") : "";
 
   errors.imageUrl = (cfg.imageUrl?.show && cfg.imageUrl?.required && !imageS3Key.value)
     ? t("ourStory.errors.imageUrlRequired") : "";
 
-  return !(errors.title || errors.type || errors.description || errors.date || errors.imageUrl);
+  return !(errors.title || errors.type || errors.description || errors.storyDate || errors.imageUrl);
 }
 
 function submit() {
   if (!validate()) return;
 
   const cfg = fieldConfig.value;
+  const lang = locale.value || "mk";
   const payload = {};
 
-  if (cfg.title?.show) payload.title = draft.title.trim();
+  if (cfg.title?.show) {
+    const title = draft.title.trim();
+    payload.title = title;
+    payload.titleI18n = { [lang]: title };
+  }
   if (cfg.type?.show) payload.type = draft.type;
-  if (cfg.description?.show) payload.description = draft.description.trim() || null;
-  if (cfg.date?.show) payload.date = draft.date.trim() || null;
-  if (cfg.imageUrl?.show) payload.imageUrl = imageS3Key.value || null;
+  if (cfg.description?.show) {
+    const desc = draft.description.trim() || null;
+    payload.description = desc;
+    if (desc) payload.descriptionI18n = { [lang]: desc };
+  }
+  if (cfg.date?.show) payload.storyDate = draft.storyDate || null;
 
   if (isEdit.value) {
     payload.id = props.item.id;
