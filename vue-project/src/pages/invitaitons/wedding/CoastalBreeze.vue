@@ -403,9 +403,11 @@ onMounted(async () => {
 
   const data = await fetchData();
   if (data) {
+    const defaultHero = config.heroPhotoUrl;
     config.heroPhotoUrl = '';
     applyBackendData(data);
     await loadGalleryImages();
+    if (!config.heroPhotoUrl) config.heroPhotoUrl = defaultHero;
   }
 });
 

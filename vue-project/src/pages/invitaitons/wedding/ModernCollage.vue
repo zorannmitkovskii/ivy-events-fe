@@ -415,11 +415,16 @@ onMounted(async () => {
 
   const data = await fetchData();
   if (data) {
-    // Clear default placeholder images so backend / gallery can take over
+    // Save defaults so we can restore them if backend + gallery provide nothing
+    const defaultHero = config.heroPhotoUrl;
+    const defaultCollage = [...config.collagePhotos];
     config.heroPhotoUrl = '';
     config.collagePhotos = [];
     applyBackendData(data);
     await loadGalleryImages();
+    // Restore defaults if still empty
+    if (!config.heroPhotoUrl) config.heroPhotoUrl = defaultHero;
+    if (!config.collagePhotos.length) config.collagePhotos = defaultCollage;
   }
 });
 

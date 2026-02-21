@@ -411,10 +411,14 @@ onMounted(async () => {
 
   const data = await fetchData();
   if (data) {
+    const defaultHero = config.heroPhotoUrl;
+    const defaultCollage = [...config.collagePhotos];
     config.heroPhotoUrl = '';
     config.collagePhotos = [];
     applyBackendData(data);
     await loadGalleryImages();
+    if (!config.heroPhotoUrl) config.heroPhotoUrl = defaultHero;
+    if (!config.collagePhotos.length) config.collagePhotos = defaultCollage;
   }
 });
 
