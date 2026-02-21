@@ -679,6 +679,8 @@
       "type": "Тип",
       "dateTime": "Датум",
       "time": "Време",
+      "startTime": "Почеток",
+      "endTime": "Крај",
       "location": "Локација",
       "locationName": "Име на место",
       "addressLine": "Адреса",

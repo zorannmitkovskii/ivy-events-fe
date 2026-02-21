@@ -626,6 +626,8 @@
       "type": "Lloji",
       "dateTime": "Data",
       "time": "Ora",
+      "startTime": "Ora e Fillimit",
+      "endTime": "Ora e Mbarimit",
       "location": "Vendndodhja",
       "locationName": "Emri i Vendit",
       "addressLine": "Adresa",
