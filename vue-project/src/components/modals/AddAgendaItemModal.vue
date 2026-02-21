@@ -1,12 +1,6 @@
 <template>
   <BaseModal :open="open" :title="isEdit ? t('agenda.editDialog.title') : t('agenda.addDialog.title')" @close="emit('close')">
     <form class="form" @submit.prevent="submit">
-      <div class="field">
-        <label>{{ t("agenda.form.title") }} *</label>
-        <input class="input" v-model="draft.title" :placeholder="t('agenda.addDialog.titlePh')" />
-        <div v-if="errors.title" class="err">{{ errors.title }}</div>
-      </div>
-
       <div class="two">
         <div class="field">
           <label>{{ t("agenda.form.type") }} *</label>
@@ -27,53 +21,22 @@
         </div>
       </div>
 
-      <div class="two">
-        <div class="field">
-          <label>{{ t("agenda.form.startTime") }} *</label>
-          <div class="time-selects">
-            <select class="input" v-model="draft.hour">
-              <option v-for="h in 24" :key="h-1" :value="String(h-1).padStart(2,'0')">
-                {{ String(h-1).padStart(2,'0') }}
-              </option>
-            </select>
-            <span class="time-sep">:</span>
-            <select class="input" v-model="draft.minute">
-              <option v-for="m in [0,5,10,15,20,25,30,35,40,45,50,55]" :key="m" :value="String(m).padStart(2,'0')">
-                {{ String(m).padStart(2,'0') }}
-              </option>
-            </select>
-          </div>
-          <div v-if="errors.time" class="err">{{ errors.time }}</div>
-        </div>
-        <div class="field">
-          <label>{{ t("agenda.form.endTime") }}</label>
-          <div class="time-selects">
-            <select class="input" v-model="draft.endHour">
-              <option value="">--</option>
-              <option v-for="h in 24" :key="h-1" :value="String(h-1).padStart(2,'0')">
-                {{ String(h-1).padStart(2,'0') }}
-              </option>
-            </select>
-            <span class="time-sep">:</span>
-            <select class="input" v-model="draft.endMinute">
-              <option value="">--</option>
-              <option v-for="m in [0,5,10,15,20,25,30,35,40,45,50,55]" :key="m" :value="String(m).padStart(2,'0')">
-                {{ String(m).padStart(2,'0') }}
-              </option>
-            </select>
-          </div>
-          <div v-if="errors.endTime" class="err">{{ errors.endTime }}</div>
-        </div>
-      </div>
-
       <div class="field">
-        <label>{{ t("agenda.form.description") }}</label>
-        <textarea
-          class="input textarea"
-          v-model="draft.description"
-          :placeholder="t('agenda.addDialog.descriptionPh')"
-          rows="3"
-        />
+        <label>{{ t("agenda.form.startTime") }} *</label>
+        <div class="time-selects">
+          <select class="input" v-model="draft.hour">
+            <option v-for="h in 24" :key="h-1" :value="String(h-1).padStart(2,'0')">
+              {{ String(h-1).padStart(2,'0') }}
+            </option>
+          </select>
+          <span class="time-sep">:</span>
+          <select class="input" v-model="draft.minute">
+            <option v-for="m in [0,5,10,15,20,25,30,35,40,45,50,55]" :key="m" :value="String(m).padStart(2,'0')">
+              {{ String(m).padStart(2,'0') }}
+            </option>
+          </select>
+        </div>
+        <div v-if="errors.time" class="err">{{ errors.time }}</div>
       </div>
 
       <AuthLocationInput
@@ -134,18 +97,14 @@ const emit = defineEmits(["close", "submit", "delete"]);
 const isEdit = computed(() => !!props.item?.id);
 
 const draft = reactive({
-  title: "",
   type: AgendaType.CEREMONY,
   visibility: AgendaVisibility.EVERYONE,
   hour: "00",
   minute: "00",
-  endHour: "",
-  endMinute: "",
-  description: "",
   location: { name: "", address: "", lat: null, lng: null, placeId: null },
 });
 
-const errors = reactive({ title: "", type: "", time: "", endTime: "" });
+const errors = reactive({ type: "", time: "" });
 const validationError = ref("");
 
 watch(
@@ -154,13 +113,10 @@ watch(
     if (!v) return;
 
     validationError.value = "";
-    errors.title = "";
     errors.type = "";
     errors.time = "";
-    errors.endTime = "";
 
     if (props.item) {
-      draft.title = props.item.title ?? "";
       draft.type = props.item.type ?? AgendaType.CEREMONY;
       draft.visibility = props.item.visibility ?? AgendaVisibility.EVERYONE;
 
@@ -174,17 +130,6 @@ watch(
         draft.minute = minute;
       }
 
-      if (props.item.endTime) {
-        const [eh, em] = props.item.endTime.split(":");
-        draft.endHour = (eh ?? "").padStart(2, "0");
-        draft.endMinute = (em ?? "").padStart(2, "0");
-      } else {
-        draft.endHour = "";
-        draft.endMinute = "";
-      }
-
-      draft.description = props.item.description ?? "";
-
       const loc = props.item.location ?? {};
       draft.location = {
         name: loc.name ?? "",
@@ -194,14 +139,10 @@ watch(
         placeId: loc.placeId ?? null,
       };
     } else {
-      draft.title = "";
       draft.type = AgendaType.CEREMONY;
       draft.visibility = AgendaVisibility.EVERYONE;
       draft.hour = "00";
       draft.minute = "00";
-      draft.endHour = "";
-      draft.endMinute = "";
-      draft.description = "";
       draft.location = { name: "", address: "", lat: null, lng: null, placeId: null };
     }
   }
@@ -220,28 +161,10 @@ function splitDateTime(iso) {
 
 function validate() {
   validationError.value = "";
-  errors.title = draft.title.trim() ? "" : "Title is required";
   errors.type = draft.type ? "" : "Type is required";
   errors.time = "";
-  errors.endTime = "";
 
-  // If one of endHour/endMinute is set, both must be set
-  const hasEndHour = draft.endHour !== "";
-  const hasEndMinute = draft.endMinute !== "";
-  if (hasEndHour !== hasEndMinute) {
-    errors.endTime = "Select both hour and minute";
-  }
-
-  // End time must be after start time
-  if (hasEndHour && hasEndMinute) {
-    const start = Number(draft.hour) * 60 + Number(draft.minute);
-    const end = Number(draft.endHour) * 60 + Number(draft.endMinute);
-    if (end <= start) {
-      errors.endTime = "End time must be after start time";
-    }
-  }
-
-  return !(errors.title || errors.type || errors.time || errors.endTime);
+  return !(errors.type || errors.time);
 }
 
 function submit() {
@@ -250,16 +173,11 @@ function submit() {
   const loc = draft.location || {};
   const hasLocation = loc.name || loc.address || loc.lat != null;
 
-  const hasEnd = draft.endHour !== "" && draft.endMinute !== "";
-
   const payload = {
-    title: draft.title.trim(),
-    description: draft.description.trim() || null,
     type: draft.type,
     visibility: draft.visibility,
     isPublic: draft.visibility === AgendaVisibility.EVERYONE,
     startTime: `${draft.hour}:${draft.minute}`,
-    endTime: hasEnd ? `${draft.endHour}:${draft.endMinute}` : null,
     displayOrder: null,
     location: hasLocation ? {
       name: loc.name || null,
@@ -309,12 +227,6 @@ function submit() {
 
 .input:focus {
   border-color: var(--brand-gold);
-}
-
-.textarea {
-  resize: vertical;
-  font-family: inherit;
-  min-height: 72px;
 }
 
 .two {
