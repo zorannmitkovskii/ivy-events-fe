@@ -5,7 +5,7 @@
         <h1 class="dash-page-title">{{ t("settings.title") }}</h1>
         <p class="dash-page-subtitle">{{ t("settings.subtitle") }}</p>
       </div>
-      <div v-if="event && !loading && !isGallery" class="header-actions">
+      <div v-if="event && !loading && !isGallery && activeTab === 'details'" class="header-actions">
         <ButtonMain
           variant="gold"
           @click="goToPackages"
@@ -43,208 +43,59 @@
     </div>
 
     <template v-else-if="form">
-      <!-- Event Details (hidden for Gallery) -->
-      <div v-if="!isGallery" class="s-card">
-        <h2 class="section-title">{{ t("settings.eventDetails") }}</h2>
-
-        <div class="details-grid">
-          <div class="detail-row">
-            <label class="detail-label" for="s-name">{{ t("settings.eventName") }}</label>
-            <input id="s-name" v-model="form.name" type="text" class="detail-input" />
-          </div>
-
-          <div class="detail-row">
-            <label class="detail-label" for="s-date">{{ t("settings.eventDate") }}</label>
-            <input id="s-date" v-model="form.date" type="date" class="detail-input" />
-          </div>
-
-          <div class="detail-row detail-row--full">
-            <label class="detail-label">{{ t("settings.eventLocation") }}</label>
-            <div class="location-input-wrap">
-              <AuthLocationInput
-                v-model="form.locationObj"
-                :label="''"
-                :placeholder="t('settings.locationPh') || 'Search for a venue or address...'"
-                :types="[]"
-                :pickOnMapLabel="t('common.pickOnMap') || 'Pick on map'"
-                :cancelLabel="t('common.cancel')"
-                :useThisLocationLabel="t('common.useThisLocation') || 'Use this location'"
-                :searchPlaceholder="t('common.searchPlaces') || 'Search places'"
-                :locatingLabel="t('common.locateMe') || 'Locate me'"
-                :locatingLabelLoading="t('common.locating') || 'Locating...'"
-                :selectedLabel="t('common.selected') || 'Selected:'"
-                :loadingAddressLabel="t('common.loadingAddress') || 'Loading address...'"
-              />
-            </div>
-          </div>
-
-          <div class="detail-row">
-            <label class="detail-label" for="s-category">{{ t("settings.eventCategory") }}</label>
-            <input id="s-category" v-model="form.category" type="text" class="detail-input" readonly />
-          </div>
-
-          <div class="detail-row">
-            <label class="detail-label" for="s-lang">{{ t("settings.language") }}</label>
-            <select id="s-lang" v-model="form.lang" class="detail-input detail-select">
-              <option value="mk">Македонски</option>
-              <option value="en">English</option>
-            </select>
-          </div>
-        </div>
+      <!-- Tab Navigation -->
+      <div v-if="!isGallery" class="tabs-bar">
+        <button
+          v-for="tab in tabs"
+          :key="tab.key"
+          class="tab-btn"
+          :class="{ active: activeTab === tab.key }"
+          @click="activeTab = tab.key"
+        >
+          {{ tab.label }}
+        </button>
       </div>
 
-      <!-- Display Options (hidden for Gallery) -->
-      <div v-if="!isGallery" class="s-card">
-        <h2 class="section-title">{{ t("settings.displayOptions") }}</h2>
+      <!-- Tab Content -->
+      <SettingsDetailsTab
+        v-if="activeTab === 'details'"
+        :form="form"
+        :is-gallery="isGallery"
+        :saving="saving"
+        @save="saveEvent"
+        @archive="archiveEvent"
+        @go-invitations="goToInvitations"
+        @go-packages="goToPackages"
+      />
 
-        <div class="toggle-grid">
-          <div class="toggle-row">
-            <span class="toggle-label">{{ t("settings.showAgenda") }}</span>
-            <label class="toggle-switch">
-              <input type="checkbox" v-model="form.showAgenda" />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
+      <SettingsAgendaTab v-if="activeTab === 'agenda'" />
 
-          <div class="toggle-row">
-            <span class="toggle-label">{{ t("settings.showOurStory") }}</span>
-            <label class="toggle-switch">
-              <input type="checkbox" v-model="form.showOurStory" />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
+      <SettingsOurStoryTab v-if="activeTab === 'ourStory'" />
 
-      <!-- Links & Sharing -->
-      <div class="s-card">
-        <h2 class="section-title">{{ t("settings.linksAndSharing") }}</h2>
-        <p class="section-desc">{{ t("settings.invitationLinkDesc") }}</p>
+      <SettingsGalleryTab v-if="activeTab === 'gallery'" />
 
-        <!-- Invitation URL (hidden for Gallery) -->
-        <div v-if="!isGallery" class="url-group">
-          <span class="url-label">{{ t("settings.invitationLink") }}</span>
-          <div class="url-box">
-            <span class="url-text">{{ form.invitationUrl || t("settings.noInvitationUrl") }}</span>
-            <button
-              v-if="form.invitationUrl"
-              class="copy-btn"
-              type="button"
-              @click="copyToClipboard(form.invitationUrl, 'invitation')"
-            >
-              <i :class="copiedField === 'invitation' ? 'bi bi-check-lg' : 'bi bi-clipboard'"></i>
-              {{ copiedField === 'invitation' ? t("settings.copied") : t("settings.copy") }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Private Invitation URL -->
-<!--        <div class="url-group">-->
-<!--          <span class="url-label">{{ t("settings.privateInvitationUrl") }}</span>-->
-<!--          <div class="url-box">-->
-<!--            <span class="url-text">{{ form.privateInvitationUrl || "—" }}</span>-->
-<!--            <button-->
-<!--              v-if="form.privateInvitationUrl"-->
-<!--              class="copy-btn"-->
-<!--              type="button"-->
-<!--              @click="copyToClipboard(form.privateInvitationUrl, 'private')"-->
-<!--            >-->
-<!--              <i :class="copiedField === 'private' ? 'bi bi-check-lg' : 'bi bi-clipboard'"></i>-->
-<!--              {{ copiedField === 'private' ? t("settings.copied") : t("settings.copy") }}-->
-<!--            </button>-->
-<!--          </div>-->
-<!--        </div>-->
-
-        <!-- Gallery URL -->
-        <div class="url-group">
-          <span class="url-label">{{ t("settings.galleryUrl") }}</span>
-          <p class="url-hint">{{ t("settings.galleryUrlDesc") }}</p>
-          <div class="url-box">
-            <span class="url-text">{{ form.galleryUrl || "—" }}</span>
-            <button
-              v-if="form.galleryUrl"
-              class="copy-btn"
-              type="button"
-              @click="copyToClipboard(form.galleryUrl, 'gallery')"
-            >
-              <i :class="copiedField === 'gallery' ? 'bi bi-check-lg' : 'bi bi-clipboard'"></i>
-              {{ copiedField === 'gallery' ? t("settings.copied") : t("settings.copy") }}
-            </button>
-          </div>
-        </div>
-
-        <!-- QR Code for Gallery URL -->
-        <div v-if="form.galleryUrl" class="qr-group">
-          <span class="url-label">{{ t("settings.galleryQrCode") }}</span>
-          <p class="url-hint">{{ t("settings.galleryQrCodeDesc") }}</p>
-          <div class="qr-box">
-            <canvas ref="qrCanvas" class="qr-canvas"></canvas>
-          </div>
-          <ButtonMain variant="main" @click="downloadQrCode" style="margin-top: 10px">
-            {{ t("settings.downloadQrCode") }}
-          </ButtonMain>
-        </div>
-
-        <!-- Table Lookup URL -->
-        <div v-if="!isGallery" class="url-group">
-          <span class="url-label">{{ t("settings.tableLookupUrl") }}</span>
-          <p class="url-hint">{{ t("settings.tableLookupUrlDesc") }}</p>
-          <div class="url-box">
-            <span class="url-text">{{ tableLookupUrl }}</span>
-            <button
-              class="copy-btn"
-              type="button"
-              @click="copyToClipboard(tableLookupUrl, 'tableLookup')"
-            >
-              <i :class="copiedField === 'tableLookup' ? 'bi bi-check-lg' : 'bi bi-clipboard'"></i>
-              {{ copiedField === 'tableLookup' ? t("settings.copied") : t("settings.copy") }}
-            </button>
-          </div>
-        </div>
-
-        <!-- QR Code for Table Lookup -->
-        <div v-if="!isGallery" class="qr-group">
-          <span class="url-label">{{ t("settings.tableLookupQrCode") }}</span>
-          <p class="url-hint">{{ t("settings.tableLookupQrCodeDesc") }}</p>
-          <div class="qr-box">
-            <canvas ref="tableQrCanvas" class="qr-canvas"></canvas>
-          </div>
-          <ButtonMain variant="main" @click="downloadTableQrCode" style="margin-top: 10px">
-            {{ t("settings.downloadTableQrCode") }}
-          </ButtonMain>
-        </div>
-
-        <div v-if="!isGallery" class="invitation-actions">
-          <ButtonMain variant="main" @click="goToInvitations">
-            {{ t("settings.changeInvitation") }}
-          </ButtonMain>
-        </div>
-      </div>
-
-      <!-- Danger Zone (hidden for Gallery) -->
-      <div v-if="!isGallery" class="s-card danger-card">
-        <h2 class="section-title danger-title">{{ t("settings.dangerZone") }}</h2>
-        <p class="section-desc">{{ t("settings.archiveDesc") }}</p>
-        <ButtonMain variant="danger" @click="archiveEvent">
-          {{ t("settings.archiveEvent") }}
-        </ButtonMain>
-      </div>
+      <SettingsCollageTab v-if="activeTab === 'collage'" />
     </template>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, nextTick, computed } from "vue";
-import { useRouter } from "vue-router";
+import { ref, onMounted, computed } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { eventsService } from "@/services/events.service";
 import { onboardingStore, setSelectedCategory } from "@/store/onboarding.store";
 import { EventCategoryEnum } from "@/enums/EventCategory";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
-import AuthLocationInput from "@/components/auth/AuthLocationInput.vue";
+import SettingsDetailsTab from "@/components/dashboard/settings/SettingsDetailsTab.vue";
+import SettingsAgendaTab from "@/components/dashboard/settings/SettingsAgendaTab.vue";
+import SettingsOurStoryTab from "@/components/dashboard/settings/SettingsOurStoryTab.vue";
+import SettingsGalleryTab from "@/components/dashboard/settings/SettingsGalleryTab.vue";
+import SettingsCollageTab from "@/components/dashboard/settings/SettingsCollageTab.vue";
 
 const { t, locale } = useI18n();
 const router = useRouter();
+const route = useRoute();
 
 const event = ref(null);
 const form = ref(null);
@@ -253,64 +104,20 @@ const error = ref(null);
 const saving = ref(false);
 const saveSuccess = ref(false);
 const saveError = ref(null);
-const copiedField = ref(null);
 
 const eventId = ref(onboardingStore.eventId);
-const qrCanvas = ref(null);
-const tableQrCanvas = ref(null);
-
-const tableLookupUrl = computed(() => {
-  if (!eventId.value) return '';
-  return `${window.location.origin}/${locale.value}/table-lookup?eventId=${eventId.value}`;
-});
 
 const isGallery = computed(() => onboardingStore.selectedCategory === EventCategoryEnum.GALLERY);
 
-async function renderQrCode() {
-  await nextTick();
-  if (!qrCanvas.value || !form.value?.galleryUrl) return;
-  try {
-    const QRCode = await import("qrcode");
-    await QRCode.toCanvas(qrCanvas.value, form.value.galleryUrl, {
-      width: 200,
-      margin: 2,
-      color: { dark: "#2f3e36", light: "#ffffff" }
-    });
-  } catch (e) {
-    console.error("QR render failed", e);
-  }
-}
+const activeTab = ref(route.query.tab || "details");
 
-function downloadQrCode() {
-  if (!qrCanvas.value) return;
-  const link = document.createElement("a");
-  link.download = "gallery-qr-code.png";
-  link.href = qrCanvas.value.toDataURL("image/png");
-  link.click();
-}
-
-async function renderTableQrCode() {
-  await nextTick();
-  if (!tableQrCanvas.value || !tableLookupUrl.value) return;
-  try {
-    const QRCode = await import("qrcode");
-    await QRCode.toCanvas(tableQrCanvas.value, tableLookupUrl.value, {
-      width: 200,
-      margin: 2,
-      color: { dark: "#2f3e36", light: "#ffffff" }
-    });
-  } catch (e) {
-    console.error("Table QR render failed", e);
-  }
-}
-
-function downloadTableQrCode() {
-  if (!tableQrCanvas.value) return;
-  const link = document.createElement("a");
-  link.download = "table-lookup-qr-code.png";
-  link.href = tableQrCanvas.value.toDataURL("image/png");
-  link.click();
-}
+const tabs = computed(() => [
+  { key: "details", label: t("settings.tabs.details") },
+  { key: "agenda", label: t("settings.tabs.agenda") },
+  { key: "ourStory", label: t("settings.tabs.ourStory") },
+  { key: "gallery", label: t("settings.tabs.gallery") },
+  { key: "collage", label: t("settings.tabs.collage") },
+]);
 
 function buildForm(ev) {
   const loc = ev.location || {};
@@ -324,7 +131,6 @@ function buildForm(ev) {
     showAgenda: ev.showAgenda ?? true,
     showOurStory: ev.showOurStory ?? true,
     invitationUrl: ev.invitationUrl || "",
-    privateInvitationUrl: ev.privateInvitationUrl || "",
     galleryUrl: ev.galleryUrl || "",
     locationObj: {
       name: isObj ? (loc.name || "") : (typeof loc === "string" ? loc : ""),
@@ -363,13 +169,10 @@ async function loadEvent() {
         showAgenda: true,
         showOurStory: true,
         invitationUrl: `${window.location.origin}/${locale.value}/invitations/sunset-glass?event=demo`,
-        privateInvitationUrl: "",
         galleryUrl: `${window.location.origin}/${locale.value}/gallery?eventId=demo`
       };
       event.value = demo;
       form.value = buildForm(demo);
-      renderQrCode();
-      renderTableQrCode();
       return;
     }
 
@@ -383,9 +186,6 @@ async function loadEvent() {
       const match = Object.values(EventCategoryEnum).find(v => v === upper);
       setSelectedCategory(match || cat);
     }
-
-    renderQrCode();
-    renderTableQrCode();
   } catch (e) {
     error.value = e?.message || "Failed to load event";
   } finally {
@@ -440,24 +240,6 @@ async function saveEvent() {
   }
 }
 
-async function copyToClipboard(text, field) {
-  if (!text) return;
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch {
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    document.body.removeChild(ta);
-  }
-  copiedField.value = field;
-  setTimeout(() => { copiedField.value = null; }, 2000);
-}
-
 function goToPackages() {
   router.push({ name: "dashboard.packages", params: { lang: locale.value } });
 }
@@ -474,7 +256,6 @@ onMounted(loadEvent);
 </script>
 
 <style scoped>
-/* Page header override for save button */
 .dash-page-header {
   display: flex;
   justify-content: space-between;
@@ -489,6 +270,42 @@ onMounted(loadEvent);
   flex-shrink: 0;
 }
 
+/* Tabs */
+.tabs-bar {
+  display: flex;
+  gap: 4px;
+  background: #fff;
+  border-radius: var(--radius-lg, 16px);
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.08));
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 4px;
+  overflow-x: auto;
+}
+
+.tab-btn {
+  padding: 10px 18px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-md, 8px);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--neutral-500);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.tab-btn:hover {
+  color: var(--neutral-700);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.tab-btn.active {
+  color: var(--brand-main, #2f3e36);
+  background: var(--bg-main, #f8f6f1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
 /* Cards */
 .s-card {
   background: #fff;
@@ -500,250 +317,6 @@ onMounted(loadEvent);
 
 .s-card-pad {
   padding: 20px 24px;
-}
-
-.section-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--neutral-900);
-  margin: 0 0 4px;
-}
-
-.section-desc {
-  font-size: 13px;
-  color: var(--neutral-500);
-  margin: 0 0 16px;
-}
-
-/* Details grid */
-.details-grid {
-  display: grid;
-  gap: 0;
-  margin-top: 16px;
-}
-
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.detail-row:last-child {
-  border-bottom: none;
-}
-
-.detail-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--neutral-500);
-  flex-shrink: 0;
-  margin-right: 16px;
-}
-
-.detail-input {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--neutral-900);
-  background: var(--bg-main, #f8f6f1);
-  border: 1px solid var(--neutral-300, #ddd);
-  border-radius: var(--radius-md, 8px);
-  padding: 8px 12px;
-  width: 280px;
-  max-width: 100%;
-  transition: border-color 0.15s ease;
-}
-
-.detail-input:focus {
-  outline: none;
-  border-color: var(--brand-gold, #C8A24D);
-  box-shadow: 0 0 0 2px rgba(200, 162, 77, 0.15);
-}
-
-.detail-input[readonly] {
-  opacity: 0.6;
-  cursor: default;
-}
-
-.detail-select {
-  cursor: pointer;
-  appearance: auto;
-}
-
-.detail-row--full {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-}
-
-.detail-row--full .location-input-wrap {
-  width: 100%;
-}
-
-.location-input-wrap {
-  width: 100%;
-}
-
-/* Toggle rows */
-.toggle-grid {
-  margin-top: 16px;
-  display: grid;
-  gap: 0;
-}
-
-.toggle-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.toggle-row:last-child {
-  border-bottom: none;
-}
-
-.toggle-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--neutral-700);
-}
-
-.toggle-switch {
-  position: relative;
-  display: inline-block;
-  width: 44px;
-  height: 24px;
-  flex-shrink: 0;
-}
-
-.toggle-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.toggle-slider {
-  position: absolute;
-  cursor: pointer;
-  inset: 0;
-  background: var(--neutral-300, #ccc);
-  border-radius: 24px;
-  transition: background 0.2s ease;
-}
-
-.toggle-slider::before {
-  content: "";
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  left: 3px;
-  bottom: 3px;
-  background: #fff;
-  border-radius: 50%;
-  transition: transform 0.2s ease;
-}
-
-.toggle-switch input:checked + .toggle-slider {
-  background: var(--brand-gold, #C8A24D);
-}
-
-.toggle-switch input:checked + .toggle-slider::before {
-  transform: translateX(20px);
-}
-
-/* URL sections */
-.url-group {
-  margin-bottom: 16px;
-}
-
-.url-group:last-of-type {
-  margin-bottom: 0;
-}
-
-.url-label {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--neutral-500);
-  margin-bottom: 6px;
-}
-
-.url-hint {
-  font-size: 12px;
-  color: var(--neutral-400);
-  margin: 0 0 6px;
-}
-
-.url-box {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background: var(--bg-main);
-  border: 1px solid var(--neutral-300);
-  border-radius: var(--radius-md);
-}
-
-.url-text {
-  flex: 1;
-  font-size: 13px;
-  color: var(--neutral-900);
-  word-break: break-all;
-  font-family: monospace;
-}
-
-.copy-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border: 1px solid var(--neutral-300);
-  background: #fff;
-  border-radius: var(--radius-md);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--brand-main);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.15s ease;
-}
-
-.copy-btn:hover {
-  border-color: var(--brand-gold);
-  background: rgba(200, 162, 77, 0.06);
-}
-
-.invitation-actions {
-  margin-top: 16px;
-}
-
-.qr-group {
-  margin-top: 16px;
-  margin-bottom: 16px;
-}
-
-.qr-box {
-  display: flex;
-  justify-content: center;
-  padding: 16px;
-  background: #fff;
-  border: 1px solid var(--neutral-300);
-  border-radius: var(--radius-md);
-}
-
-.qr-canvas {
-  display: block;
-}
-
-/* Danger zone */
-.danger-card {
-  border-left: 4px solid var(--error);
-}
-
-.danger-title {
-  color: var(--error);
 }
 
 /* Save toast */
@@ -767,7 +340,6 @@ onMounted(loadEvent);
   color: #c62828;
 }
 
-/* Empty / error states */
 .empty-title {
   font-weight: 700;
   font-size: 15px;
@@ -780,7 +352,6 @@ onMounted(loadEvent);
   color: var(--neutral-500);
 }
 
-/* Responsive */
 @media (max-width: 640px) {
   .dash-page-header {
     flex-direction: column;
@@ -791,23 +362,14 @@ onMounted(loadEvent);
     padding: 18px 16px;
   }
 
-  .detail-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
+  .tabs-bar {
+    gap: 2px;
+    padding: 3px;
   }
 
-  .detail-input {
-    width: 100%;
-  }
-
-  .url-box {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .copy-btn {
-    justify-content: center;
+  .tab-btn {
+    padding: 8px 12px;
+    font-size: 12px;
   }
 }
 </style>

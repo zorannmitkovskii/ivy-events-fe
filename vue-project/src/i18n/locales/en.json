@@ -793,7 +793,8 @@
     "weddingDetails": "Wedding Details",
     "team": "Team",
     "packages": "Packages",
-    "settings": "Settings",
+    "invitationLinks": "Invitation Links",
+    "settings": "Event Details",
     "support": "Support",
     "premium": "PREMIUM",
     "eventPlanner": "Event Planner",
@@ -1008,6 +1009,7 @@
         "description": "Description",
         "descriptionPh": "Add a description or notes...",
         "dueDate": "Due Date",
+        "time": "Time",
         "status": "Status",
         "priority": "Priority",
         "titleRequired": "Task name is required"
@@ -1110,7 +1112,30 @@
     "dangerZone": "Danger Zone",
     "archiveDesc": "Archiving this event will hide it from your dashboard. This action can be reversed later.",
     "archiveEvent": "Archive Event",
-    "locationPh": "Search for a venue or address..."
+    "locationPh": "Search for a venue or address...",
+    "tabs": {
+      "details": "Details",
+      "agenda": "Agenda",
+      "ourStory": "Our Story",
+      "gallery": "Story Gallery",
+      "collage": "Collage Photos"
+    }
+  },
+  "invitationLinks": {
+    "title": "Invitation Links",
+    "subtitle": "Share these links with your guests",
+    "regular": "Regular Invitation",
+    "regularDesc": "Share this link with your guests so they can view the invitation and RSVP.",
+    "closeFriends": "Close Friends",
+    "closeFriendsDesc": "This link hides the agenda section — ideal for close friends who already know the details.",
+    "gallery": "Gallery Upload",
+    "galleryDesc": "Share this link so guests can upload photos from the event.",
+    "tableLookup": "Table Lookup",
+    "tableLookupDesc": "Share this link so guests can look up their table assignment.",
+    "copyLink": "Copy",
+    "copied": "Copied!",
+    "downloadQr": "Download QR Code",
+    "noLink": "No link available yet."
   },
   "tableLookup": {
     "title": "Find Your Table",
@@ -1378,6 +1403,7 @@
     "and": "&",
     "tapToEnter": "Tap any photo to enter",
     "tapToOpen": "Tap photo to open",
+    "heroQuote": "Forever begins now.",
     "weddingDetails": "Wedding Details",
     "celebrationOfLove": "A celebration of love in the City of Light",
     "storySubtitle": "From our first coffee to our \"I do\", here are the moments that defined us.",

@@ -27,11 +27,11 @@
       />
     </div>
 
-    <div data-reveal>
+    <div v-if="showAgenda && !isPrivate" data-reveal>
       <TimelineSection :items="data.timeline" />
     </div>
 
-    <div data-reveal>
+    <div v-if="showOurStory" data-reveal>
       <OurStorySection :left-cards="data.storyCards" :images="data.storyImages" />
     </div>
 
@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from "vue";
+import { reactive, ref, onMounted, computed } from "vue";
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
@@ -62,6 +62,8 @@ const { t } = useI18n();
 const { eventId: invEventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
 
 const rootRef = ref(null);
+const showAgenda = ref(true);
+const showOurStory = ref(true);
 useScrollReveal(rootRef);
 
 const data = reactive({
@@ -114,6 +116,7 @@ const data = reactive({
 
 const route = useRoute();
 const router = useRouter();
+const isPrivate = computed(() => route.query.isPrivate === 'true');
 const eventId = invEventId;
 
 const rsvp = ref({
@@ -129,6 +132,9 @@ const rsvp = ref({
 function applyBackendData(raw) {
   const ev = raw.event;
   if (!ev) return;
+
+  showAgenda.value = ev.showAgenda ?? true;
+  showOurStory.value = ev.showOurStory ?? true;
 
   if (ev.coupleNames?.bride && ev.coupleNames?.groom) {
     data.coupleName = `${ev.coupleNames.bride} & ${ev.coupleNames.groom}`;

@@ -52,14 +52,14 @@
               <img :src="config.collagePhotos[0].url" :alt="config.collagePhotos[0].alt" />
             </div>
             <div class="ec-hero-side-quote">
-              <p class="ec-quote-text">"{{ config.heroQuote }}"</p>
+              <p class="ec-quote-text">"{{ config.heroQuote || t('invitation.heroQuote') }}"</p>
             </div>
           </div>
         </div>
       </header>
 
       <!-- OUR STORY SLIDER -->
-      <section v-show="mainVisible" id="story-section" class="ec-section ec-section--white" data-reveal>
+      <section v-if="showOurStory" v-show="mainVisible" id="story-section" class="ec-section ec-section--white" data-reveal>
         <div class="ec-section-inner">
           <div class="ec-story-header">
             <div>
@@ -94,7 +94,7 @@
       </section>
 
       <!-- DETAILS SECTION -->
-      <section v-show="mainVisible" id="details-section" class="ec-section ec-section--warm" data-reveal>
+      <section v-if="showAgenda && !isPrivate" v-show="mainVisible" id="details-section" class="ec-section ec-section--warm" data-reveal>
         <div class="ec-section-inner">
           <div class="ec-section-header-center">
             <h2 class="ec-section-title">{{ t('invitation.theWeddingWeekend') }}</h2>
@@ -177,7 +177,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, ref, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
@@ -194,6 +194,9 @@ const router = useRouter();
 const { eventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
 
 const rootRef = ref(null);
+const showAgenda = ref(true);
+const showOurStory = ref(true);
+const isPrivate = computed(() => route.query.isPrivate === 'true');
 const showCover = ref(true);
 const coverFading = ref(false);
 const polaroidExpanding = ref(false);
@@ -227,7 +230,7 @@ const config = reactive({
   heroMapUrl: '',
   ctaLabel: 'RSVP',
   heroPhotoUrl: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1600&q=80',
-  heroQuote: 'Forever begins now.',
+  heroQuote: '',
 
   collagePhotos: [
     { url: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=1000&q=80', alt: 'Wedding detail' },
@@ -307,6 +310,9 @@ function scrollSlider(direction) {
 function applyBackendData(data) {
   const ev = data.event;
   if (!ev) return;
+
+  showAgenda.value = ev.showAgenda ?? true;
+  showOurStory.value = ev.showOurStory ?? true;
 
   if (ev.coupleNames?.bride) config.brideName = ev.coupleNames.bride;
   if (ev.coupleNames?.groom) config.groomName = ev.coupleNames.groom;

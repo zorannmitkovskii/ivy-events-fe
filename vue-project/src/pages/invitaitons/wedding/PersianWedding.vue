@@ -147,7 +147,7 @@
     </section>
 
     <!-- Agenda Timeline -->
-    <section class="section section--gradient" data-reveal>
+    <section v-if="showAgenda && !isPrivate" class="section section--gradient" data-reveal>
       <div class="section-inner section-inner--narrow">
         <VerticalTimeline
           title="Wedding Day Timeline"
@@ -162,7 +162,7 @@
     </section>
 
     <!-- Our Story -->
-    <section class="section section--white" data-reveal>
+    <section v-if="showOurStory" class="section section--white" data-reveal>
       <div class="section-inner">
         <OurStorySection
           :title="config.storyTitle"
@@ -212,7 +212,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, ref, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
@@ -233,6 +233,9 @@ const router = useRouter();
 const { eventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
 
 const rootRef = ref(null);
+const showAgenda = ref(true);
+const showOurStory = ref(true);
+const isPrivate = computed(() => route.query.isPrivate === 'true');
 useScrollReveal(rootRef);
 
 const palette = {
@@ -351,6 +354,9 @@ async function fetchInvitationData() {
 function applyBackendData(data) {
   const ev = data.event;
   if (!ev) return;
+
+  showAgenda.value = ev.showAgenda ?? true;
+  showOurStory.value = ev.showOurStory ?? true;
 
   // Couple names
   if (ev.coupleNames?.bride) config.brideName = ev.coupleNames.bride;

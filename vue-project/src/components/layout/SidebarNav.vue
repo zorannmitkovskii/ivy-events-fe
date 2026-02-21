@@ -38,6 +38,8 @@
       :role="userRole"
       :avatarUrl="avatarUrl"
       @settings="goToSettings"
+      @invitation-links="goToInvitationLinks"
+      @packages="goToPackages"
       @support="goToSupport"
       @sign-out="signOut"
     />
@@ -80,11 +82,8 @@ const allNavItems = [
   { key: "tasks", path: "tasks", labelKey: "sidebar.tasks", icon: Icons.check },
   { key: "budget", path: "budget", labelKey: "sidebar.budget", icon: Icons.card },
   { key: "tables", path: "tables", labelKey: "sidebar.seating", icon: Icons.grid2 },
-  { key: "agenda", path: "agenda", labelKey: "sidebar.agenda", icon: Icons.calendar },
   { key: "gallery", path: "gallery", labelKey: "sidebar.gallery", icon: Icons.image },
-  { key: "our-story", path: "our-story", labelKey: "sidebar.ourStory", icon: Icons.heart },
   { key: "wedding-details", path: "wedding-details", labelKey: "sidebar.weddingDetails", icon: Icons.clipboardList },
-  { key: "packages", path: "packages", labelKey: "sidebar.packages", icon: Icons.package },
   { key: "settings", path: "settings", labelKey: "sidebar.settings", icon: Icons.settings }
 ];
 
@@ -105,6 +104,14 @@ const avatarUrl = computed(() => "");
 
 function goToSettings() {
   router.push(`/${lang.value}/dashboard/events/settings`);
+}
+
+function goToInvitationLinks() {
+  router.push(`/${lang.value}/dashboard/events/invitation-links`);
+}
+
+function goToPackages() {
+  router.push({ name: "dashboard.packages", params: { lang: lang.value } });
 }
 
 function goToSupport() {

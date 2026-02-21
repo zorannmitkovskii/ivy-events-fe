@@ -99,16 +99,11 @@
             </div>
           </div>
 
-          <!-- Dress Code -->
-          <div v-if="config.dressCode" class="dress-code">
-            <span class="dress-label">{{ t('invitation.dressCode') }}:</span>
-            <span class="dress-value">{{ config.dressCode }}</span>
-          </div>
         </div>
       </section>
 
       <!-- AGENDA SECTION -->
-      <section v-show="!showEntry" id="agenda-section" class="section section--white" data-reveal>
+      <section v-if="showAgenda && !isPrivate" v-show="!showEntry" id="agenda-section" class="section section--white" data-reveal>
         <div class="section-inner">
           <div class="section-header">
             <h2 class="section-title">{{ t('invitation.orderOfEvents') }}</h2>
@@ -126,7 +121,7 @@
       </section>
 
       <!-- OUR STORY SECTION -->
-      <section v-show="!showEntry" id="story-section" class="section section--cream" data-reveal>
+      <section v-if="showOurStory" v-show="!showEntry" id="story-section" class="section section--cream" data-reveal>
         <div class="section-inner">
           <div class="section-header">
             <h2 class="section-title">{{ t('invitation.ourLoveStory') }}</h2>
@@ -183,7 +178,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, ref, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
@@ -201,6 +196,9 @@ const router = useRouter();
 const { eventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
 
 const rootRef = ref(null);
+const showAgenda = ref(true);
+const showOurStory = ref(true);
+const isPrivate = computed(() => route.query.isPrivate === 'true');
 const showEntry = ref(true);
 const collageZooming = ref(false);
 const entryFading = ref(false);
@@ -258,7 +256,6 @@ const config = reactive({
   receptionTime: '5:30 PM - Midnight',
   receptionAddress: 'Beringer Vineyards<br>2000 Main St<br>St Helena, CA 94574',
   receptionMapUrl: '#',
-  dressCode: 'Formal / Black Tie Optional',
 
   agendaEvents: [
     { time: '3:00 PM', title: 'Ceremony Begins', subtitle: 'Please arrive by 2:45 PM', color: palette.rose300 },
@@ -305,6 +302,9 @@ function enterSite() {
 function applyBackendData(data) {
   const ev = data.event;
   if (!ev) return;
+
+  showAgenda.value = ev.showAgenda ?? true;
+  showOurStory.value = ev.showOurStory ?? true;
 
   if (ev.coupleNames?.bride) config.brideName = ev.coupleNames.bride;
   if (ev.coupleNames?.groom) config.groomName = ev.coupleNames.groom;
@@ -371,7 +371,6 @@ function applyBackendData(data) {
   }
 
   if (ev.rsvpDeadline) config.rsvpDeadline = formatDate(ev.rsvpDeadline);
-  if (ev.dressCode) config.dressCode = ev.dressCode;
 }
 
 async function loadGalleryImages() {
@@ -818,25 +817,6 @@ async function onRsvpSubmit(payload) {
 .detail-map-link--rose:hover { color: #be123c; }
 .detail-map-link--stone { color: #57534e; }
 .detail-map-link--stone:hover { color: #292524; }
-
-.dress-code {
-  display: flex;
-  justify-content: center;
-  margin-top: 48px;
-}
-.dress-code > * {
-  display: inline;
-}
-.dress-label {
-  font-family: var(--font-heading);
-  font-size: 18px;
-  color: #292524;
-  margin-right: 8px;
-}
-.dress-value {
-  font-size: 16px;
-  color: #57534e;
-}
 
 /* ========== STORY ========== */
 .story-grid {
