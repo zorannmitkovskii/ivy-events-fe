@@ -80,12 +80,12 @@ onMounted(() => {
   loadStories();
 });
 
-async function onSave(payload) {
+async function onSave(payload, file) {
   if (payload.id) {
-    await updateItem(payload.id, payload);
+    await updateItem(payload.id, payload, file);
   } else {
     payload.displayOrder = items.value.length;
-    await createItem(payload);
+    await createItem(payload, file);
   }
   closeModal();
 }

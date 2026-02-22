@@ -15,12 +15,22 @@ export const ourStoryApi = {
     return api.get(`/our-stories/${encodeURIComponent(id)}`);
   },
 
-  create(payload) {
-    return api.post("/our-stories", payload);
+  create(payload, file) {
+    const fd = new FormData();
+    fd.append("data", new Blob([JSON.stringify(payload)], { type: "application/json" }));
+    if (file) fd.append("file", file);
+    return api.post("/our-stories", fd, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
   },
 
-  update(id, payload) {
-    return api.put(`/our-stories/${encodeURIComponent(id)}`, payload);
+  update(id, payload, file) {
+    const fd = new FormData();
+    fd.append("data", new Blob([JSON.stringify(payload)], { type: "application/json" }));
+    if (file) fd.append("file", file);
+    return api.put(`/our-stories/${encodeURIComponent(id)}`, fd, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
   },
 
   remove(id) {
