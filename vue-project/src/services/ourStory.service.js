@@ -20,7 +20,7 @@ export const ourStoryApi = {
     fd.append("data", new Blob([JSON.stringify(payload)], { type: "application/json" }));
     if (file) fd.append("file", file);
     return api.post("/our-stories", fd, {
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: { "Content-Type": undefined },
     });
   },
 
@@ -29,7 +29,7 @@ export const ourStoryApi = {
     fd.append("data", new Blob([JSON.stringify(payload)], { type: "application/json" }));
     if (file) fd.append("file", file);
     return api.put(`/our-stories/${encodeURIComponent(id)}`, fd, {
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: { "Content-Type": undefined },
     });
   },
 
