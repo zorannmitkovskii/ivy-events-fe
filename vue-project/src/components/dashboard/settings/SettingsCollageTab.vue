@@ -64,7 +64,7 @@ onMounted(() => {
 
     <div v-else class="collage-grid">
       <div v-for="(photo, idx) in photos" :key="photo.url || idx" class="collage-item">
-        <img :src="photo.url" alt="" class="collage-img" />
+        <img :src="photo.thumbUrl || photo.url" alt="" class="collage-img" />
         <button class="delete-btn" type="button" @click="onDelete(photo.url)">
           <i class="bi bi-trash"></i>
         </button>
