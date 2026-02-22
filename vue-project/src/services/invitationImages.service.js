@@ -1,4 +1,5 @@
 import axios from "axios";
+import { api } from "@/services/api";
 import backendApi from "@/services/backendApi";
 import { baseUrl } from "@/services/baseUrl";
 
@@ -8,11 +9,9 @@ export const invitationImagesService = {
     for (const file of files) {
       fd.append("files", file);
     }
-    // Use plain axios so the browser sets the correct multipart boundary
-    const res = await axios.post(`${baseUrl}/public/media/upload`, fd, {
-      params: { eventId },
+    return api.post(`/invitation-images/our-story/${encodeURIComponent(eventId)}`, fd, {
+      headers: { "Content-Type": undefined },
     });
-    return res.data;
   },
 
   async uploadHeroImage(eventId, file) {
