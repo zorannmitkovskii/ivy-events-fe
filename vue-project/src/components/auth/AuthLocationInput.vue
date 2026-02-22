@@ -106,7 +106,7 @@ const props = defineProps({
   loadingAddressLabel: { type: String, default: "Loading address..." },
 
   // optional config
-  types: { type: Array, default: () => ["geocode"] }, // Places types
+  types: { type: Array, default: () => [] }, // Places types (empty = all: addresses + establishments)
   country: { type: String, default: "" } // 'mk' etc (componentRestrictions)
 });
 
@@ -188,8 +188,11 @@ function initAddressAutocomplete() {
 
   const options = {
     fields: ["place_id", "name", "formatted_address", "geometry"],
-    types: props.types
   };
+
+  if (props.types.length) {
+    options.types = props.types;
+  }
 
   if (props.country) {
     options.componentRestrictions = { country: props.country };
