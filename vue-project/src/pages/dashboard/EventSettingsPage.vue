@@ -75,6 +75,8 @@
       <SettingsGalleryTab v-if="activeTab === 'gallery'" />
 
       <SettingsCollageTab v-if="activeTab === 'collage'" />
+
+      <SettingsWeddingDetailsTab v-if="activeTab === 'weddingDetails'" />
     </template>
   </div>
 </template>
@@ -92,6 +94,7 @@ import SettingsAgendaTab from "@/components/dashboard/settings/SettingsAgendaTab
 import SettingsOurStoryTab from "@/components/dashboard/settings/SettingsOurStoryTab.vue";
 import SettingsGalleryTab from "@/components/dashboard/settings/SettingsGalleryTab.vue";
 import SettingsCollageTab from "@/components/dashboard/settings/SettingsCollageTab.vue";
+import SettingsWeddingDetailsTab from "@/components/dashboard/settings/SettingsWeddingDetailsTab.vue";
 
 const { t, locale } = useI18n();
 const router = useRouter();
@@ -117,6 +120,7 @@ const tabs = computed(() => [
   { key: "ourStory", label: t("settings.tabs.ourStory") },
   { key: "gallery", label: t("settings.tabs.gallery") },
   { key: "collage", label: t("settings.tabs.collage") },
+  { key: "weddingDetails", label: t("settings.tabs.weddingDetails") },
 ]);
 
 function buildForm(ev) {

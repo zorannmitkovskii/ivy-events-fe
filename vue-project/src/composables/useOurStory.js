@@ -26,16 +26,16 @@ export function useOurStory() {
     }
   }
 
-  async function createItem(payload) {
+  async function createItem(payload, file) {
     const eventId = onboardingStore.eventId;
     if (!eventId) throw new Error("Missing eventId");
-    const created = await ourStoryApi.create({ ...payload, eventId });
+    const created = await ourStoryApi.create({ ...payload, eventId }, file);
     items.value.push(created);
     return created;
   }
 
-  async function updateItem(itemId, payload) {
-    const updated = await ourStoryApi.update(itemId, payload);
+  async function updateItem(itemId, payload, file) {
+    const updated = await ourStoryApi.update(itemId, payload, file);
     const idx = items.value.findIndex(x => x.id === itemId);
     if (idx !== -1) items.value[idx] = updated;
     return updated;
