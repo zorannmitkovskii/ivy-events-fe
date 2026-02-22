@@ -16,7 +16,7 @@
             class="collage-item"
             @click="enterSite"
           >
-            <img :src="photo.url" :alt="photo.alt" loading="eager" />
+            <img :src="photo.thumbUrl || photo.url" :alt="photo.alt" loading="eager" />
           </div>
         </div>
 
@@ -189,6 +189,7 @@ import { buildLocationAddress, buildMapUrl, formatTimeRange } from '@/utils/invi
 import CountdownTimer from '@/components/invitations/shared/CountdownTimer.vue';
 import EventTimeline from '@/components/invitations/shared/EventTimeline.vue';
 import RsvpForm from '@/components/invitations/shared/RsvpForm.vue';
+import { invitationPhotosApi } from '@/services/invitationPhotos.service';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -364,13 +365,24 @@ function applyBackendData(data) {
       date: s.date || '',
       imageUrl: ourStoryImages[i] || s.imageUrl || '',
     }));
-    const allImages = config.stories.map(s => s.imageUrl).filter(Boolean);
-    if (allImages.length) {
-      config.collagePhotos = allImages.map((url, i) => ({ url, alt: `Photo ${i + 1}` }));
-    }
   }
 
   if (ev.rsvpDeadline) config.rsvpDeadline = formatDate(ev.rsvpDeadline);
+}
+
+async function loadCollagePhotos() {
+  if (!eventId) return;
+  try {
+    const data = await invitationPhotosApi.list(eventId);
+    const photos = Array.isArray(data) ? data : [];
+    if (photos.length) {
+      config.collagePhotos = photos
+        .filter((p) => p.url)
+        .map((p, i) => ({ url: p.url, thumbUrl: p.thumbUrl || p.url, alt: `Photo ${i + 1}` }));
+    }
+  } catch (e) {
+    console.error('Collage photos fetch failed:', e);
+  }
 }
 
 async function loadGalleryImages() {
@@ -420,6 +432,7 @@ onMounted(async () => {
     config.heroPhotoUrl = '';
     config.collagePhotos = [];
     applyBackendData(data);
+    await loadCollagePhotos();
     await loadGalleryImages();
     // Restore defaults if still empty
     if (!config.heroPhotoUrl) config.heroPhotoUrl = defaultHero;

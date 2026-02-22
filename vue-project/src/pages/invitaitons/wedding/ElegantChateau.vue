@@ -11,13 +11,13 @@
       <div v-if="showCover" class="cover-screen" :class="{ 'cover-hidden': coverFading }">
         <div class="polaroid-stack" :class="{ expanding: polaroidExpanding }" @click="revealSite">
           <div class="polaroid polaroid-1">
-            <img :src="config.collagePhotos[0].url" :alt="config.collagePhotos[0].alt" />
+            <img :src="config.collagePhotos[0].thumbUrl || config.collagePhotos[0].url" :alt="config.collagePhotos[0].alt" />
           </div>
           <div class="polaroid polaroid-2">
-            <img :src="config.collagePhotos[1].url" :alt="config.collagePhotos[1].alt" />
+            <img :src="config.collagePhotos[1].thumbUrl || config.collagePhotos[1].url" :alt="config.collagePhotos[1].alt" />
           </div>
           <div class="polaroid polaroid-3">
-            <img :src="config.collagePhotos[2].url" :alt="config.collagePhotos[2].alt" />
+            <img :src="config.collagePhotos[2].thumbUrl || config.collagePhotos[2].url" :alt="config.collagePhotos[2].alt" />
             <div class="polaroid-label">{{ config.brideName }} & {{ config.groomName }}</div>
           </div>
         </div>
@@ -187,6 +187,7 @@ import { useScrollReveal } from '@/composables/useScrollReveal';
 import { buildLocationAddress, buildMapUrl, formatTimeRange } from '@/utils/invitation';
 import CountdownTimer from '@/components/invitations/shared/CountdownTimer.vue';
 import RsvpForm from '@/components/invitations/shared/RsvpForm.vue';
+import { invitationPhotosApi } from '@/services/invitationPhotos.service';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -369,13 +370,25 @@ function applyBackendData(data) {
       text: localized(s.descriptionI18n, s.description),
       imageUrl: ourStoryImages[i] || s.imageUrl || '',
     }));
-    const allImages = config.stories.map(s => s.imageUrl).filter(Boolean);
-    if (allImages.length) {
-      config.collagePhotos = allImages.slice(0, 3).map((url, i) => ({ url, alt: `Photo ${i + 1}` }));
-    }
   }
 
   if (ev.rsvpDeadline) config.rsvpDeadline = formatDate(ev.rsvpDeadline);
+}
+
+async function loadCollagePhotos() {
+  if (!eventId) return;
+  try {
+    const data = await invitationPhotosApi.list(eventId);
+    const photos = Array.isArray(data) ? data : [];
+    if (photos.length) {
+      config.collagePhotos = photos
+        .filter((p) => p.url)
+        .slice(0, 3)
+        .map((p, i) => ({ url: p.url, thumbUrl: p.thumbUrl || p.url, alt: `Photo ${i + 1}` }));
+    }
+  } catch (e) {
+    console.error('Collage photos fetch failed:', e);
+  }
 }
 
 async function loadGalleryImages() {
@@ -422,6 +435,7 @@ onMounted(async () => {
     config.heroPhotoUrl = '';
     config.collagePhotos = [];
     applyBackendData(data);
+    await loadCollagePhotos();
     await loadGalleryImages();
     if (!config.heroPhotoUrl) config.heroPhotoUrl = defaultHero;
     if (!config.collagePhotos.length) config.collagePhotos = defaultCollage;

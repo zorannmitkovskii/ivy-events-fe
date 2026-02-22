@@ -11,7 +11,7 @@ export const invitationPhotosApi = {
       formData.append("files", file);
     }
     return api.post(`/invitation-images/collage/${encodeURIComponent(eventId)}`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: { "Content-Type": undefined },
     });
   },
 
