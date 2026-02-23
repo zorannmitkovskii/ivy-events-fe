@@ -1418,5 +1418,32 @@
     "farewellBrunch": "Bruç lamtumire",
     "rsvpMessage": "Ju lutem përgjigjuni deri më {date}. Mezi presim të festojmë me ju!",
     "contactQuestion": "Për pyetje ose informacione shtesë, na kontaktoni në"
+  },
+  "editCollage": {
+    "title": "Fotot e kolazhit",
+    "empty": "Nuk ka foto",
+    "upload": "Ngarko foto"
+  },
+  "editHero": {
+    "title": "Ndrysho seksionin Hero",
+    "heroImage": "Foto Hero",
+    "uploadImage": "Ngarko foto",
+    "changeImage": "Ndrysho foto",
+    "uploading": "Duke ngarkuar...",
+    "brideName": "Emri i nuses",
+    "groomName": "Emri i dhëndrit",
+    "weddingDate": "Data e dasmës"
+  },
+  "editDetails": {
+    "title": "Detajet e ngjarjes",
+    "empty": "Nuk ka detaje",
+    "addItem": "Shto"
+  },
+  "editSection": {
+    "collage": "Ndrysho kolazhin",
+    "hero": "Ndrysho hero",
+    "details": "Ndrysho detajet",
+    "agenda": "Ndrysho agendën",
+    "ourStory": "Ndrysho historinë"
   }
 }

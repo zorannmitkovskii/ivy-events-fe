@@ -36,7 +36,7 @@ watch(() => route.path, () => {
 
 // Redirect Gallery events to gallery page
 function redirectGalleryIfNeeded() {
-  if (isGallery.value && !route.path.includes("/events/gallery") && !route.path.includes("/events/settings")) {
+  if (isGallery.value && !route.path.includes("/events/gallery") && !route.path.includes("/events/settings") && !route.path.includes("/events/invitation-links")) {
     const lang = route.params.lang || "mk";
     router.replace(`/${lang}/dashboard/events/gallery`);
   }

@@ -82,16 +82,17 @@ const allNavItems = [
   { key: "tasks", path: "tasks", labelKey: "sidebar.tasks", icon: Icons.check },
   { key: "budget", path: "budget", labelKey: "sidebar.budget", icon: Icons.card },
   { key: "tables", path: "tables", labelKey: "sidebar.seating", icon: Icons.grid2 },
-  { key: "gallery", path: "gallery", labelKey: "sidebar.gallery", icon: Icons.image }
+  { key: "gallery", path: "gallery", labelKey: "sidebar.gallery", icon: Icons.image },
+  { key: "links", path: "invitation-links", labelKey: "sidebar.invitationLinks", icon: Icons.mail }
 ];
 
-const GALLERY_NAV_KEYS = ['settings'];
+const GALLERY_NAV_KEYS = ['gallery', 'links'];
 
 const navItems = computed(() => {
   if (isGallery.value) {
     return allNavItems.filter(it => GALLERY_NAV_KEYS.includes(it.key));
   }
-  return allNavItems;
+  return allNavItems.filter(it => !GALLERY_NAV_KEYS.includes(it.key) || it.key === 'gallery');
 });
 
 const router = useRouter();

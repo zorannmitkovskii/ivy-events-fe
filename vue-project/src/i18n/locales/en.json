@@ -1437,5 +1437,32 @@
     "farewellBrunch": "Farewell Brunch",
     "rsvpMessage": "Please respond by {date}. We can't wait to celebrate with you!",
     "contactQuestion": "For questions or additional information, please contact us at"
+  },
+  "editCollage": {
+    "title": "Collage Photos",
+    "empty": "No photos yet",
+    "upload": "Upload Photos"
+  },
+  "editHero": {
+    "title": "Edit Hero Section",
+    "heroImage": "Hero Image",
+    "uploadImage": "Upload Image",
+    "changeImage": "Change Image",
+    "uploading": "Uploading...",
+    "brideName": "Bride Name",
+    "groomName": "Groom Name",
+    "weddingDate": "Wedding Date"
+  },
+  "editDetails": {
+    "title": "Event Details",
+    "empty": "No detail items yet",
+    "addItem": "Add Item"
+  },
+  "editSection": {
+    "collage": "Edit Collage",
+    "hero": "Edit Hero",
+    "details": "Edit Details",
+    "agenda": "Edit Agenda",
+    "ourStory": "Edit Story"
   }
 }
