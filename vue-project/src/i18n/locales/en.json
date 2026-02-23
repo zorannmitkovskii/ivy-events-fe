@@ -701,6 +701,7 @@
     "totalItems": "{count} stories",
     "th": {
       "title": "Title",
+      "description": "Description",
       "type": "Type",
       "actions": "Actions"
     },

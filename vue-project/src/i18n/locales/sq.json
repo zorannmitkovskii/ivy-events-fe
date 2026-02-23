@@ -690,6 +690,7 @@
     "totalItems": "{count} histori",
     "th": {
       "title": "Titulli",
+      "description": "Përshkrimi",
       "type": "Lloji",
       "actions": "Veprimet"
     },

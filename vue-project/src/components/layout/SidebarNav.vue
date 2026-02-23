@@ -82,9 +82,7 @@ const allNavItems = [
   { key: "tasks", path: "tasks", labelKey: "sidebar.tasks", icon: Icons.check },
   { key: "budget", path: "budget", labelKey: "sidebar.budget", icon: Icons.card },
   { key: "tables", path: "tables", labelKey: "sidebar.seating", icon: Icons.grid2 },
-  { key: "gallery", path: "gallery", labelKey: "sidebar.gallery", icon: Icons.image },
-  { key: "wedding-details", path: "wedding-details", labelKey: "sidebar.weddingDetails", icon: Icons.clipboardList },
-  { key: "settings", path: "settings", labelKey: "sidebar.settings", icon: Icons.settings }
+  { key: "gallery", path: "gallery", labelKey: "sidebar.gallery", icon: Icons.image }
 ];
 
 const GALLERY_NAV_KEYS = ['settings'];
@@ -177,7 +175,7 @@ function signOut() {
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0;
   margin-top: 12px;
   flex: 1;
   overflow-y: auto;
@@ -212,7 +210,7 @@ function signOut() {
   border: 1px solid var(--neutral-100);
   background: var(--brand-dark);
   color: var(--neutral-100);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s ease;

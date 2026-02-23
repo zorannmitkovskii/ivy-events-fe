@@ -737,6 +737,7 @@
     "totalItems": "{count} приказни",
     "th": {
       "title": "Наслов",
+      "description": "Опис",
       "type": "Тип",
       "actions": "Акции"
     },

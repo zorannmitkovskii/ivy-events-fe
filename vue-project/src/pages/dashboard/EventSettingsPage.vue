@@ -72,8 +72,6 @@
 
       <SettingsOurStoryTab v-if="activeTab === 'ourStory'" />
 
-      <SettingsGalleryTab v-if="activeTab === 'gallery'" />
-
       <SettingsCollageTab v-if="activeTab === 'collage'" />
 
       <SettingsWeddingDetailsTab v-if="activeTab === 'weddingDetails'" />
@@ -92,7 +90,6 @@ import ButtonMain from "@/components/generic/ButtonMain.vue";
 import SettingsDetailsTab from "@/components/dashboard/settings/SettingsDetailsTab.vue";
 import SettingsAgendaTab from "@/components/dashboard/settings/SettingsAgendaTab.vue";
 import SettingsOurStoryTab from "@/components/dashboard/settings/SettingsOurStoryTab.vue";
-import SettingsGalleryTab from "@/components/dashboard/settings/SettingsGalleryTab.vue";
 import SettingsCollageTab from "@/components/dashboard/settings/SettingsCollageTab.vue";
 import SettingsWeddingDetailsTab from "@/components/dashboard/settings/SettingsWeddingDetailsTab.vue";
 
@@ -118,7 +115,6 @@ const tabs = computed(() => [
   { key: "details", label: t("settings.tabs.details") },
   { key: "agenda", label: t("settings.tabs.agenda") },
   { key: "ourStory", label: t("settings.tabs.ourStory") },
-  { key: "gallery", label: t("settings.tabs.gallery") },
   { key: "collage", label: t("settings.tabs.collage") },
   { key: "weddingDetails", label: t("settings.tabs.weddingDetails") },
 ]);

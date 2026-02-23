@@ -1,8 +1,7 @@
 <template>
   <tr class="clickable-row" @click="$emit('edit', item)">
     <td>
-      <div class="item-title">{{ item.title }}</div>
-      <div v-if="item.description" class="item-desc">{{ item.description }}</div>
+      <div class="item-desc">{{ item.description }}</div>
     </td>
 
     <td v-if="showType">
@@ -11,7 +10,6 @@
 
     <td>
       <div class="actions">
-        <button class="action-link action-images" type="button" @click.stop="$emit('images', item)">{{ t("ourStory.images.btn") }}</button>
         <button class="action-link" type="button" @click.stop="$emit('edit', item)">{{ t("common.edit") }}</button>
         <button class="action-link action-remove" type="button" @click.stop="$emit('delete', item.id)">{{ t("common.delete") }}</button>
       </div>
@@ -29,20 +27,14 @@ defineProps({
   showType: { type: Boolean, default: true },
 });
 
-defineEmits(["edit", "delete", "images"]);
+defineEmits(["edit", "delete"]);
 </script>
 
 <style scoped>
-.item-title {
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--neutral-900);
-}
-
 .item-desc {
-  font-size: 13px;
-  color: var(--neutral-500);
-  margin-top: 2px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--neutral-900);
 }
 
 .type-pill {
@@ -74,14 +66,6 @@ defineEmits(["edit", "delete", "images"]);
 
 .action-link:hover {
   color: var(--brand-main);
-}
-
-.action-images {
-  color: var(--brand-gold, #c8a24d);
-}
-
-.action-images:hover {
-  color: #b08d3a;
 }
 
 .action-remove {

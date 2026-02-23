@@ -29,14 +29,13 @@ defineProps({
   align-items: center;
   justify-content: space-between;
 
-  /* ✅ fixed nav height target like you asked */
-  height: 48px;
+  height: 42px;
 }
 .item:hover { background: var(--neutral-700); color: var(--bg-white); }
 .active { background: var(--neutral-500); color: var(--bg-white); }
 
 .left { display:flex; align-items:center; gap: 10px; min-width: 0; }
-.label { font-weight: 600; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+.label { white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
 
 .icon{
   width: 18px;
