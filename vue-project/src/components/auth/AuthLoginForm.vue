@@ -105,10 +105,10 @@ async function onSubmit() {
     setEventId(getEventId());
 
     const redirect = route.query.redirect;
-    if (redirect) {
-      await router.push(redirect);
-    } else if (hasRole('ADMIN')) {
+    if (hasRole('ADMIN')) {
       await router.push(`/${lang.value}/admin/events`);
+    } else if (redirect) {
+      await router.push(redirect);
     } else {
       await router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
     }
