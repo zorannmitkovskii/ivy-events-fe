@@ -71,7 +71,7 @@ import AuthDivider from '@/components/auth/AuthDivider.vue';
 import AuthInput from '@/components/auth/AuthInput.vue';
 import GoogleButton from '@/components/auth/GoogleButton.vue';
 import ButtonMain from '@/components/generic/ButtonMain.vue';
-import { loginWithCredentials, getEventId } from '@/services/auth.service';
+import { loginWithCredentials, getEventId, hasRole } from '@/services/auth.service';
 import { setEventId } from '@/store/onboarding.store';
 import { getRuntimeEnv, detectDefaultEnvFromLocation, computeKeycloakBaseUrl } from '@/services/env';
 
@@ -107,6 +107,8 @@ async function onSubmit() {
     const redirect = route.query.redirect;
     if (redirect) {
       await router.push(redirect);
+    } else if (hasRole('ADMIN')) {
+      await router.push(`/${lang.value}/admin/events`);
     } else {
       await router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
     }
