@@ -1,16 +1,10 @@
 <template>
   <BaseModal :open="open" title="" @close="emit('close')">
     <form class="form" @submit.prevent="submit">
-      <div class="field" v-if="fieldConfig.title?.show">
-        <label>{{ t("ourStory.form.title") }} {{ fieldConfig.title.required ? '*' : '' }}</label>
-        <input class="input" v-model="draft.title" :placeholder="t('ourStory.addDialog.titlePh')" />
-        <div v-if="errors.title" class="err">{{ errors.title }}</div>
-      </div>
-
       <div class="field" v-if="fieldConfig.type?.show">
         <label>{{ t("ourStory.form.type") }} {{ fieldConfig.type.required ? '*' : '' }}</label>
         <select class="input" v-model="draft.type">
-          <option v-for="(val, key) in StoryType" :key="key" :value="val">
+          <option v-for="val in availableTypes" :key="val" :value="val">
             {{ t(`storyTypes.${val}`) }}
           </option>
         </select>
@@ -93,7 +87,8 @@ const { t, locale } = useI18n();
 
 const props = defineProps({
   open: { type: Boolean, default: false },
-  item: { type: Object, default: null }
+  item: { type: Object, default: null },
+  items: { type: Array, default: () => [] },
 });
 
 const emit = defineEmits(["close", "submit", "delete"]);
@@ -104,14 +99,20 @@ const fieldConfig = computed(() =>
   OUR_STORY_FIELD_CONFIG[onboardingStore.invitationName] || DEFAULT_FIELD_CONFIG
 );
 
+const availableTypes = computed(() => {
+  const usedTypes = props.items
+    .filter((i) => !isEdit.value || i.id !== props.item?.id)
+    .map((i) => i.type);
+  return Object.values(StoryType).filter((t) => !usedTypes.includes(t));
+});
+
 const draft = reactive({
-  title: "",
   type: StoryType.HOW_WE_MET,
   description: "",
   storyDate: "",
 });
 
-const errors = reactive({ title: "", type: "", description: "", storyDate: "" });
+const errors = reactive({ type: "", description: "", storyDate: "" });
 const validationError = ref("");
 
 /* ---- image (local preview, file sent on submit) ---- */
@@ -148,7 +149,6 @@ watch(
     if (!v) return;
 
     validationError.value = "";
-    errors.title = "";
     errors.type = "";
     errors.description = "";
     errors.storyDate = "";
@@ -157,14 +157,12 @@ watch(
     selectedFile.value = null;
 
     if (props.item) {
-      draft.title = props.item.title ?? "";
       draft.type = props.item.type ?? StoryType.HOW_WE_MET;
       draft.description = props.item.description ?? "";
       draft.storyDate = props.item.storyDate ?? props.item.date ?? "";
       imagePreviewUrl.value = props.item.imageUrl ?? "";
     } else {
-      draft.title = "";
-      draft.type = StoryType.HOW_WE_MET;
+      draft.type = availableTypes.value[0] ?? StoryType.HOW_WE_MET;
       draft.description = "";
       draft.storyDate = "";
       imagePreviewUrl.value = "";
@@ -176,9 +174,6 @@ function validate() {
   validationError.value = "";
   const cfg = fieldConfig.value;
 
-  errors.title = (cfg.title?.show && cfg.title?.required && !draft.title.trim())
-    ? t("ourStory.errors.titleRequired") : "";
-
   errors.type = (cfg.type?.show && cfg.type?.required && !draft.type)
     ? t("ourStory.errors.typeRequired") : "";
 
@@ -188,7 +183,7 @@ function validate() {
   errors.storyDate = (cfg.date?.show && cfg.date?.required && !draft.storyDate)
     ? t("ourStory.errors.dateRequired") : "";
 
-  return !(errors.title || errors.type || errors.description || errors.storyDate);
+  return !(errors.type || errors.description || errors.storyDate);
 }
 
 function submit() {
@@ -198,11 +193,6 @@ function submit() {
   const lang = locale.value || "mk";
   const payload = {};
 
-  if (cfg.title?.show) {
-    const title = draft.title.trim();
-    payload.title = title;
-    payload.titleI18n = { [lang]: title };
-  }
   if (cfg.type?.show) payload.type = draft.type;
   if (cfg.description?.show) {
     const desc = draft.description.trim() || null;

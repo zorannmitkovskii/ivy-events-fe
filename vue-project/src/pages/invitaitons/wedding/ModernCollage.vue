@@ -9,6 +9,7 @@
 
       <!-- ENTRY OVERLAY -->
       <div v-if="showEntry" class="entry-overlay" :class="{ 'entry-fading': entryFading }">
+        <SectionEditButton :visible="isEditMode" :label="t('editSection.collage')" variant="dark" @click="enterSite(); openModal('collage')" />
         <div class="collage-grid" :class="{ 'collage-zooming': collageZooming }">
           <div
             v-for="(photo, i) in config.collagePhotos"
@@ -30,7 +31,8 @@
       </div>
 
       <!-- HERO SECTION -->
-      <section v-show="!showEntry" class="hero-section" data-reveal>
+      <section v-show="!showEntry" class="hero-section" data-reveal style="position:relative;">
+        <SectionEditButton :visible="isEditMode" :label="t('editSection.hero')" variant="dark" @click="openModal('hero')" />
         <div class="hero-bg">
           <img :src="config.heroPhotoUrl" alt="Hero" class="hero-img" />
           <div class="hero-overlay"></div>
@@ -54,7 +56,8 @@
       </section>
 
       <!-- DETAILS SECTION -->
-      <section v-show="!showEntry" id="details-section" class="section section--cream" data-reveal>
+      <section v-show="!showEntry" id="details-section" class="section section--cream" data-reveal style="position:relative;">
+        <SectionEditButton :visible="isEditMode" :label="t('editSection.details')" @click="openModal('details')" />
         <div class="section-inner">
           <div class="section-header">
             <h2 class="section-title">{{ t('invitation.countingDown') }}</h2>
@@ -103,7 +106,8 @@
       </section>
 
       <!-- AGENDA SECTION -->
-      <section v-if="showAgenda && !isPrivate" v-show="!showEntry" id="agenda-section" class="section section--white" data-reveal>
+      <section v-if="showAgenda && !isPrivate" v-show="!showEntry" id="agenda-section" class="section section--white" data-reveal style="position:relative;">
+        <SectionEditButton :visible="isEditMode" :label="t('editSection.agenda')" @click="openModal('agenda')" />
         <div class="section-inner">
           <div class="section-header">
             <h2 class="section-title">{{ t('invitation.orderOfEvents') }}</h2>
@@ -121,7 +125,8 @@
       </section>
 
       <!-- OUR STORY SECTION -->
-      <section v-if="showOurStory" v-show="!showEntry" id="story-section" class="section section--cream" data-reveal>
+      <section v-if="showOurStory" v-show="!showEntry" id="story-section" class="section section--cream" data-reveal style="position:relative;">
+        <SectionEditButton :visible="isEditMode" :label="t('editSection.ourStory')" @click="openModal('ourStory')" />
         <div class="section-inner">
           <div class="section-header">
             <h2 class="section-title">{{ t('invitation.ourLoveStory') }}</h2>
@@ -174,6 +179,43 @@
       </section>
 
     </div>
+
+    <!-- Edit Mode Modals -->
+    <template v-if="isEditMode">
+      <AddAgendaItemModal
+        :open="activeModal === 'agenda'"
+        :item="editingItem"
+        @close="closeModal"
+        @submit="handleAgendaSave"
+        @delete="handleAgendaDelete"
+      />
+      <AddOurStoryModal
+        :open="activeModal === 'ourStory'"
+        :item="editingItem"
+        @close="closeModal"
+        @submit="handleOurStorySave"
+        @delete="handleOurStoryDelete"
+      />
+      <EditCollageModal
+        :open="activeModal === 'collage'"
+        @close="closeModal"
+        @updated="refreshAllData"
+      />
+      <EditHeroModal
+        :open="activeModal === 'hero'"
+        :event="backendData?.event"
+        @close="closeModal"
+        @updated="refreshAllData"
+      />
+      <EditDetailsModal
+        :open="activeModal === 'details'"
+        :items="agenda.items.value"
+        @close="closeModal"
+        @add="onDetailsAdd"
+        @edit="onDetailsEdit"
+        @delete="onDetailsDelete"
+      />
+    </template>
   </div>
 </template>
 
@@ -189,12 +231,26 @@ import { buildLocationAddress, buildMapUrl, formatTimeRange } from '@/utils/invi
 import CountdownTimer from '@/components/invitations/shared/CountdownTimer.vue';
 import EventTimeline from '@/components/invitations/shared/EventTimeline.vue';
 import RsvpForm from '@/components/invitations/shared/RsvpForm.vue';
+import SectionEditButton from '@/components/invitations/shared/SectionEditButton.vue';
 import { invitationPhotosApi } from '@/services/invitationPhotos.service';
+import { useInvitationEditMode } from '@/composables/useInvitationEditMode';
+import AddAgendaItemModal from '@/components/modals/AddAgendaItemModal.vue';
+import AddOurStoryModal from '@/components/modals/AddOurStoryModal.vue';
+import EditCollageModal from '@/components/modals/EditCollageModal.vue';
+import EditHeroModal from '@/components/modals/EditHeroModal.vue';
+import EditDetailsModal from '@/components/modals/EditDetailsModal.vue';
 
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const { eventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
+
+const {
+  isEditMode, activeModal, editingItem,
+  openModal, closeModal, refreshCallback, agenda,
+  handleAgendaSave, handleAgendaDelete,
+  handleOurStorySave, handleOurStoryDelete,
+} = useInvitationEditMode();
 
 const rootRef = ref(null);
 const showAgenda = ref(true);
@@ -424,9 +480,20 @@ onMounted(async () => {
     }
   });
 
+  await refreshAllData();
+
+  if (isEditMode.value) {
+    agenda.loadAgenda();
+  }
+});
+
+// Edit mode: data refresh after modal saves
+const backendData = ref(null);
+
+async function refreshAllData() {
   const data = await fetchData();
   if (data) {
-    // Save defaults so we can restore them if backend + gallery provide nothing
+    backendData.value = data;
     const defaultHero = config.heroPhotoUrl;
     const defaultCollage = [...config.collagePhotos];
     config.heroPhotoUrl = '';
@@ -434,11 +501,27 @@ onMounted(async () => {
     applyBackendData(data);
     await loadCollagePhotos();
     await loadGalleryImages();
-    // Restore defaults if still empty
     if (!config.heroPhotoUrl) config.heroPhotoUrl = defaultHero;
     if (!config.collagePhotos.length) config.collagePhotos = defaultCollage;
   }
-});
+}
+
+refreshCallback.value = refreshAllData;
+
+function onDetailsAdd() {
+  closeModal();
+  openModal('agenda');
+}
+
+function onDetailsEdit(item) {
+  closeModal();
+  openModal('agenda', item);
+}
+
+async function onDetailsDelete(id) {
+  await handleAgendaDelete(id);
+  agenda.loadAgenda();
+}
 
 async function onRsvpSubmit(payload) {
   if (!eventId) return;

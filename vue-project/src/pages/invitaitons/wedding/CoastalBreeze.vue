@@ -7,6 +7,8 @@
 
     <div v-show="!loading">
     <!-- Hero -->
+    <div style="position:relative;">
+    <SectionEditButton :visible="isEditMode" :label="t('editSection.hero')" variant="dark" @click="openModal('hero')" />
     <HeroSection
       :bride-name="config.brideName"
       :groom-name="config.groomName"
@@ -24,9 +26,11 @@
       :heading-font="fonts.heading"
       :body-font="fonts.body"
     />
+    </div>
 
     <!-- Event Details -->
-    <section class="section section--gray" data-reveal>
+    <section class="section section--gray" data-reveal style="position:relative;">
+      <SectionEditButton :visible="isEditMode" :label="t('editSection.details')" @click="openModal('details')" />
       <div class="section-inner">
         <div class="section-header">
           <h2 class="section-title">{{ t('invitation.eventDetails') }}</h2>
@@ -124,7 +128,8 @@
     </section>
 
     <!-- Schedule -->
-    <section v-if="showAgenda && !isPrivate" class="section section--white" data-reveal>
+    <section v-if="showAgenda && !isPrivate" class="section section--white" data-reveal style="position:relative;">
+      <SectionEditButton :visible="isEditMode" :label="t('editSection.agenda')" @click="openModal('agenda')" />
       <div class="section-inner">
         <ScheduleList
           :title="config.scheduleTitle"
@@ -137,7 +142,8 @@
     </section>
 
     <!-- Our Story -->
-    <section v-if="showOurStory" class="section section--gray" data-reveal>
+    <section v-if="showOurStory" class="section section--gray" data-reveal style="position:relative;">
+      <SectionEditButton :visible="isEditMode" :label="t('editSection.ourStory')" @click="openModal('ourStory')" />
       <div class="section-inner">
         <StoryGallery
           :title="config.storyTitle"
@@ -183,6 +189,38 @@
       </div>
     </section>
 
+    <!-- Edit Mode Modals -->
+    <template v-if="isEditMode">
+      <AddAgendaItemModal
+        :open="activeModal === 'agenda'"
+        :item="editingItem"
+        @close="closeModal"
+        @submit="handleAgendaSave"
+        @delete="handleAgendaDelete"
+      />
+      <AddOurStoryModal
+        :open="activeModal === 'ourStory'"
+        :item="editingItem"
+        @close="closeModal"
+        @submit="handleOurStorySave"
+        @delete="handleOurStoryDelete"
+      />
+      <EditHeroModal
+        :open="activeModal === 'hero'"
+        :event="backendData?.event"
+        @close="closeModal"
+        @updated="refreshAllData"
+      />
+      <EditDetailsModal
+        :open="activeModal === 'details'"
+        :items="agenda.items.value"
+        @close="closeModal"
+        @add="onDetailsAdd"
+        @edit="onDetailsEdit"
+        @delete="onDetailsDelete"
+      />
+    </template>
+
     </div>
   </div>
 </template>
@@ -202,11 +240,24 @@ import StoryGallery from '@/components/invitations/wedding/CoastalBreeze/StoryGa
 import DetailCard from '@/components/invitations/shared/DetailCard.vue';
 import CountdownTimer from '@/components/invitations/shared/CountdownTimer.vue';
 import RsvpForm from '@/components/invitations/shared/RsvpForm.vue';
+import SectionEditButton from '@/components/invitations/shared/SectionEditButton.vue';
+import { useInvitationEditMode } from '@/composables/useInvitationEditMode';
+import AddAgendaItemModal from '@/components/modals/AddAgendaItemModal.vue';
+import AddOurStoryModal from '@/components/modals/AddOurStoryModal.vue';
+import EditHeroModal from '@/components/modals/EditHeroModal.vue';
+import EditDetailsModal from '@/components/modals/EditDetailsModal.vue';
 
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const { eventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
+
+const {
+  isEditMode, activeModal, editingItem,
+  openModal, closeModal, refreshCallback, agenda,
+  handleAgendaSave, handleAgendaDelete,
+  handleOurStorySave, handleOurStoryDelete,
+} = useInvitationEditMode();
 
 const rootRef = ref(null);
 const showAgenda = ref(true);
@@ -393,6 +444,37 @@ async function loadGalleryImages() {
   }
 }
 
+const backendData = ref(null);
+
+async function refreshAllData() {
+  const data = await fetchData();
+  if (data) {
+    backendData.value = data;
+    const defaultHero = config.heroPhotoUrl;
+    config.heroPhotoUrl = '';
+    applyBackendData(data);
+    await loadGalleryImages();
+    if (!config.heroPhotoUrl) config.heroPhotoUrl = defaultHero;
+  }
+}
+
+refreshCallback.value = refreshAllData;
+
+function onDetailsAdd() {
+  closeModal();
+  openModal('agenda');
+}
+
+function onDetailsEdit(item) {
+  closeModal();
+  openModal('agenda', item);
+}
+
+async function onDetailsDelete(id) {
+  await handleAgendaDelete(id);
+  agenda.loadAgenda();
+}
+
 onMounted(async () => {
   const fontLinks = [
     'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap',
@@ -407,13 +489,9 @@ onMounted(async () => {
     }
   });
 
-  const data = await fetchData();
-  if (data) {
-    const defaultHero = config.heroPhotoUrl;
-    config.heroPhotoUrl = '';
-    applyBackendData(data);
-    await loadGalleryImages();
-    if (!config.heroPhotoUrl) config.heroPhotoUrl = defaultHero;
+  await refreshAllData();
+  if (isEditMode.value) {
+    agenda.loadAgenda();
   }
 });
 

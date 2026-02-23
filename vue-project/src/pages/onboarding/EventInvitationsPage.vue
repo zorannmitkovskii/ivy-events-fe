@@ -132,7 +132,7 @@ function onSelectInvitation(id) {
 function onPreview(id) {
   const inv = templates.value.find(t => t.id === id);
   if (!inv?.path) return;
-  const resolved = router.resolve(`/${lang.value}/${inv.path}`);
+  const resolved = router.resolve(`/${lang.value}/${inv.path}?edit=true`);
   window.open(resolved.href, '_blank');
 }
 

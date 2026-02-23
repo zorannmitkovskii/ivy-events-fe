@@ -7,6 +7,8 @@
 
     <div v-show="!loading">
     <!-- Hero -->
+    <div style="position:relative;">
+    <SectionEditButton :visible="isEditMode" :label="t('editSection.hero')" variant="dark" @click="openModal('hero')" />
     <HeroSection
       :bride-name="config.brideName"
       :groom-name="config.groomName"
@@ -22,9 +24,11 @@
       :gradient-mid="palette.gradientMid"
       :gradient-end="palette.gradientEnd"
     />
+    </div>
 
     <!-- Details Section -->
-    <section class="section section--white" data-reveal>
+    <section class="section section--white" data-reveal style="position:relative;">
+      <SectionEditButton :visible="isEditMode" :label="t('editSection.details')" @click="openModal('details')" />
       <div class="section-inner">
         <h2 class="section-title">{{ t('invitation.weddingDetails') }}</h2>
 
@@ -147,7 +151,8 @@
     </section>
 
     <!-- Agenda Timeline -->
-    <section v-if="showAgenda && !isPrivate" class="section section--gradient" data-reveal>
+    <section v-if="showAgenda && !isPrivate" class="section section--gradient" data-reveal style="position:relative;">
+      <SectionEditButton :visible="isEditMode" :label="t('editSection.agenda')" @click="openModal('agenda')" />
       <div class="section-inner section-inner--narrow">
         <VerticalTimeline
           title="Wedding Day Timeline"
@@ -162,7 +167,8 @@
     </section>
 
     <!-- Our Story -->
-    <section v-if="showOurStory" class="section section--white" data-reveal>
+    <section v-if="showOurStory" class="section section--white" data-reveal style="position:relative;">
+      <SectionEditButton :visible="isEditMode" :label="t('editSection.ourStory')" @click="openModal('ourStory')" />
       <div class="section-inner">
         <OurStorySection
           :title="config.storyTitle"
@@ -207,6 +213,38 @@
         </div>
       </div>
     </section>
+
+    <!-- Edit Mode Modals -->
+    <template v-if="isEditMode">
+      <AddAgendaItemModal
+        :open="activeModal === 'agenda'"
+        :item="editingItem"
+        @close="closeModal"
+        @submit="handleAgendaSave"
+        @delete="handleAgendaDelete"
+      />
+      <AddOurStoryModal
+        :open="activeModal === 'ourStory'"
+        :item="editingItem"
+        @close="closeModal"
+        @submit="handleOurStorySave"
+        @delete="handleOurStoryDelete"
+      />
+      <EditHeroModal
+        :open="activeModal === 'hero'"
+        :event="backendData?.event"
+        @close="closeModal"
+        @updated="refreshAllData"
+      />
+      <EditDetailsModal
+        :open="activeModal === 'details'"
+        :items="agenda.items.value"
+        @close="closeModal"
+        @add="onDetailsAdd"
+        @edit="onDetailsEdit"
+        @delete="onDetailsDelete"
+      />
+    </template>
     </div>
   </div>
 </template>
@@ -226,11 +264,23 @@ import DetailCard from '@/components/invitations/shared/DetailCard.vue';
 import CountdownTimer from '@/components/invitations/shared/CountdownTimer.vue';
 import VerticalTimeline from '@/components/invitations/shared/VerticalTimeline.vue';
 import RsvpForm from '@/components/invitations/shared/RsvpForm.vue';
+import SectionEditButton from '@/components/invitations/shared/SectionEditButton.vue';
+import { useInvitationEditMode } from '@/composables/useInvitationEditMode';
+import AddAgendaItemModal from '@/components/modals/AddAgendaItemModal.vue';
+import AddOurStoryModal from '@/components/modals/AddOurStoryModal.vue';
+import EditHeroModal from '@/components/modals/EditHeroModal.vue';
+import EditDetailsModal from '@/components/modals/EditDetailsModal.vue';
 
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const { eventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
+const {
+  isEditMode, activeModal, editingItem,
+  openModal, closeModal, refreshCallback, agenda,
+  handleAgendaSave, handleAgendaDelete,
+  handleOurStorySave, handleOurStoryDelete,
+} = useInvitationEditMode();
 
 const rootRef = ref(null);
 const showAgenda = ref(true);
@@ -337,9 +387,12 @@ const typeToIcon = {
 };
 
 /* ---- fetch & apply ---- */
-async function fetchInvitationData() {
+const backendData = ref(null);
+
+async function refreshAllData() {
   const data = await fetchData();
   if (data) {
+    backendData.value = data;
     const defaultHero = config.heroPhotoUrl;
     const defaultPhotos = [...config.storyPhotos];
     config.heroPhotoUrl = '';
@@ -349,6 +402,23 @@ async function fetchInvitationData() {
     if (!config.heroPhotoUrl) config.heroPhotoUrl = defaultHero;
     if (!config.storyPhotos.length) config.storyPhotos = defaultPhotos;
   }
+}
+
+refreshCallback.value = refreshAllData;
+
+function onDetailsAdd() {
+  closeModal();
+  openModal('agenda');
+}
+
+function onDetailsEdit(item) {
+  closeModal();
+  openModal('agenda', item);
+}
+
+async function onDetailsDelete(id) {
+  await handleAgendaDelete(id);
+  agenda.loadAgenda();
 }
 
 function applyBackendData(data) {
@@ -475,7 +545,10 @@ onMounted(() => {
     }
   });
 
-  fetchInvitationData();
+  refreshAllData();
+  if (isEditMode.value) {
+    agenda.loadAgenda();
+  }
 });
 
 async function onRsvpSubmit(payload) {

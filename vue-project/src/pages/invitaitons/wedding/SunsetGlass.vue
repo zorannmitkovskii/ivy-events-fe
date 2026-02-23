@@ -4,7 +4,8 @@
       <div style="width:40px;height:40px;border:3px solid rgba(0,0,0,0.1);border-top-color:#a78bfa;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
     </div>
     <div v-show="!loading">
-    <div data-reveal>
+    <div data-reveal style="position:relative;">
+      <SectionEditButton :visible="isEditMode" :label="t('editSection.hero')" variant="dark" @click="openModal('hero')" />
       <InvitationHero
         :image-url="data.heroImage"
         :couple-name="data.coupleName"
@@ -15,7 +16,8 @@
       />
     </div>
 
-    <div data-reveal>
+    <div data-reveal style="position:relative;">
+      <SectionEditButton :visible="isEditMode" :label="t('editSection.details')" @click="openModal('details')" />
       <WeddingDetails
         :countdown-target-iso="data.countdownTargetIso"
         :ceremony-html="data.ceremonyHtml"
@@ -27,17 +29,51 @@
       />
     </div>
 
-    <div v-if="showAgenda && !isPrivate" data-reveal>
+    <div v-if="showAgenda && !isPrivate" data-reveal style="position:relative;">
+      <SectionEditButton :visible="isEditMode" :label="t('editSection.agenda')" @click="openModal('agenda')" />
       <TimelineSection :items="data.timeline" />
     </div>
 
-    <div v-if="showOurStory" data-reveal>
+    <div v-if="showOurStory" data-reveal style="position:relative;">
+      <SectionEditButton :visible="isEditMode" :label="t('editSection.ourStory')" @click="openModal('ourStory')" />
       <OurStorySection :left-cards="data.storyCards" :images="data.storyImages" />
     </div>
 
     <div data-reveal>
       <RSVPSection v-model="rsvp" :respond-by-label="data.respondByLabel" @submit="onSubmitRsvp" />
     </div>
+
+    <!-- Edit Mode Modals -->
+    <template v-if="isEditMode">
+      <AddAgendaItemModal
+        :open="activeModal === 'agenda'"
+        :item="editingItem"
+        @close="closeModal"
+        @submit="handleAgendaSave"
+        @delete="handleAgendaDelete"
+      />
+      <AddOurStoryModal
+        :open="activeModal === 'ourStory'"
+        :item="editingItem"
+        @close="closeModal"
+        @submit="handleOurStorySave"
+        @delete="handleOurStoryDelete"
+      />
+      <EditHeroModal
+        :open="activeModal === 'hero'"
+        :event="backendData?.event"
+        @close="closeModal"
+        @updated="refreshAllData"
+      />
+      <EditDetailsModal
+        :open="activeModal === 'details'"
+        :items="agenda.items.value"
+        @close="closeModal"
+        @add="onDetailsAdd"
+        @edit="onDetailsEdit"
+        @delete="onDetailsDelete"
+      />
+    </template>
     </div>
   </div>
 </template>
@@ -57,9 +93,21 @@ import TimelineSection from "@/components/invitations/wedding/sunsetGlass/Timeli
 import OurStorySection from "@/components/invitations/wedding/sunsetGlass/OurStorySection.vue";
 import RSVPSection from "@/components/invitations/wedding/sunsetGlass/RSVPSection.vue";
 import '@/styles/sunsetGlass.css';
+import SectionEditButton from '@/components/invitations/shared/SectionEditButton.vue';
+import { useInvitationEditMode } from '@/composables/useInvitationEditMode';
+import AddAgendaItemModal from '@/components/modals/AddAgendaItemModal.vue';
+import AddOurStoryModal from '@/components/modals/AddOurStoryModal.vue';
+import EditHeroModal from '@/components/modals/EditHeroModal.vue';
+import EditDetailsModal from '@/components/modals/EditDetailsModal.vue';
 
 const { t } = useI18n();
 const { eventId: invEventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
+const {
+  isEditMode, activeModal, editingItem,
+  openModal, closeModal, refreshCallback, agenda,
+  handleAgendaSave, handleAgendaDelete,
+  handleOurStorySave, handleOurStoryDelete,
+} = useInvitationEditMode();
 
 const rootRef = ref(null);
 const showAgenda = ref(true);
@@ -252,9 +300,12 @@ async function loadGalleryImages() {
   }
 }
 
-onMounted(async () => {
+const backendData = ref(null);
+
+async function refreshAllData() {
   const result = await fetchData();
   if (result) {
+    backendData.value = result;
     const defaultHero = data.heroImage;
     const defaultStoryImages = [...data.storyImages];
     data.heroImage = '';
@@ -263,6 +314,30 @@ onMounted(async () => {
     await loadGalleryImages();
     if (!data.heroImage) data.heroImage = defaultHero;
     if (!data.storyImages.length) data.storyImages = defaultStoryImages;
+  }
+}
+
+refreshCallback.value = refreshAllData;
+
+function onDetailsAdd() {
+  closeModal();
+  openModal('agenda');
+}
+
+function onDetailsEdit(item) {
+  closeModal();
+  openModal('agenda', item);
+}
+
+async function onDetailsDelete(id) {
+  await handleAgendaDelete(id);
+  agenda.loadAgenda();
+}
+
+onMounted(async () => {
+  await refreshAllData();
+  if (isEditMode.value) {
+    agenda.loadAgenda();
   }
 });
 
