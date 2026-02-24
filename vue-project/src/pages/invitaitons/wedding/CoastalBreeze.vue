@@ -40,7 +40,7 @@
         <div class="details-grid">
           <!-- Ceremony -->
           <DetailCard
-            :title="t('invitation.ceremony')"
+            :title="config.ceremonyVenue || t('invitation.ceremony')"
             bg-color="#fff"
             border-width="0"
             border-radius="24px"
@@ -55,8 +55,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </template>
-            <p>{{ config.ceremonyTime }}</p>
-            <p class="muted">{{ config.ceremonyVenue }}</p>
+            <p v-if="config.ceremonyDate" class="bold">{{ config.ceremonyDate }}</p>
+            <p v-if="config.ceremonyTime">{{ config.ceremonyTime }}</p>
             <template #footer>
               <a v-if="config.ceremonyMapUrl" :href="config.ceremonyMapUrl" target="_blank" rel="noopener" class="map-link">{{ t('invitation.viewMap') }}</a>
             </template>
@@ -64,7 +64,7 @@
 
           <!-- Reception -->
           <DetailCard
-            :title="t('invitation.reception')"
+            :title="config.receptionVenue || t('invitation.reception')"
             bg-color="#fff"
             border-width="0"
             border-radius="24px"
@@ -79,8 +79,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </template>
-            <p>{{ config.receptionTime }}</p>
-            <p class="muted">{{ config.receptionVenue }}</p>
+            <p v-if="config.receptionDate" class="bold">{{ config.receptionDate }}</p>
+            <p v-if="config.receptionTime">{{ config.receptionTime }}</p>
             <template #footer>
               <a v-if="config.receptionMapUrl" :href="config.receptionMapUrl" target="_blank" rel="noopener" class="map-link">{{ t('invitation.viewMap') }}</a>
             </template>
@@ -129,10 +129,10 @@
 
     <!-- Schedule -->
     <section v-if="showAgenda && !isPrivate" class="section section--white" data-reveal style="position:relative;">
-      <SectionEditButton :visible="isEditMode" :label="t('editSection.agenda')" @click="openModal('agenda')" />
+      <SectionEditButton :visible="isEditMode" :label="t('editSection.agenda')" @click="openModal('agendaList')" />
       <div class="section-inner">
         <ScheduleList
-          :title="config.scheduleTitle"
+          :title="t('invitation.schedule')"
           :events="config.scheduleEvents"
           :divider-color="palette.rose300"
           :heading-font="fonts.heading"
@@ -143,10 +143,11 @@
 
     <!-- Our Story -->
     <section v-if="showOurStory" class="section section--gray" data-reveal style="position:relative;">
-      <SectionEditButton :visible="isEditMode" :label="t('editSection.ourStory')" @click="openModal('ourStory')" />
+      <SectionEditButton :visible="isEditMode" :label="t('editSection.ourStory')" @click="openModal('ourStoryList')" />
+      <SectionEditButton :visible="isEditMode" :label="t('ourStory.images.upload')" @click="openModal('ourStoryImages')" style="right: 180px;" />
       <div class="section-inner">
         <StoryGallery
-          :title="config.storyTitle"
+          :title="t('invitation.ourStory')"
           :stories="config.stories"
           :divider-color="palette.rose300"
           :heading-font="fonts.heading"
@@ -191,33 +192,65 @@
 
     <!-- Edit Mode Modals -->
     <template v-if="isEditMode">
-      <AddAgendaItemModal
-        :open="activeModal === 'agenda'"
+      <EditDetailsModal
+        :open="activeModal === 'details'"
+        :items="eventDetails.items.value"
+        @close="closeModal"
+        @add="onDetailsAdd"
+        @edit="onDetailsEdit"
+        @delete="onDetailsDelete"
+      />
+      <AddEventDetailModal
+        :open="activeModal === 'eventDetail'"
         :item="editingItem"
+        :items="eventDetails.items.value"
+        @close="closeModal"
+        @submit="handleEventDetailSave"
+        @delete="handleEventDetailDelete"
+      />
+      <EditAgendaModal
+        :open="activeModal === 'agendaList'"
+        :items="agenda.items.value"
+        @close="closeModal"
+        @add="onAgendaAdd"
+        @edit="onAgendaEdit"
+        @delete="onAgendaDelete"
+      />
+      <AddAgendaItemModal
+        :open="activeModal === 'agendaItem'"
+        :item="editingItem"
+        :items="agenda.items.value"
         @close="closeModal"
         @submit="handleAgendaSave"
         @delete="handleAgendaDelete"
       />
+      <EditOurStoryModal
+        :open="activeModal === 'ourStoryList'"
+        :items="ourStory.items.value"
+        @close="closeModal"
+        @add="onOurStoryAdd"
+        @edit="onOurStoryEdit"
+        @delete="onOurStoryDelete"
+      />
       <AddOurStoryModal
-        :open="activeModal === 'ourStory'"
+        :open="activeModal === 'ourStoryItem'"
         :item="editingItem"
+        :items="ourStory.items.value"
         @close="closeModal"
         @submit="handleOurStorySave"
         @delete="handleOurStoryDelete"
+      />
+      <OurStoryUploadModal
+        :open="activeModal === 'ourStoryImages'"
+        :images="ourStory.images.value"
+        @close="closeModal"
+        @uploaded="refreshAllData"
       />
       <EditHeroModal
         :open="activeModal === 'hero'"
         :event="backendData?.event"
         @close="closeModal"
         @updated="refreshAllData"
-      />
-      <EditDetailsModal
-        :open="activeModal === 'details'"
-        :items="agenda.items.value"
-        @close="closeModal"
-        @add="onDetailsAdd"
-        @edit="onDetailsEdit"
-        @delete="onDetailsDelete"
       />
     </template>
 
@@ -246,6 +279,11 @@ import AddAgendaItemModal from '@/components/modals/AddAgendaItemModal.vue';
 import AddOurStoryModal from '@/components/modals/AddOurStoryModal.vue';
 import EditHeroModal from '@/components/modals/EditHeroModal.vue';
 import EditDetailsModal from '@/components/modals/EditDetailsModal.vue';
+import AddEventDetailModal from '@/components/modals/AddEventDetailModal.vue';
+import EditAgendaModal from '@/components/modals/EditAgendaModal.vue';
+import OurStoryUploadModal from '@/components/modals/OurStoryUploadModal.vue';
+import EditOurStoryModal from '@/components/modals/EditOurStoryModal.vue';
+import { EventDetailTypeSortOrder } from '@/enums/EventDetailType';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -254,8 +292,9 @@ const { eventId, loading, localized, formatDate, formatTime, fetchData } = useIn
 
 const {
   isEditMode, activeModal, editingItem,
-  openModal, closeModal, refreshCallback, agenda,
+  openModal, closeModal, refreshCallback, agenda, eventDetails, ourStory,
   handleAgendaSave, handleAgendaDelete,
+  handleEventDetailSave, handleEventDetailDelete,
   handleOurStorySave, handleOurStoryDelete,
 } = useInvitationEditMode();
 
@@ -298,14 +337,16 @@ const config = reactive({
   heroLabel: "You're Invited",
   ctaLabel: 'RSVP',
 
+  ceremonyDate: '',
   ceremonyTime: '4:00 PM - 5:00 PM',
   ceremonyVenue: 'Garden Terrace',
   ceremonyMapUrl: '',
+  receptionDate: '',
   receptionTime: '6:00 PM - 11:00 PM',
   receptionVenue: 'Grand Ballroom',
   receptionMapUrl: '',
   heroMapUrl: '',
-  locationMapUrl: 'https://maps.google.com',
+  locationMapUrl: '',
 
   scheduleTitle: 'Schedule',
   scheduleEvents: [
@@ -338,7 +379,7 @@ const config = reactive({
     },
   ],
 
-  rsvpMessage: "Please respond by May 1st, 2025. We can't wait to celebrate with you!",
+  rsvpMessage: '',
 });
 
 function applyBackendData(data) {
@@ -373,36 +414,40 @@ function applyBackendData(data) {
     }
   }
 
-  // Agenda → ceremony/reception cards + schedule
-  if (Array.isArray(data.agenda) && data.agenda.length) {
-    const sorted = [...data.agenda].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+  // Event Details → ceremony/reception/location cards
+  if (Array.isArray(data.weddingDetails) && data.weddingDetails.length) {
+    const sorted = [...data.weddingDetails].sort(
+      (a, b) => (EventDetailTypeSortOrder[a.type] || 99) - (EventDetailTypeSortOrder[b.type] || 99)
+    );
 
-    // Populate ceremony & reception cards from agenda items by type
-    const ceremonyTypes = ['CEREMONY', 'CHURCH'];
-    const ceremonyItem = sorted.find((a) => ceremonyTypes.includes(a.type));
-    if (ceremonyItem) {
-      config.ceremonyTime = formatTimeRange(ceremonyItem.startTime, ceremonyItem.endTime);
-      config.ceremonyVenue = buildLocationAddress(ceremonyItem.location)
-        || ceremonyItem.location?.name || ceremonyItem.description || '';
-      config.ceremonyMapUrl = buildMapUrl(ceremonyItem.location);
+    const churchItem = sorted.find(d => d.type === 'CHURCH' || d.type === 'REGISTRATION');
+    if (churchItem) {
+      config.ceremonyDate = churchItem.eventDate || '';
+      config.ceremonyTime = churchItem.time || '';
+      config.ceremonyVenue = churchItem.description || '';
+      config.ceremonyMapUrl = buildMapUrl(churchItem.location);
     }
 
-    const receptionItem = sorted.find((a) => a.type === 'RECEPTION');
+    const receptionItem = sorted.find(d => d.type === 'RECEPTION');
     if (receptionItem) {
-      config.receptionTime = formatTimeRange(receptionItem.startTime, receptionItem.endTime);
-      config.receptionVenue = buildLocationAddress(receptionItem.location)
-        || receptionItem.location?.name || receptionItem.description || '';
+      config.receptionDate = receptionItem.eventDate || '';
+      config.receptionTime = receptionItem.time || '';
+      config.receptionVenue = receptionItem.description || '';
       config.receptionMapUrl = buildMapUrl(receptionItem.location);
     }
+  }
 
-    // Schedule timeline (CoastalBreeze splits time into timeValue/timePeriod)
+  // Agenda → schedule timeline
+  if (Array.isArray(data.agenda) && data.agenda.length) {
+    const sorted = [...data.agenda].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
     config.scheduleEvents = sorted.map((a) => {
-      const time = a.startTime || '';
+      const time = a.time || a.startTime || '';
       const parts = time.match(/^(\d+:\d+)\s*(AM|PM)?$/i);
+      const typeKey = a.agendaType || a.type || '';
       return {
         timeValue: parts ? parts[1] : time,
         timePeriod: parts ? (parts[2] || '') : '',
-        title: a.title || '',
+        title: typeKey ? t('agenda.types.' + typeKey) : '',
         description: a.description || '',
       };
     });
@@ -414,14 +459,15 @@ function applyBackendData(data) {
     config.stories = data.ourStory.map((s, i) => ({
       imageUrl: ourStoryImages[i] || s.imageUrl || '',
       date: s.date || '',
-      title: localized(s.titleI18n, s.title),
+      title: s.type ? t('storyTypes.' + s.type) : localized(s.titleI18n, s.title),
       description: localized(s.descriptionI18n, s.description),
     }));
   }
 
   // RSVP
-  if (ev.rsvpDeadline) {
-    config.rsvpMessage = `Please respond by ${formatDate(ev.rsvpDeadline)}. We can't wait to celebrate with you!`;
+  const rsvpDate = ev.rsvpDeadline || (ev.date ? (() => { const d = new Date(ev.date); d.setDate(d.getDate() - 14); return d.toISOString(); })() : null);
+  if (rsvpDate) {
+    config.rsvpMessage = t('invitation.rsvpSubtitle', { date: formatDate(rsvpDate) });
   }
 }
 
@@ -462,17 +508,46 @@ refreshCallback.value = refreshAllData;
 
 function onDetailsAdd() {
   closeModal();
-  openModal('agenda');
+  openModal('eventDetail');
 }
 
 function onDetailsEdit(item) {
   closeModal();
-  openModal('agenda', item);
+  openModal('eventDetail', item);
 }
 
 async function onDetailsDelete(id) {
+  await handleEventDetailDelete(id);
+}
+
+function onAgendaAdd() {
+  closeModal();
+  openModal('agendaItem');
+}
+
+function onAgendaEdit(item) {
+  closeModal();
+  openModal('agendaItem', item);
+}
+
+async function onAgendaDelete(id) {
   await handleAgendaDelete(id);
   agenda.loadAgenda();
+}
+
+function onOurStoryAdd() {
+  closeModal();
+  openModal('ourStoryItem');
+}
+
+function onOurStoryEdit(item) {
+  closeModal();
+  openModal('ourStoryItem', item);
+}
+
+async function onOurStoryDelete(id) {
+  await handleOurStoryDelete(id);
+  ourStory.loadStories();
 }
 
 onMounted(async () => {
@@ -491,7 +566,9 @@ onMounted(async () => {
 
   await refreshAllData();
   if (isEditMode.value) {
+    eventDetails.loadEventDetails();
     agenda.loadAgenda();
+    ourStory.loadStories();
   }
 });
 

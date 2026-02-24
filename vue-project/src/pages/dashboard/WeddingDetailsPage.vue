@@ -7,7 +7,7 @@
 
     <div class="toolbar">
       <div></div>
-      <button class="btn-add" @click="openCreate">
+      <button class="btn-add" :disabled="allTypesUsed" @click="openCreate">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
         {{ t('weddingDetails.addBtn') }}
       </button>
@@ -73,10 +73,9 @@
     <div v-if="!loading && items.length > 0" class="details-grid">
       <div v-for="item in sorted" :key="item.id" class="detail-card">
         <div class="detail-card-head">
-          <div class="detail-icon" v-if="item.icon">
-            <span>{{ iconMap[item.icon] || item.icon }}</span>
+          <div class="detail-icon" v-if="item.type">
+            <span>{{ EventDetailTypeIcon[item.type] }}</span>
           </div>
-          <div class="detail-order">#{{ item.displayOrder }}</div>
           <div class="detail-actions">
             <button class="action-btn" @click="openEdit(item)" title="Edit">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -86,12 +85,12 @@
             </button>
           </div>
         </div>
-        <h4 class="detail-title">{{ item.title }}</h4>
-        <p class="detail-desc" v-if="item.description">
-          {{ item.description }}
+        <h4 class="detail-title">{{ t('detailTypes.' + item.type) }}</h4>
+        <p class="detail-meta" v-if="item.date || item.time">
+          {{ item.date }}{{ item.date && item.time ? ' \u2022 ' : '' }}{{ item.time }}
         </p>
         <div v-if="item.location?.venueName || item.location?.address" class="detail-location">
-          <span class="detail-location-name">📍 {{ item.location.venueName || item.location.address }}</span>
+          <span class="detail-location-name">\u{1F4CD} {{ item.location.venueName || item.location.address }}</span>
           <a v-if="getMapUrl(item.location)" :href="getMapUrl(item.location)" target="_blank" rel="noopener" class="detail-map-btn">
             {{ t('weddingDetails.showOnMap') }}
           </a>
@@ -103,42 +102,42 @@
     <BaseModal :open="modalOpen" :title="isEditing ? t('weddingDetails.editTitle') : t('weddingDetails.createTitle')" @close="closeModal">
       <div class="modal-form">
         <div class="form-group">
-          <label class="form-label">{{ t('weddingDetails.fields.title') }} *</label>
-          <input type="text" v-model="form.title" class="form-input" :placeholder="t('weddingDetails.fields.titlePh')" />
+          <label class="form-label">{{ t('weddingDetails.fields.type') }} *</label>
+          <select v-model="form.type" class="form-input" :disabled="isEditing">
+            <option value="" disabled>{{ t('weddingDetails.fields.typePh') }}</option>
+            <option v-if="isEditing && form.type" :value="form.type">{{ t('detailTypes.' + form.type) }}</option>
+            <template v-if="!isEditing">
+              <option v-for="tp in availableTypes" :key="tp" :value="tp">{{ t('detailTypes.' + tp) }}</option>
+            </template>
+          </select>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">{{ t('weddingDetails.fields.description') }}</label>
-          <textarea v-model="form.description" class="form-input form-textarea" :placeholder="t('weddingDetails.fields.descriptionPh')" rows="3"></textarea>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">{{ t('weddingDetails.fields.icon') }}</label>
-            <select v-model="form.icon" class="form-input">
-              <option value="">None</option>
-              <option v-for="ic in iconOptions" :key="ic.value" :value="ic.value">{{ ic.label }}</option>
-            </select>
+        <template v-if="!isCountdown">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">{{ t('weddingDetails.fields.date') }}</label>
+              <input type="date" v-model="form.date" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">{{ t('weddingDetails.fields.time') }}</label>
+              <input type="time" v-model="form.time" class="form-input" />
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">{{ t('weddingDetails.fields.displayOrder') }}</label>
-            <input type="number" v-model.number="form.displayOrder" class="form-input" min="1" placeholder="1" />
-          </div>
-        </div>
 
-        <div class="form-group">
-          <AuthLocationInput
-            :label="t('weddingDetails.fields.location')"
-            :placeholder="t('weddingDetails.fields.locationPh')"
-            v-model="form.location"
-            :pick-on-map-label="t('weddingDetails.fields.pickOnMap')"
-            :cancel-label="t('common.cancel')"
-            :use-this-location-label="t('weddingDetails.fields.useThisLocation')"
-            :search-placeholder="t('weddingDetails.fields.searchPlaces')"
-            :locating-label="t('weddingDetails.fields.locateMe')"
-            :locating-label-loading="t('weddingDetails.fields.locating')"
-          />
-        </div>
+          <div class="form-group">
+            <AuthLocationInput
+              :label="t('weddingDetails.fields.location')"
+              :placeholder="t('weddingDetails.fields.locationPh')"
+              v-model="form.location"
+              :pick-on-map-label="t('weddingDetails.fields.pickOnMap')"
+              :cancel-label="t('common.cancel')"
+              :use-this-location-label="t('weddingDetails.fields.useThisLocation')"
+              :search-placeholder="t('weddingDetails.fields.searchPlaces')"
+              :locating-label="t('weddingDetails.fields.locateMe')"
+              :locating-label-loading="t('weddingDetails.fields.locating')"
+            />
+          </div>
+        </template>
 
         <p v-if="formError" class="form-error">{{ formError }}</p>
       </div>
@@ -155,38 +154,22 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import AuthLocationInput from "@/components/auth/AuthLocationInput.vue";
+import { EventDetailType, EventDetailTypeIcon, EventDetailTypeSortOrder } from "@/enums/EventDetailType.js";
 import { eventDetailsService } from "@/services/eventDetails.service";
 import { eventsService } from "@/services/events.service";
 import { invitationImagesService } from "@/services/invitationImages.service.js";
 import { onboardingStore } from "@/store/onboarding.store";
 
 const { t } = useI18n();
-const route = useRoute();
 
-const iconOptions = [
-  { value: "church", label: "Church" },
-  { value: "party", label: "Party / Reception" },
-  { value: "dresscode", label: "Dress Code" },
-  { value: "rings", label: "Rings" },
-  { value: "cake", label: "Cake" },
-  { value: "music", label: "Music" },
-  { value: "gift", label: "Gift / Registry" },
-  { value: "hotel", label: "Accommodation" },
-  { value: "transport", label: "Transport" },
-  { value: "food", label: "Food / Dinner" },
-  { value: "photo", label: "Photography" },
-  { value: "flowers", label: "Flowers" },
-];
-
-const iconMap = {
-  church: "⛪", party: "🎉", dresscode: "👔", rings: "💍",
-  cake: "🎂", music: "🎵", gift: "🎁", hotel: "🏨",
-  transport: "🚗", food: "🍽️", photo: "📷", flowers: "💐",
-};
+const allTypes = Object.values(EventDetailType);
+const usedTypes = computed(() => items.value.map(i => i.type));
+const availableTypes = computed(() => allTypes.filter(t => !usedTypes.value.includes(t)));
+const allTypesUsed = computed(() => availableTypes.value.length === 0);
+const isCountdown = computed(() => form.value.type === EventDetailType.COUNTDOWN);
 
 function getMapUrl(loc) {
   if (!loc) return '';
@@ -202,7 +185,9 @@ const items = ref([]);
 const loading = ref(true);
 
 const sorted = computed(() =>
-  [...items.value].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
+  [...items.value].sort((a, b) =>
+    (EventDetailTypeSortOrder[a.type] || 99) - (EventDetailTypeSortOrder[b.type] || 99)
+  )
 );
 
 async function fetchData() {
@@ -264,8 +249,7 @@ const saving = ref(false);
 const formError = ref("");
 
 const form = ref({
-  title: "", description: "",
-  icon: "", displayOrder: 1,
+  type: "", date: "", time: "",
   location: { name: "", address: "", lat: null, lng: null, placeId: null },
 });
 
@@ -273,8 +257,7 @@ function openCreate() {
   isEditing.value = false;
   editingId.value = null;
   form.value = {
-    title: "", description: "",
-    icon: "", displayOrder: items.value.length + 1,
+    type: "", date: "", time: "",
     location: { name: "", address: "", lat: null, lng: null, placeId: null },
   };
   formError.value = "";
@@ -286,10 +269,9 @@ function openEdit(item) {
   editingId.value = item.id;
   const loc = item.location;
   form.value = {
-    title: item.title || "",
-    description: item.description || "",
-    icon: item.icon || "",
-    displayOrder: item.displayOrder || 1,
+    type: item.type || "",
+    date: item.date || "",
+    time: item.time || "",
     location: loc ? {
       name: loc.venueName || "",
       address: loc.address || "",
@@ -310,7 +292,7 @@ function closeModal() {
 
 async function saveForm() {
   formError.value = "";
-  if (!form.value.title.trim()) { formError.value = t('weddingDetails.errors.titleRequired'); return; }
+  if (!form.value.type) { formError.value = t('weddingDetails.errors.typeRequired'); return; }
 
   saving.value = true;
   const eventId = onboardingStore.eventId;
@@ -325,12 +307,13 @@ async function saveForm() {
   } : null;
 
   const payload = {
-    title: form.value.title.trim(),
-    description: form.value.description.trim(),
-    icon: form.value.icon || null,
-    displayOrder: form.value.displayOrder || 1,
+    type: form.value.type,
     eventId,
-    location,
+    ...(form.value.type !== EventDetailType.COUNTDOWN ? {
+      date: form.value.date || null,
+      time: form.value.time || null,
+      location,
+    } : {}),
   };
 
   try {
@@ -349,7 +332,7 @@ async function saveForm() {
 }
 
 async function onDelete(item) {
-  if (!window.confirm(`Delete "${item.title}"?`)) return;
+  if (!window.confirm(`Delete "${t('detailTypes.' + item.type)}"?`)) return;
   try {
     await eventDetailsService.remove(item.id);
     await fetchData();
@@ -382,6 +365,7 @@ async function onDelete(item) {
   transition: background 0.15s;
 }
 .btn-add:hover { filter: brightness(0.95); }
+.btn-add:disabled { opacity: 0.5; cursor: not-allowed; filter: none; }
 
 .loading-msg {
   display: flex;
@@ -553,14 +537,8 @@ async function onDelete(item) {
   font-size: 18px;
 }
 
-.detail-order {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--neutral-400);
-  flex: 1;
-}
-
 .detail-actions {
+  margin-left: auto;
   display: flex;
   gap: 4px;
   opacity: 0;
@@ -590,11 +568,10 @@ async function onDelete(item) {
   margin: 0 0 4px;
 }
 
-.detail-desc {
+.detail-meta {
   font-size: 13px;
   color: var(--neutral-500);
-  margin: 0;
-  line-height: 1.5;
+  margin: 0 0 4px;
 }
 
 .detail-location {

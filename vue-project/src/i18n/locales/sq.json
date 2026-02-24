@@ -285,6 +285,9 @@
     "forgot": {
       "title": "Keni harruar fjalëkalimin?",
       "subtitle": "Shkruani adresën tuaj të email-it dhe do t’ju dërgojmë një link rivendosjeje.",
+      "sentSubtitle": "Kontrolloni kutinë tuaj postare për linkun e rivendosjes.",
+      "sentMessage": "Nëse ekziston një llogari me atë email, kemi dërguar një link për rivendosjen e fjalëkalimit. Ju lutem kontrolloni kutinë postare dhe dosjen e spam-it.",
+      "error": "Diçka shkoi keq. Ju lutem provoni përsëri.",
       "cta": "Dërgo linkun e rivendosjes",
       "backToLogin": "Kthehu te hyrja"
     },
@@ -737,6 +740,13 @@
       "removeImage": "Hiq foton"
     }
   },
+  "detailTypes": {
+    "REGISTRATION": "Regjistrimi",
+    "RECEPTION": "Pritja",
+    "CHURCH": "Kisha",
+    "LOCATION": "Vendndodhja",
+    "COUNTDOWN": "Numërim mbrapsht"
+  },
   "weddingDetails": {
     "title": "Detajet e Dasmës",
     "subtitle": "Shtoni detaje si ceremonia, pritja, kodi i veshjes dhe më shumë",
@@ -747,23 +757,21 @@
     "createTitle": "Shto detaj",
     "editTitle": "Ndrysho detajin",
     "fields": {
-      "title": "Titulli",
-      "titlePh": "p.sh. Ceremonia",
-      "description": "Përshkrimi",
-      "descriptionPh": "p.sh. Na bashkohuni në kishën e Shën Klementit në orën 16:00",
-      "icon": "Ikona",
-      "displayOrder": "Radhitja",
+      "type": "Lloji",
+      "typePh": "Zgjidhni një lloj",
+      "date": "Data",
+      "time": "Ora",
       "location": "Vendndodhja",
       "locationPh": "Kërko për një vend ose adresë",
       "pickOnMap": "Zgjidh në hartë",
       "useThisLocation": "Përdor këtë vendndodhje",
       "searchPlaces": "Kërko vende",
       "locateMe": "Gjej pozicionin tim",
-      "locating": "Duke gjetur…"
+      "locating": "Duke gjetur\u2026"
     },
     "showOnMap": "Shiko në hartë",
     "errors": {
-      "titleRequired": "Titulli është i detyrueshëm"
+      "typeRequired": "Lloji është i detyrueshëm"
     },
     "heroImage": "Foto Kryesore",
     "heroImageDesc": "Kjo foto shfaqet në krye të ftesës suaj",
@@ -800,7 +808,9 @@
       "reviews": "Vlerësimet",
       "contacts": "Kontaktet",
       "faq": "FAQ",
-      "invitationTemplates": "Ftesat"
+      "invitationTemplates": "Ftesat",
+      "emailTemplates": "Shabllonet Email",
+      "emailSend": "Dërgo Email"
     },
     "reviews": {
       "title": "Vlerësimet",
@@ -878,6 +888,68 @@
       "thActive": "Statusi",
       "thActions": "Veprimet",
       "active": "Aktive"
+    },
+    "emailTemplates": {
+      "title": "Shabllonet Email",
+      "subtitle": "Menaxhoni shabllonet email për fushata marketingu",
+      "searchPh": "Kërko shabllone...",
+      "loading": "Duke ngarkuar shabllonet...",
+      "empty": "Nuk u gjetën shabllone email",
+      "addBtn": "Shto Shabllon",
+      "createTitle": "Krijo Shabllon Email",
+      "editTitle": "Ndrysho Shabllon Email",
+      "name": "Emri",
+      "subject": "Tema",
+      "description": "Përshkrimi",
+      "htmlFile": "Skedari HTML",
+      "htmlContent": "Përmbajtja HTML",
+      "uploadHint": "Ngarkoni një skedar .html për trupin e emailit",
+      "replaceFile": "Zëvendëso Skedarin HTML",
+      "thName": "Emri",
+      "thSubject": "Tema",
+      "thDescription": "Përshkrimi",
+      "thCreatedAt": "Krijuar Më",
+      "thActions": "Veprimet",
+      "deleteConfirm": "Fshi \"{name}\"?",
+      "previewTitle": "Parashikimi i Emailit"
+    },
+    "emailSend": {
+      "title": "Dërgo Email",
+      "subtitle": "Zgjidhni marrësit dhe dërgoni email marketingu",
+      "searchPh": "Kërko sipas emailit...",
+      "allSources": "Të gjitha burimet",
+      "sourceLegacy": "I vjetër",
+      "sourceContact": "Kontakt",
+      "loading": "Duke ngarkuar marrësit...",
+      "empty": "Nuk u gjetën marrës",
+      "thEmail": "Email",
+      "thDiscountCode": "Kodi i Zbritjes",
+      "thSource": "Burimi",
+      "selectAll": "Zgjidh të gjitha",
+      "selectedCount": "{count} të zgjedhura",
+      "templateLabel": "Shablloni Email",
+      "templatePlaceholder": "Zgjidhni një shabllon...",
+      "subject": "Tema",
+      "subjectPh": "Tema e emailit",
+      "sendBtn": "Dërgo Email",
+      "sending": "Duke dërguar...",
+      "resultTitle": "Rezultatet e Dërgimit",
+      "totalRequested": "Totali i Kërkuar",
+      "successCount": "Të suksesshme",
+      "failedCount": "Të dështuara",
+      "failedEmails": "Emailet e Dështuara",
+      "noSelection": "Ju lutem zgjidhni të paktën një marrës",
+      "noTemplate": "Ju lutem zgjidhni një shabllon email",
+      "sendConfirm": "Dërgo email te {count} marrës(a)?",
+      "sendFollowUpBtn": "Dërgo Follow-up Demo",
+      "ctaLink": "Linku CTA",
+      "ctaLinkPh": "https://calendly.com/your-link",
+      "ctaLabel": "Teksti CTA",
+      "ctaLabelPh": "p.sh. Rezervo prezantim",
+      "senderName": "Emri i dërguesit",
+      "senderNamePh": "p.sh. Marko",
+      "senderContact": "Kontakti i dërguesit",
+      "senderContactPh": "p.sh. 070123456 / {'@'}ivyevents"
     }
   },
   "overview": {
@@ -916,8 +988,10 @@
     "viewTimeline": "Shiko Kronologjinë"
   },
   "common": {
+    "edit": "Ndrysho",
     "delete": "Fshi",
     "cancel": "Anulo",
+    "close": "Mbyll",
     "save": "Ruaj",
     "saveChanges": "Ruaj Ndryshimet",
     "viewAll": "Shiko të Gjitha",
@@ -1432,12 +1506,41 @@
     "uploading": "Duke ngarkuar...",
     "brideName": "Emri i nuses",
     "groomName": "Emri i dhëndrit",
-    "weddingDate": "Data e dasmës"
+    "weddingDate": "Data e dasmës",
+    "location": "Vendndodhja",
+    "locationPh": "Kërko për një vend ose adresë",
+    "changeLocation": "Ndrysho vendndodhjen"
   },
   "editDetails": {
     "title": "Detajet e ngjarjes",
     "empty": "Nuk ka detaje",
     "addItem": "Shto"
+  },
+  "editAgenda": {
+    "title": "Artikujt e agjendës",
+    "empty": "Nuk ka artikuj të agjendës",
+    "addItem": "Shto"
+  },
+  "editOurStory": {
+    "title": "Historia jonë",
+    "empty": "Nuk ka artikuj",
+    "addItem": "Shto histori"
+  },
+  "eventDetail": {
+    "addTitle": "Shto detaj të ngjarjes",
+    "editTitle": "Ndrysho detajin e ngjarjes",
+    "form": {
+      "type": "Lloji",
+      "eventDate": "Data",
+      "time": "Ora",
+      "description": "Përshkrimi",
+      "descriptionPh": "p.sh. Ceremoni në kopsht në natyrë",
+      "location": "Vendndodhja",
+      "locationPh": "Kërko për një vend ose adresë..."
+    },
+    "errors": {
+      "typeRequired": "Lloji është i detyrueshëm"
+    }
   },
   "editSection": {
     "collage": "Ndrysho kolazhin",

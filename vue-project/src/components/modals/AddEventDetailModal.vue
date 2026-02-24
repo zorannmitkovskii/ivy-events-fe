@@ -1,18 +1,24 @@
 <template>
-  <BaseModal :open="open" :title="isEdit ? t('agenda.editDialog.title') : t('agenda.addDialog.title')" @close="emit('close')">
+  <BaseModal :open="open" :title="isEdit ? t('eventDetail.editTitle') : t('eventDetail.addTitle')" @close="emit('close')">
     <form class="form" @submit.prevent="submit">
-      <div class="field">
-        <label>{{ t("agenda.form.type") }} *</label>
-        <select class="input" v-model="draft.type">
-          <option v-for="val in availableTypes" :key="val" :value="val">
-            {{ t(`agenda.types.${val}`) }}
-          </option>
-        </select>
-        <div v-if="errors.type" class="err">{{ errors.type }}</div>
+      <div class="two">
+        <div class="field">
+          <label>{{ t("eventDetail.form.type") }} *</label>
+          <select class="input" v-model="draft.type">
+            <option v-for="val in availableTypes" :key="val" :value="val">
+              {{ t(`detailTypes.${val}`) }}
+            </option>
+          </select>
+          <div v-if="errors.type" class="err">{{ errors.type }}</div>
+        </div>
+        <div class="field">
+          <label>{{ t("eventDetail.form.eventDate") }}</label>
+          <input type="date" class="input" v-model="draft.eventDate" />
+        </div>
       </div>
 
       <div class="field">
-        <label>{{ t("agenda.form.startTime") }} *</label>
+        <label>{{ t("eventDetail.form.time") }}</label>
         <div class="time-selects">
           <select class="input" v-model="draft.hour">
             <option v-for="h in 24" :key="h-1" :value="String(h-1).padStart(2,'0')">
@@ -26,18 +32,17 @@
             </option>
           </select>
         </div>
-        <div v-if="errors.time" class="err">{{ errors.time }}</div>
       </div>
 
       <div class="field">
-        <label>{{ t("agenda.form.description") }}</label>
-        <input type="text" class="input" v-model="draft.description" :placeholder="t('agenda.addDialog.descriptionPh')" />
+        <label>{{ t("eventDetail.form.description") }}</label>
+        <input type="text" class="input" v-model="draft.description" :placeholder="t('eventDetail.form.descriptionPh')" />
       </div>
 
       <AuthLocationInput
         v-model="draft.location"
-        :label="t('agenda.form.location')"
-        :placeholder="t('agenda.addDialog.locationPh')"
+        :label="t('eventDetail.form.location')"
+        :placeholder="t('eventDetail.form.locationPh')"
         :types="[]"
         :pickOnMapLabel="t('common.pickOnMap')"
         :cancelLabel="t('common.cancel')"
@@ -77,7 +82,7 @@ import { useI18n } from "vue-i18n";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import AuthLocationInput from "@/components/auth/AuthLocationInput.vue";
-import { AgendaType } from "@/enums/AgendaType";
+import { EventDetailType } from "@/enums/EventDetailType";
 
 const { t } = useI18n();
 
@@ -90,8 +95,8 @@ const props = defineProps({
 const availableTypes = computed(() => {
   const usedTypes = props.items
     .filter((i) => !isEdit.value || i.id !== props.item?.id)
-    .map((i) => i.type || i.agendaType);
-  return Object.values(AgendaType).filter((t) => !usedTypes.includes(t));
+    .map((i) => i.type);
+  return Object.values(EventDetailType).filter((t) => !usedTypes.includes(t));
 });
 
 const emit = defineEmits(["close", "submit", "delete"]);
@@ -99,14 +104,15 @@ const emit = defineEmits(["close", "submit", "delete"]);
 const isEdit = computed(() => !!props.item?.id);
 
 const draft = reactive({
-  type: AgendaType.CEREMONY,
+  type: EventDetailType.CHURCH,
+  eventDate: "",
   hour: "00",
   minute: "00",
   description: "",
   location: { name: "", address: "", lat: null, lng: null, placeId: null },
 });
 
-const errors = reactive({ type: "", time: "" });
+const errors = reactive({ type: "" });
 const validationError = ref("");
 
 watch(
@@ -116,24 +122,19 @@ watch(
 
     validationError.value = "";
     errors.type = "";
-    errors.time = "";
 
     if (props.item) {
-      draft.type = props.item.type ?? AgendaType.CEREMONY;
+      draft.type = props.item.type ?? EventDetailType.CHURCH;
+      draft.eventDate = props.item.eventDate ?? "";
       draft.description = props.item.description ?? "";
 
       if (props.item.time) {
         const [sh, sm] = props.item.time.split(":");
         draft.hour = (sh ?? "00").padStart(2, "0");
         draft.minute = (sm ?? "00").padStart(2, "0");
-      } else if (props.item.startTime) {
-        const [sh, sm] = props.item.startTime.split(":");
-        draft.hour = (sh ?? "00").padStart(2, "0");
-        draft.minute = (sm ?? "00").padStart(2, "0");
       } else {
-        const { hour, minute } = splitDateTime(props.item.dateTime);
-        draft.hour = hour;
-        draft.minute = minute;
+        draft.hour = "00";
+        draft.minute = "00";
       }
 
       const loc = props.item.location ?? {};
@@ -145,7 +146,8 @@ watch(
         placeId: loc.placeId ?? null,
       };
     } else {
-      draft.type = availableTypes.value[0] ?? AgendaType.CEREMONY;
+      draft.type = availableTypes.value[0] ?? EventDetailType.CHURCH;
+      draft.eventDate = "";
       draft.hour = "00";
       draft.minute = "00";
       draft.description = "";
@@ -154,23 +156,10 @@ watch(
   }
 );
 
-/**
- * Split an ISO / OffsetDateTime string into hour, minute.
- * Parses the string directly to avoid timezone conversion.
- */
-function splitDateTime(iso) {
-  if (!iso) return { hour: "00", minute: "00" };
-  const match = String(iso).match(/T(\d{2}):(\d{2})/);
-  if (match) return { hour: match[1], minute: match[2] };
-  return { hour: "00", minute: "00" };
-}
-
 function validate() {
   validationError.value = "";
-  errors.type = draft.type ? "" : "Type is required";
-  errors.time = "";
-
-  return !(errors.type || errors.time);
+  errors.type = draft.type ? "" : t("eventDetail.errors.typeRequired");
+  return !errors.type;
 }
 
 function submit() {
@@ -181,16 +170,19 @@ function submit() {
 
   const payload = {
     type: draft.type,
-    description: draft.description || null,
+    eventDate: draft.eventDate || null,
     time: `${draft.hour}:${draft.minute}`,
-    location: hasLocation ? {
-      name: loc.name || null,
-      type: "VENUE",
-      addressLine: loc.address || null,
-      latitude: loc.lat,
-      longitude: loc.lng,
-      isActive: true,
-    } : null,
+    description: draft.description || null,
+    location: hasLocation
+      ? {
+          name: loc.name || null,
+          type: "VENUE",
+          addressLine: loc.address || null,
+          latitude: loc.lat,
+          longitude: loc.lng,
+          isActive: true,
+        }
+      : null,
   };
 
   if (isEdit.value) {

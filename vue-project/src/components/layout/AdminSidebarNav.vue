@@ -64,6 +64,8 @@ const navItems = [
   { key: "contacts", path: "contacts", labelKey: "admin.sidebar.contacts", icon: Icons.mail },
   { key: "faq", path: "faq", labelKey: "admin.sidebar.faq", icon: Icons.messageCircle },
   { key: "invitationTemplates", path: "invitation-templates", labelKey: "admin.sidebar.invitationTemplates", icon: Icons.image },
+  { key: "emailTemplates", path: "email-templates", labelKey: "admin.sidebar.emailTemplates", icon: Icons.clipboardList },
+  { key: "emailSend", path: "email-send", labelKey: "admin.sidebar.emailSend", icon: Icons.send },
 ];
 
 const userName = computed(() => getFullName() || "Admin");

@@ -65,7 +65,8 @@
             <template #icon>
               <span class="card-emoji">{{ iconMap[detail.icon] || typeToIcon[detail.icon] || '📋' }}</span>
             </template>
-            <p v-if="detail.description">{{ detail.description }}</p>
+            <p v-if="detail.eventDate" class="bold">{{ detail.eventDate }}</p>
+            <p v-if="detail.time">{{ detail.time }}</p>
             <template #footer>
               <a v-if="detail.mapUrl" :href="detail.mapUrl" target="_blank" rel="noopener" class="map-btn" :style="{ background: detailCardPalette[idx % 3].accent }">{{ t('invitation.viewMap') }}</a>
             </template>
@@ -152,10 +153,10 @@
 
     <!-- Agenda Timeline -->
     <section v-if="showAgenda && !isPrivate" class="section section--gradient" data-reveal style="position:relative;">
-      <SectionEditButton :visible="isEditMode" :label="t('editSection.agenda')" @click="openModal('agenda')" />
+      <SectionEditButton :visible="isEditMode" :label="t('editSection.agenda')" @click="openModal('agendaList')" />
       <div class="section-inner section-inner--narrow">
         <VerticalTimeline
-          title="Wedding Day Timeline"
+          :title="t('invitation.weddingDayTimeline')"
           :events="config.agendaEvents"
           :pill-colors="[palette.pink, palette.purple, palette.teal]"
           :card-shadow="shadows.card"
@@ -168,10 +169,11 @@
 
     <!-- Our Story -->
     <section v-if="showOurStory" class="section section--white" data-reveal style="position:relative;">
-      <SectionEditButton :visible="isEditMode" :label="t('editSection.ourStory')" @click="openModal('ourStory')" />
+      <SectionEditButton :visible="isEditMode" :label="t('editSection.ourStory')" @click="openModal('ourStoryList')" />
+      <SectionEditButton :visible="isEditMode" :label="t('ourStory.images.upload')" @click="openModal('ourStoryImages')" style="right: 180px;" />
       <div class="section-inner">
         <OurStorySection
-          :title="config.storyTitle"
+          :title="t('invitation.ourLoveStory')"
           :stories="config.stories"
           :photos="config.storyPhotos"
           :card-colors="[palette.pinkBg, palette.purpleBg]"
@@ -216,33 +218,65 @@
 
     <!-- Edit Mode Modals -->
     <template v-if="isEditMode">
-      <AddAgendaItemModal
-        :open="activeModal === 'agenda'"
+      <EditDetailsModal
+        :open="activeModal === 'details'"
+        :items="eventDetails.items.value"
+        @close="closeModal"
+        @add="onDetailsAdd"
+        @edit="onDetailsEdit"
+        @delete="onDetailsDelete"
+      />
+      <AddEventDetailModal
+        :open="activeModal === 'eventDetail'"
         :item="editingItem"
+        :items="eventDetails.items.value"
+        @close="closeModal"
+        @submit="handleEventDetailSave"
+        @delete="handleEventDetailDelete"
+      />
+      <EditAgendaModal
+        :open="activeModal === 'agendaList'"
+        :items="agenda.items.value"
+        @close="closeModal"
+        @add="onAgendaAdd"
+        @edit="onAgendaEdit"
+        @delete="onAgendaDelete"
+      />
+      <AddAgendaItemModal
+        :open="activeModal === 'agendaItem'"
+        :item="editingItem"
+        :items="agenda.items.value"
         @close="closeModal"
         @submit="handleAgendaSave"
         @delete="handleAgendaDelete"
       />
+      <EditOurStoryModal
+        :open="activeModal === 'ourStoryList'"
+        :items="ourStory.items.value"
+        @close="closeModal"
+        @add="onOurStoryAdd"
+        @edit="onOurStoryEdit"
+        @delete="onOurStoryDelete"
+      />
       <AddOurStoryModal
-        :open="activeModal === 'ourStory'"
+        :open="activeModal === 'ourStoryItem'"
         :item="editingItem"
+        :items="ourStory.items.value"
         @close="closeModal"
         @submit="handleOurStorySave"
         @delete="handleOurStoryDelete"
+      />
+      <OurStoryUploadModal
+        :open="activeModal === 'ourStoryImages'"
+        :images="ourStory.images.value"
+        @close="closeModal"
+        @uploaded="refreshAllData"
       />
       <EditHeroModal
         :open="activeModal === 'hero'"
         :event="backendData?.event"
         @close="closeModal"
         @updated="refreshAllData"
-      />
-      <EditDetailsModal
-        :open="activeModal === 'details'"
-        :items="agenda.items.value"
-        @close="closeModal"
-        @add="onDetailsAdd"
-        @edit="onDetailsEdit"
-        @delete="onDetailsDelete"
       />
     </template>
     </div>
@@ -268,8 +302,13 @@ import SectionEditButton from '@/components/invitations/shared/SectionEditButton
 import { useInvitationEditMode } from '@/composables/useInvitationEditMode';
 import AddAgendaItemModal from '@/components/modals/AddAgendaItemModal.vue';
 import AddOurStoryModal from '@/components/modals/AddOurStoryModal.vue';
+import OurStoryUploadModal from '@/components/modals/OurStoryUploadModal.vue';
+import EditOurStoryModal from '@/components/modals/EditOurStoryModal.vue';
 import EditHeroModal from '@/components/modals/EditHeroModal.vue';
 import EditDetailsModal from '@/components/modals/EditDetailsModal.vue';
+import AddEventDetailModal from '@/components/modals/AddEventDetailModal.vue';
+import EditAgendaModal from '@/components/modals/EditAgendaModal.vue';
+import { EventDetailTypeSortOrder } from '@/enums/EventDetailType';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -277,8 +316,9 @@ const router = useRouter();
 const { eventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
 const {
   isEditMode, activeModal, editingItem,
-  openModal, closeModal, refreshCallback, agenda,
+  openModal, closeModal, refreshCallback, agenda, eventDetails, ourStory,
   handleAgendaSave, handleAgendaDelete,
+  handleEventDetailSave, handleEventDetailDelete,
   handleOurStorySave, handleOurStoryDelete,
 } = useInvitationEditMode();
 
@@ -319,7 +359,7 @@ const config = reactive({
   groomName: 'James',
   weddingDate: 'June 15, 2024',
   weddingDateTime: '2024-06-15T16:00:00',
-  subtitle: 'are getting married',
+  subtitle: t('invitation.weAreGettingMarried'),
   venue: 'Sunset Garden Estate',
   location: 'Santa Barbara, California',
   ctaLabel: 'RSVP Now',
@@ -328,13 +368,13 @@ const config = reactive({
 
   ceremonyDate: 'June 15, 2024',
   ceremonyTime: '4:00 PM',
-  ceremonyMapUrl: '#',
+  ceremonyMapUrl: '',
   receptionDate: 'June 15, 2024',
   receptionTime: '6:00 PM',
-  receptionMapUrl: '#',
+  receptionMapUrl: '',
   venueName: 'Sunset Garden Estate',
   venueAddress: 'Santa Barbara, CA',
-  venueMapUrl: '#',
+  venueMapUrl: '',
 
   weddingDetails: [],
 
@@ -408,17 +448,46 @@ refreshCallback.value = refreshAllData;
 
 function onDetailsAdd() {
   closeModal();
-  openModal('agenda');
+  openModal('eventDetail');
 }
 
 function onDetailsEdit(item) {
   closeModal();
-  openModal('agenda', item);
+  openModal('eventDetail', item);
 }
 
 async function onDetailsDelete(id) {
+  await handleEventDetailDelete(id);
+}
+
+function onAgendaAdd() {
+  closeModal();
+  openModal('agendaItem');
+}
+
+function onAgendaEdit(item) {
+  closeModal();
+  openModal('agendaItem', item);
+}
+
+async function onAgendaDelete(id) {
   await handleAgendaDelete(id);
   agenda.loadAgenda();
+}
+
+function onOurStoryAdd() {
+  closeModal();
+  openModal('ourStoryItem');
+}
+
+function onOurStoryEdit(item) {
+  closeModal();
+  openModal('ourStoryItem', item);
+}
+
+async function onOurStoryDelete(id) {
+  await handleOurStoryDelete(id);
+  ourStory.loadStories();
 }
 
 function applyBackendData(data) {
@@ -464,33 +533,38 @@ function applyBackendData(data) {
     }
   }
 
-  // Agenda → dynamic detail cards + timeline
+  // Event Details → dynamic detail cards
+  if (Array.isArray(data.weddingDetails) && data.weddingDetails.length) {
+    const sorted = [...data.weddingDetails].sort(
+      (a, b) => (EventDetailTypeSortOrder[a.type] || 99) - (EventDetailTypeSortOrder[b.type] || 99)
+    );
+
+    config.weddingDetails = sorted.map((d) => ({
+      title: d.description || t('detailTypes.' + d.type) || '',
+      eventDate: d.eventDate || '',
+      time: d.time || '',
+      icon: d.type || null,
+      mapUrl: buildMapUrl(d.location),
+    }));
+  }
+
+  // Agenda → timeline events
   if (Array.isArray(data.agenda) && data.agenda.length) {
     const sorted = [...data.agenda].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
-
-    // Dynamic detail cards from agenda items (PersianWedding uses typeToIcon mapping)
-    config.weddingDetails = sorted.map((a) => ({
-      title: a.title || '',
-      description: [
-        formatTimeRange(a.startTime, a.endTime),
-        buildLocationAddress(a.location) || a.description || '',
-      ].filter(Boolean).join(' — '),
-      icon: a.icon || a.type || null,
-      mapUrl: buildMapUrl(a.location),
-    }));
-
-    // Timeline events
-    config.agendaEvents = sorted.map((a) => ({
-      time: a.startTime || formatTime(a.date),
-      title: a.title || '',
-      subtitle: a.description || '',
-    }));
+    config.agendaEvents = sorted.map((a) => {
+      const typeKey = a.agendaType || a.type || '';
+      return {
+        time: a.time || a.startTime || formatTime(a.date),
+        title: typeKey ? t('agenda.types.' + typeKey) : '',
+        subtitle: a.description || '',
+      };
+    });
   }
 
   // Our Story
   if (Array.isArray(data.ourStory) && data.ourStory.length) {
     config.stories = data.ourStory.map((s) => ({
-      title: localized(s.titleI18n, s.title),
+      title: s.type ? t('storyTypes.' + s.type) : localized(s.titleI18n, s.title),
       text: localized(s.descriptionI18n, s.description),
     }));
     const imgSources = Array.isArray(data.ourStoryImages) && data.ourStoryImages.length
@@ -505,7 +579,12 @@ function applyBackendData(data) {
   }
 
   // RSVP deadline
-  if (ev.rsvpDeadline) config.rsvpDeadline = formatDate(ev.rsvpDeadline);
+  if (ev.rsvpDeadline) {
+    config.rsvpDeadline = formatDate(ev.rsvpDeadline);
+  } else if (ev.date) {
+    const d = new Date(ev.date); d.setDate(d.getDate() - 14);
+    config.rsvpDeadline = formatDate(d.toISOString());
+  }
 }
 
 async function loadGalleryImages() {
@@ -547,7 +626,9 @@ onMounted(() => {
 
   refreshAllData();
   if (isEditMode.value) {
+    eventDetails.loadEventDetails();
     agenda.loadAgenda();
+    ourStory.loadStories();
   }
 });
 
@@ -656,6 +737,11 @@ async function onRsvpSubmit(payload) {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
+}
+
+/* Bold text in detail cards */
+:deep(.bold) {
+  font-weight: 700;
 }
 
 /* SVG icons in detail cards */

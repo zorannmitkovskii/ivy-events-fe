@@ -292,6 +292,9 @@
     "forgot": {
       "title": "Ја заборавивте лозинката?",
       "subtitle": "Внесете емаил адреса и ќе ви испратиме линк за ресетирање.",
+      "sentSubtitle": "Проверете го вашето сандаче за линк за ресетирање.",
+      "sentMessage": "Ако постои профил со таа емаил адреса, испративме линк за ресетирање на лозинката. Проверете го сандачето и спам фолдерот.",
+      "error": "Нешто тргна наопаку. Обидете се повторно.",
       "cta": "Испрати линк за ресет",
       "backToLogin": "Назад на најава"
     },
@@ -784,6 +787,13 @@
       "removeImage": "Отстрани слика"
     }
   },
+  "detailTypes": {
+    "REGISTRATION": "Регистрација",
+    "RECEPTION": "Прием",
+    "CHURCH": "Црква",
+    "LOCATION": "Локација",
+    "COUNTDOWN": "Одбројување"
+  },
   "weddingDetails": {
     "title": "Детали за свадбата",
     "subtitle": "Додадете детали како церемонија, прием, облека и друго",
@@ -794,23 +804,21 @@
     "createTitle": "Додади детал",
     "editTitle": "Уреди детал",
     "fields": {
-      "title": "Наслов",
-      "titlePh": "пр. Церемонија",
-      "description": "Опис",
-      "descriptionPh": "пр. Придружете ни се во црквата Св. Климент во 16:00",
-      "icon": "Икона",
-      "displayOrder": "Редослед",
+      "type": "Тип",
+      "typePh": "Изберете тип",
+      "date": "Датум",
+      "time": "Време",
       "location": "Локација",
       "locationPh": "Пребарај место или адреса",
       "pickOnMap": "Избери на мапа",
       "useThisLocation": "Користи ја оваа локација",
       "searchPlaces": "Пребарај места",
       "locateMe": "Лоцирај ме",
-      "locating": "Се лоцира…"
+      "locating": "Се лоцира\u2026"
     },
     "showOnMap": "Прикажи на мапа",
     "errors": {
-      "titleRequired": "Насловот е задолжителен"
+      "typeRequired": "Типот е задолжителен"
     },
     "heroImage": "Главна слика",
     "heroImageDesc": "Оваа слика се прикажува на врвот на вашата покана",
@@ -848,7 +856,9 @@
       "reviews": "Рецензии",
       "contacts": "Контакти",
       "faq": "ЧПП",
-      "invitationTemplates": "Покани"
+      "invitationTemplates": "Покани",
+      "emailTemplates": "Емаил шаблони",
+      "emailSend": "Испрати емаили"
     },
     "reviews": {
       "title": "Рецензии",
@@ -926,11 +936,75 @@
       "thActive": "Статус",
       "thActions": "Акции",
       "active": "Активно"
+    },
+    "emailTemplates": {
+      "title": "Емаил шаблони",
+      "subtitle": "Управувајте со емаил шаблони за маркетинг кампањи",
+      "searchPh": "Пребарувај шаблони...",
+      "loading": "Вчитување шаблони...",
+      "empty": "Нема пронајдени емаил шаблони",
+      "addBtn": "Додај шаблон",
+      "createTitle": "Креирај емаил шаблон",
+      "editTitle": "Уреди емаил шаблон",
+      "name": "Име",
+      "subject": "Тема",
+      "description": "Опис",
+      "htmlFile": "HTML датотека",
+      "htmlContent": "HTML содржина",
+      "uploadHint": "Прикачете .html датотека за телото на емаилот",
+      "replaceFile": "Замени HTML датотека",
+      "thName": "Име",
+      "thSubject": "Тема",
+      "thDescription": "Опис",
+      "thCreatedAt": "Креирано",
+      "thActions": "Акции",
+      "deleteConfirm": "Избриши \"{name}\"?",
+      "previewTitle": "Преглед на емаил"
+    },
+    "emailSend": {
+      "title": "Испрати емаили",
+      "subtitle": "Изберете примачи и испратете маркетинг емаили",
+      "searchPh": "Пребарувај по емаил...",
+      "allSources": "Сите извори",
+      "sourceLegacy": "Стари",
+      "sourceContact": "Контакт",
+      "loading": "Вчитување примачи...",
+      "empty": "Нема пронајдени примачи",
+      "thEmail": "Емаил",
+      "thDiscountCode": "Код за попуст",
+      "thSource": "Извор",
+      "selectAll": "Избери сите",
+      "selectedCount": "{count} избрани",
+      "templateLabel": "Емаил шаблон",
+      "templatePlaceholder": "Изберете шаблон...",
+      "subject": "Тема",
+      "subjectPh": "Тема на е-пошта",
+      "sendBtn": "Испрати емаили",
+      "sending": "Се испраќа...",
+      "resultTitle": "Резултати од испраќање",
+      "totalRequested": "Вкупно побарани",
+      "successCount": "Успешни",
+      "failedCount": "Неуспешни",
+      "failedEmails": "Неуспешни емаили",
+      "noSelection": "Изберете барем еден примач",
+      "noTemplate": "Изберете емаил шаблон",
+      "sendConfirm": "Испрати емаил до {count} примач(и)?",
+      "sendFollowUpBtn": "Испрати Follow-up Демо",
+      "ctaLink": "CTA Линк",
+      "ctaLinkPh": "https://calendly.com/your-link",
+      "ctaLabel": "CTA Текст",
+      "ctaLabelPh": "пр. Закажи презентација",
+      "senderName": "Име на испраќач",
+      "senderNamePh": "пр. Марко",
+      "senderContact": "Контакт на испраќач",
+      "senderContactPh": "пр. 070123456 / {'@'}ivyevents"
     }
   },
   "common": {
+    "edit": "Уреди",
     "delete": "Избриши",
     "cancel": "Откажи",
+    "close": "Затвори",
     "save": "Зачувај",
     "saveChanges": "Зачувај промени",
     "viewAll": "Прегледај ги сите",
@@ -1451,12 +1525,41 @@
     "uploading": "Се прикачува...",
     "brideName": "Име на невестата",
     "groomName": "Име на младоженецот",
-    "weddingDate": "Датум на свадба"
+    "weddingDate": "Датум на свадба",
+    "location": "Локација",
+    "locationPh": "Пребарај место или адреса",
+    "changeLocation": "Промени локација"
   },
   "editDetails": {
     "title": "Детали за настанот",
     "empty": "Нема детали",
     "addItem": "Додади"
+  },
+  "editAgenda": {
+    "title": "Ставки на агенда",
+    "empty": "Нема ставки на агенда",
+    "addItem": "Додади"
+  },
+  "editOurStory": {
+    "title": "Нашата приказна",
+    "empty": "Нема ставки",
+    "addItem": "Додади приказна"
+  },
+  "eventDetail": {
+    "addTitle": "Додади детал за настан",
+    "editTitle": "Уреди детал за настан",
+    "form": {
+      "type": "Тип",
+      "eventDate": "Датум",
+      "time": "Време",
+      "description": "Опис",
+      "descriptionPh": "пр. Церемонија во градина на отворено",
+      "location": "Локација",
+      "locationPh": "Пребарај место или адреса..."
+    },
+    "errors": {
+      "typeRequired": "Типот е задолжителен"
+    }
   },
   "editSection": {
     "collage": "Уреди колаж",

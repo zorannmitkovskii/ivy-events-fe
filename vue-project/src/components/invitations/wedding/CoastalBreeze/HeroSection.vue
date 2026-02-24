@@ -164,8 +164,9 @@ function scrollToRsvp() {
 }
 
 .map-link {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
   font-family: var(--h-body-font);
   font-size: 13px;
@@ -185,7 +186,7 @@ function scrollToRsvp() {
 }
 
 .hero-cta {
-  display: inline-block;
+  display: block;
   padding: 16px 40px;
   background: var(--h-accent);
   color: #374151;

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Темплејт 1 — Follow-up на луѓе од саемот</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand-main: #5B7B6A;
+    --brand-light: #8AAE97;
+    --brand-dark: #3D5A4C;
+    --secondary-sage: #A8C5B8;
+    --secondary-salmon: #D4937A;
+    --secondary-moss: #6B8F5B;
+    --neutral-900: #1A1A1A;
+    --neutral-700: #444444;
+    --neutral-500: #777777;
+    --neutral-300: #BBBBBB;
+    --neutral-100: #F2F2F2;
+    --bg-white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito Sans', sans-serif;
+    background: linear-gradient(145deg, #f7faf8 0%, #eef4f0 50%, #f5f0ec 100%);
+    min-height: 100vh;
+    padding: 40px 20px;
+    color: var(--neutral-700);
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .badge {
+    display: inline-block;
+    background: var(--brand-main);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--brand-dark);
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    color: var(--neutral-500);
+    font-size: 14px;
+    margin-bottom: 32px;
+    font-style: italic;
+  }
+
+  .email-card {
+    background: var(--bg-white);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(61, 90, 76, 0.08), 0 1px 4px rgba(0,0,0,0.04);
+    overflow: hidden;
+  }
+
+  .email-header {
+    background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-main) 100%);
+    padding: 20px 28px;
+    color: white;
+  }
+
+  .email-header label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    opacity: 0.7;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .email-header .subject {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .placeholder {
+    color: var(--secondary-salmon);
+    font-style: italic;
+    font-weight: 600;
+    background: rgba(212, 147, 122, 0.1);
+    padding: 1px 6px;
+    border-radius: 4px;
+    border-bottom: 2px dashed var(--secondary-salmon);
+  }
+
+  .email-header .placeholder {
+    color: #ffd4c4;
+    background: rgba(255,255,255,0.1);
+    border-bottom-color: #ffd4c4;
+  }
+
+  .email-body {
+    padding: 28px;
+    line-height: 1.75;
+    font-size: 15px;
+  }
+
+  .email-body p { margin-bottom: 16px; }
+
+  .feature-list {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #f7faf8 0%, #f5f0ec 100%);
+    border-radius: 10px;
+    border-left: 3px solid var(--brand-light);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .feature-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(61, 90, 76, 0.1);
+  }
+
+  .feature-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+
+  .feature-name {
+    font-weight: 600;
+    color: var(--brand-dark);
+    display: block;
+    font-size: 14px;
+  }
+
+  .feature-desc {
+    color: var(--neutral-500);
+    font-size: 13px;
+  }
+
+  .cta-block {
+    margin: 24px 0 16px;
+    padding: 16px 20px;
+    background: var(--brand-dark);
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+  }
+
+  .cta-block .label {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-bottom: 4px;
+  }
+
+  .cta-block .link-placeholder {
+    color: #A8C5B8;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  .sign-off {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--neutral-100);
+    color: var(--neutral-500);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .copy-btn {
+    display: block;
+    margin: 24px auto 0;
+    padding: 12px 32px;
+    background: var(--brand-main);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .copy-btn:hover { background: var(--brand-dark); transform: translateY(-1px); }
+  .copy-btn:active { transform: translateY(0); }
+
+  .tip {
+    margin-top: 24px;
+    padding: 14px 18px;
+    background: rgba(168, 197, 184, 0.15);
+    border-radius: 10px;
+    font-size: 13px;
+    color: var(--neutral-500);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="badge">Темплејт 1</div>
+  <h1>Follow-up на луѓе од саемот</h1>
+  <p class="subtitle">За парови кои ви оставија mail и сакаат да видат live презентација. Испратете во рок од 24-48 часа.</p>
+
+  <div class="email-card">
+    <div class="email-header">
+      <label>Subject</label>
+      <div class="subject"><span class="placeholder">[Име]</span>, закажете ја вашата бесплатна live презентација ❤️</div>
+    </div>
+
+    <div class="email-body">
+      <p>Здраво <span class="placeholder">[Име]</span>,</p>
+
+      <p>Ви благодариме што не посетивте на саемот за венчавки! Ни беше задоволство да разговараме со вас за вашиот посебен ден.</p>
+
+      <p>Како што ветивме, ви пишуваме за да закажеме кратка live видео презентација каде ќе ви покажеме како работи нашата платформа:</p>
+
+      <p>Најдобриот начин да видите како сето ова работи е преку кратка live видео презентација каде ќе ви покажеме како точно би изгледала вашата венчавка на нашата платформа.</p>
+
+      <div class="cta-block">
+        <div class="label">📅 Закажете бесплатна live презентација:</div>
+        <div class="link-placeholder">[link za zakazuvanje / telefonski broj]</div>
+      </div>
+
+      <p>Презентацијата трае околу 30 минути и ќе можете да поставитsе сите прашања во живо. Се радуваме на можноста да бидеме дел од вашиот посебен ден!</p>
+
+      <div class="sign-off">
+        Со почит,<br>
+        <span class="placeholder">[Ваше Име]</span><br>
+        <span class="placeholder">[Име на платформа]</span><br>
+        <span class="placeholder">[Телефон / Instagram / Website]</span>
+      </div>
+    </div>
+  </div>
+
+  <button class="copy-btn" onclick="copyEmail()">📋 Копирај го текстот</button>
+
+  <div class="tip">💡 Совет: Вклучете скриншот или GIF од платформата во маилот — визуелно продава најдобро.</div>
+</div>
+
+<script>
+function copyEmail() {
+  const body = document.querySelector('.email-body');
+  const range = document.createRange();
+  range.selectNodeContents(body);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  document.execCommand('copy');
+  sel.removeAllRanges();
+  const btn = document.querySelector('.copy-btn');
+  btn.textContent = '✅ Копирано!';
+  setTimeout(() => btn.textContent = '📋 Копирај го текстот', 2000);
+}
+</script>
+</body>
+</html>

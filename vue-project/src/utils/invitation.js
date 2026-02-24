@@ -9,7 +9,7 @@
  */
 export function buildLocationAddress(loc) {
   if (!loc) return '';
-  return [loc.name, loc.addressLine, loc.city].filter(Boolean).join('<br>');
+  return [loc.name || loc.venueName, loc.addressLine || loc.address, loc.city].filter(Boolean).join('<br>');
 }
 
 /**
@@ -18,7 +18,7 @@ export function buildLocationAddress(loc) {
  */
 export function buildMapUrl(loc) {
   if (!loc) return '';
-  if (loc.googleMapsUrl) return loc.googleMapsUrl;
+  if (loc.googleMapsUrl || loc.mapUrl) return loc.googleMapsUrl || loc.mapUrl;
   if (loc.latitude != null && loc.longitude != null) {
     return `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`;
   }

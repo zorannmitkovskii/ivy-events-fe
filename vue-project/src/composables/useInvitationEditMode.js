@@ -3,6 +3,7 @@ import { useRoute } from "vue-router";
 import { isAuthenticated } from "@/services/auth.service";
 import { onboardingStore, setEventId } from "@/store/onboarding.store";
 import { useAgenda } from "@/composables/useAgenda";
+import { useEventDetails } from "@/composables/useEventDetails";
 import { useOurStory } from "@/composables/useOurStory";
 
 export function useInvitationEditMode() {
@@ -39,6 +40,25 @@ export function useInvitationEditMode() {
     if (typeof refreshCallback.value === "function") {
       await refreshCallback.value();
     }
+  }
+
+  // ---- Event Details handlers ----
+  const eventDetails = useEventDetails();
+
+  async function handleEventDetailSave(payload) {
+    if (payload.id) {
+      await eventDetails.updateItem(payload.id, payload);
+    } else {
+      await eventDetails.createItem(payload);
+    }
+    closeModal();
+    await refresh();
+  }
+
+  async function handleEventDetailDelete(id) {
+    await eventDetails.deleteItem(id);
+    closeModal();
+    await refresh();
   }
 
   // ---- Agenda handlers ----
@@ -86,8 +106,11 @@ export function useInvitationEditMode() {
     openModal,
     closeModal,
     refreshCallback,
+    eventDetails,
     agenda,
     ourStory,
+    handleEventDetailSave,
+    handleEventDetailDelete,
     handleAgendaSave,
     handleAgendaDelete,
     handleOurStorySave,

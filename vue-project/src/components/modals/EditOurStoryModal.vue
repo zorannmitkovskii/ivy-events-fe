@@ -1,10 +1,10 @@
 <template>
-  <BaseModal :open="open" :title="t('editDetails.title')" @close="emit('close')">
+  <BaseModal :open="open" :title="t('editOurStory.title')" @close="emit('close')">
     <div class="items-list" v-if="items.length">
       <div v-for="item in items" :key="item.id" class="item-row">
         <div class="item-info">
-          <span class="item-type">{{ t(`detailTypes.${item.type}`) }}</span>
-          <span class="item-time">{{ item.time || '' }}</span>
+          <span class="item-type">{{ item.type ? t(`storyTypes.${item.type}`) : (item.title || '') }}</span>
+          <span class="item-desc">{{ item.description || '' }}</span>
         </div>
         <div class="item-actions">
           <button class="icon-btn" type="button" @click="onEdit(item)">
@@ -20,14 +20,14 @@
         </div>
       </div>
     </div>
-    <p v-else class="empty-msg">{{ t('editDetails.empty') }}</p>
+    <p v-else class="empty-msg">{{ t('editOurStory.empty') }}</p>
 
     <template #footer>
       <ButtonMain variant="outline" type="button" @click="emit('close')">
         {{ t('common.close') }}
       </ButtonMain>
       <ButtonMain variant="main" type="button" @click="emit('add')">
-        {{ t('editDetails.addItem') }}
+        {{ t('editOurStory.addItem') }}
       </ButtonMain>
     </template>
   </BaseModal>
@@ -73,6 +73,8 @@ function onEdit(item) {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
+  flex: 1;
 }
 
 .item-type {
@@ -81,14 +83,19 @@ function onEdit(item) {
   color: var(--brand-main, #1f2937);
 }
 
-.item-time {
+.item-desc {
   font-size: 12px;
   color: var(--neutral-500, #6b7280);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .item-actions {
   display: flex;
   gap: 6px;
+  flex-shrink: 0;
+  margin-left: 8px;
 }
 
 .icon-btn {

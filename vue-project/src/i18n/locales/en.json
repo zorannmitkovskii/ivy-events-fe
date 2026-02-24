@@ -291,6 +291,9 @@
     "forgot": {
       "title": "Forgot your password?",
       "subtitle": "Enter your email address and we’ll send you a reset link.",
+      "sentSubtitle": "Check your inbox for a reset link.",
+      "sentMessage": "If an account exists with that email, we’ve sent a password reset link. Please check your inbox and spam folder.",
+      "error": "Something went wrong. Please try again.",
       "cta": "Send reset link",
       "backToLogin": "Back to login"
     },
@@ -748,6 +751,13 @@
       "removeImage": "Remove Image"
     }
   },
+  "detailTypes": {
+    "REGISTRATION": "Registration",
+    "RECEPTION": "Reception",
+    "CHURCH": "Church",
+    "LOCATION": "Location",
+    "COUNTDOWN": "Countdown"
+  },
   "weddingDetails": {
     "title": "Wedding Details",
     "subtitle": "Add details like ceremony, reception, dress code and more",
@@ -758,23 +768,21 @@
     "createTitle": "Add Detail",
     "editTitle": "Edit Detail",
     "fields": {
-      "title": "Title",
-      "titlePh": "e.g. Ceremony",
-      "description": "Description",
-      "descriptionPh": "e.g. Join us at St. Clement Church at 4 PM",
-      "icon": "Icon",
-      "displayOrder": "Order",
+      "type": "Type",
+      "typePh": "Select a type",
+      "date": "Date",
+      "time": "Time",
       "location": "Location",
       "locationPh": "Search for a venue or address",
       "pickOnMap": "Pick on map",
       "useThisLocation": "Use this location",
       "searchPlaces": "Search places",
       "locateMe": "Locate me",
-      "locating": "Locating…"
+      "locating": "Locating\u2026"
     },
     "showOnMap": "Show on Map",
     "errors": {
-      "titleRequired": "Title is required"
+      "typeRequired": "Type is required"
     },
     "heroImage": "Hero Image",
     "heroImageDesc": "This image appears at the top of your invitation",
@@ -812,7 +820,9 @@
       "reviews": "Reviews",
       "contacts": "Contacts",
       "faq": "FAQ",
-      "invitationTemplates": "Invitations"
+      "invitationTemplates": "Invitations",
+      "emailTemplates": "Email Templates",
+      "emailSend": "Send Emails"
     },
     "reviews": {
       "title": "Reviews",
@@ -890,6 +900,68 @@
       "thActive": "Status",
       "thActions": "Actions",
       "active": "Active"
+    },
+    "emailTemplates": {
+      "title": "Email Templates",
+      "subtitle": "Manage email templates for marketing campaigns",
+      "searchPh": "Search templates...",
+      "loading": "Loading templates...",
+      "empty": "No email templates found",
+      "addBtn": "Add Template",
+      "createTitle": "Create Email Template",
+      "editTitle": "Edit Email Template",
+      "name": "Name",
+      "subject": "Subject",
+      "description": "Description",
+      "htmlFile": "HTML File",
+      "htmlContent": "HTML Content",
+      "uploadHint": "Upload an .html file for the email body",
+      "replaceFile": "Replace HTML File",
+      "thName": "Name",
+      "thSubject": "Subject",
+      "thDescription": "Description",
+      "thCreatedAt": "Created At",
+      "thActions": "Actions",
+      "deleteConfirm": "Delete \"{name}\"?",
+      "previewTitle": "Email Preview"
+    },
+    "emailSend": {
+      "title": "Send Emails",
+      "subtitle": "Select recipients and send marketing emails",
+      "searchPh": "Search by email...",
+      "allSources": "All Sources",
+      "sourceLegacy": "Legacy",
+      "sourceContact": "Contact",
+      "loading": "Loading recipients...",
+      "empty": "No recipients found",
+      "thEmail": "Email",
+      "thDiscountCode": "Discount Code",
+      "thSource": "Source",
+      "selectAll": "Select All",
+      "selectedCount": "{count} selected",
+      "templateLabel": "Email Template",
+      "templatePlaceholder": "Select a template...",
+      "subject": "Subject",
+      "subjectPh": "Email subject line",
+      "sendBtn": "Send Emails",
+      "sending": "Sending...",
+      "resultTitle": "Send Results",
+      "totalRequested": "Total Requested",
+      "successCount": "Successful",
+      "failedCount": "Failed",
+      "failedEmails": "Failed Emails",
+      "noSelection": "Please select at least one recipient",
+      "noTemplate": "Please select an email template",
+      "sendConfirm": "Send email to {count} recipient(s)?",
+      "sendFollowUpBtn": "Send Follow-up Demo",
+      "ctaLink": "CTA Link",
+      "ctaLinkPh": "https://calendly.com/your-link",
+      "ctaLabel": "CTA Label",
+      "ctaLabelPh": "e.g. Book a presentation",
+      "senderName": "Sender Name",
+      "senderNamePh": "e.g. Marko",
+      "senderContact": "Sender Contact",
+      "senderContactPh": "e.g. 070123456 / {'@'}ivyevents"
     }
   },
   "overview": {
@@ -928,8 +1000,10 @@
     "viewTimeline": "View Timeline"
   },
   "common": {
+    "edit": "Edit",
     "delete": "Delete",
     "cancel": "Cancel",
+    "close": "Close",
     "save": "Save",
     "saveChanges": "Save Changes",
     "viewAll": "View All",
@@ -1451,12 +1525,41 @@
     "uploading": "Uploading...",
     "brideName": "Bride Name",
     "groomName": "Groom Name",
-    "weddingDate": "Wedding Date"
+    "weddingDate": "Wedding Date",
+    "location": "Location",
+    "locationPh": "Search for a venue or address",
+    "changeLocation": "Change location"
   },
   "editDetails": {
     "title": "Event Details",
     "empty": "No detail items yet",
     "addItem": "Add Item"
+  },
+  "editAgenda": {
+    "title": "Agenda Items",
+    "empty": "No agenda items yet",
+    "addItem": "Add Item"
+  },
+  "editOurStory": {
+    "title": "Our Story",
+    "empty": "No story items yet",
+    "addItem": "Add Story"
+  },
+  "eventDetail": {
+    "addTitle": "Add Event Detail",
+    "editTitle": "Edit Event Detail",
+    "form": {
+      "type": "Type",
+      "eventDate": "Date",
+      "time": "Time",
+      "description": "Description",
+      "descriptionPh": "e.g. Garden ceremony with outdoor seating",
+      "location": "Location",
+      "locationPh": "Search for a venue or address..."
+    },
+    "errors": {
+      "typeRequired": "Type is required"
+    }
   },
   "editSection": {
     "collage": "Edit Collage",
