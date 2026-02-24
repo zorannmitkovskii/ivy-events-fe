@@ -155,9 +155,8 @@ function scrollToRsvp() {
 }
 
 .map-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
+  display: block;
+  text-align: center;
   font-family: var(--font-body, 'Lato', sans-serif);
   font-size: 13px;
   font-weight: 600;
@@ -172,7 +171,7 @@ function scrollToRsvp() {
 }
 
 .cta-btn {
-  display: inline-block;
+  display: block;
   color: #fff;
   font-family: var(--font-body, 'Lato', sans-serif);
   font-size: 14px;

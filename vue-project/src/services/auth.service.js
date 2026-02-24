@@ -159,6 +159,12 @@ export async function refreshAccessToken() {
   return data;
 }
 
+// Request password reset link
+export async function requestPasswordReset(email) {
+  const res = await apiPublic.post("/public/password-reset/request", { email });
+  return res?.data || res;
+}
+
 // Exchange Keycloak authorization code for tokens (Google OAuth callback)
 export async function exchangeOAuthCode(code, redirectUri) {
   const env = getRuntimeEnv();

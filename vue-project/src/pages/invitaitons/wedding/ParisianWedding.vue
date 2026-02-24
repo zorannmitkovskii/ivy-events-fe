@@ -41,9 +41,9 @@
                 <path d="M10 12h4" />
               </svg>
             </div>
-            <h3 class="card-title">{{ t('invitation.theCeremony') }}</h3>
-            <p class="card-time">{{ config.ceremonyTime }}</p>
-            <p class="card-address" v-html="config.ceremonyAddress"></p>
+            <h3 class="card-title">{{ config.ceremonyVenue || t('invitation.theCeremony') }}</h3>
+            <p v-if="config.ceremonyDate" class="card-time bold">{{ config.ceremonyDate }}</p>
+            <p v-if="config.ceremonyTime" class="card-time">{{ config.ceremonyTime }}</p>
             <a v-if="config.ceremonyMapUrl" :href="config.ceremonyMapUrl" target="_blank" rel="noopener" class="card-map-link">{{ t('invitation.viewMap') }}</a>
           </div>
 
@@ -58,9 +58,9 @@
                 <path d="M12 10V2" />
               </svg>
             </div>
-            <h3 class="card-title">{{ t('invitation.theReception') }}</h3>
-            <p class="card-time">{{ config.receptionTime }}</p>
-            <p class="card-address" v-html="config.receptionAddress"></p>
+            <h3 class="card-title">{{ config.receptionVenue || t('invitation.theReception') }}</h3>
+            <p v-if="config.receptionDate" class="card-time bold">{{ config.receptionDate }}</p>
+            <p v-if="config.receptionTime" class="card-time">{{ config.receptionTime }}</p>
             <a v-if="config.receptionMapUrl" :href="config.receptionMapUrl" target="_blank" rel="noopener" class="card-map-link">{{ t('invitation.viewMap') }}</a>
           </div>
 
@@ -85,10 +85,11 @@
 
     <!-- Our Story -->
     <section v-if="showOurStory" class="section section--white" data-reveal style="position:relative;">
-      <SectionEditButton :visible="isEditMode" :label="t('editSection.ourStory')" @click="openModal('ourStory')" />
+      <SectionEditButton :visible="isEditMode" :label="t('editSection.ourStory')" @click="openModal('ourStoryList')" />
+      <SectionEditButton :visible="isEditMode" :label="t('ourStory.images.upload')" @click="openModal('ourStoryImages')" style="right: 180px;" />
       <div class="section-inner">
         <OurStorySection
-          :title="config.storyTitle"
+          :title="t('invitation.ourStory')"
           :paragraphs="config.storyParagraphs"
           :image-url="config.storyImageUrl"
           :signature-url="config.signatureUrl"
@@ -101,10 +102,10 @@
 
     <!-- Agenda Timeline -->
     <section v-if="showAgenda && !isPrivate" class="section section--champagne" data-reveal style="position:relative;">
-      <SectionEditButton :visible="isEditMode" :label="t('editSection.agenda')" @click="openModal('agenda')" />
+      <SectionEditButton :visible="isEditMode" :label="t('editSection.agenda')" @click="openModal('agendaList')" />
       <div class="section-inner">
         <AgendaTimeline
-          :title="config.agendaTitle"
+          :title="t('invitation.theAgenda')"
           :events="config.agendaEvents"
           :line-color="palette.champagne300"
           :badge-bg="palette.champagne100"
@@ -169,33 +170,65 @@
 
     <!-- Edit Mode Modals -->
     <template v-if="isEditMode">
-      <AddAgendaItemModal
-        :open="activeModal === 'agenda'"
+      <EditDetailsModal
+        :open="activeModal === 'details'"
+        :items="eventDetails.items.value"
+        @close="closeModal"
+        @add="onDetailsAdd"
+        @edit="onDetailsEdit"
+        @delete="onDetailsDelete"
+      />
+      <AddEventDetailModal
+        :open="activeModal === 'eventDetail'"
         :item="editingItem"
+        :items="eventDetails.items.value"
+        @close="closeModal"
+        @submit="handleEventDetailSave"
+        @delete="handleEventDetailDelete"
+      />
+      <EditAgendaModal
+        :open="activeModal === 'agendaList'"
+        :items="agenda.items.value"
+        @close="closeModal"
+        @add="onAgendaAdd"
+        @edit="onAgendaEdit"
+        @delete="onAgendaDelete"
+      />
+      <AddAgendaItemModal
+        :open="activeModal === 'agendaItem'"
+        :item="editingItem"
+        :items="agenda.items.value"
         @close="closeModal"
         @submit="handleAgendaSave"
         @delete="handleAgendaDelete"
       />
+      <EditOurStoryModal
+        :open="activeModal === 'ourStoryList'"
+        :items="ourStory.items.value"
+        @close="closeModal"
+        @add="onOurStoryAdd"
+        @edit="onOurStoryEdit"
+        @delete="onOurStoryDelete"
+      />
       <AddOurStoryModal
-        :open="activeModal === 'ourStory'"
+        :open="activeModal === 'ourStoryItem'"
         :item="editingItem"
+        :items="ourStory.items.value"
         @close="closeModal"
         @submit="handleOurStorySave"
         @delete="handleOurStoryDelete"
+      />
+      <OurStoryUploadModal
+        :open="activeModal === 'ourStoryImages'"
+        :images="ourStory.images.value"
+        @close="closeModal"
+        @uploaded="refreshAllData"
       />
       <EditHeroModal
         :open="activeModal === 'hero'"
         :event="backendData?.event"
         @close="closeModal"
         @updated="refreshAllData"
-      />
-      <EditDetailsModal
-        :open="activeModal === 'details'"
-        :items="agenda.items.value"
-        @close="closeModal"
-        @add="onDetailsAdd"
-        @edit="onDetailsEdit"
-        @delete="onDetailsDelete"
       />
     </template>
 
@@ -221,8 +254,13 @@ import SectionEditButton from '@/components/invitations/shared/SectionEditButton
 import { useInvitationEditMode } from '@/composables/useInvitationEditMode';
 import AddAgendaItemModal from '@/components/modals/AddAgendaItemModal.vue';
 import AddOurStoryModal from '@/components/modals/AddOurStoryModal.vue';
+import OurStoryUploadModal from '@/components/modals/OurStoryUploadModal.vue';
+import EditOurStoryModal from '@/components/modals/EditOurStoryModal.vue';
 import EditHeroModal from '@/components/modals/EditHeroModal.vue';
 import EditDetailsModal from '@/components/modals/EditDetailsModal.vue';
+import AddEventDetailModal from '@/components/modals/AddEventDetailModal.vue';
+import EditAgendaModal from '@/components/modals/EditAgendaModal.vue';
+import { EventDetailTypeSortOrder } from '@/enums/EventDetailType';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -231,8 +269,9 @@ const { eventId, loading, localized, formatDate, formatTime, fetchData } = useIn
 
 const {
   isEditMode, activeModal, editingItem,
-  openModal, closeModal, refreshCallback, agenda,
+  openModal, closeModal, refreshCallback, agenda, eventDetails, ourStory,
   handleAgendaSave, handleAgendaDelete,
+  handleEventDetailSave, handleEventDetailDelete,
   handleOurStorySave, handleOurStoryDelete,
 } = useInvitationEditMode();
 
@@ -268,18 +307,20 @@ const config = reactive({
   groomName: 'Alexandre',
   weddingDate: 'June 24th, 2024',
   weddingDateTime: '2024-06-24T15:00:00',
-  inviteText: 'You are invited to the wedding of',
+  inviteText: t('invitation.youAreInvited'),
   location: 'Paris, France',
   heroMapUrl: '',
   ctaLabel: 'RSVP',
   heroPhotoUrl: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=2070&q=80',
 
+  ceremonyVenue: '',
+  ceremonyDate: '',
   ceremonyTime: '3:00 PM',
-  ceremonyAddress: 'Saint-&Eacute;tienne-du-Mont<br>Place Sainte-Genevi&egrave;ve<br>75005 Paris',
-  ceremonyMapUrl: '#',
+  ceremonyMapUrl: '',
+  receptionVenue: '',
+  receptionDate: '',
   receptionTime: '6:00 PM',
-  receptionAddress: 'Le Pavillon des Canaux<br>39 Quai de la Loire<br>75019 Paris',
-  receptionMapUrl: '#',
+  receptionMapUrl: '',
 
   storyTitle: 'Our Story',
   storyParagraphs: [
@@ -328,35 +369,41 @@ function applyBackendData(data) {
     if (mapUrl) config.heroMapUrl = mapUrl;
   }
 
-  // Agenda → ceremony/reception cards + timeline
-  if (Array.isArray(data.agenda) && data.agenda.length) {
-    const sorted = [...data.agenda].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+  // Event Details → ceremony/reception cards
+  if (Array.isArray(data.weddingDetails) && data.weddingDetails.length) {
+    const sorted = [...data.weddingDetails].sort(
+      (a, b) => (EventDetailTypeSortOrder[a.type] || 99) - (EventDetailTypeSortOrder[b.type] || 99)
+    );
 
-    // Populate ceremony & reception cards from agenda items by type
-    const ceremonyTypes = ['CEREMONY', 'CHURCH'];
-    const ceremonyItem = sorted.find((a) => ceremonyTypes.includes(a.type));
-    if (ceremonyItem) {
-      config.ceremonyTime = formatTimeRange(ceremonyItem.startTime, ceremonyItem.endTime);
-      config.ceremonyAddress = buildLocationAddress(ceremonyItem.location)
-        || ceremonyItem.description || '';
-      config.ceremonyMapUrl = buildMapUrl(ceremonyItem.location);
+    const churchItem = sorted.find(d => d.type === 'CHURCH' || d.type === 'REGISTRATION');
+    if (churchItem) {
+      config.ceremonyVenue = churchItem.description || '';
+      config.ceremonyDate = churchItem.eventDate || '';
+      config.ceremonyTime = churchItem.time || '';
+      config.ceremonyMapUrl = buildMapUrl(churchItem.location);
     }
 
-    const receptionItem = sorted.find((a) => a.type === 'RECEPTION');
+    const receptionItem = sorted.find(d => d.type === 'RECEPTION');
     if (receptionItem) {
-      config.receptionTime = formatTimeRange(receptionItem.startTime, receptionItem.endTime);
-      config.receptionAddress = buildLocationAddress(receptionItem.location)
-        || receptionItem.description || '';
+      config.receptionVenue = receptionItem.description || '';
+      config.receptionDate = receptionItem.eventDate || '';
+      config.receptionTime = receptionItem.time || '';
       config.receptionMapUrl = buildMapUrl(receptionItem.location);
     }
+  }
 
-    // Agenda timeline (ParisianWedding uses venue field from location name or description)
-    config.agendaEvents = sorted.map((a) => ({
-      time: a.startTime || '',
-      title: a.title || '',
-      venue: a.location?.name || a.description || '',
-      description: a.description || '',
-    }));
+  // Agenda → timeline
+  if (Array.isArray(data.agenda) && data.agenda.length) {
+    const sorted = [...data.agenda].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+    config.agendaEvents = sorted.map((a) => {
+      const typeKey = a.agendaType || a.type || '';
+      return {
+        time: a.time || a.startTime || '',
+        title: typeKey ? t('agenda.types.' + typeKey) : '',
+        venue: a.location?.name || a.description || '',
+        description: a.description || '',
+      };
+    });
   }
 
   // Our Story → paragraphs
@@ -372,7 +419,12 @@ function applyBackendData(data) {
     }
   }
 
-  if (ev.rsvpDeadline) config.rsvpDeadline = formatDate(ev.rsvpDeadline);
+  if (ev.rsvpDeadline) {
+    config.rsvpDeadline = formatDate(ev.rsvpDeadline);
+  } else if (ev.date) {
+    const d = new Date(ev.date); d.setDate(d.getDate() - 14);
+    config.rsvpDeadline = formatDate(d.toISOString());
+  }
 }
 
 async function loadGalleryImages() {
@@ -412,17 +464,46 @@ refreshCallback.value = refreshAllData;
 
 function onDetailsAdd() {
   closeModal();
-  openModal('agenda');
+  openModal('eventDetail');
 }
 
 function onDetailsEdit(item) {
   closeModal();
-  openModal('agenda', item);
+  openModal('eventDetail', item);
 }
 
 async function onDetailsDelete(id) {
+  await handleEventDetailDelete(id);
+}
+
+function onAgendaAdd() {
+  closeModal();
+  openModal('agendaItem');
+}
+
+function onAgendaEdit(item) {
+  closeModal();
+  openModal('agendaItem', item);
+}
+
+async function onAgendaDelete(id) {
   await handleAgendaDelete(id);
   agenda.loadAgenda();
+}
+
+function onOurStoryAdd() {
+  closeModal();
+  openModal('ourStoryItem');
+}
+
+function onOurStoryEdit(item) {
+  closeModal();
+  openModal('ourStoryItem', item);
+}
+
+async function onOurStoryDelete(id) {
+  await handleOurStoryDelete(id);
+  ourStory.loadStories();
 }
 
 onMounted(async () => {
@@ -441,6 +522,8 @@ onMounted(async () => {
 
   await refreshAllData();
   if (isEditMode.value) {
+    eventDetails.loadEventDetails();
+    ourStory.loadStories();
     agenda.loadAgenda();
   }
 });
@@ -593,6 +676,10 @@ async function onRsvpSubmit(payload) {
   font-size: 18px;
   color: #4b5563;
   margin: 0 0 16px;
+}
+
+.card-time.bold {
+  font-weight: 700;
 }
 
 .card-address {

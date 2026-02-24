@@ -5,10 +5,18 @@
     <AuthCard>
       <AuthCardTitle
         :title="$t('auth.forgot.title')"
-        :subtitle="$t('auth.forgot.subtitle')"
+        :subtitle="sent ? $t('auth.forgot.sentSubtitle') : $t('auth.forgot.subtitle')"
       />
 
-      <form class="auth-form" @submit.prevent="onSendResetLink">
+      <div v-if="sent" class="success-message">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="success-icon">
+          <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" />
+        </svg>
+        <p class="success-text">{{ $t('auth.forgot.sentMessage') }}</p>
+      </div>
+
+      <form v-else class="auth-form" @submit.prevent="onSendResetLink">
         <AuthInput
           v-model="email"
           :label="$t('auth.fields.email')"
@@ -25,11 +33,15 @@
           </template>
         </AuthInput>
 
+        <p v-if="formError" class="error">{{ formError }}</p>
+
         <ButtonMain
           :label="$t('auth.forgot.cta')"
           variant="main"
           type="submit"
           class="auth-submit-btn"
+          :loading="isLoading"
+          :disabled="!email"
         />
       </form>
 
@@ -49,19 +61,34 @@
 <script setup>
 import { computed, ref } from "vue";
 import { RouterLink, useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
 import AuthShell from "@/components/auth/AuthShell.vue";
 import AuthCard from "@/components/auth/AuthCard.vue";
 import AuthHeader from "@/components/auth/AuthHeader.vue";
 import AuthCardTitle from "@/components/auth/AuthCardTitle.vue";
 import AuthInput from "@/components/auth/AuthInput.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
+import { requestPasswordReset } from "@/services/auth.service";
 
+const { t } = useI18n();
 const route = useRoute();
 const lang = computed(() => route.params.lang || 'mk');
 const email = ref("");
+const isLoading = ref(false);
+const formError = ref("");
+const sent = ref(false);
 
-function onSendResetLink() {
-  console.log("send reset link to", email.value);
+async function onSendResetLink() {
+  formError.value = "";
+  isLoading.value = true;
+  try {
+    await requestPasswordReset(email.value);
+    sent.value = true;
+  } catch (e) {
+    formError.value = e?.response?.data?.message || e?.message || t('auth.forgot.error');
+  } finally {
+    isLoading.value = false;
+  }
 }
 </script>
 
@@ -81,4 +108,26 @@ function onSendResetLink() {
   transition: color 0.2s ease;
 }
 .card-footer-link:hover { color: var(--brand-gold); }
+.error {
+  color: var(--error, #e53935);
+  font-size: 13px;
+  margin: 0 0 8px;
+}
+.success-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0;
+  text-align: center;
+}
+.success-icon {
+  color: var(--brand-gold, #c9a96e);
+}
+.success-text {
+  font-size: 14px;
+  color: var(--neutral-600, #666);
+  line-height: 1.5;
+  margin: 0;
+}
 </style>

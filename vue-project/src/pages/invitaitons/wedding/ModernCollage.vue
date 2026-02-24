@@ -82,9 +82,9 @@
                   <path d="M18 21V8a6 6 0 0 0-12 0v13"/><path d="M2 21h20"/><path d="M12 2v4"/><path d="M10 12h4"/>
                 </svg>
               </div>
-              <h3 class="detail-title">{{ t('invitation.theCeremony') }}</h3>
-              <p class="detail-time">{{ config.ceremonyTime }}</p>
-              <p class="detail-address" v-html="config.ceremonyAddress"></p>
+              <h3 class="detail-title">{{ config.ceremonyVenue || t('invitation.theCeremony') }}</h3>
+              <p v-if="config.ceremonyDate" class="detail-time bold">{{ config.ceremonyDate }}</p>
+              <p v-if="config.ceremonyTime" class="detail-time">{{ config.ceremonyTime }}</p>
               <a v-if="config.ceremonyMapUrl" :href="config.ceremonyMapUrl" target="_blank" rel="noopener" class="detail-map-link detail-map-link--rose">{{ t('invitation.getDirections') }}</a>
             </div>
 
@@ -95,9 +95,9 @@
                   <path d="M8 22h8"/><path d="M7 10h10"/><path d="M12 15v7"/><path d="M12 15a5 5 0 0 0 5-5c0-2-1-3.5-1-3.5H8S7 8 7 10a5 5 0 0 0 5 5z"/><path d="M12 10V2"/>
                 </svg>
               </div>
-              <h3 class="detail-title">{{ t('invitation.theReception') }}</h3>
-              <p class="detail-time">{{ config.receptionTime }}</p>
-              <p class="detail-address" v-html="config.receptionAddress"></p>
+              <h3 class="detail-title">{{ config.receptionVenue || t('invitation.theReception') }}</h3>
+              <p v-if="config.receptionDate" class="detail-time bold">{{ config.receptionDate }}</p>
+              <p v-if="config.receptionTime" class="detail-time">{{ config.receptionTime }}</p>
               <a v-if="config.receptionMapUrl" :href="config.receptionMapUrl" target="_blank" rel="noopener" class="detail-map-link detail-map-link--stone">{{ t('invitation.getDirections') }}</a>
             </div>
           </div>
@@ -107,7 +107,7 @@
 
       <!-- AGENDA SECTION -->
       <section v-if="showAgenda && !isPrivate" v-show="!showEntry" id="agenda-section" class="section section--white" data-reveal style="position:relative;">
-        <SectionEditButton :visible="isEditMode" :label="t('editSection.agenda')" @click="openModal('agenda')" />
+        <SectionEditButton :visible="isEditMode" :label="t('editSection.agenda')" @click="openModal('agendaList')" />
         <div class="section-inner">
           <div class="section-header">
             <h2 class="section-title">{{ t('invitation.orderOfEvents') }}</h2>
@@ -126,7 +126,8 @@
 
       <!-- OUR STORY SECTION -->
       <section v-if="showOurStory" v-show="!showEntry" id="story-section" class="section section--cream" data-reveal style="position:relative;">
-        <SectionEditButton :visible="isEditMode" :label="t('editSection.ourStory')" @click="openModal('ourStory')" />
+        <SectionEditButton :visible="isEditMode" :label="t('editSection.ourStory')" @click="openModal('ourStoryList')" />
+        <SectionEditButton :visible="isEditMode" :label="t('ourStory.images.upload')" @click="openModal('ourStoryImages')" style="right: 180px;" />
         <div class="section-inner">
           <div class="section-header">
             <h2 class="section-title">{{ t('invitation.ourLoveStory') }}</h2>
@@ -182,19 +183,59 @@
 
     <!-- Edit Mode Modals -->
     <template v-if="isEditMode">
-      <AddAgendaItemModal
-        :open="activeModal === 'agenda'"
+      <EditDetailsModal
+        :open="activeModal === 'details'"
+        :items="eventDetails.items.value"
+        @close="closeModal"
+        @add="onDetailsAdd"
+        @edit="onDetailsEdit"
+        @delete="onDetailsDelete"
+      />
+      <AddEventDetailModal
+        :open="activeModal === 'eventDetail'"
         :item="editingItem"
+        :items="eventDetails.items.value"
+        @close="closeModal"
+        @submit="handleEventDetailSave"
+        @delete="handleEventDetailDelete"
+      />
+      <EditAgendaModal
+        :open="activeModal === 'agendaList'"
+        :items="agenda.items.value"
+        @close="closeModal"
+        @add="onAgendaAdd"
+        @edit="onAgendaEdit"
+        @delete="onAgendaDelete"
+      />
+      <AddAgendaItemModal
+        :open="activeModal === 'agendaItem'"
+        :item="editingItem"
+        :items="agenda.items.value"
         @close="closeModal"
         @submit="handleAgendaSave"
         @delete="handleAgendaDelete"
       />
+      <EditOurStoryModal
+        :open="activeModal === 'ourStoryList'"
+        :items="ourStory.items.value"
+        @close="closeModal"
+        @add="onOurStoryAdd"
+        @edit="onOurStoryEdit"
+        @delete="onOurStoryDelete"
+      />
       <AddOurStoryModal
-        :open="activeModal === 'ourStory'"
+        :open="activeModal === 'ourStoryItem'"
         :item="editingItem"
+        :items="ourStory.items.value"
         @close="closeModal"
         @submit="handleOurStorySave"
         @delete="handleOurStoryDelete"
+      />
+      <OurStoryUploadModal
+        :open="activeModal === 'ourStoryImages'"
+        :images="ourStory.images.value"
+        @close="closeModal"
+        @uploaded="refreshAllData"
       />
       <EditCollageModal
         :open="activeModal === 'collage'"
@@ -206,14 +247,6 @@
         :event="backendData?.event"
         @close="closeModal"
         @updated="refreshAllData"
-      />
-      <EditDetailsModal
-        :open="activeModal === 'details'"
-        :items="agenda.items.value"
-        @close="closeModal"
-        @add="onDetailsAdd"
-        @edit="onDetailsEdit"
-        @delete="onDetailsDelete"
       />
     </template>
   </div>
@@ -236,9 +269,14 @@ import { invitationPhotosApi } from '@/services/invitationPhotos.service';
 import { useInvitationEditMode } from '@/composables/useInvitationEditMode';
 import AddAgendaItemModal from '@/components/modals/AddAgendaItemModal.vue';
 import AddOurStoryModal from '@/components/modals/AddOurStoryModal.vue';
+import OurStoryUploadModal from '@/components/modals/OurStoryUploadModal.vue';
+import EditOurStoryModal from '@/components/modals/EditOurStoryModal.vue';
 import EditCollageModal from '@/components/modals/EditCollageModal.vue';
 import EditHeroModal from '@/components/modals/EditHeroModal.vue';
 import EditDetailsModal from '@/components/modals/EditDetailsModal.vue';
+import AddEventDetailModal from '@/components/modals/AddEventDetailModal.vue';
+import EditAgendaModal from '@/components/modals/EditAgendaModal.vue';
+import { EventDetailTypeSortOrder } from '@/enums/EventDetailType';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -247,8 +285,9 @@ const { eventId, loading, localized, formatDate, formatTime, fetchData } = useIn
 
 const {
   isEditMode, activeModal, editingItem,
-  openModal, closeModal, refreshCallback, agenda,
+  openModal, closeModal, refreshCallback, agenda, eventDetails, ourStory,
   handleAgendaSave, handleAgendaDelete,
+  handleEventDetailSave, handleEventDetailDelete,
   handleOurStorySave, handleOurStoryDelete,
 } = useInvitationEditMode();
 
@@ -293,7 +332,7 @@ const config = reactive({
   groomName: 'James',
   weddingDate: 'October 14, 2024',
   weddingDateTime: '2024-10-14T15:00:00',
-  inviteText: "We're getting married!",
+  inviteText: t('invitation.gettingMarried'),
   location: 'Napa Valley, CA',
   heroMapUrl: '',
   heroPhotoUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1920&q=80',
@@ -307,12 +346,14 @@ const config = reactive({
     { url: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800&h=800&fit=crop', alt: 'Kiss' },
   ],
 
+  ceremonyVenue: '',
+  ceremonyDate: '',
   ceremonyTime: '3:00 PM',
-  ceremonyAddress: 'St. Helena Catholic Church<br>1340 Tainter St<br>St Helena, CA 94574',
-  ceremonyMapUrl: '#',
+  ceremonyMapUrl: '',
+  receptionVenue: '',
+  receptionDate: '',
   receptionTime: '5:30 PM - Midnight',
-  receptionAddress: 'Beringer Vineyards<br>2000 Main St<br>St Helena, CA 94574',
-  receptionMapUrl: '#',
+  receptionMapUrl: '',
 
   agendaEvents: [
     { time: '3:00 PM', title: 'Ceremony Begins', subtitle: 'Please arrive by 2:45 PM', color: palette.rose300 },
@@ -383,47 +424,58 @@ function applyBackendData(data) {
     config.heroMapUrl = buildMapUrl(loc);
   }
 
-  // Map agenda items to detail cards and timeline
-  if (Array.isArray(data.agenda) && data.agenda.length) {
-    const sorted = [...data.agenda].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+  // Event Details → ceremony/reception cards
+  if (Array.isArray(data.weddingDetails) && data.weddingDetails.length) {
+    const sorted = [...data.weddingDetails].sort(
+      (a, b) => (EventDetailTypeSortOrder[a.type] || 99) - (EventDetailTypeSortOrder[b.type] || 99)
+    );
 
-    // Populate ceremony & reception cards from agenda items by type
-    const ceremonyTypes = ['CEREMONY', 'CHURCH'];
-    const ceremonyItem = sorted.find((a) => ceremonyTypes.includes(a.type));
-    if (ceremonyItem) {
-      config.ceremonyTime = formatTimeRange(ceremonyItem.startTime, ceremonyItem.endTime);
-      config.ceremonyAddress = buildLocationAddress(ceremonyItem.location)
-        || ceremonyItem.description || '';
-      config.ceremonyMapUrl = buildMapUrl(ceremonyItem.location);
+    const churchItem = sorted.find(d => d.type === 'CHURCH' || d.type === 'REGISTRATION');
+    if (churchItem) {
+      config.ceremonyVenue = churchItem.description || '';
+      config.ceremonyDate = churchItem.eventDate || '';
+      config.ceremonyTime = churchItem.time || '';
+      config.ceremonyMapUrl = buildMapUrl(churchItem.location);
     }
 
-    const receptionItem = sorted.find((a) => a.type === 'RECEPTION');
+    const receptionItem = sorted.find(d => d.type === 'RECEPTION');
     if (receptionItem) {
-      config.receptionTime = formatTimeRange(receptionItem.startTime, receptionItem.endTime);
-      config.receptionAddress = buildLocationAddress(receptionItem.location)
-        || receptionItem.description || '';
+      config.receptionVenue = receptionItem.description || '';
+      config.receptionDate = receptionItem.eventDate || '';
+      config.receptionTime = receptionItem.time || '';
       config.receptionMapUrl = buildMapUrl(receptionItem.location);
     }
+  }
 
-    // Timeline events
-    config.agendaEvents = sorted.map((a) => ({
-      time: formatTimeRange(a.startTime, a.endTime),
-      title: a.title || '',
-      subtitle: a.description || '',
-    }));
+  // Agenda → timeline events
+  if (Array.isArray(data.agenda) && data.agenda.length) {
+    const sorted = [...data.agenda].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
+    config.agendaEvents = sorted.map((a) => {
+      const typeKey = a.agendaType || a.type || '';
+      return {
+        time: a.time || a.startTime || '',
+        title: typeKey ? t('agenda.types.' + typeKey) : '',
+        subtitle: a.description || '',
+      };
+    });
   }
 
   if (Array.isArray(data.ourStory) && data.ourStory.length) {
     const ourStoryImages = Array.isArray(data.ourStoryImages) ? data.ourStoryImages : [];
     config.stories = data.ourStory.map((s, i) => ({
-      title: localized(s.titleI18n, s.title),
+      title: s.type ? t('storyTypes.' + s.type) : localized(s.titleI18n, s.title),
       text: localized(s.descriptionI18n, s.description),
       date: s.date || '',
       imageUrl: ourStoryImages[i] || s.imageUrl || '',
     }));
   }
 
-  if (ev.rsvpDeadline) config.rsvpDeadline = formatDate(ev.rsvpDeadline);
+  if (ev.rsvpDeadline) {
+    config.rsvpDeadline = formatDate(ev.rsvpDeadline);
+  } else if (ev.date) {
+    const d = new Date(ev.date); d.setDate(d.getDate() - 14);
+    config.rsvpDeadline = formatDate(d.toISOString());
+  }
 }
 
 async function loadCollagePhotos() {
@@ -483,6 +535,8 @@ onMounted(async () => {
   await refreshAllData();
 
   if (isEditMode.value) {
+    eventDetails.loadEventDetails();
+    ourStory.loadStories();
     agenda.loadAgenda();
   }
 });
@@ -510,17 +564,46 @@ refreshCallback.value = refreshAllData;
 
 function onDetailsAdd() {
   closeModal();
-  openModal('agenda');
+  openModal('eventDetail');
 }
 
 function onDetailsEdit(item) {
   closeModal();
-  openModal('agenda', item);
+  openModal('eventDetail', item);
 }
 
 async function onDetailsDelete(id) {
+  await handleEventDetailDelete(id);
+}
+
+function onAgendaAdd() {
+  closeModal();
+  openModal('agendaItem');
+}
+
+function onAgendaEdit(item) {
+  closeModal();
+  openModal('agendaItem', item);
+}
+
+async function onAgendaDelete(id) {
   await handleAgendaDelete(id);
   agenda.loadAgenda();
+}
+
+function onOurStoryAdd() {
+  closeModal();
+  openModal('ourStoryItem');
+}
+
+function onOurStoryEdit(item) {
+  closeModal();
+  openModal('ourStoryItem', item);
+}
+
+async function onOurStoryDelete(id) {
+  await handleOurStoryDelete(id);
+  ourStory.loadStories();
 }
 
 async function onRsvpSubmit(payload) {
@@ -893,6 +976,10 @@ async function onRsvpSubmit(payload) {
   font-weight: 700;
   color: #78716c;
   margin: 0 0 24px;
+}
+
+.detail-time.bold {
+  font-weight: 800;
 }
 .detail-address {
   font-size: 16px;

@@ -1,9 +1,9 @@
 <template>
-  <BaseModal :open="open" :title="t('editDetails.title')" @close="emit('close')">
+  <BaseModal :open="open" :title="t('editAgenda.title')" @close="emit('close')">
     <div class="items-list" v-if="items.length">
       <div v-for="item in items" :key="item.id" class="item-row">
         <div class="item-info">
-          <span class="item-type">{{ t(`detailTypes.${item.type}`) }}</span>
+          <span class="item-type">{{ t(`agenda.types.${item.type}`) }}</span>
           <span class="item-time">{{ item.time || '' }}</span>
         </div>
         <div class="item-actions">
@@ -20,14 +20,14 @@
         </div>
       </div>
     </div>
-    <p v-else class="empty-msg">{{ t('editDetails.empty') }}</p>
+    <p v-else class="empty-msg">{{ t('editAgenda.empty') }}</p>
 
     <template #footer>
       <ButtonMain variant="outline" type="button" @click="emit('close')">
         {{ t('common.close') }}
       </ButtonMain>
       <ButtonMain variant="main" type="button" @click="emit('add')">
-        {{ t('editDetails.addItem') }}
+        {{ t('editAgenda.addItem') }}
       </ButtonMain>
     </template>
   </BaseModal>
