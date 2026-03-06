@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none">
+  <!-- Sky gradient -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#bfdbfe"/>
+      <stop offset="60%" stop-color="#e0f2fe"/>
+      <stop offset="100%" stop-color="#fef3c7"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="600" fill="url(#sky)"/>
+
+  <!-- Sun -->
+  <circle cx="320" cy="120" r="50" fill="#fbbf24" opacity="0.7"/>
+
+  <!-- Clouds -->
+  <ellipse cx="100" cy="80" rx="60" ry="20" fill="#fff" opacity="0.6"/>
+  <ellipse cx="130" cy="75" rx="40" ry="18" fill="#fff" opacity="0.5"/>
+  <ellipse cx="280" cy="60" rx="50" ry="16" fill="#fff" opacity="0.4"/>
+
+  <!-- Ocean waves -->
+  <path d="M0 380 Q50 360 100 380 Q150 400 200 380 Q250 360 300 380 Q350 400 400 380 L400 600 L0 600Z" fill="#93c5fd" opacity="0.5"/>
+  <path d="M0 400 Q50 380 100 400 Q150 420 200 400 Q250 380 300 400 Q350 420 400 400 L400 600 L0 600Z" fill="#60a5fa" opacity="0.5"/>
+  <path d="M0 430 Q50 410 100 430 Q150 450 200 430 Q250 410 300 430 Q350 450 400 430 L400 600 L0 600Z" fill="#3b82f6" opacity="0.4"/>
+
+  <!-- Beach sand -->
+  <path d="M0 480 Q100 460 200 470 Q300 480 400 465 L400 600 L0 600Z" fill="#fef3c7" opacity="0.6"/>
+
+  <!-- Couple silhouette -->
+  <g transform="translate(160, 280)" opacity="0.7">
+    <!-- Person 1 -->
+    <circle cx="0" cy="0" r="12" fill="#1e3a5f"/>
+    <path d="M0 12 L-15 60 L15 60Z" fill="#1e3a5f"/>
+    <!-- Dress flow -->
+    <path d="M-15 60 L-25 90 L25 90 L15 60Z" fill="#1e3a5f"/>
+    <!-- Person 2 -->
+    <circle cx="40" cy="-2" r="12" fill="#1e3a5f"/>
+    <path d="M40 10 L25 60 L55 60Z" fill="#1e3a5f"/>
+    <path d="M25 60 L20 90 L60 90 L55 60Z" fill="#1e3a5f"/>
+    <!-- Holding hands -->
+    <line x1="15" y1="35" x2="25" y2="35" stroke="#1e3a5f" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <!-- Seagulls -->
+  <path d="M60 140 Q65 132 70 140" stroke="#64748b" stroke-width="1.5" fill="none"/>
+  <path d="M80 130 Q85 122 90 130" stroke="#64748b" stroke-width="1.5" fill="none"/>
+  <path d="M340 90 Q345 82 350 90" stroke="#64748b" stroke-width="1.5" fill="none"/>
+
+  <!-- Text area -->
+  <rect x="60" y="500" width="280" height="60" rx="12" fill="#fff" opacity="0.8"/>
+  <text x="200" y="525" text-anchor="middle" font-family="serif" font-size="18" font-weight="600" fill="#1e3a5f">Coastal Breeze</text>
+  <text x="200" y="545" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#64748b">Modern Seaside Wedding</text>
+</svg>

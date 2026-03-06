@@ -1,5 +1,5 @@
 <template>
-  <BaseModal :open="open" :title="isEdit ? t('eventDetail.editTitle') : t('eventDetail.addTitle')" @close="emit('close')">
+  <BaseModal :open="open" :title="isEdit ? t('eventDetail.editTitle') : t('eventDetail.addTitle')" :sub-modal="subModal" @close="emit('close')">
     <form class="form" @submit.prevent="submit">
       <div class="two">
         <div class="field">
@@ -32,11 +32,6 @@
             </option>
           </select>
         </div>
-      </div>
-
-      <div class="field">
-        <label>{{ t("eventDetail.form.description") }}</label>
-        <input type="text" class="input" v-model="draft.description" :placeholder="t('eventDetail.form.descriptionPh')" />
       </div>
 
       <AuthLocationInput
@@ -90,14 +85,10 @@ const props = defineProps({
   open: { type: Boolean, default: false },
   item: { type: Object, default: null },
   items: { type: Array, default: () => [] },
+  subModal: { type: Boolean, default: false },
 });
 
-const availableTypes = computed(() => {
-  const usedTypes = props.items
-    .filter((i) => !isEdit.value || i.id !== props.item?.id)
-    .map((i) => i.type);
-  return Object.values(EventDetailType).filter((t) => !usedTypes.includes(t));
-});
+const availableTypes = computed(() => Object.values(EventDetailType));
 
 const emit = defineEmits(["close", "submit", "delete"]);
 
@@ -108,7 +99,6 @@ const draft = reactive({
   eventDate: "",
   hour: "00",
   minute: "00",
-  description: "",
   location: { name: "", address: "", lat: null, lng: null, placeId: null },
 });
 
@@ -126,7 +116,6 @@ watch(
     if (props.item) {
       draft.type = props.item.type ?? EventDetailType.CHURCH;
       draft.eventDate = props.item.eventDate ?? "";
-      draft.description = props.item.description ?? "";
 
       if (props.item.time) {
         const [sh, sm] = props.item.time.split(":");
@@ -150,10 +139,10 @@ watch(
       draft.eventDate = "";
       draft.hour = "00";
       draft.minute = "00";
-      draft.description = "";
       draft.location = { name: "", address: "", lat: null, lng: null, placeId: null };
     }
-  }
+  },
+  { immediate: true }
 );
 
 function validate() {
@@ -172,7 +161,6 @@ function submit() {
     type: draft.type,
     eventDate: draft.eventDate || null,
     time: `${draft.hour}:${draft.minute}`,
-    description: draft.description || null,
     location: hasLocation
       ? {
           name: loc.name || null,

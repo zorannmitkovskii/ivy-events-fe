@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none">
+  <!-- Soft pink background -->
+  <defs>
+    <linearGradient id="pinkbg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fce7f3"/>
+      <stop offset="100%" stop-color="#fff1f2"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="600" fill="url(#pinkbg)"/>
+
+  <!-- Eiffel Tower -->
+  <g transform="translate(200, 80)" stroke="#9f1239" stroke-width="1.5" fill="none" opacity="0.6">
+    <!-- Tip -->
+    <line x1="0" y1="0" x2="0" y2="30"/>
+    <!-- Upper section -->
+    <line x1="0" y1="30" x2="-20" y2="100"/>
+    <line x1="0" y1="30" x2="20" y2="100"/>
+    <!-- First platform -->
+    <line x1="-25" y1="100" x2="25" y2="100"/>
+    <!-- Middle section -->
+    <line x1="-25" y1="100" x2="-40" y2="180"/>
+    <line x1="25" y1="100" x2="40" y2="180"/>
+    <!-- Arch -->
+    <path d="M-25 100 Q0 130 25 100" stroke-width="1"/>
+    <!-- Second platform -->
+    <line x1="-45" y1="180" x2="45" y2="180"/>
+    <!-- Lower section -->
+    <line x1="-45" y1="180" x2="-65" y2="280"/>
+    <line x1="45" y1="180" x2="65" y2="280"/>
+    <!-- Lower arch -->
+    <path d="M-45 180 Q0 230 45 180" stroke-width="1"/>
+    <!-- Base -->
+    <line x1="-70" y1="280" x2="70" y2="280"/>
+    <!-- Cross beams -->
+    <line x1="-15" y1="60" x2="15" y2="60" stroke-width="0.8"/>
+    <line x1="-32" y1="140" x2="32" y2="140" stroke-width="0.8"/>
+    <line x1="-55" y1="230" x2="55" y2="230" stroke-width="0.8"/>
+  </g>
+
+  <!-- Floral elements -->
+  <g opacity="0.5">
+    <!-- Left flowers -->
+    <circle cx="50" cy="200" r="8" fill="#f9a8d4"/>
+    <circle cx="35" cy="215" r="6" fill="#fbcfe8"/>
+    <circle cx="55" cy="225" r="7" fill="#f9a8d4"/>
+    <circle cx="40" cy="240" r="5" fill="#fbcfe8"/>
+    <!-- Stems -->
+    <path d="M50 208 Q45 230 40 250" stroke="#86efac" stroke-width="1.5"/>
+    <path d="M55 232 Q60 250 55 270" stroke="#86efac" stroke-width="1"/>
+
+    <!-- Right flowers -->
+    <circle cx="350" cy="200" r="8" fill="#f9a8d4"/>
+    <circle cx="365" cy="215" r="6" fill="#fbcfe8"/>
+    <circle cx="345" cy="225" r="7" fill="#f9a8d4"/>
+    <circle cx="360" cy="240" r="5" fill="#fbcfe8"/>
+    <!-- Stems -->
+    <path d="M350 208 Q355 230 360 250" stroke="#86efac" stroke-width="1.5"/>
+    <path d="M345 232 Q340 250 345 270" stroke="#86efac" stroke-width="1"/>
+
+    <!-- Leaves -->
+    <ellipse cx="45" cy="260" rx="8" ry="4" fill="#86efac" transform="rotate(-30, 45, 260)"/>
+    <ellipse cx="355" cy="260" rx="8" ry="4" fill="#86efac" transform="rotate(30, 355, 260)"/>
+  </g>
+
+  <!-- Hearts -->
+  <g fill="#f9a8d4" opacity="0.3">
+    <path d="M100 150 Q100 142 93 142 Q86 142 86 150 L100 165 L114 150 Q114 142 107 142 Q100 142 100 150Z" transform="scale(0.6) translate(50, 120)"/>
+    <path d="M300 100 Q300 92 293 92 Q286 92 286 100 L300 115 L314 100 Q314 92 307 92 Q300 92 300 100Z" transform="scale(0.5) translate(310, 50)"/>
+  </g>
+
+  <!-- Text area -->
+  <rect x="50" y="420" width="300" height="140" rx="16" fill="#fff" opacity="0.7"/>
+  <text x="200" y="470" text-anchor="middle" font-family="serif" font-size="22" font-weight="600" fill="#9f1239">Parisian Wedding</text>
+  <text x="200" y="495" text-anchor="middle" font-family="serif" font-size="13" fill="#be185d" opacity="0.7">Elegant French Romance</text>
+
+  <!-- Bottom decorative line -->
+  <path d="M120 530 Q160 520 200 530 Q240 540 280 530" stroke="#f9a8d4" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <circle cx="200" cy="530" r="3" fill="#f9a8d4" opacity="0.5"/>
+</svg>

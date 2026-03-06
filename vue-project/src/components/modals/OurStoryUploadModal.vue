@@ -1,5 +1,5 @@
 <template>
-  <BaseModal :open="open" :title="t('ourStory.uploadImages.title')" @close="emit('close')">
+  <BaseModal :open="open" :title="t('ourStory.uploadImages.title')" :sub-modal="subModal" @close="emit('close')">
     <!-- Existing images -->
     <div v-if="images.length" class="existing-section">
       <div class="section-label">{{ t("ourStory.uploadImages.existing") }}</div>
@@ -95,9 +95,10 @@ const { t } = useI18n();
 const props = defineProps({
   open: { type: Boolean, default: false },
   images: { type: Array, default: () => [] },
+  subModal: { type: Boolean, default: false },
 });
 
-const emit = defineEmits(["close", "uploaded"]);
+const emit = defineEmits(["close", "uploaded", "files-collected"]);
 
 const pendingFiles = ref([]);
 const uploading = ref(false);
@@ -158,12 +159,23 @@ async function deleteImage(url) {
 async function uploadAll() {
   if (!pendingFiles.value.length) return;
 
+  const files = pendingFiles.value.map((pf) => pf.file);
+  const eventId = onboardingStore.eventId;
+
+  // No eventId yet — emit files for deferred upload via saveFullEvent
+  if (!eventId) {
+    emit("files-collected", files);
+    pendingFiles.value = [];
+    revokeAll();
+    emit("close");
+    return;
+  }
+
   uploading.value = true;
   errorMsg.value = "";
 
   try {
-    const files = pendingFiles.value.map((pf) => pf.file);
-    await invitationImagesService.uploadOurStoryImages(onboardingStore.eventId, files);
+    await invitationImagesService.uploadOurStoryImages(eventId, files);
 
     pendingFiles.value = [];
     revokeAll();

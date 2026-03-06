@@ -40,6 +40,6 @@ function goToPackages() {
 }
 
 function goToInvitations() {
-  router.push({ name: "EventInvitationsPage", params: { lang: lang.value } });
+  router.push({ name: "EventInvitationsPage", params: { lang: lang.value }, query: { from: 'dashboard' } });
 }
 </script>

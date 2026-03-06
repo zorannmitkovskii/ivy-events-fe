@@ -1,5 +1,5 @@
 <template>
-  <BaseModal :open="open" :title="isEdit ? t('agenda.editDialog.title') : t('agenda.addDialog.title')" @close="emit('close')">
+  <BaseModal :open="open" :title="isEdit ? t('agenda.editDialog.title') : t('agenda.addDialog.title')" :sub-modal="subModal" @close="emit('close')">
     <form class="form" @submit.prevent="submit">
       <div class="field">
         <label>{{ t("agenda.form.type") }} *</label>
@@ -29,28 +29,6 @@
         <div v-if="errors.time" class="err">{{ errors.time }}</div>
       </div>
 
-      <div class="field">
-        <label>{{ t("agenda.form.description") }}</label>
-        <input type="text" class="input" v-model="draft.description" :placeholder="t('agenda.addDialog.descriptionPh')" />
-      </div>
-
-      <AuthLocationInput
-        v-model="draft.location"
-        :label="t('agenda.form.location')"
-        :placeholder="t('agenda.addDialog.locationPh')"
-        :types="[]"
-        :pickOnMapLabel="t('common.pickOnMap')"
-        :cancelLabel="t('common.cancel')"
-        :useThisLocationLabel="t('common.useThisLocation')"
-        :searchPlaceholder="t('common.searchPlaces')"
-        :locatingLabel="t('common.locateMe')"
-        :locatingLabelLoading="t('common.locating')"
-        :selectedLabel="t('common.selected')"
-        :loadingAddressLabel="t('common.loadingAddress')"
-      >
-        <template #icon>📍</template>
-      </AuthLocationInput>
-
       <div v-if="validationError" class="err-box">{{ validationError }}</div>
     </form>
 
@@ -76,7 +54,6 @@ import { reactive, ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
-import AuthLocationInput from "@/components/auth/AuthLocationInput.vue";
 import { AgendaType } from "@/enums/AgendaType";
 
 const { t } = useI18n();
@@ -85,6 +62,7 @@ const props = defineProps({
   open: { type: Boolean, default: false },
   item: { type: Object, default: null },
   items: { type: Array, default: () => [] },
+  subModal: { type: Boolean, default: false },
 });
 
 const availableTypes = computed(() => {
@@ -102,8 +80,6 @@ const draft = reactive({
   type: AgendaType.CEREMONY,
   hour: "00",
   minute: "00",
-  description: "",
-  location: { name: "", address: "", lat: null, lng: null, placeId: null },
 });
 
 const errors = reactive({ type: "", time: "" });
@@ -120,7 +96,6 @@ watch(
 
     if (props.item) {
       draft.type = props.item.type ?? AgendaType.CEREMONY;
-      draft.description = props.item.description ?? "";
 
       if (props.item.time) {
         const [sh, sm] = props.item.time.split(":");
@@ -135,23 +110,13 @@ watch(
         draft.hour = hour;
         draft.minute = minute;
       }
-
-      const loc = props.item.location ?? {};
-      draft.location = {
-        name: loc.name ?? "",
-        address: loc.addressLine ?? "",
-        lat: loc.latitude ?? null,
-        lng: loc.longitude ?? null,
-        placeId: loc.placeId ?? null,
-      };
     } else {
       draft.type = availableTypes.value[0] ?? AgendaType.CEREMONY;
       draft.hour = "00";
       draft.minute = "00";
-      draft.description = "";
-      draft.location = { name: "", address: "", lat: null, lng: null, placeId: null };
     }
-  }
+  },
+  { immediate: true }
 );
 
 /**
@@ -176,21 +141,9 @@ function validate() {
 function submit() {
   if (!validate()) return;
 
-  const loc = draft.location || {};
-  const hasLocation = loc.name || loc.address || loc.lat != null;
-
   const payload = {
     type: draft.type,
-    description: draft.description || null,
     time: `${draft.hour}:${draft.minute}`,
-    location: hasLocation ? {
-      name: loc.name || null,
-      type: "VENUE",
-      addressLine: loc.address || null,
-      latitude: loc.lat,
-      longitude: loc.lng,
-      isActive: true,
-    } : null,
   };
 
   if (isEdit.value) {

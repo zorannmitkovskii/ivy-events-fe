@@ -75,6 +75,7 @@ const lang = computed(() => route.params.lang || 'mk');
 
 const loading = ref(false);
 const error = ref('');
+const fromDashboard = computed(() => route.query.from === 'dashboard');
 
 const displayCategory = computed(() =>
   onboardingStore.selectedCategory || EventCategoryEnum.WEDDING
@@ -106,11 +107,21 @@ const templates = ref([]);
 const fetchLoading = ref(false);
 
 const filteredInvitations = computed(() => {
-  return templates.value.map(t => ({
+  const mapped = templates.value.map(t => ({
     id: t.id,
     name: t.name,
     thumbnailUrl: t.thumbnailImage || '',
   }));
+  // Put the selected invitation first
+  const sel = onboardingStore.invitationName;
+  if (sel) {
+    const idx = mapped.findIndex(i => i.id === sel);
+    if (idx > 0) {
+      const [item] = mapped.splice(idx, 1);
+      mapped.unshift(item);
+    }
+  }
+  return mapped;
 });
 
 onMounted(async () => {
@@ -118,12 +129,27 @@ onMounted(async () => {
   try {
     const data = await invitationTemplateService.listByCategory(displayCategory.value);
     templates.value = (data || []).filter(t => t.active !== false);
+
+    // Preselect invitation: resolve stored name (path/slug from BE) to template id
+    if (onboardingStore.invitationName) {
+      const match = resolveTemplate(onboardingStore.invitationName);
+      if (match) setInvitationName(match.id);
+    }
   } catch (e) {
     console.error('Failed to load invitation templates:', e);
   } finally {
     fetchLoading.value = false;
   }
 });
+
+// Match an invitationName (could be id, path, or slug) to a template
+function resolveTemplate(name) {
+  if (!name) return null;
+  return templates.value.find(t =>
+    t.id === name || t.path === name || t.slug === name ||
+    t.name?.toLowerCase().replace(/\s+/g, '-') === name
+  );
+}
 
 function onSelectInvitation(id) {
   setInvitationName(id);
@@ -137,7 +163,9 @@ function onPreview(id) {
 }
 
 function onBack() {
-  if (!isAuthenticated()) {
+  if (fromDashboard.value) {
+    router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
+  } else if (!isAuthenticated()) {
     router.push({ name: 'home', params: { lang: lang.value } });
   } else {
     router.push({ name: 'EventBasicDetailsPage', params: { lang: lang.value } });

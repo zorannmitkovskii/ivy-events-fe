@@ -80,6 +80,7 @@ const eventId = ref(onboardingStore.eventId);
 const isGallery = computed(() => onboardingStore.selectedCategory === EventCategoryEnum.GALLERY);
 
 const closeFriendsUrl = computed(() => {
+  if (event.value?.privateInvitationUrl) return event.value.privateInvitationUrl;
   const url = event.value?.invitationUrl;
   if (!url) return "";
   const sep = url.includes("?") ? "&" : "?";
@@ -107,7 +108,13 @@ async function loadEvent() {
     }
 
     const data = await eventsService.getById(eventId.value);
-    event.value = data;
+    const inv = data.invitation || {};
+    event.value = {
+      ...data,
+      invitationUrl: inv.invitationUrl || data.invitationUrl || '',
+      galleryUrl: inv.galleryUrl || data.galleryUrl || '',
+      privateInvitationUrl: inv.privateInvitationUrl || data.privateInvitationUrl || '',
+    };
 
     const cat = data?.categoryType || data?.category || "";
     if (cat) {

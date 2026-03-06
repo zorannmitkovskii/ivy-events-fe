@@ -49,6 +49,7 @@
       <EditDetailsModal
         :open="activeModal === 'details'"
         :items="eventDetails.items.value"
+        :max-items="2"
         @close="closeModal"
         @add="onDetailsAdd"
         @edit="onDetailsEdit"
@@ -65,6 +66,7 @@
       <EditAgendaModal
         :open="activeModal === 'agendaList'"
         :items="agenda.items.value"
+        :max-items="3"
         @close="closeModal"
         @add="onAgendaAdd"
         @edit="onAgendaEdit"
@@ -81,6 +83,7 @@
       <EditOurStoryModal
         :open="activeModal === 'ourStoryList'"
         :items="ourStory.items.value"
+        :max-items="3"
         @close="closeModal"
         @add="onOurStoryAdd"
         @edit="onOurStoryEdit"
@@ -120,6 +123,7 @@ import { mediaService } from '@/services/media.service';
 import { useInvitationData } from '@/composables/useInvitationData';
 import { useScrollReveal } from '@/composables/useScrollReveal';
 import { buildLocationAddress, buildMapUrl, formatTimeRange } from '@/utils/invitation';
+import { getFutureWeddingDate, formatWeddingDate, toLocalISO, formatRsvpDeadline } from '@/utils/date.js';
 import InvitationHero from "@/components/invitations/wedding/sunsetGlass/InvitationHero.vue";
 import WeddingDetails from "@/components/invitations/wedding/sunsetGlass/WeddingDetails.vue";
 import TimelineSection from "@/components/invitations/wedding/sunsetGlass/TimelineSection.vue";
@@ -153,15 +157,17 @@ const showAgenda = ref(true);
 const showOurStory = ref(true);
 useScrollReveal(rootRef);
 
+const _futureDate = getFutureWeddingDate();
+
 const data = reactive({
   coupleName: "Emily & James",
-  dateLabel: "June 15, 2024",
-  respondByLabel: "May 1, 2024",
+  dateLabel: formatWeddingDate(_futureDate),
+  respondByLabel: formatRsvpDeadline(_futureDate),
   locationHtml: "Sunset Garden Estate<br>Santa Barbara, California",
   heroImage: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=1000&fit=crop",
 
   // For countdown use an ISO datetime (adjust to your real event time/timezone)
-  countdownTargetIso: "2026-06-15T16:00:00",
+  countdownTargetIso: toLocalISO(_futureDate, '16:00:00'),
 
   heroMapUrl: "",
   mapUrl: "",
@@ -169,8 +175,8 @@ const data = reactive({
   receptionMapUrl: "",
   venueMapUrl: "",
 
-  ceremonyHtml: "June 15, 2024<br>4:00 PM",
-  receptionHtml: "June 15, 2024<br>6:00 PM",
+  ceremonyHtml: `${formatWeddingDate(_futureDate)}<br>4:00 PM`,
+  receptionHtml: `${formatWeddingDate(_futureDate)}<br>6:00 PM`,
   venueHtml: "Sunset Garden Estate<br>Santa Barbara, CA",
 
   timeline: [

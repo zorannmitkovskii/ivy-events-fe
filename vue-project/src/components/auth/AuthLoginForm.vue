@@ -73,6 +73,7 @@ import GoogleButton from '@/components/auth/GoogleButton.vue';
 import ButtonMain from '@/components/generic/ButtonMain.vue';
 import { loginWithCredentials, getEventId, hasRole } from '@/services/auth.service';
 import { setEventId } from '@/store/onboarding.store';
+import { syncDraftToBackend } from '@/composables/useDraftSync';
 import { getRuntimeEnv, detectDefaultEnvFromLocation, computeKeycloakBaseUrl } from '@/services/env';
 
 const route = useRoute();
@@ -103,6 +104,7 @@ async function onSubmit() {
   try {
     await loginWithCredentials(email.value.trim(), password.value);
     setEventId(getEventId());
+    await syncDraftToBackend();
 
     const redirect = route.query.redirect;
     if (hasRole('ADMIN')) {

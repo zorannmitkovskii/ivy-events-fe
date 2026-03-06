@@ -6,7 +6,7 @@ import { guestsService } from "@/services/guests.service";
 import { budgetsService } from "@/services/budgets.service";
 import { tablesService } from "@/services/tables.service";
 import { mediaService } from "@/services/media.service";
-import { onboardingStore, setSelectedCategory, setEventStatus } from "@/store/onboarding.store";
+import { onboardingStore, setSelectedCategory, setEventStatus, setInvitationName } from "@/store/onboarding.store";
 import { EventCategoryEnum } from "@/enums/EventCategory";
 
 export function useOverview() {
@@ -30,6 +30,10 @@ export function useOverview() {
         const match = Object.values(EventCategoryEnum).find(v => v === upper);
         setSelectedCategory(match || cat);
       }
+
+      // Store invitation name for preselection
+      const invName = ev.invitation?.invitationName;
+      if (invName) setInvitationName(invName);
 
       if (ev.date || ev.eventDate) {
         const dateStr = ev.date || ev.eventDate;

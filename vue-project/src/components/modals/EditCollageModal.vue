@@ -39,7 +39,7 @@ const props = defineProps({
   open: { type: Boolean, default: false },
 });
 
-const emit = defineEmits(["close", "updated"]);
+const emit = defineEmits(["close", "updated", "files-collected"]);
 
 const { photos, loadPhotos, uploadPhotos, deletePhoto } = useCollagePhotos();
 const uploading = ref(false);
@@ -53,14 +53,22 @@ watch(
       const eventId = onboardingStore.eventId;
       if (eventId) await loadPhotos(eventId);
     }
-  }
+  },
+  { immediate: true }
 );
 
 async function onFilesSelected(e) {
   const files = e.target.files;
   if (!files?.length) return;
   const eventId = onboardingStore.eventId;
-  if (!eventId) return;
+
+  // No eventId yet — emit files for deferred upload via saveFullEvent
+  if (!eventId) {
+    emit("files-collected", Array.from(files));
+    if (fileInput.value) fileInput.value.value = "";
+    return;
+  }
+
   uploading.value = true;
   try {
     await uploadPhotos(eventId, files);
