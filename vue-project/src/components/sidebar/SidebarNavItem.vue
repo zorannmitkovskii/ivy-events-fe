@@ -1,11 +1,8 @@
 <template>
-  <RouterLink :to="to" class="item" :class="{ active }">
-    <div class="left">
-      <span class="icon" v-html="icon" />
-      <span class="label">{{ label }}</span>
-    </div>
-
-    <span v-if="badge" class="badge">{{ badge }}</span>
+  <RouterLink :to="to" class="nav-item" :class="{ active }">
+    <span class="nav-icon" v-html="icon" />
+    <span class="nav-label">{{ label }}</span>
+    <span v-if="badge" class="nav-badge">{{ badge }}</span>
   </RouterLink>
 </template>
 
@@ -13,39 +10,58 @@
 defineProps({
   to: { type: String, required: true },
   label: { type: String, required: true },
-  icon: { type: String, default: "" }, // inline svg html
+  icon: { type: String, default: "" },
   badge: { type: String, default: null },
   active: { type: Boolean, default: false }
 });
 </script>
 
 <style scoped>
-.item {
-  padding: 10px 12px;
-  border-radius: var(--radius-md);
-  color: var(--neutral-100);
-  text-decoration: none;
+.nav-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-
-  height: 42px;
+  gap: 11px;
+  padding: 10px 24px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.44);
+  cursor: pointer;
+  transition: all 0.18s;
+  text-decoration: none;
+  position: relative;
+  letter-spacing: 0.01em;
 }
-.item:hover { background: var(--neutral-700); color: var(--bg-white); }
-.active { background: var(--neutral-500); color: var(--bg-white); }
 
-.left { display:flex; align-items:center; gap: 10px; min-width: 0; }
-.label { white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+.nav-item:hover {
+  color: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.04);
+}
 
-.icon{
+.nav-item.active {
+  color: #fff;
+  background: rgba(90, 122, 82, 0.18);
+}
+
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 25%;
+  bottom: 25%;
+  width: 3px;
+  background: var(--dash-sage-mid);
+  border-radius: 3px 0 0 3px;
+}
+
+.nav-icon {
   width: 18px;
-  height: 18px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  opacity: .95;
+  text-align: center;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
-.icon :deep(svg){
+
+.nav-icon :deep(svg) {
   width: 18px;
   height: 18px;
   stroke: currentColor;
@@ -55,12 +71,19 @@ defineProps({
   stroke-linejoin: round;
 }
 
-.badge {
-  background: var(--brand-gold);
-  color: #1b1b1b;
-  border-radius: 999px;
+.nav-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.nav-badge {
+  background: var(--dash-gold);
+  color: #fff;
+  border-radius: 20px;
   padding: 2px 8px;
-  font-size: 12px;
-  font-weight: 800;
+  font-size: 10px;
+  font-weight: 600;
 }
 </style>

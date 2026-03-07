@@ -1,12 +1,9 @@
 <template>
-  <div class="card card-pad-lg">
-    <div class="gal-head">
-      <div style="font-weight: 900;">{{ t("overview.galleryPreview") }}</div>
-      <router-link
-        :to="`/${lang}/dashboard/events/gallery`"
-        class="kpi-sub view-link"
-      >
-        {{ t("common.viewAll") }} →
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">{{ t("overview.galleryPreview") }}</div>
+      <router-link :to="`/${lang}/dashboard/events/gallery`" class="card-action">
+        {{ t("common.viewAll") }} &rarr;
       </router-link>
     </div>
 
@@ -37,49 +34,40 @@ defineProps({
 </script>
 
 <style scoped>
-.gal-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-}
-.view-link {
-  text-decoration: none;
-  font-weight: 800;
-  cursor: pointer;
-}
 .preview-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 10px;
   margin-top: 14px;
 }
+
 .preview-item {
   border-radius: 10px;
   overflow: hidden;
   aspect-ratio: 1;
-  background: var(--neutral-200, #e5e7eb);
+  background: var(--dash-sage-ghost);
 }
+
 .preview-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s;
 }
+
 .preview-item:hover img {
   transform: scale(1.05);
 }
+
 .empty {
   margin-top: 14px;
-  color: var(--neutral-500);
+  color: var(--dash-muted);
   font-size: 13px;
   text-align: center;
   padding: 24px 0;
 }
 
 @media (max-width: 768px) {
-  .preview-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  .preview-grid { grid-template-columns: repeat(3, 1fr); }
 }
 </style>

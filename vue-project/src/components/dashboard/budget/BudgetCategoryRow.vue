@@ -1,29 +1,29 @@
 <template>
-  <div class="row">
-    <div class="left">
-      <div class="icon">{{ iconChar }}</div>
-      <div class="info">
-        <div class="name">{{ name }}</div>
-        <div v-if="description" class="desc">{{ description }}</div>
+  <tr>
+    <td>
+      <div class="cat-cell">
+        <div class="cat-icon">{{ iconChar }}</div>
+        <div class="cat-info">
+          <div class="cat-name">{{ name }}</div>
+          <div v-if="description" class="cat-desc">{{ description }}</div>
+        </div>
       </div>
-    </div>
+    </td>
 
-    <div class="right">
-      <div class="money">
-        <span class="spent">{{ money(spent) }}</span>
-        <span class="slash">/</span>
-        <span class="budget">{{ money(budget) }}</span>
-      </div>
-      <div class="leftText" v-if="leftLabel">{{ leftLabel }}</div>
-    </div>
+    <td class="money-cell">{{ formatMoney(spent) }}</td>
+    <td class="money-cell budget-val">{{ formatMoney(budget) }}</td>
 
-    <div class="progressWrap">
-      <div class="percent">{{ safePercent }}%</div>
-      <div class="bar">
-        <div class="fill" :style="{ width: safePercent + '%' }"></div>
+    <td>
+      <div class="progress-cell">
+        <span class="percent">{{ safePercent }}%</span>
+        <div class="bar">
+          <div class="fill" :style="{ width: safePercent + '%' }"></div>
+        </div>
       </div>
-    </div>
-  </div>
+    </td>
+
+    <td class="left-cell">{{ leftLabel || '—' }}</td>
+  </tr>
 </template>
 
 <script setup>
@@ -43,91 +43,98 @@ const safePercent = computed(() => Math.max(0, Math.min(100, Math.round(props.pe
 
 const iconChar = computed(() => {
   const n = (props.name || "").toLowerCase();
-  if (n.includes("housing")) return "⌂";
-  if (n.includes("food")) return "🍴";
+  if (n.includes("housing") || n.includes("venue")) return "⌂";
+  if (n.includes("food") || n.includes("cater")) return "🍴";
   if (n.includes("transport")) return "🚗";
-  if (n.includes("entertain")) return "🎟";
-  if (n.includes("shop")) return "🛍";
+  if (n.includes("entertain") || n.includes("music")) return "🎟";
+  if (n.includes("shop") || n.includes("decor")) return "🛍";
+  if (n.includes("photo")) return "📷";
+  if (n.includes("flower") || n.includes("floral")) return "🌸";
   return "●";
 });
 
-function money(v){
-  try { return new Intl.NumberFormat(undefined,{style:"currency",currency:props.currency}).format(v||0); }
-  catch { return `${v||0} ${props.currency}`; }
+function formatMoney(v) {
+  try {
+    return new Intl.NumberFormat(undefined, { style: "currency", currency: props.currency }).format(v || 0);
+  } catch {
+    return `${v || 0} ${props.currency}`;
+  }
 }
 </script>
 
 <style scoped>
-.row{
-  padding:18px;
-  display:grid;
-  grid-template-columns: 1fr auto;
-  grid-template-rows: auto auto;
-  gap: 10px 14px;
-  border-bottom: 1px solid var(--brand-dark);
+.cat-cell {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  min-width: 0;
 }
 
-.row:last-child{ border-bottom:0; }
-
-.left{
-  display:flex;
-  gap:12px;
-  align-items:center;
-  min-width:0;
+.cat-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--dash-sage-ghost);
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  flex-shrink: 0;
 }
 
-.icon{
-  width:36px;height:36px;
-  border-radius:999px;
-  background: var(--brand-light);
-  display:grid;
-  place-items:center;
-  font-weight:900;
-  color: var(--brand-main);
+.cat-name {
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--dash-ink);
 }
 
-.name{
-  font-weight:900;
-  color: var(--brand-main);
+.cat-desc {
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--dash-muted);
 }
 
-.desc{
-  margin-top:2px;
-  font-size:12px;
-  font-weight:700;
-  color: var(--brand-dark);
+.money-cell {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--dash-ink);
+  white-space: nowrap;
 }
 
-.right{ text-align:right; }
-.money{ font-weight:900; color: var(--brand-main); white-space:nowrap; }
-.slash,.budget{ color: var(--brand-dark); font-weight:900; }
-.leftText{ margin-top:6px; font-size:12px; font-weight:900; color: var(--brand-dark); }
-
-.progressWrap{
-  grid-column: 1 / -1;
-  display:grid;
-  grid-template-columns: 44px 1fr;
-  gap:10px;
-  align-items:center;
+.budget-val {
+  color: var(--dash-light);
 }
 
-.percent{ font-size:12px; font-weight:900; color: var(--brand-gold); }
-
-.bar{
-  height:6px;
-  border-radius:999px;
-  background: var(--brand-light);
-  overflow:hidden;
+.progress-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.fill{
-  height:100%;
-  border-radius:999px;
-  background: var(--brand-gold);
+.percent {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--dash-gold);
+  width: 34px;
+  flex-shrink: 0;
 }
 
-@media (max-width: 650px){
-  .row{ grid-template-columns:1fr; }
-  .right{ text-align:left; }
+.bar {
+  flex: 1;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--dash-sage-ghost);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--dash-gold), var(--dash-gold-light));
+}
+
+.left-cell {
+  font-size: 12px;
+  color: var(--dash-muted);
+  white-space: nowrap;
 }
 </style>

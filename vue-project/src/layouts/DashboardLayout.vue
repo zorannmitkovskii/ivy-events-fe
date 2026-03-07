@@ -50,8 +50,8 @@ watch(isGallery, redirectGalleryIfNeeded);
 .dashboard-layout {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 260px 1fr;
-  background: var(--bg-main);
+  grid-template-columns: var(--dash-sidebar-w) 1fr;
+  background: var(--dash-cream);
 }
 
 .dash-sidebar {
@@ -62,13 +62,14 @@ watch(isGallery, redirectGalleryIfNeeded);
 }
 
 .main {
-  display: grid;
-  grid-template-rows: var(--header-height) 1fr;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .content {
-  padding: 24px;
-  width: 100%;
+  padding: 36px 40px;
+  flex: 1;
 }
 
 .backdrop {
@@ -85,10 +86,9 @@ watch(isGallery, redirectGalleryIfNeeded);
     top: 0;
     left: 0;
     bottom: 0;
-    width: 100%;
+    width: var(--dash-sidebar-w);
     z-index: 1000;
     transform: translateX(-100%);
-    background: var(--brand-main);
     display: flex;
     flex-direction: column;
   }
@@ -104,6 +104,10 @@ watch(isGallery, redirectGalleryIfNeeded);
     inset: 0;
     background: rgba(0, 0, 0, 0.4);
     z-index: 999;
+  }
+
+  .content {
+    padding: 24px 16px;
   }
 }
 </style>

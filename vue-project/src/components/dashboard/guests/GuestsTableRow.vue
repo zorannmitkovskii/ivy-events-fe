@@ -87,76 +87,79 @@ function onChangeStatus(value) {
 
 <style scoped>
 .row-declined {
-  opacity: 0.65;
+  opacity: 0.55;
 }
 
 .guest-name {
   font-weight: 600;
-  font-size: 14px;
-  color: var(--neutral-900);
+  font-size: 13.5px;
+  color: var(--dash-ink);
 }
 
 .guest-email {
-  font-size: 13px;
-  color: var(--neutral-500);
+  font-size: 12px;
+  color: var(--dash-light);
   margin-top: 2px;
 }
 
 /* Status select */
 .status-select {
-  padding: 4px 12px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
   white-space: nowrap;
   border: none;
   outline: none;
   cursor: pointer;
   appearance: auto;
+  letter-spacing: 0.02em;
 }
 
 .pill-confirmed {
-  background: var(--success);
-  color: var(--brand-main);
+  background: var(--dash-sage-ghost);
+  color: var(--dash-sage);
 }
 
 .pill-pending {
-  background: var(--brand-dark);
-  color: #fff;
+  background: var(--dash-gold-pale);
+  color: #8a6a30;
 }
 
 .pill-declined {
-  background: rgba(237, 110, 105, 0.18);
-  color: var(--error);
+  background: var(--dash-blush-pale);
+  color: #9a5e56;
 }
 
 /* Table select */
 .table-select {
-  padding: 8px 12px;
-  border: 1px solid var(--neutral-300);
-  border-radius: 8px;
-  font-size: 13px;
-  color: var(--neutral-900);
-  background: #fff;
+  padding: 7px 12px;
+  border: 1.5px solid var(--dash-cream-border);
+  border-radius: 9px;
+  font-size: 12.5px;
+  font-family: 'Outfit', sans-serif;
+  color: var(--dash-ink);
+  background: var(--dash-cream);
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   max-width: 170px;
 }
 
 .table-select:focus {
-  border-color: var(--brand-gold);
-  box-shadow: 0 0 0 3px rgba(200, 162, 77, 0.15);
+  border-color: var(--dash-sage-light);
+  box-shadow: 0 0 0 3px rgba(90, 122, 82, 0.1);
+  background: var(--dash-cream-card);
 }
 
 .table-select:disabled {
-  background: var(--bg-main);
-  color: var(--neutral-500);
+  background: var(--dash-cream);
+  color: var(--dash-light);
   cursor: not-allowed;
 }
 
 .dietary-cell {
-  font-size: 13px;
-  color: var(--neutral-500);
+  font-size: 12px;
+  color: var(--dash-light);
 }
 
 /* Text-only action buttons */
@@ -170,22 +173,22 @@ function onChangeStatus(value) {
   background: none;
   padding: 0;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
-  color: var(--brand-dark);
+  color: var(--dash-sage);
   transition: color 0.15s ease;
 }
 
 .action-link:hover {
-  color: var(--brand-main);
+  color: var(--dash-sage-dark);
 }
 
 .action-remove {
-  color: var(--error);
+  color: var(--dash-blush);
 }
 
 .action-remove:hover {
-  color: #c0302b;
+  color: #9a5e56;
 }
 
 .clickable-row {

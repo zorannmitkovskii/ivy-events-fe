@@ -1,10 +1,11 @@
 <template>
-  <div class="admin-page">
+  <div class="dash-page">
     <!-- Header -->
-    <div class="page-header">
+    <div class="dash-page-header">
       <div>
-        <h2 class="page-title">{{ $t('support.title') }}</h2>
-        <p class="page-subtitle">{{ $t('support.subtitle') }}</p>
+        <div class="page-eyebrow">{{ $t("sidebar.navigation") }}</div>
+        <h1 class="dash-page-title">{{ $t('support.title') }}</h1>
+        <p class="dash-page-subtitle">{{ $t('support.subtitle') }}</p>
       </div>
       <button class="btn-create" @click="openCreate">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
@@ -226,57 +227,62 @@ function formatDate(d) {
 </script>
 
 <style scoped>
-.admin-page { max-width: 1100px; }
-
-.page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }
-.page-title { font-size: 24px; font-weight: 700; color: var(--neutral-900); margin: 0; }
-.page-subtitle { font-size: 14px; color: #64748b; margin: 4px 0 0; }
+.dash-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
 
 .btn-create {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 10px 20px; border: none; border-radius: 10px;
-  background: var(--brand-main); color: #fff;
-  font-size: 14px; font-weight: 600; cursor: pointer;
-  transition: background 0.2s;
+  padding: 9px 18px; border: none; border-radius: 9px;
+  background: var(--dash-sage); color: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  transition: background 0.15s;
 }
-.btn-create:hover { background: var(--brand-dark); }
+.btn-create:hover { background: var(--dash-sage-dark); }
 
-.loading { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 60px 0; color: #64748b; font-size: 14px; }
-.spinner { width: 20px; height: 20px; border: 2.5px solid #e2e8f0; border-top-color: var(--brand-main); border-radius: 50%; animation: spin 0.6s linear infinite; }
+.loading { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 60px 0; color: var(--dash-muted); font-size: 13px; }
+.spinner { width: 20px; height: 20px; border: 2.5px solid var(--dash-cream-border); border-top-color: var(--dash-sage); border-radius: 50%; animation: spin 0.6s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .empty-state {
   text-align: center;
   padding: 60px 24px;
-  color: #94a3b8;
+  color: var(--dash-light);
 }
 .empty-state h3 {
+  font-family: 'Playfair Display', serif;
   font-size: 18px;
-  font-weight: 600;
-  color: #475569;
+  font-weight: 400;
+  color: var(--dash-charcoal);
   margin: 16px 0 8px;
 }
 .empty-state p {
-  font-size: 14px;
+  font-size: 13px;
+  color: var(--dash-muted);
   margin: 0;
 }
 
 /* Table */
-.table-card { background: #fff; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); overflow: hidden; }
+.table-card { background: var(--dash-cream-card); border-radius: var(--dash-radius); border: 1px solid var(--dash-cream-border); box-shadow: var(--dash-shadow-sm); overflow: hidden; }
 .table-wrap { overflow-x: auto; }
 
 .table { width: 100%; border-collapse: collapse; text-align: left; }
-.table thead tr { background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
-.table th { padding: 14px 20px; font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
-.table td { padding: 14px 20px; font-size: 14px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+.table thead tr { background: var(--dash-sage-ghost); border-bottom: 1px solid var(--dash-cream-border); }
+.table th { padding: 13px 20px; font-size: 10.5px; font-weight: 600; color: var(--dash-muted); text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+.table td { padding: 14px 20px; font-size: 13.5px; color: var(--dash-ink); border-bottom: 1px solid var(--dash-cream-border); vertical-align: middle; }
 .table tbody tr:last-child td { border-bottom: none; }
 
 .row-hover { transition: background 0.15s; }
-.row-hover:hover { background: #f8fafc; }
+.row-hover:hover { background: var(--dash-cream); }
 .row-click { cursor: pointer; }
 
-.cell-title { font-weight: 600; color: var(--brand-main); }
-.text-sub { font-size: 12px; color: #94a3b8; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cell-title { font-weight: 600; color: var(--dash-ink); }
+.text-sub { font-size: 12px; color: var(--dash-light); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .text-sub--wide { max-width: 300px; }
 
 /* Dialog form */
@@ -299,27 +305,31 @@ function formatDate(d) {
 }
 
 .field label {
-  font-size: 13px;
+  font-size: 10.5px;
   font-weight: 600;
-  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dash-muted);
 }
 
-.req { color: #dc2626; }
+.req { color: #9a5e56; }
 
 .input {
-  padding: 10px 14px;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  font-size: 14px;
-  background: #fff;
+  padding: 9px 14px;
+  border: 1.5px solid var(--dash-cream-border);
+  border-radius: 9px;
+  font-size: 13px;
+  font-family: 'Outfit', sans-serif;
+  background: var(--dash-cream);
+  color: var(--dash-ink);
   outline: none;
   transition: border-color 0.2s;
-  font-family: inherit;
 }
 
 .input:focus {
-  border-color: var(--brand-main);
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  border-color: var(--dash-sage-light);
+  box-shadow: 0 0 0 3px rgba(90, 122, 82, 0.1);
+  background: var(--dash-cream-card);
 }
 
 .textarea {
@@ -329,33 +339,35 @@ function formatDate(d) {
 
 .form-error {
   padding: 10px 14px;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 10px;
-  color: #dc2626;
-  font-size: 13px;
+  background: var(--dash-blush-pale);
+  border: 1px solid var(--dash-blush);
+  border-radius: 9px;
+  color: #9a5e56;
+  font-size: 12px;
   font-weight: 500;
   margin: 0;
 }
 
 .btn-cancel {
-  padding: 9px 20px; border: 1px solid #e2e8f0; border-radius: 8px;
-  background: #fff; color: #475569; font-size: 14px; font-weight: 500;
+  padding: 9px 20px; border: 1.5px solid var(--dash-cream-border); border-radius: 9px;
+  background: var(--dash-cream-card); color: var(--dash-ink); font-size: 13px; font-weight: 500;
+  font-family: 'Outfit', sans-serif;
   cursor: pointer; transition: all 0.15s;
 }
-.btn-cancel:hover { background: #f8fafc; }
+.btn-cancel:hover { border-color: var(--dash-sage-light); }
 
 .btn-save {
-  padding: 9px 24px; border: none; border-radius: 8px;
-  background: var(--brand-main); color: #fff;
-  font-size: 14px; font-weight: 600; cursor: pointer;
-  transition: background 0.2s;
+  padding: 9px 24px; border: none; border-radius: 9px;
+  background: var(--dash-sage); color: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  transition: background 0.15s;
 }
-.btn-save:hover:not(:disabled) { background: var(--brand-dark); }
+.btn-save:hover:not(:disabled) { background: var(--dash-sage-dark); }
 .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
 
 @media (max-width: 600px) {
-  .page-header { flex-direction: column; }
+  .dash-page-header { flex-direction: column; }
   .form-row { grid-template-columns: 1fr; }
 }
 </style>

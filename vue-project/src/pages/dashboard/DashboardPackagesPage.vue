@@ -95,6 +95,7 @@ onMounted(fetchPackages);
   <div class="dash-page">
     <div class="dash-page-header">
       <div class="header-text">
+        <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
         <h1 class="dash-page-title">{{ t("packages.title") }}</h1>
         <p class="dash-page-subtitle">{{ t("packages.subtitle") }}</p>
       </div>
@@ -232,8 +233,8 @@ onMounted(fetchPackages);
   display: inline-block;
   width: 32px;
   height: 32px;
-  border: 3px solid var(--neutral-300, #e5e7eb);
-  border-top-color: var(--brand-gold, #c8a24d);
+  border: 3px solid var(--dash-cream-border);
+  border-top-color: var(--dash-gold);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }
@@ -244,90 +245,89 @@ onMounted(fetchPackages);
 
 .error-msg {
   padding: 18px 0;
-  color: #b00020;
+  color: #9a5e56;
 }
 
 .empty-card {
-  background: #fff;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--dash-cream-card);
+  border-radius: var(--dash-radius);
+  border: 1px solid var(--dash-cream-border);
+  box-shadow: var(--dash-shadow-sm);
   padding: 40px 24px;
   text-align: center;
 }
 
 .empty-title {
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--neutral-500);
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--dash-charcoal);
 }
 
 /* ---- Grid ---- */
 .packages-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
+  gap: 20px;
   text-align: center;
 }
 
 /* ---- Card ---- */
 .package-card {
   position: relative;
-  background: #fff;
-  border: 1px solid var(--neutral-200, #e5e7eb);
-  border-radius: 16px;
+  background: var(--dash-cream-card);
+  border: 1px solid var(--dash-cream-border);
+  border-radius: var(--dash-radius);
   padding: 36px 28px 32px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  transition: all 0.22s;
 }
 
 .package-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
-}
-
-.package-card {
-  cursor: pointer;
+  transform: translateY(-3px);
+  box-shadow: var(--dash-shadow-md);
 }
 
 .package-card.featured {
-  border-color: var(--brand-gold, #c8a24d);
-  box-shadow: 0 4px 20px rgba(200, 162, 77, 0.15);
+  border-color: var(--dash-gold);
+  box-shadow: 0 4px 20px rgba(184, 149, 78, 0.15);
 }
 
 .package-card.selected {
-  border-color: var(--brand-gold, #c8a24d);
+  border-color: var(--dash-gold);
   border-width: 2px;
-  box-shadow: 0 4px 20px rgba(200, 162, 77, 0.25);
-  background: #fffdf7;
+  box-shadow: 0 4px 20px rgba(184, 149, 78, 0.25);
+  background: var(--dash-cream);
 }
 
 .badge-popular {
   position: absolute;
   top: -12px;
-  background: var(--brand-gold, #c8a24d);
+  background: linear-gradient(135deg, var(--dash-gold), #9a7a3e);
   color: #fff;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.08em;
   padding: 4px 14px;
   border-radius: 20px;
 }
 
 .package-name {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--brand-dark, #2f3e36);
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--dash-charcoal);
   margin: 0;
 }
 
 .package-desc {
-  font-size: 13px;
-  color: var(--neutral-500, #6b7280);
+  font-size: 12.5px;
+  color: var(--dash-muted);
   margin: 0;
   line-height: 1.4;
 }
@@ -342,23 +342,25 @@ onMounted(fetchPackages);
 }
 
 .price-amount {
+  font-family: 'Playfair Display', serif;
   font-size: 2rem;
-  font-weight: 800;
-  color: var(--brand-dark, #2f3e36);
+  font-weight: 400;
+  color: var(--dash-charcoal);
 }
 
 .price-old {
   font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--neutral-400, #9ca3af);
+  font-weight: 500;
+  color: var(--dash-light);
   text-decoration: line-through;
 }
 
 .price-badge {
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 700;
+  letter-spacing: 0.04em;
   color: #fff;
-  background: #059669;
+  background: var(--dash-sage);
   padding: 2px 8px;
   border-radius: 12px;
 }
@@ -374,10 +376,10 @@ onMounted(fetchPackages);
 
 /* ---- Discount Code ---- */
 .discount-section {
-  background: #fff;
-  border-radius: var(--radius-lg, 12px);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--dash-cream-card);
+  border-radius: var(--dash-radius);
+  border: 1px solid var(--dash-cream-border);
+  box-shadow: var(--dash-shadow-sm);
   padding: 18px 24px;
 }
 
@@ -389,32 +391,36 @@ onMounted(fetchPackages);
 
 .discount-input {
   flex: 1;
-  padding: 10px 14px;
-  border: 1px solid var(--neutral-300, #ddd);
-  border-radius: var(--radius-md, 8px);
-  font-size: 14px;
-  background: var(--bg-main, #f8f6f1);
-  color: var(--neutral-900);
+  padding: 9px 14px;
+  border: 1.5px solid var(--dash-cream-border);
+  border-radius: 9px;
+  font-size: 13px;
+  font-family: 'Outfit', sans-serif;
+  background: var(--dash-cream);
+  color: var(--dash-ink);
   max-width: 320px;
 }
 
 .discount-input:focus {
   outline: none;
-  border-color: var(--brand-gold, #C8A24D);
-  box-shadow: 0 0 0 2px rgba(200, 162, 77, 0.15);
+  border-color: var(--dash-gold-light);
+  box-shadow: 0 0 0 2px rgba(184, 149, 78, 0.12);
+  background: var(--dash-cream-card);
 }
 
 .discount-btn {
-  padding: 10px 20px;
+  padding: 9px 18px;
   border: none;
-  border-radius: var(--radius-md, 8px);
-  background: var(--brand-gold, #c8a24d);
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--dash-gold), #9a7a3e);
   color: #fff;
-  font-size: 14px;
-  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
-  transition: opacity 0.15s ease;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 10px rgba(184, 149, 78, 0.25);
 }
 
 .discount-btn:disabled {
@@ -423,7 +429,8 @@ onMounted(fetchPackages);
 }
 
 .discount-btn:hover:not(:disabled) {
-  opacity: 0.9;
+  box-shadow: 0 4px 16px rgba(184, 149, 78, 0.4);
+  transform: translateY(-1px);
 }
 
 .discount-success {
@@ -432,10 +439,10 @@ onMounted(fetchPackages);
   align-items: center;
   gap: 10px;
   padding: 8px 14px;
-  background: #e8f5e9;
-  color: #2e7d32;
-  border-radius: var(--radius-md, 8px);
-  font-size: 14px;
+  background: var(--dash-sage-ghost);
+  color: var(--dash-sage);
+  border-radius: 9px;
+  font-size: 13px;
   font-weight: 600;
 }
 
@@ -444,15 +451,15 @@ onMounted(fetchPackages);
   border: none;
   font-size: 18px;
   cursor: pointer;
-  color: #2e7d32;
+  color: var(--dash-sage);
   padding: 0 4px;
   line-height: 1;
 }
 
 .discount-error {
   margin-top: 8px;
-  font-size: 13px;
-  color: #c62828;
+  font-size: 12px;
+  color: #9a5e56;
 }
 
 /* ---- Responsive ---- */

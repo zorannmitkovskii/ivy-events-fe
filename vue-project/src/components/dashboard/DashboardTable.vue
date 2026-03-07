@@ -1,7 +1,11 @@
 <template>
   <div class="table-card">
     <div class="table-scroll">
-      <table class="d-table">
+      <table class="d-table" :class="{ 'fixed-layout': cols?.length }">
+        <colgroup v-if="cols?.length">
+          <col v-for="(w, i) in cols" :key="i" :style="{ width: w }" />
+        </colgroup>
+
         <thead>
           <tr>
             <slot name="head" />
@@ -20,12 +24,18 @@
   </div>
 </template>
 
+<script setup>
+defineProps({
+  cols: { type: Array, default: null }
+});
+</script>
+
 <style scoped>
 .table-card {
-  background: #fff;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--dash-cream-card);
+  border-radius: var(--dash-radius);
+  border: 1px solid var(--dash-cream-border);
+  box-shadow: var(--dash-shadow-sm);
   overflow: hidden;
 }
 
@@ -38,33 +48,43 @@
   border-collapse: collapse;
 }
 
+.d-table.fixed-layout {
+  table-layout: fixed;
+}
+
 .d-table thead {
-  background: var(--bg-main);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--dash-sage-ghost);
+  border-bottom: 1px solid var(--dash-cream-border);
 }
 
 .d-table :deep(th) {
-  padding: 14px 24px;
+  padding: 13px 24px;
   text-align: left;
-  font-size: 13px;
+  font-size: 10.5px;
   font-weight: 600;
-  color: var(--neutral-900);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dash-muted);
   white-space: nowrap;
 }
 
 .d-table :deep(tbody tr) {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  border-bottom: 1px solid var(--dash-cream-border);
   transition: background 0.15s ease;
 }
 
+.d-table :deep(tbody tr:last-child) {
+  border-bottom: none;
+}
+
 .d-table :deep(tbody tr:hover) {
-  background: var(--bg-main);
+  background: var(--dash-cream);
 }
 
 .d-table :deep(tbody td) {
   padding: 14px 24px;
-  font-size: 14px;
-  color: var(--neutral-900);
+  font-size: 13.5px;
+  color: var(--dash-ink);
   vertical-align: middle;
 }
 
@@ -73,10 +93,10 @@
   gap: 16px;
   flex-wrap: wrap;
   padding: 14px 24px;
-  background: var(--bg-main);
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
-  font-size: 13px;
-  color: var(--neutral-500);
+  background: var(--dash-sage-ghost);
+  border-top: 1px solid var(--dash-cream-border);
+  font-size: 12.5px;
+  color: var(--dash-muted);
 }
 
 @media (max-width: 900px) {

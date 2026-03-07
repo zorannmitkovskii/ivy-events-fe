@@ -1,6 +1,7 @@
 <template>
   <div class="dash-page">
     <div class="dash-page-header">
+      <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
       <h1 class="dash-page-title">{{ t('budget.title') }}</h1>
       <p class="dash-page-subtitle">{{ subtitle }}</p>
     </div>
@@ -115,14 +116,14 @@ function onExport() {
 <style scoped>
 .content {
   display: grid;
-  gap: 24px;
+  gap: 20px;
 }
 
 .empty-card {
-  background: #fff;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--dash-cream-card);
+  border-radius: var(--dash-radius);
+  border: 1px solid var(--dash-cream-border);
+  box-shadow: var(--dash-shadow-sm);
   padding: 48px 24px;
   text-align: center;
   display: grid;
@@ -131,20 +132,21 @@ function onExport() {
 }
 
 .empty-icon {
-  color: var(--neutral-400);
+  color: var(--dash-light);
   margin-bottom: 8px;
 }
 
 .empty-title {
-  font-weight: 700;
-  font-size: 16px;
-  color: var(--neutral-900);
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--dash-charcoal);
   margin: 0;
 }
 
 .empty-sub {
   font-size: 13px;
-  color: var(--neutral-500);
+  color: var(--dash-muted);
   margin: 0 0 8px;
 }
 </style>

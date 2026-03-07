@@ -602,7 +602,17 @@
     "adults": "Të rritur",
     "children": "Fëmijë",
     "note": "Shënim",
-    "notePh": "Shënim opsional..."
+    "notePh": "Shënim opsional...",
+    "totalGuests": "Totali i Mysafirëve"
+  },
+  "notifications": {
+    "subtitle": "Dërgoni përditësime dhe RSVP mysafirëve tuaj",
+    "placeholder": "Shabllonet e njoftimeve së shpejti."
+  },
+  "team": {
+    "title": "Ekipi & Bashkë-organizatorët",
+    "subtitle": "Menaxhoni anëtarët e ekipit dhe lejet",
+    "placeholder": "Menaxhimi i ekipit së shpejti."
   },
   "agenda": {
     "title": "Axhenda",
@@ -795,10 +805,13 @@
     "support": "Mbështetje",
     "premium": "PREMIUM",
     "eventPlanner": "Planifikues Ngjarjesh",
+    "weddingPlanner": "Planifikues Dasmash",
     "eventSettings": "Cilësimet e Ngjarjes",
+    "notifications": "Njoftimet",
     "signOut": "Dil",
     "addGuest": "Shto Mysafir",
-    "addTask": "Shto Detyrë"
+    "addTask": "Shto Detyrë",
+    "navigation": "Navigimi"
   },
   "admin": {
     "sidebar": {
@@ -961,14 +974,17 @@
     "totalGuests": "Totali i Mysafirëve",
     "tablesAssigned": "Tavolina të Caktuara",
     "tablesSeated": "e tavolinave të mbushura",
-    "budgetStatus": "Statusi i Buxhetit",
+    "budgetStatus": "Buxheti – Shpenzimet",
+    "budgetRemaining": "Buxheti i Mbetur",
     "of": "nga",
     "budget": "buxheti",
     "remaining": "Mbetur",
     "used": "Përdorur",
-    "rsvpSummary": "Përmbledhja RSVP",
-    "viewDetails": "Shiko Detajet",
-    "total": "TOTALI",
+    "spent": "shpenzuar",
+    "totalBudget": "Buxheti Total",
+    "rsvpSummary": "Statusi RSVP",
+    "viewDetails": "Detajet",
+    "total": "Totali",
     "coming": "Vinë",
     "maybe": "Ndoshta",
     "declined": "Refuzuar",
@@ -985,7 +1001,18 @@
     "guestsAssigned": "mysafirë të caktuar",
     "viewAllTasks": "Shiko të Gjitha Detyrat",
     "onTrackTitle": "Gjithçka është në rregull!",
-    "viewTimeline": "Shiko Kronologjinë"
+    "viewTimeline": "Shiko Kronologjinë",
+    "readiness": "Gatishmëria",
+    "live": "Drejtpërdrejt",
+    "weddingEvent": "Ngjarja e Dasmës",
+    "event": "Ngjarje",
+    "activeTasks": "Detyra Aktive",
+    "highPriority": "me prioritet të lartë",
+    "tablesSeating": "Tavolinat e Mbushura",
+    "seated": "të vendosur",
+    "unseated": "Pa vendosur",
+    "tables": "Tavolina",
+    "tableNum": "Tavolina {n}"
   },
   "common": {
     "edit": "Ndrysho",
@@ -1088,6 +1115,7 @@
     "totalBudget": "Buxheti Total",
     "totalSpent": "Totali i Shpenzuar",
     "remaining": "Mbetur",
+    "progress": "Progresi",
     "monthly": "Mujore",
     "fixedAndVariable": "Fikse dhe Variabël",
     "safeToSpend": "E sigurt për shpenzim",

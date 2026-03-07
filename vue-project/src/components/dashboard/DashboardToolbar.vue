@@ -14,11 +14,11 @@
 
 <style scoped>
 .toolbar-card {
-  background: #fff;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  padding: 16px 24px;
+  background: var(--dash-cream-card);
+  border-radius: var(--dash-radius);
+  border: 1px solid var(--dash-cream-border);
+  box-shadow: var(--dash-shadow-sm);
+  padding: 14px 24px;
 }
 
 .toolbar-inner {
@@ -26,29 +26,30 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 14px;
 }
 
 .btn-group {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
 .filter-group {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
 .filter-group :deep(.filter-input),
 .filter-group :deep(.filter-select) {
-  padding: 10px 16px;
-  border: 1px solid var(--neutral-300);
-  border-radius: var(--radius-md);
-  font-size: 14px;
-  color: var(--neutral-900);
-  background: #fff;
+  padding: 9px 14px;
+  border: 1.5px solid var(--dash-cream-border);
+  border-radius: 9px;
+  font-size: 13px;
+  font-family: 'Outfit', sans-serif;
+  color: var(--dash-ink);
+  background: var(--dash-cream);
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -58,13 +59,14 @@
 }
 
 .filter-group :deep(.filter-input)::placeholder {
-  color: var(--neutral-500);
+  color: var(--dash-light);
 }
 
 .filter-group :deep(.filter-input):focus,
 .filter-group :deep(.filter-select):focus {
-  border-color: var(--brand-gold);
-  box-shadow: 0 0 0 3px rgba(200, 162, 77, 0.15);
+  border-color: var(--dash-sage-light);
+  box-shadow: 0 0 0 3px rgba(90, 122, 82, 0.1);
+  background: var(--dash-cream-card);
 }
 
 @media (max-width: 1100px) {
@@ -86,7 +88,7 @@
 
 @media (max-width: 640px) {
   .toolbar-card {
-    padding: 14px 16px;
+    padding: 12px 16px;
   }
   .btn-group {
     width: 100%;

@@ -3,14 +3,24 @@
     <div class="sidebar-head">
       <SidebarBrand />
       <button class="close-btn" @click="$emit('close')" aria-label="Close menu">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18" />
           <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
       </button>
     </div>
 
+    <!-- Event info card -->
+    <div v-if="eventName" class="event-info">
+      <div class="ei-names">{{ eventName }}</div>
+      <div class="ei-date">
+        <span v-if="eventDate">{{ eventDate }}</span>
+        <span v-if="eventStatusLabel" class="pill-draft">{{ eventStatusLabel }}</span>
+      </div>
+    </div>
+
     <nav class="nav">
+      <div class="nav-label">{{ t("sidebar.navigation") }}</div>
       <SidebarNavItem
         v-for="it in navItems"
         :key="it.key"
@@ -22,15 +32,9 @@
       />
     </nav>
 
-    <div v-if="!isGallery" class="sidebar-actions">
-      <button class="sidebar-action-btn" @click="goToGuests">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-        {{ t("sidebar.addGuest") }}
-      </button>
-      <button class="sidebar-action-btn" @click="goToTasks">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-        {{ t("sidebar.addTask") }}
-      </button>
+    <div v-if="!isGallery" class="sidebar-ctas">
+      <button class="cta-btn cta-primary" @click="goToGuests">+ {{ t("sidebar.addGuest") }}</button>
+      <button class="cta-btn cta-outline" @click="goToTasks">+ {{ t("sidebar.addTask") }}</button>
     </div>
 
     <SidebarAccount
@@ -47,7 +51,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import SidebarBrand from "@/components/sidebar/SidebarBrand.vue";
@@ -57,17 +61,17 @@ import { Icons } from "@/utils/icons.js";
 import { getFullName, logout } from "@/services/auth.service";
 import { onboardingStore, clearOnboarding } from "@/store/onboarding.store";
 import { EventCategoryEnum } from "@/enums/EventCategory.js";
-
+import { eventsService } from "@/services/events.service";
 
 defineEmits(["close", "navigate"]);
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const route = useRoute();
+const router = useRouter();
 
 const lang = computed(() => route.params.lang || "mk");
 
-const link = (section) =>
-  `/${lang.value}/dashboard/events/${section}`;
+const link = (section) => `/${lang.value}/dashboard/events/${section}`;
 
 const isActive = (section) => {
   const p = `/dashboard/events/${section}`;
@@ -95,56 +99,67 @@ const navItems = computed(() => {
   return allNavItems.filter(it => !GALLERY_NAV_KEYS.includes(it.key) || it.key === 'gallery');
 });
 
-const router = useRouter();
-
 const userName = computed(() => getFullName() || "User");
 const userRole = computed(() => t("sidebar.eventPlanner"));
 const avatarUrl = computed(() => "");
 
-function goToSettings() {
-  router.push(`/${lang.value}/dashboard/events/settings`);
-}
+// Event info
+const eventName = ref("");
+const eventDate = ref("");
+const eventStatusLabel = computed(() => {
+  const s = onboardingStore.eventStatus;
+  if (!s || s === "ACTIVE") return "";
+  return s === "DRAFT" ? "Draft" : s;
+});
 
-function goToInvitationLinks() {
-  router.push(`/${lang.value}/dashboard/events/invitation-links`);
-}
+onMounted(async () => {
+  try {
+    const id = onboardingStore.eventId;
+    if (!id || id === "demo") return;
+    const ev = await eventsService.getById(id);
+    eventName.value = ev.name || ev.title || "";
+    if (ev.date || ev.eventDate) {
+      const d = new Date(ev.date || ev.eventDate);
+      eventDate.value = d.toLocaleDateString(locale.value === "mk" ? "mk-MK" : "en-US", {
+        day: "numeric", month: "short", year: "numeric"
+      });
+    }
+  } catch {
+    // keep empty
+  }
+});
 
-function goToPackages() {
-  router.push({ name: "dashboard.packages", params: { lang: lang.value } });
-}
-
-function goToSupport() {
-  router.push(`/${lang.value}/dashboard/events/support`);
-}
-
-function goToGuests() {
-  router.push(`/${lang.value}/dashboard/events/guests?action=add`);
-}
-
-function goToTasks() {
-  router.push(`/${lang.value}/dashboard/events/tasks?action=add`);
-}
-
-function signOut() {
-  logout();
-  clearOnboarding();
-  router.push(`/${lang.value}/auth/login`);
-}
+function goToSettings() { router.push(`/${lang.value}/dashboard/events/settings`); }
+function goToInvitationLinks() { router.push(`/${lang.value}/dashboard/events/invitation-links`); }
+function goToPackages() { router.push({ name: "dashboard.packages", params: { lang: lang.value } }); }
+function goToSupport() { router.push(`/${lang.value}/dashboard/events/support`); }
+function goToGuests() { router.push(`/${lang.value}/dashboard/events/guests?action=add`); }
+function goToTasks() { router.push(`/${lang.value}/dashboard/events/tasks?action=add`); }
+function signOut() { logout(); clearOnboarding(); router.push(`/${lang.value}/auth/login`); }
 </script>
 
 <style scoped>
-/* Use exactly your design */
 .sidebar {
   height: 100vh;
-  background: var(--brand-main);
-  color: var(--neutral-100);
-  padding: 18px 14px;
+  background: var(--dash-charcoal);
   display: flex;
   flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
+  position: relative;
+  overflow: hidden;
 }
+
+.sidebar::before {
+  content: '';
+  position: absolute;
+  bottom: -80px;
+  right: -80px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(90, 122, 82, 0.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
 .sidebar-head {
   display: flex;
   align-items: center;
@@ -155,70 +170,135 @@ function signOut() {
   display: none;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: var(--neutral-100);
+  color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
   padding: 0;
+  margin-right: 14px;
 }
-.close-btn:hover { background: rgba(255,255,255,0.12); }
+
+.close-btn:hover { background: rgba(255, 255, 255, 0.08); }
 
 @media (max-width: 1024px) {
   .close-btn { display: inline-flex; }
 }
 
-.brand { padding: 8px 10px 14px; }
-.logo { font-family: var(--font-family), serif; font-size: 22px; letter-spacing: .4px; }
+/* Event info card */
+.event-info {
+  margin: 16px 14px 0;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  padding: 14px 16px;
+  position: relative;
+  overflow: hidden;
+}
 
+.event-info::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--dash-gold), var(--dash-gold-light));
+  border-radius: 0 2px 2px 0;
+}
+
+.ei-names {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.92);
+  font-style: italic;
+}
+
+.ei-date {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.38);
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pill-draft {
+  background: rgba(184, 149, 78, 0.2);
+  border: 1px solid rgba(184, 149, 78, 0.35);
+  color: var(--dash-gold-light);
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+/* Nav */
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  margin-top: 12px;
+  padding: 20px 0;
   flex: 1;
   overflow-y: auto;
 }
 
-/* item styles live in SidebarNavItem; keep here if you want global */
-.badge {
-  background: var(--brand-gold);
-  color: #1b1b1b;
-  border-radius: 999px;
-  padding: 2px 8px;
-  font-size: 12px;
-}
-.footer { padding: 14px 10px 8px; }
-.account { color: var(--neutral-100); text-decoration: none; opacity: .9; }
-
-/* Sidebar action buttons */
-.sidebar-actions {
-  display: grid;
-  gap: 8px;
-  padding: 14px 0;
+.nav-label {
+  font-size: 8.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.22);
+  padding: 0 24px;
+  margin-bottom: 4px;
+  font-weight: 600;
 }
 
-.sidebar-action-btn {
-  display: inline-flex;
+/* Sidebar CTAs */
+.sidebar-ctas {
+  padding: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.cta-btn {
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 7px;
   width: 100%;
-  padding: 10px 14px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--neutral-100);
-  background: var(--brand-dark);
-  color: var(--neutral-100);
-  font-size: 12px;
-  font-weight: 600;
+  padding: 10px;
+  border-radius: 9px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12.5px;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: all 0.18s;
+  border: none;
+  letter-spacing: 0.02em;
 }
 
-.sidebar-action-btn:hover {
-  background: var(--brand-light);
-  color: var(--brand-main);
+.cta-primary {
+  background: var(--dash-sage);
+  color: #fff;
+}
+
+.cta-primary:hover {
+  background: var(--dash-sage-dark);
+}
+
+.cta-outline {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+}
+
+.cta-outline:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+  color: rgba(255, 255, 255, 0.75);
 }
 </style>

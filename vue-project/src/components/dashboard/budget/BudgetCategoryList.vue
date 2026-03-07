@@ -1,26 +1,40 @@
 <template>
-  <section class="list">
-    <div class="head">
-      <h2 class="title">{{ title }}</h2>
-      <button class="link" type="button" @click="$emit('viewAll')">
-        {{ viewAllLabel }}
-      </button>
-    </div>
+  <DashboardTable>
+    <template #head>
+      <th>{{ title }}</th>
+      <th>{{ t('budget.totalSpent') }}</th>
+      <th>{{ t('budget.totalBudget') }}</th>
+      <th>{{ t('budget.progress') }}</th>
+      <th>{{ t('budget.remaining') }}</th>
+    </template>
 
-    <div class="rows">
+    <template #body>
       <BudgetCategoryRow
         v-for="c in categories"
         :key="c.id"
         :currency="currency"
         v-bind="c"
-       name="2"/>
-    </div>
-  </section>
+      />
+
+      <tr v-if="categories.length === 0">
+        <td colspan="5" class="empty-cell">No categories yet.</td>
+      </tr>
+    </template>
+
+    <template v-if="categories.length > 0" #footer>
+      <button class="view-all-link" type="button" @click="$emit('viewAll')">
+        {{ viewAllLabel }}
+      </button>
+    </template>
+  </DashboardTable>
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n";
+import DashboardTable from "@/components/dashboard/DashboardTable.vue";
+import BudgetCategoryRow from "./BudgetCategoryRow.vue";
 
-import BudgetCategoryRow from "@/components/dashboard/budget/BudgetCategoryRow.vue";
+const { t } = useI18n();
 
 defineProps({
   title: { type: String, required: true },
@@ -33,36 +47,25 @@ defineEmits(["viewAll"]);
 </script>
 
 <style scoped>
-.list{
-  background:#fff;
-  border: 1px solid var(--brand-dark);
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow: 0 6px 16px #00000012;
+.empty-cell {
+  text-align: center;
+  padding: 32px 24px !important;
+  color: var(--dash-muted);
+  font-size: 13px;
 }
 
-.head{
-  padding:18px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  border-bottom: 1px solid var(--brand-dark);
+.view-all-link {
+  border: 0;
+  background: transparent;
+  color: var(--dash-sage);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s;
+  padding: 0;
 }
 
-.title{
-  margin:0;
-  font-size:16px;
-  font-weight:900;
-  color: var(--brand-main);
+.view-all-link:hover {
+  color: var(--dash-sage-dark);
 }
-
-.link{
-  border:0;
-  background:transparent;
-  color: var(--brand-gold);
-  font-weight:900;
-  cursor:pointer;
-}
-
-.rows{ display:grid; }
 </style>

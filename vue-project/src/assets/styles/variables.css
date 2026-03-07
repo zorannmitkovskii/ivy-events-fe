@@ -12,7 +12,7 @@
   --secondary-moss: #5D6A57; /* Moss Green */
   --secondary-gold: #E1C699; /* Gold */
 
-  --neutral-900: #334338;    /* Forest Green (as “near-black”) */
+  --neutral-900: #334338;    /* Forest Green (as "near-black") */
   --neutral-700: #5D6A57;    /* Moss Green */
   --neutral-500: #7A8773;    /* Optional mid (derived from palette feel) */
   --neutral-300: #E7E7E7;    /* Light Grey */
@@ -37,6 +37,33 @@
   --shadow-lg: 0 16px 40px rgba(0,0,0,0.12);
 
   --container-max: 1200px;
-  --header-height: 72px;
+  --header-height: 58px;
   --font-family: 'Cormorant Garamond', serif;
+
+  /* Dashboard palette */
+  --dash-sage:        #5a7a52;
+  --dash-sage-dark:   #3d5637;
+  --dash-sage-mid:    #7a9a70;
+  --dash-sage-light:  #b2c9aa;
+  --dash-sage-pale:   #dcebd6;
+  --dash-sage-ghost:  #f1f6ee;
+  --dash-cream:       #faf6ef;
+  --dash-cream-card:  #ffffff;
+  --dash-cream-border:#e6dfd4;
+  --dash-gold:        #b8954e;
+  --dash-gold-light:  #d4b070;
+  --dash-gold-pale:   #f5ead4;
+  --dash-blush:       #c4968e;
+  --dash-blush-pale:  #f5e8e6;
+  --dash-sky:         #7a9db8;
+  --dash-sky-pale:    #e6eff6;
+  --dash-charcoal:    #1e2420;
+  --dash-ink:         #2e3530;
+  --dash-muted:       #7a7870;
+  --dash-light:       #b0ada6;
+  --dash-radius:      14px;
+  --dash-shadow-sm:   0 1px 12px rgba(30,36,32,0.06);
+  --dash-shadow-md:   0 4px 24px rgba(30,36,32,0.1);
+  --dash-shadow-lg:   0 12px 48px rgba(30,36,32,0.14);
+  --dash-sidebar-w:   240px;
 }

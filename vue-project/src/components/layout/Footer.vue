@@ -1,39 +1,50 @@
 <template>
   <footer class="footer">
-    <div class="footer__container">
+    <div class="foot-grid">
       <!-- Brand -->
-      <div class="footer-brand">
-        <img src="/logoInv.svg" alt="IvyEvents" class="footer-brand__logo" />
-        <p class="footer-brand__desc">
-          {{$t('footer.brand.tagline')}}
-        </p>
+      <div class="foot-brand">
+        <div class="foot-brand-name">
+          <img src="/logoInv.svg" alt="IvyEvents" class="foot-logo" />
+        </div>
+        <p class="foot-tagline">{{ $t('footer.brand.tagline') }}</p>
       </div>
 
       <!-- Columns -->
-      <FooterColumn :titleKey="'footer.columns.product'" :links="productLinks" />
-      <FooterColumn :titleKey="'footer.columns.company'" :links="companyLinks" />
-      <FooterColumn :titleKey="'footer.columns.support'" :links="supportLinks" />
+      <div class="foot-col">
+        <h4>{{ $t('footer.columns.product') }}</h4>
+        <ul>
+          <li v-for="link in productLinks" :key="link.labelKey">
+            <router-link :to="link.to">{{ $t(link.labelKey) }}</router-link>
+          </li>
+        </ul>
+      </div>
 
-      <!-- Social -->
-      <div class="footer-col">
-        <h4 class="footer-col__title">{{$t('footer.columns.connect')}}</h4>
+      <div class="foot-col">
+        <h4>{{ $t('footer.columns.company') }}</h4>
+        <ul>
+          <li v-for="link in companyLinks" :key="link.labelKey">
+            <router-link :to="link.to">{{ $t(link.labelKey) }}</router-link>
+          </li>
+        </ul>
+      </div>
 
-        <div class="footer-social">
-          <SocialIconLink
-            v-for="(s, i) in socials"
-            :key="i"
-            :href="s.href"
-            :icon="s.icon"
-            :labelKey="s.labelKey"
-          />
-        </div>
+      <div class="foot-col">
+        <h4>{{ $t('footer.columns.support') }}</h4>
+        <ul>
+          <li v-for="link in supportLinks" :key="link.labelKey">
+            <router-link :to="link.to">{{ $t(link.labelKey) }}</router-link>
+          </li>
+        </ul>
       </div>
     </div>
 
-    <div class="footer__bottom">
-      <p class="footer__copyright">
-        © {{ new Date().getFullYear() }} IvyEvents. {{$t('footer.copyright')}}
-      </p>
+    <div class="foot-bot">
+      <span>© {{ new Date().getFullYear() }} IvyEvents. {{ $t('footer.copyright') }}</span>
+      <div class="soc">
+        <a v-for="(s, i) in socials" :key="i" :href="s.href" target="_blank" rel="noopener" :aria-label="$t(s.labelKey)">
+          <i :class="s.icon"></i>
+        </a>
+      </div>
     </div>
   </footer>
 </template>
@@ -41,96 +52,135 @@
 <script setup>
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import FooterColumn from "@/components/footer/FooterColumn.vue";
-import SocialIconLink from "@/components/footer/SocialIconLink.vue";
 
 const route = useRoute();
 const lang = computed(() => route.params.lang || "mk");
 
 const productLinks = computed(() => [
-  // { labelKey: "footer.links.features", to: `/${lang.value}/features` },
-  { labelKey: "footer.links.pricing", to: `/${lang.value}/pricing` },
+  { labelKey: "footer.links.pricing", to: `/${lang.value}/packages` },
   { labelKey: "footer.links.designs", to: `/${lang.value}/event-invitations` },
-  { labelKey: "footer.links.faq", to: `/${lang.value}/faq` }
+  { labelKey: "footer.links.faq", to: `/${lang.value}/faq` },
 ]);
 
 const companyLinks = computed(() => [
   { labelKey: "footer.links.about", to: `/${lang.value}/about` },
-  { labelKey: "footer.links.contact", to: `/${lang.value}/contact` }
+  { labelKey: "footer.links.contact", to: `/${lang.value}/contact` },
 ]);
 
 const supportLinks = computed(() => [
   { labelKey: "footer.links.terms", to: `/${lang.value}/terms` },
-  { labelKey: "footer.links.feedback", to: `/${lang.value}/feedback` }
+  { labelKey: "footer.links.feedback", to: `/${lang.value}/feedback` },
 ]);
 
 const socials = [
   { labelKey: 'comingSoon.social.facebook', href: "https://www.facebook.com/profile.php?id=61584269536071", icon: "fab fa-facebook-f" },
-  { labelKey: 'comingSoon.social.instagram', href: "https://www.instagram.com/ivyevents.mk/", icon: "fab fa-instagram" }
+  { labelKey: 'comingSoon.social.instagram', href: "https://www.instagram.com/ivyevents.mk/", icon: "fab fa-instagram" },
 ];
 </script>
 
 <style scoped>
 .footer {
-  background: var(--brand-main);
-  color: var(--bg-white);
+  background: #111D18;
+  padding: 64px 52px 30px;
 }
 
-.footer__container {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 44px 20px;
-
+.foot-grid {
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
-  gap: 42px;
-  align-items: start;
+  grid-template-columns: 2.2fr 1fr 1fr 1fr;
+  gap: 52px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 48px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 28px;
 }
 
-.footer-brand__logo {
+.foot-logo {
   height: 28px;
   width: auto;
-  margin: 0 0 12px;
   display: block;
+  margin-bottom: 10px;
 }
 
-.footer-brand__desc {
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 14px;
-  line-height: 1.7;
-  max-width: 320px;
-  margin: 0;
-}
-
-.footer-social {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.footer__bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 14px 20px;
-  justify-content: center;
-}
-
-.footer__copyright {
-  margin: 0;
+.foot-tagline {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.42);
+  line-height: 1.75;
+  max-width: 230px;
+  font-weight: 300;
+  margin: 0;
 }
 
-/* Responsive */
-@media (max-width: 980px) {
-  .footer__container {
-    grid-template-columns: 1fr 1fr;
-    gap: 28px;
-  }
+.foot-col h4 {
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 0 16px;
 }
 
-@media (max-width: 560px) {
-  .footer__container {
-    grid-template-columns: 1fr;
-  }
+.foot-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.foot-col li { margin-bottom: 8px; }
+
+.foot-col a {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.42);
+  text-decoration: none;
+  transition: color 0.2s;
+  font-weight: 300;
+}
+
+.foot-col a:hover {
+  color: var(--brand-light);
+}
+
+.foot-bot {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.soc {
+  display: flex;
+  gap: 8px;
+}
+
+.soc a {
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 13px;
+  text-decoration: none;
+  transition: all 0.25s;
+}
+
+.soc a:hover {
+  border-color: var(--brand-light);
+  color: var(--brand-light);
+}
+
+@media (max-width: 900px) {
+  .footer { padding: 48px 24px 24px; }
+  .foot-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+
+@media (max-width: 520px) {
+  .foot-grid { grid-template-columns: 1fr; }
+  .foot-bot { flex-direction: column; gap: 12px; text-align: center; }
 }
 </style>

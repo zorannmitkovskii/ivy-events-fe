@@ -48,21 +48,21 @@ defineEmits(["changeTable", "changeStatus", "remove", "edit"]);
 
 <style scoped>
 .stat strong {
-  color: var(--neutral-900);
+  color: var(--dash-ink);
 }
 
 .stat-confirmed {
-  color: var(--success);
-  font-weight: 500;
+  color: var(--dash-sage);
+  font-weight: 600;
 }
 
 .stat-pending {
-  color: var(--brand-dark);
-  font-weight: 500;
+  color: var(--dash-gold);
+  font-weight: 600;
 }
 
 .stat-declined {
-  color: var(--error);
-  font-weight: 500;
+  color: var(--dash-blush);
+  font-weight: 600;
 }
 </style>

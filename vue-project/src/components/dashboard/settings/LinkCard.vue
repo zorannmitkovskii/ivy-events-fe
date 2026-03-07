@@ -91,23 +91,23 @@ watch(() => props.url, renderQr);
 
 <style scoped>
 .link-card {
-  background: #fff;
-  border-radius: var(--radius-lg, 16px);
-  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.08));
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--dash-cream-card);
+  border-radius: var(--dash-radius);
+  box-shadow: var(--dash-shadow-sm);
+  border: 1px solid var(--dash-cream-border);
   padding: 24px;
 }
 
 .link-card-title {
   font-size: 16px;
   font-weight: 700;
-  color: var(--neutral-900);
+  color: var(--dash-charcoal);
   margin: 0 0 4px;
 }
 
 .link-card-desc {
   font-size: 13px;
-  color: var(--neutral-500);
+  color: var(--dash-muted);
   margin: 0 0 16px;
 }
 
@@ -116,15 +116,15 @@ watch(() => props.url, renderQr);
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  background: var(--bg-main, #f8f6f1);
-  border: 1px solid var(--neutral-300, #ddd);
-  border-radius: var(--radius-md, 8px);
+  background: var(--dash-cream);
+  border: 1px solid var(--dash-cream-border);
+  border-radius: 10px;
 }
 
 .url-text {
   flex: 1;
   font-size: 13px;
-  color: var(--neutral-900);
+  color: var(--dash-ink);
   word-break: break-all;
   font-family: monospace;
 }
@@ -134,20 +134,20 @@ watch(() => props.url, renderQr);
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  border: 1px solid var(--neutral-300, #ddd);
-  background: #fff;
-  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--dash-cream-border);
+  background: var(--dash-cream-card);
+  border-radius: 10px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--brand-main);
+  color: var(--dash-sage);
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.15s ease;
 }
 
 .copy-btn:hover {
-  border-color: var(--brand-gold);
-  background: rgba(200, 162, 77, 0.06);
+  border-color: var(--dash-sage-light);
+  background: var(--dash-sage-ghost);
 }
 
 .qr-section {
@@ -160,30 +160,30 @@ watch(() => props.url, renderQr);
 
 .qr-canvas {
   display: block;
-  border: 1px solid var(--neutral-300, #ddd);
-  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--dash-cream-border);
+  border-radius: 10px;
 }
 
 .qr-download-btn {
   padding: 8px 16px;
-  border: 1px solid var(--neutral-300, #ddd);
-  background: #fff;
-  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--dash-cream-border);
+  background: var(--dash-cream-card);
+  border-radius: 10px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--brand-main);
+  color: var(--dash-sage);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .qr-download-btn:hover {
-  border-color: var(--brand-gold);
-  background: rgba(200, 162, 77, 0.06);
+  border-color: var(--dash-sage-light);
+  background: var(--dash-sage-ghost);
 }
 
 .link-card-empty {
   font-size: 13px;
-  color: var(--neutral-400);
+  color: var(--dash-muted);
   padding: 12px 0;
 }
 

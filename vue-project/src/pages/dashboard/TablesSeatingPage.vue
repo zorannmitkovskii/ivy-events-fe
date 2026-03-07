@@ -1,6 +1,7 @@
 <template>
   <div class="dash-page">
     <div class="dash-page-header">
+      <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
       <h1 class="dash-page-title">{{ t("tables.title") }}</h1>
       <p class="dash-page-subtitle">{{ t("tables.subtitle") }}</p>
     </div>

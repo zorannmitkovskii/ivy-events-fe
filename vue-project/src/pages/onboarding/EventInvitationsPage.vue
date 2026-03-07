@@ -110,7 +110,7 @@ const filteredInvitations = computed(() => {
   const mapped = templates.value.map(t => ({
     id: t.id,
     name: t.name,
-    thumbnailUrl: t.thumbnailImage || '',
+    thumbnailUrl: t.thumbnailImage || (t.path ? `/thumbnails/${t.path.split('/').pop()}.svg` : ''),
   }));
   // Put the selected invitation first
   const sel = onboardingStore.invitationName;

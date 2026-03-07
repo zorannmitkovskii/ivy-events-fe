@@ -1,13 +1,40 @@
 <template>
-  <header class="app-header">
+  <header class="app-header" :class="{ scrolled }">
     <div class="header-container">
       <!-- Logo -->
-      <router-link :to="`/${lang}`" class="logo">
-        <img src="/logo.svg" alt="IvyEvents" class="logo__img" />
+      <router-link :to="`/${lang}`" class="nav-brand">
+        <img src="/logo.svg" alt="IvyEvents" class="logo-img" />
       </router-link>
 
-      <NavLinks class="desktop-nav"/>
-      <HeaderActions class="desktop-actions"/>
+      <!-- Desktop nav -->
+      <NavLinks class="desktop-nav" />
+
+      <!-- Desktop actions -->
+      <div class="nav-r desktop-actions">
+        <template v-if="loggedIn">
+          <router-link :to="{ name: 'dashboard.overview', params: { lang } }" class="btn-fill">
+            {{ fullName || $t('header.actions.myDashboard') }}
+          </router-link>
+        </template>
+        <template v-else>
+          <router-link :to="{ name: 'login', params: { lang } }" class="btn-outline">
+            {{ $t('header.actions.signIn') }}
+          </router-link>
+          <router-link :to="{ name: 'signup', params: { lang } }" class="btn-fill">
+            {{ $t('pricing.cta.getStarted') }}
+          </router-link>
+        </template>
+        <div class="lang-toggle">
+          <button
+            v-for="loc in locales"
+            :key="loc"
+            class="lang-btn"
+            :class="{ on: lang === loc }"
+            @click="switchLang(loc)"
+          >{{ loc.toUpperCase() }}</button>
+        </div>
+      </div>
+
       <!-- Mobile hamburger -->
       <button
         class="icon-btn mobile-only"
@@ -21,16 +48,11 @@
     </div>
 
     <!-- Mobile menu overlay -->
-    <div
-      class="overlay"
-      :class="{ show: isMenuOpen }"
-      @click="closeMenu"
-    ></div>
+    <div class="overlay" :class="{ show: isMenuOpen }" @click="closeMenu"></div>
 
-    <!-- Mobile menu panel (dropdown) -->
+    <!-- Mobile menu panel -->
     <div class="mobile-menu" :class="{ open: isMenuOpen }">
       <nav class="mobile-nav">
-        <!-- Categories accordion -->
         <div class="mobile-accordion">
           <button class="mobile-accordion-toggle" @click="mobileCategoriesOpen = !mobileCategoriesOpen">
             <span>{{ $t('header.menu.categories') }}</span>
@@ -39,45 +61,23 @@
             </svg>
           </button>
           <div v-show="mobileCategoriesOpen" class="mobile-accordion-body">
-            <a
-              v-for="item in categoryItems"
-              :key="item.enumValue"
-              href="#"
-              @click.prevent="goToCategory(item.enumValue)"
-            >{{ $t(item.labelKey) }}</a>
+            <a v-for="item in categoryItems" :key="item.enumValue" href="#" @click.prevent="goToCategory(item.enumValue)">{{ $t(item.labelKey) }}</a>
           </div>
         </div>
-
-        <!-- Packages link -->
         <a href="#" @click.prevent="goTo('packages')">{{ $t('header.menu.packages') }}</a>
-
-        <!-- Static links -->
         <a href="#" @click.prevent="goTo('about')">{{ $t('header.menu.about') }}</a>
-        <a href="#" @click.prevent="goTo('terms')">{{ $t('header.menu.terms') }}</a>
         <a href="#" @click.prevent="goTo('contact')">{{ $t('header.menu.contact') }}</a>
       </nav>
-
-      <!-- Mobile language switcher -->
       <div class="mobile-lang-switcher">
-        <button
-          v-for="loc in locales"
-          :key="loc"
-          class="lang-btn"
-          :class="{ active: lang === loc }"
-          @click="switchLang(loc)"
-        >{{ loc.toUpperCase() }}</button>
+        <button v-for="loc in locales" :key="loc" class="lang-btn" :class="{ active: lang === loc }" @click="switchLang(loc)">{{ loc.toUpperCase() }}</button>
       </div>
-
-      <!-- Mobile auth-conditional actions -->
       <div class="mobile-actions">
         <template v-if="loggedIn">
-          <button class="btn btn-main w-full" @click="goToDashboard">
-            {{ fullName || $t('header.actions.myDashboard') }}
-          </button>
+          <button class="btn btn-main w-full" @click="goToDashboard">{{ fullName || $t('header.actions.myDashboard') }}</button>
         </template>
         <template v-else>
-          <button class="btn btn-main-outline w-full" @click="goToLogin">{{$t('header.actions.signIn')}}</button>
-          <button class="btn btn-main w-full" @click="goToSignup">{{$t('header.actions.getStartedFree')}}</button>
+          <button class="btn btn-main-outline w-full" @click="goToLogin">{{ $t('header.actions.signIn') }}</button>
+          <button class="btn btn-main w-full" @click="goToSignup">{{ $t('header.actions.getStartedFree') }}</button>
         </template>
       </div>
     </div>
@@ -88,7 +88,6 @@
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import NavLinks from "@/components/header/NavLinks.vue";
-import HeaderActions from "@/components/header/HeaderActions.vue";
 import { isAuthenticated, getFullName } from "@/services/auth.service";
 import { EventCategoryEnum } from "@/enums/EventCategory.js";
 import { setSelectedCategory } from "@/store/onboarding.store.js";
@@ -101,6 +100,7 @@ const fullName = computed(() => getFullName());
 
 const isMenuOpen = ref(false);
 const mobileCategoriesOpen = ref(false);
+const scrolled = ref(false);
 
 const locales = ["mk", "en"];
 
@@ -116,44 +116,13 @@ const categoryItems = [
   { enumValue: EventCategoryEnum.GALLERY, labelKey: "header.menu.gallery" },
 ];
 
-function mobileRoute(path) {
-  return `/${lang.value}/${path}`;
-}
-
-function toggleMenu() {
-  isMenuOpen.value = !isMenuOpen.value;
-}
-
-function closeMenu() {
-  isMenuOpen.value = false;
-  mobileCategoriesOpen.value = false;
-}
-
-function goTo(path) {
-  router.push(mobileRoute(path));
-  closeMenu();
-}
-
-function goToCategory(enumValue) {
-  setSelectedCategory(enumValue);
-  router.push({ path: `/${lang.value}/event-invitations` });
-  closeMenu();
-}
-
-function goToLogin() {
-  router.push({ name: "login", params: { lang: lang.value } });
-  closeMenu();
-}
-
-function goToSignup() {
-  router.push({ name: "signup", params: { lang: lang.value } });
-  closeMenu();
-}
-
-function goToDashboard() {
-  router.push({ name: "dashboard.overview", params: { lang: lang.value } });
-  closeMenu();
-}
+function toggleMenu() { isMenuOpen.value = !isMenuOpen.value; }
+function closeMenu() { isMenuOpen.value = false; mobileCategoriesOpen.value = false; }
+function goTo(path) { router.push(`/${lang.value}/${path}`); closeMenu(); }
+function goToCategory(enumValue) { setSelectedCategory(enumValue); router.push({ path: `/${lang.value}/event-invitations` }); closeMenu(); }
+function goToLogin() { router.push({ name: "login", params: { lang: lang.value } }); closeMenu(); }
+function goToSignup() { router.push({ name: "signup", params: { lang: lang.value } }); closeMenu(); }
+function goToDashboard() { router.push({ name: "dashboard.overview", params: { lang: lang.value } }); closeMenu(); }
 
 function switchLang(newLang) {
   if (newLang === lang.value) return;
@@ -161,15 +130,141 @@ function switchLang(newLang) {
   closeMenu();
 }
 
-function onKeydown(e) {
-  if (e.key === "Escape") closeMenu();
-}
+function onScroll() { scrolled.value = window.scrollY > 50; }
+function onKeydown(e) { if (e.key === "Escape") closeMenu(); }
 
-onMounted(() => window.addEventListener("keydown", onKeydown));
-onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
+onMounted(() => {
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("keydown", onKeydown);
+  onScroll();
+});
+onBeforeUnmount(() => {
+  window.removeEventListener("scroll", onScroll);
+  window.removeEventListener("keydown", onKeydown);
+});
 </script>
 
 <style scoped>
+.app-header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 200;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(247, 245, 240, 0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.app-header.scrolled {
+  border-color: rgba(191, 210, 164, 0.45);
+}
+
+.header-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo */
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+}
+
+.logo-img {
+  height: 34px;
+  width: auto;
+}
+
+/* Desktop nav */
+.desktop-nav {
+  display: flex;
+}
+
+/* Right actions */
+.nav-r {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-outline {
+  padding: 8px 20px;
+  border: 1.5px solid var(--brand-main);
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--brand-main);
+  text-decoration: none;
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+
+.btn-outline:hover {
+  background: var(--brand-main);
+  color: #fff;
+}
+
+.btn-fill {
+  padding: 8px 20px;
+  background: var(--brand-main);
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  text-decoration: none;
+  transition: background 0.25s;
+  white-space: nowrap;
+}
+
+.btn-fill:hover {
+  background: var(--brand-dark);
+}
+
+/* Lang toggle */
+.lang-toggle {
+  display: flex;
+  gap: 2px;
+  background: var(--soft-light);
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.lang-toggle .lang-btn {
+  padding: 4px 9px;
+  font-size: 12px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--neutral-500);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lang-toggle .lang-btn.on {
+  background: #fff;
+  color: var(--brand-main);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Mobile */
+.mobile-only {
+  display: none;
+}
+
+/* Mobile lang */
 .mobile-lang-switcher {
   display: flex;
   gap: 4px;
@@ -189,21 +284,10 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   transition: background 0.2s, color 0.2s;
 }
 
-.mobile-lang-switcher .lang-btn:hover {
-  background: rgba(0, 0, 0, 0.04);
-}
-
-.mobile-lang-switcher .lang-btn.active {
-  background: var(--brand-main);
-  color: #fff;
-  border-color: var(--brand-main);
-}
+.mobile-lang-switcher .lang-btn:hover { background: rgba(0, 0, 0, 0.04); }
+.mobile-lang-switcher .lang-btn.active { background: var(--brand-main); color: #fff; border-color: var(--brand-main); }
 
 /* Mobile accordion */
-.mobile-accordion {
-  border-radius: 12px;
-}
-
 .mobile-accordion-toggle {
   display: flex;
   align-items: center;
@@ -217,21 +301,12 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   color: var(--neutral-900);
   padding: 10px 12px;
   border-radius: 12px;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: background 0.2s ease;
 }
 
-.mobile-accordion-toggle:hover {
-  background: var(--neutral-100);
-  color: var(--brand-main);
-}
-
-.mobile-chevron {
-  transition: transform 0.2s ease;
-}
-
-.mobile-chevron.rotated {
-  transform: rotate(180deg);
-}
+.mobile-accordion-toggle:hover { background: var(--neutral-100); }
+.mobile-chevron { transition: transform 0.2s ease; }
+.mobile-chevron.rotated { transform: rotate(180deg); }
 
 .mobile-accordion-body {
   display: grid;
@@ -246,11 +321,14 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
   font-size: 14px;
   padding: 8px 12px;
   border-radius: 8px;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: background 0.2s ease;
 }
 
-.mobile-accordion-body a:hover {
-  background: var(--neutral-100);
-  color: var(--brand-main);
+.mobile-accordion-body a:hover { background: var(--neutral-100); color: var(--brand-main); }
+
+@media (max-width: 900px) {
+  .header-container { padding: 0 20px; }
+  .desktop-nav, .desktop-actions { display: none !important; }
+  .mobile-only { display: inline-flex; }
 }
 </style>
