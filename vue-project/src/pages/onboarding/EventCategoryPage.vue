@@ -80,7 +80,7 @@ async function onContinue() {
     setSelectedCategory(enumValue);
   }
 
-  await router.push({ name: 'EventBasicDetailsPage', params: { lang: lang.value } });
+  await router.push({ name: 'EventInvitationsPage', params: { lang: lang.value } });
 }
 </script>
 

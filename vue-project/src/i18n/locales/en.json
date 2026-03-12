@@ -416,11 +416,12 @@
   },
   "home": {
     "hero": {
-      "pill": "Digital Invitations · Macedonia 🇲🇰",
+      "pill": "Digital Invitations",
       "titleLine1": "Create",
       "titleAccent1": "beautiful",
       "titleLine2": "invitations. Plan",
       "titleAccent2": "unforgettable",
+      "titleLine3": "invitations.",
       "subtitle": "The all-in-one platform for elegant digital invitations, seamless RSVP tracking, and stress-free event management.",
       "primaryCta": "✦ Get Started Free",
       "secondaryCta": "View Templates",

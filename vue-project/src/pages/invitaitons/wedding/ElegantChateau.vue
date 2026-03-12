@@ -633,7 +633,8 @@ async function onGlobalSave() {
       lang: locale.value,
     });
     await saveFullEvent(payload, { heroImage: heroFile.value, ourStoryImages: ourStoryFiles.value.length ? ourStoryFiles.value : undefined, collageImages: collageFiles.value.length ? collageFiles.value : undefined });
-    if (eventId) { router.push({ name: 'dashboard.overview', params: { lang: locale.value } }); return; }
+    router.push({ name: 'dashboard.overview', params: { lang: locale.value } });
+    return;
   } else {
     const payload = buildEventFullPayload({
       config,

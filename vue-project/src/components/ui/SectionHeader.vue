@@ -20,7 +20,7 @@ defineProps({
 
 .section-title {
   font-family: var(--font-family), serif;
-  font-size: 42px;
+  font-size: 48px;
   font-weight: 500;
   color: var(--brand-main);
   margin: 0 0 10px;
@@ -29,6 +29,6 @@ defineProps({
 .section-subtitle {
   margin: 0;
   color: var(--brand-dark);
-  font-size: 16px;
+  font-size: 17px;
 }
 </style>

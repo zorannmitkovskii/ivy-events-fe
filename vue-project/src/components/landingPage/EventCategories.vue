@@ -67,28 +67,28 @@ const categories = [
 
 .eyebrow {
   display: inline-block;
-  font-size: 10.5px;
-  font-weight: 500;
+  font-size: 13.5px;
+  font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--brand-gold);
+  color: var(--brand-main);
   margin-bottom: 12px;
 }
 
 h2 {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(32px, 3.6vw, 48px);
+  font-size: clamp(36px, 4vw, 54px);
   font-weight: 400;
   line-height: 1.15;
-  margin: 0 0 13px;
+  margin: 0 0 14px;
   color: var(--brand-main);
 }
 
-h2 em { font-style: italic; color: var(--neutral-500); }
+h2 em { font-style: italic; color: var(--brand-gold); }
 
 .s-desc {
-  font-size: 15px;
-  color: var(--neutral-500);
+  font-size: 17px;
+  color: var(--neutral-700);
   font-weight: 300;
   line-height: 1.75;
   max-width: 520px;
@@ -159,15 +159,15 @@ h2 em { font-style: italic; color: var(--neutral-500); }
 }
 
 .cat-n {
-  font-size: 13.5px;
+  font-size: 15px;
   font-weight: 500;
   margin-bottom: 6px;
   color: var(--brand-main);
 }
 
 .cat-d {
-  font-size: 12px;
-  color: var(--neutral-500);
+  font-size: 14px;
+  color: var(--neutral-700);
   line-height: 1.55;
 }
 

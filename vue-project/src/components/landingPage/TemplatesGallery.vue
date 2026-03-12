@@ -100,24 +100,24 @@ function goToTemplate(tpl) {
 
 .eyebrow {
   display: inline-block;
-  font-size: 10.5px;
-  font-weight: 500;
+  font-size: 13.5px;
+  font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--brand-gold);
+  color: var(--brand-main);
   margin-bottom: 12px;
 }
 
 h2 {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(32px, 3.6vw, 48px);
+  font-size: clamp(36px, 4vw, 54px);
   font-weight: 400;
   line-height: 1.15;
   margin: 0;
   color: var(--brand-main);
 }
 
-h2 em { font-style: italic; color: var(--neutral-500); }
+h2 em { font-style: italic; color: var(--brand-gold); }
 
 /* Grid */
 .tpl-grid {
@@ -169,8 +169,8 @@ h2 em { font-style: italic; color: var(--neutral-500); }
 }
 
 .mini-date {
-  font-size: 11px;
-  color: var(--neutral-500);
+  font-size: 12.5px;
+  color: var(--neutral-700);
   margin-bottom: 9px;
 }
 
@@ -198,15 +198,15 @@ h2 em { font-style: italic; color: var(--neutral-500); }
 }
 
 .tpl-info h3 {
-  font-size: 14px;
+  font-size: 15.5px;
   font-weight: 500;
   margin: 0 0 3px;
   color: var(--brand-main);
 }
 
 .tpl-info p {
-  font-size: 12px;
-  color: var(--neutral-500);
+  font-size: 14px;
+  color: var(--neutral-700);
   margin: 0;
 }
 

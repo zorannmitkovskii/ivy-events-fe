@@ -162,7 +162,7 @@ const galleryPlans = computed(() => [
 
 .pricing__title {
   font-family: var(--font-family), serif;
-  font-size: 42px;
+  font-size: 48px;
   font-weight: 500;
   margin: 0 0 10px;
   color: var(--neutral-900);
@@ -171,7 +171,7 @@ const galleryPlans = computed(() => [
 .pricing__subtitle {
   margin: 0;
   color: var(--neutral-700);
-  font-size: 16px;
+  font-size: 17px;
 }
 
 .pricing__grid {

@@ -10,7 +10,7 @@
 
         <h1 class="hero-h1">
           {{ $t('home.hero.titleLine1') }} <em>{{ $t('home.hero.titleAccent1') }}</em><br>
-          {{ $t('home.hero.titleLine2') }} <em>{{ $t('home.hero.titleAccent2') }}</em>
+          {{ $t('home.hero.titleLine2') }} <em>{{ $t('home.hero.titleAccent2') }}</em> {{ $t('home.hero.titleLine3') }}
         </h1>
 
         <p class="hero-sub">{{ $t('home.hero.subtitle') }}</p>
@@ -180,7 +180,7 @@ const stats = [
 .hero-sub {
   font-size: 15.5px;
   line-height: 1.75;
-  color: var(--neutral-500);
+  color: var(--neutral-700);
   font-weight: 300;
   max-width: 400px;
   margin: 0 0 40px;
@@ -250,8 +250,8 @@ const stats = [
 }
 
 .hero-num-lbl {
-  font-size: 11.5px;
-  color: var(--neutral-500);
+  font-size: 13px;
+  color: var(--neutral-700);
   margin-top: 3px;
 }
 
@@ -294,11 +294,11 @@ const stats = [
 }
 
 .invite-leaf { font-size: 28px; margin-bottom: 9px; }
-.invite-label { font-size: 8.5px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--neutral-500); margin-bottom: 7px; }
+.invite-label { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--neutral-700); margin-bottom: 7px; }
 .invite-names { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-style: italic; color: var(--brand-main); line-height: 1.2; margin-bottom: 12px; }
 .invite-rule { width: 32px; height: 1px; background: var(--brand-gold); margin: 0 auto 12px; }
-.invite-date { font-size: 11.5px; color: var(--neutral-500); margin-bottom: 4px; }
-.invite-loc { font-size: 11.5px; color: var(--neutral-500); margin-bottom: 17px; }
+.invite-date { font-size: 13px; color: var(--neutral-700); margin-bottom: 4px; }
+.invite-loc { font-size: 13px; color: var(--neutral-700); margin-bottom: 17px; }
 .invite-btn { display: inline-block; padding: 8px 20px; background: var(--brand-main); border-radius: 8px; font-size: 10.5px; font-weight: 500; color: #fff; letter-spacing: 0.07em; }
 
 /* Floating chips */
@@ -330,7 +330,7 @@ const stats = [
 
 .chip-icon { font-size: 17px; }
 .chip-title { font-size: 12px; font-weight: 500; }
-.chip-sub { font-size: 10px; color: var(--neutral-500); }
+.chip-sub { font-size: 11px; color: var(--neutral-700); }
 .chip-sub-light { font-size: 10px; color: var(--brand-light); }
 
 /* Animations */

@@ -44,8 +44,8 @@ const lang = computed(() => route.params.lang || "mk");
 
 .eyebrow {
   display: inline-block;
-  font-size: 10.5px;
-  font-weight: 500;
+  font-size: 13.5px;
+  font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--brand-light);
@@ -54,10 +54,10 @@ const lang = computed(() => route.params.lang || "mk");
 
 h2 {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(32px, 3.6vw, 48px);
+  font-size: clamp(36px, 4vw, 54px);
   font-weight: 400;
   line-height: 1.15;
-  margin: 0 0 13px;
+  margin: 0 0 14px;
   color: #fff;
 }
 
@@ -67,8 +67,8 @@ h2 em {
 }
 
 .s-desc {
-  font-size: 15px;
-  color: rgba(255, 255, 255, 0.55);
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.72);
   font-weight: 300;
   line-height: 1.75;
   max-width: 520px;

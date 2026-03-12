@@ -61,9 +61,9 @@ import CategoryFilterBar from '@/components/onboarding/CategoryFilterBar.vue';
 import InvitationGrid from '@/components/onboarding/InvitationGrid.vue';
 import ButtonMain from '@/components/generic/ButtonMain.vue';
 import OnboardingFooterLinks from '@/components/onboarding/OnboardingFooterLinks.vue';
-import { onboardingStore, setInvitationName } from '@/store/onboarding.store';
+import { onboardingStore, setInvitationName, setEventId } from '@/store/onboarding.store';
 import { eventsService } from '@/services/events.service';
-import { isAuthenticated } from '@/services/auth.service';
+import { isAuthenticated, getUsername } from '@/services/auth.service';
 import { EventCategoryEnum } from '@/enums/EventCategory';
 import { invitationTemplateService } from '@/services/invitationTemplate.service';
 import { useI18n } from 'vue-i18n';
@@ -168,7 +168,7 @@ function onBack() {
   } else if (!isAuthenticated()) {
     router.push({ name: 'home', params: { lang: lang.value } });
   } else {
-    router.push({ name: 'EventBasicDetailsPage', params: { lang: lang.value } });
+    router.push({ name: 'EventCategoryPage', params: { lang: lang.value } });
   }
 }
 
@@ -185,8 +185,23 @@ async function onContinue() {
   loading.value = true;
 
   try {
-    const eventId = onboardingStore.eventId;
+    let eventId = onboardingStore.eventId;
 
+    // Create event if it doesn't exist yet
+    if (!eventId) {
+      const payload = {
+        name: 'New Event',
+        categoryType: onboardingStore.selectedCategory,
+        status: 'DRAFT',
+        username: getUsername(),
+        lang: lang.value,
+      };
+      const res = await eventsService.create(payload);
+      eventId = res?.id || res?.eventId;
+      setEventId(eventId);
+    }
+
+    // Attach selected invitation to the event
     if (eventId) {
       const selected = templates.value.find(t => t.id === onboardingStore.invitationName);
       const path = selected?.path || onboardingStore.invitationName;

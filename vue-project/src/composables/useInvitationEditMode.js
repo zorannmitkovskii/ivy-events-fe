@@ -28,6 +28,9 @@ export function useInvitationEditMode() {
     setEventId(eventId);
   }
 
+  // Helper: true when we can make direct API calls (authenticated + event exists)
+  const canUseApi = () => isAuthenticated() && onboardingStore.eventId;
+
   // Modal state
   const activeModal = ref(null);
   const activeRootSection = ref(null);
@@ -133,7 +136,7 @@ export function useInvitationEditMode() {
   const eventDetails = useEventDetails();
 
   async function handleEventDetailSave(payload) {
-    if (isAuthenticated()) {
+    if (canUseApi()) {
       if (payload.id) {
         await eventDetails.updateItem(payload.id, payload);
       } else {
@@ -155,7 +158,7 @@ export function useInvitationEditMode() {
   }
 
   async function handleEventDetailUpdate(payload) {
-    if (isAuthenticated()) {
+    if (canUseApi()) {
       if (payload.id) await eventDetails.updateItem(payload.id, payload);
     } else if (payload.id && payload.id.startsWith("_local_")) {
       updateDraftItem("eventDetails", payload.id, payload);
@@ -167,7 +170,7 @@ export function useInvitationEditMode() {
   }
 
   async function handleEventDetailDelete(id) {
-    if (isAuthenticated()) {
+    if (canUseApi()) {
       await eventDetails.deleteItem(id);
     } else {
       deleteDraftItem("eventDetails", id);
@@ -181,7 +184,7 @@ export function useInvitationEditMode() {
   const agenda = useAgenda();
 
   async function handleAgendaSave(payload) {
-    if (isAuthenticated()) {
+    if (canUseApi()) {
       if (payload.id) {
         await agenda.updateItem(payload.id, payload);
       } else {
@@ -203,7 +206,7 @@ export function useInvitationEditMode() {
   }
 
   async function handleAgendaUpdate(payload) {
-    if (isAuthenticated()) {
+    if (canUseApi()) {
       if (payload.id) await agenda.updateItem(payload.id, payload);
     } else if (payload.id && payload.id.startsWith("_local_")) {
       updateDraftItem("agenda", payload.id, payload);
@@ -215,7 +218,7 @@ export function useInvitationEditMode() {
   }
 
   async function handleAgendaDelete(id) {
-    if (isAuthenticated()) {
+    if (canUseApi()) {
       await agenda.deleteItem(id);
     } else {
       deleteDraftItem("agenda", id);
@@ -229,7 +232,7 @@ export function useInvitationEditMode() {
   const ourStory = useOurStory();
 
   async function handleOurStorySave(payload, file) {
-    if (isAuthenticated()) {
+    if (canUseApi()) {
       if (payload.id) {
         await ourStory.updateItem(payload.id, payload, file);
       } else {
@@ -252,7 +255,7 @@ export function useInvitationEditMode() {
   }
 
   async function handleOurStoryUpdate(payload, file) {
-    if (isAuthenticated()) {
+    if (canUseApi()) {
       if (payload.id) await ourStory.updateItem(payload.id, payload, file);
     } else if (payload.id && payload.id.startsWith("_local_")) {
       updateDraftItem("ourStory", payload.id, payload);
@@ -264,7 +267,7 @@ export function useInvitationEditMode() {
   }
 
   async function handleOurStoryDelete(id) {
-    if (isAuthenticated()) {
+    if (canUseApi()) {
       await ourStory.deleteItem(id);
     } else {
       deleteDraftItem("ourStory", id);
@@ -276,7 +279,7 @@ export function useInvitationEditMode() {
 
   // ---- Load data based on auth state ----
   function loadEditData() {
-    if (isAuthenticated()) {
+    if (canUseApi()) {
       eventDetails.loadEventDetails();
       agenda.loadAgenda();
       ourStory.loadStories();

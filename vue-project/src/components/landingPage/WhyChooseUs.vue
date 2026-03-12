@@ -66,7 +66,7 @@ const benefits = [
 .section-title {
   margin: 0 0 10px;
   font-family: var(--font-family), serif;
-  font-size: 44px;
+  font-size: 48px;
   font-weight: 500;
   color: var(--neutral-900);
 }
@@ -74,6 +74,6 @@ const benefits = [
 .section-subtitle {
   margin: 0;
   color: var(--neutral-700);
-  font-size: 14px;
+  font-size: 16px;
 }
 </style>

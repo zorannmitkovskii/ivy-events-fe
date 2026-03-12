@@ -92,7 +92,7 @@ const rsvpGuests = [
 /* Left */
 .feat-left h2 {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(28px, 3.6vw, 44px);
+  font-size: clamp(32px, 4vw, 50px);
   font-weight: 400;
   line-height: 1.15;
   text-align: left;
@@ -100,21 +100,21 @@ const rsvpGuests = [
   color: var(--brand-main);
 }
 
-.feat-left h2 em { font-style: italic; color: var(--neutral-500); }
+.feat-left h2 em { font-style: italic; color: var(--brand-gold); }
 
 .eyebrow {
   display: inline-block;
-  font-size: 10.5px;
-  font-weight: 500;
+  font-size: 13.5px;
+  font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--brand-gold);
+  color: var(--brand-main);
   margin-bottom: 12px;
 }
 
 .feat-desc {
-  font-size: 15px;
-  color: var(--neutral-500);
+  font-size: 17px;
+  color: var(--neutral-700);
   line-height: 1.8;
   font-weight: 300;
   margin: 0 0 32px;
@@ -154,15 +154,15 @@ const rsvpGuests = [
 }
 
 .feat-item h4 {
-  font-size: 14px;
+  font-size: 15.5px;
   font-weight: 500;
   margin: 0 0 4px;
   color: var(--brand-main);
 }
 
 .feat-item p {
-  font-size: 13px;
-  color: var(--neutral-500);
+  font-size: 14.5px;
+  color: var(--neutral-700);
   line-height: 1.6;
   margin: 0;
 }
