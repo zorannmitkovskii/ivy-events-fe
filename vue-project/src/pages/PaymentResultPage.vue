@@ -35,6 +35,7 @@ import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { cpayService } from "@/services/cpay.service";
+import { getErrorMessage } from "@/services/apiError";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -83,7 +84,7 @@ async function loadStatus() {
     const data = res?.data ?? res;
     status.value = data.status || "UNKNOWN";
   } catch (e) {
-    error.value = e?.message || "Could not fetch payment status.";
+    error.value = getErrorMessage(e);
   }
 }
 

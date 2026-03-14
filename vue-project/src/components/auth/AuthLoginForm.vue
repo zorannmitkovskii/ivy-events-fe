@@ -75,6 +75,7 @@ import { loginWithCredentials, getEventId, hasRole } from '@/services/auth.servi
 import { setEventId } from '@/store/onboarding.store';
 import { syncDraftToBackend } from '@/composables/useDraftSync';
 import { getRuntimeEnv, detectDefaultEnvFromLocation, computeKeycloakBaseUrl } from '@/services/env';
+import { ApiError } from '@/services/apiError';
 
 const route = useRoute();
 const router = useRouter();
@@ -115,7 +116,11 @@ async function onSubmit() {
       await router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
     }
   } catch (e) {
-    formError.value = e?.message || 'Login failed. Please try again.';
+    if (e instanceof ApiError) {
+      formError.value = e.detail || e.message;
+    } else {
+      formError.value = e?.message || 'Login failed. Please try again.';
+    }
   } finally {
     isLoading.value = false;
   }

@@ -61,6 +61,7 @@ import Header from "@/components/header/Header.vue";
 import Footer from "@/components/layout/Footer.vue";
 import StarRating from "@/components/ui/StarRating.vue";
 import { feedbackService } from "@/services/feedback.service";
+import { getErrorMessage } from "@/services/apiError";
 
 const route = useRoute();
 
@@ -90,7 +91,7 @@ async function submit() {
     });
     success.value = true;
   } catch (e) {
-    error.value = e.message || "Something went wrong. Please try again.";
+    error.value = getErrorMessage(e);
   } finally {
     submitting.value = false;
   }

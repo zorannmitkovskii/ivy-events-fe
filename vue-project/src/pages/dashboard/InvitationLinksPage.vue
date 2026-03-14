@@ -69,6 +69,7 @@ import { onboardingStore, setSelectedCategory } from "@/store/onboarding.store";
 import { EventCategoryEnum } from "@/enums/EventCategory";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import LinkCard from "@/components/dashboard/settings/LinkCard.vue";
+import { getErrorMessage } from "@/services/apiError";
 
 const { t, locale } = useI18n();
 
@@ -124,7 +125,7 @@ async function loadEvent() {
       setSelectedCategory(match || cat);
     }
   } catch (e) {
-    error.value = e?.message || "Failed to load event";
+    error.value = getErrorMessage(e);
   } finally {
     loading.value = false;
   }

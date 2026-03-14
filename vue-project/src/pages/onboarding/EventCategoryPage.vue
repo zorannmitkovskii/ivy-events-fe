@@ -14,12 +14,7 @@
           <p class="header-subtitle">{{ $t('onboarding.category.subtitle') }}</p>
         </div>
 
-        <ButtonMain
-          :label="$t('onboarding.category.continue')"
-          variant="main"
-          :disabled="!selectedCategoryId"
-          @click="onContinue"
-        />
+        <div></div>
       </div>
     </header>
 
@@ -40,7 +35,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import ButtonMain from '@/components/generic/ButtonMain.vue';
 import OnboardingFooterLinks from '@/components/onboarding/OnboardingFooterLinks.vue';
 import { setSelectedCategory, onboardingStore } from '@/store/onboarding.store';
 import EventCategories from "@/components/landingPage/EventCategories.vue";
@@ -57,12 +51,13 @@ const selectedCategoryId = ref(
     : null
 );
 
-// Watch for selection changes and sync to store
-watch(selectedCategoryId, (newId) => {
+// Watch for selection changes, sync to store and auto-navigate
+watch(selectedCategoryId, async (newId) => {
   if (newId) {
     const enumValue = categoryIdToEnum(newId);
     if (enumValue) {
       setSelectedCategory(enumValue);
+      await router.push({ name: 'EventInvitationsPage', params: { lang: lang.value } });
     }
   }
 });
@@ -71,17 +66,6 @@ function onBack() {
   router.push({ name: 'home', params: { lang: lang.value } });
 }
 
-async function onContinue() {
-  if (!selectedCategoryId.value) return;
-
-  // Ensure the enum is stored (should already be from watch)
-  const enumValue = categoryIdToEnum(selectedCategoryId.value);
-  if (enumValue) {
-    setSelectedCategory(enumValue);
-  }
-
-  await router.push({ name: 'EventInvitationsPage', params: { lang: lang.value } });
-}
 </script>
 
 <style scoped>

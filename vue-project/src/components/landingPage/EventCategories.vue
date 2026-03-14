@@ -98,13 +98,13 @@ h2 em { font-style: italic; color: var(--brand-gold); }
 /* Grid */
 .cats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 13px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
 
 .cat {
-  border-radius: 14px;
-  padding: 26px 20px 22px;
+  border-radius: 16px;
+  padding: 36px 28px 30px;
   text-align: center;
   border: 1.5px solid var(--soft-light);
   background: var(--bg-white);
@@ -148,35 +148,38 @@ h2 em { font-style: italic; color: var(--brand-gold); }
 }
 
 .cat-ico {
-  width: 50px;
-  height: 50px;
-  border-radius: 11px;
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 13px;
-  font-size: 19px;
+  margin: 0 auto 16px;
+  font-size: 26px;
 }
 
 .cat-n {
-  font-size: 15px;
-  font-weight: 500;
-  margin-bottom: 6px;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
   color: var(--brand-main);
 }
 
 .cat-d {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--neutral-700);
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 @media (max-width: 900px) {
   .cats { padding: 64px 24px; }
-  .cats-grid { grid-template-columns: repeat(2, 1fr); }
+  .cats-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
 }
 
 @media (max-width: 520px) {
   .cats-grid { grid-template-columns: 1fr; }
+  .cat { padding: 28px 22px 24px; }
+  .cat-n { font-size: 16px; }
+  .cat-d { font-size: 14px; }
 }
 </style>

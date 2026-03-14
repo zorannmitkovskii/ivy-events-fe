@@ -6,23 +6,17 @@
         <h2>{{ $t('home.templates.titleBefore') }} <em>{{ $t('home.templates.titleAccent') }}</em></h2>
       </div>
 
-      <div class="tpl-grid">
-        <div v-for="(tpl, i) in templates" :key="i" class="tpl-card" @click="goToTemplate(tpl)">
-          <div class="tpl-thumb" :class="tpl.gradientClass">
-            <div class="mini">
-              <div style="font-size:17px;margin-bottom:6px">{{ tpl.emoji }}</div>
-              <div class="mini-names">{{ tpl.names }}</div>
-              <div class="mini-line"></div>
-              <div class="mini-date">{{ tpl.date }}</div>
-              <div class="mini-rsvp" :style="tpl.rsvpStyle || {}">RSVP</div>
-            </div>
-          </div>
-          <div class="tpl-info">
-            <h3>{{ tpl.title }}</h3>
-            <p>{{ tpl.subtitle }}</p>
-          </div>
-        </div>
+      <div v-if="loading" class="loading-state">
+        <span class="spinner" />
       </div>
+
+      <InvitationGrid
+        v-else
+        :invitations="displayTemplates"
+        :empty-message="$t('home.templates.empty', 'No templates available yet.')"
+        @select="onOpenEdit"
+        @preview="onOpenEdit"
+      />
 
       <div class="tpl-cta">
         <router-link :to="resolvedCtaTo" class="btn-lg ghost">
@@ -34,9 +28,12 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from 'vue-i18n';
+import InvitationGrid from '@/components/onboarding/InvitationGrid.vue';
+import { invitationTemplateService } from '@/services/invitationTemplate.service';
+import { EventCategoryEnum } from '@/enums/EventCategory';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -52,39 +49,34 @@ const resolvedCtaTo = computed(() =>
   props.ctaTo || { name: 'EventInvitationsPage', params: { lang: lang.value } }
 );
 
-const templates = computed(() => [
-  {
-    emoji: "🌸",
-    names: t('home.templates.items.elegantWedding.cardNames'),
-    date: t('home.templates.items.elegantWedding.cardDate'),
-    title: t('home.templates.items.elegantWedding.title'),
-    subtitle: t('home.templates.items.elegantWedding.subtitle'),
-    gradientClass: "g1",
-    routeName: "persianWedding",
-  },
-  {
-    emoji: "🌿",
-    names: t('home.templates.items.birthday.cardNames'),
-    date: t('home.templates.items.birthday.cardDate'),
-    title: t('home.templates.items.birthday.title'),
-    subtitle: t('home.templates.items.birthday.subtitle'),
-    gradientClass: "g2",
-    rsvpStyle: { background: '#5D6A57' },
-    routeName: "parisianWedding",
-  },
-  {
-    emoji: "✨",
-    names: t('home.templates.items.corporate.cardNames'),
-    date: t('home.templates.items.corporate.cardDate'),
-    title: t('home.templates.items.corporate.title'),
-    subtitle: t('home.templates.items.corporate.subtitle'),
-    gradientClass: "g3",
-    routeName: "coastalBreeze",
-  }
-]);
+const templates = ref([]);
+const loading = ref(false);
 
-function goToTemplate(tpl) {
-  router.push({ name: tpl.routeName, params: { lang: lang.value } });
+const displayTemplates = computed(() => {
+  const mapped = templates.value.map(t => ({
+    id: t.id,
+    name: t.name,
+    thumbnailUrl: t.thumbnailImage || (t.path ? `/thumbnails/${t.path.split('/').pop()}.svg` : ''),
+  }));
+  return mapped.slice(-3).reverse();
+});
+
+onMounted(async () => {
+  loading.value = true;
+  try {
+    const data = await invitationTemplateService.listByCategory(EventCategoryEnum.WEDDING);
+    templates.value = (data || []).filter(t => t.active !== false);
+  } catch (e) {
+    console.warn('[TemplatesGallery] failed to load templates:', e);
+  } finally {
+    loading.value = false;
+  }
+});
+
+function onOpenEdit(id) {
+  const inv = templates.value.find(t => t.id === id);
+  if (!inv?.path) return;
+  router.push(`/${lang.value}/${inv.path}?edit=true`);
 }
 </script>
 
@@ -119,95 +111,24 @@ h2 {
 
 h2 em { font-style: italic; color: var(--brand-gold); }
 
-/* Grid */
-.tpl-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-}
-
-.tpl-card {
-  border-radius: 14px;
-  overflow: hidden;
-  background: var(--bg-white);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.35s;
-  cursor: pointer;
-}
-
-.tpl-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
-}
-
-.tpl-thumb {
-  aspect-ratio: 3 / 4;
+/* Loading */
+.loading-state {
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 22px;
+  padding: 48px 16px;
 }
 
-.tpl-thumb.g1 { background: linear-gradient(145deg, #2F3E36, #5D6A57); }
-.tpl-thumb.g2 { background: linear-gradient(145deg, #F0EBE0, #E1C699); }
-.tpl-thumb.g3 { background: linear-gradient(145deg, #BFD2A4, #2F3E36); }
-
-.mini {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 10px;
-  padding: 16px 13px;
-  text-align: center;
-  width: 100%;
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-color: var(--brand-gold, #c4956a);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
 }
 
-.mini-names {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 19px;
-  font-style: italic;
-  margin-bottom: 5px;
-  color: var(--brand-main);
-}
-
-.mini-date {
-  font-size: 12.5px;
-  color: var(--neutral-700);
-  margin-bottom: 9px;
-}
-
-.mini-line {
-  height: 1px;
-  background: var(--brand-gold);
-  width: 26px;
-  margin: 0 auto 9px;
-}
-
-.mini-rsvp {
-  font-size: 9.5px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 6px 14px;
-  background: var(--brand-main);
-  color: #fff;
-  border-radius: 7px;
-  display: inline-block;
-}
-
-.tpl-info {
-  padding: 14px 18px 17px;
-}
-
-.tpl-info h3 {
-  font-size: 15.5px;
-  font-weight: 500;
-  margin: 0 0 3px;
-  color: var(--brand-main);
-}
-
-.tpl-info p {
-  font-size: 14px;
-  color: var(--neutral-700);
-  margin: 0;
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 /* CTA */
@@ -240,6 +161,5 @@ h2 em { font-style: italic; color: var(--brand-gold); }
 
 @media (max-width: 900px) {
   .templates { padding: 64px 24px; }
-  .tpl-grid { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto; }
 }
 </style>

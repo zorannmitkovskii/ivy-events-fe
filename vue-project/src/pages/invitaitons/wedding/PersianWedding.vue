@@ -490,6 +490,7 @@ import EditEntryModal from '@/components/modals/EditEntryModal.vue';
 import EditColorsModal from '@/components/modals/EditColorsModal.vue';
 import EditFontsModal from '@/components/modals/EditFontsModal.vue';
 import { useInvitationEditMode } from '@/composables/useInvitationEditMode';
+import { useToast } from '@/composables/useToast';
 import { useSectionState } from '@/composables/useSectionState';
 import { getDraftTheme, setDraftTheme, getDraftSectionState, setDraftSectionState, setDraftFullPayload } from '@/store/invitationDraft.store';
 import SectionLayoutPicker from '@/components/invitations/shared/SectionLayoutPicker.vue';
@@ -528,6 +529,7 @@ const {
   dirty, previewMode, markDirty, clearDirty, toggleSection, setupUnsavedGuard,
   saveFullEvent, saving,
 } = useInvitationEditMode();
+const toast = useToast();
 
 const rootRef = ref(null);
 const entryRef = ref(null);
@@ -714,27 +716,32 @@ function onSpacingChange(preset) {
 
 async function onGlobalSave() {
   if (isAuthenticated()) {
-    const payload = buildEventFullPayload({
-      config,
-      palette,
-      fonts,
-      buttonStyle,
-      cardStyle,
-      spacingPreset: spacingPreset.value,
-      rsvpConfig,
-      entryType: entryType.value,
-      entryDesign: entryDesign.value,
-      sectionOrder: sectionOrder.value,
-      sectionVisibility: sectionVisibility.value,
-      sectionLayouts: { ...sectionLayouts },
-      eventDetailItems: eventDetails.items.value,
-      agendaItems: agenda.items.value,
-      ourStoryItems: ourStory.items.value,
-      invitationName: 'persian-wedding',
-      lang: locale.value,
-    });
-    await saveFullEvent(payload, { heroImage: heroFile.value, ourStoryImages: ourStoryFiles.value.length ? ourStoryFiles.value : undefined, collageImages: collageFiles.value.length ? collageFiles.value : undefined });
-    router.push({ name: 'dashboard.overview', params: { lang: locale.value } });
+    try {
+      const payload = buildEventFullPayload({
+        config,
+        palette,
+        fonts,
+        buttonStyle,
+        cardStyle,
+        spacingPreset: spacingPreset.value,
+        rsvpConfig,
+        entryType: entryType.value,
+        entryDesign: entryDesign.value,
+        sectionOrder: sectionOrder.value,
+        sectionVisibility: sectionVisibility.value,
+        sectionLayouts: { ...sectionLayouts },
+        eventDetailItems: eventDetails.items.value,
+        agendaItems: agenda.items.value,
+        ourStoryItems: ourStory.items.value,
+        invitationName: 'persian-wedding',
+        lang: locale.value,
+      });
+      await saveFullEvent(payload, { heroImage: heroFile.value, ourStoryImages: ourStoryFiles.value.length ? ourStoryFiles.value : undefined, collageImages: collageFiles.value.length ? collageFiles.value : undefined });
+      clearDirty();
+      await router.push({ name: 'dashboard.overview', params: { lang: locale.value } });
+    } catch (e) {
+      toast.apiError(e);
+    }
     return;
   } else {
     const payload = buildEventFullPayload({
@@ -762,7 +769,6 @@ async function onGlobalSave() {
     router.push({ name: 'signup', params: { lang: locale.value } });
     return;
   }
-  clearDirty();
 }
 
 useScrollReveal(rootRef);

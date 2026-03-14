@@ -2,6 +2,7 @@ import { ref, computed } from "vue";
 import { tasksService } from "@/services/tasks.service";
 import { onboardingStore } from "@/store/onboarding.store";
 import { checkDraftLimit } from "@/utils/draftLimits";
+import { getErrorMessage } from "@/services/apiError";
 
 export function useTasks() {
   const eventId = computed(() => onboardingStore.eventId);
@@ -17,7 +18,7 @@ export function useTasks() {
       const list = await tasksService.list(eventId.value);
       tasks.value = Array.isArray(list) ? list : [];
     } catch (e) {
-      error.value = e?.message || "Failed to load tasks";
+      error.value = getErrorMessage(e);
       if (eventId.value === "demo") {
         tasks.value = getDemoTasks();
       }

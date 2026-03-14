@@ -3,6 +3,7 @@ import { useRoute } from "vue-router";
 import { eventsService } from "@/services/events.service";
 import { getDemoOverview } from "@/demo/overview.demo";
 import { useAuthUser } from "@/composables/useAuthUser";
+import { getErrorMessage } from "@/services/apiError";
 
 export function useEventOverview() {
   const route = useRoute();
@@ -30,7 +31,7 @@ export function useEventOverview() {
     } catch (e) {
       // fallback to demo so you can still show UI to clients
       data.value = getDemoOverview("demo");
-      error.value = e?.message || "Failed to load overview";
+      error.value = getErrorMessage(e);
     } finally {
       loading.value = false;
     }

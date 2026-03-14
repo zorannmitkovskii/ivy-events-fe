@@ -2,6 +2,7 @@ import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { eventsService } from "@/services/events.service";
 import { createDemoEvent } from "@/demo/events.demo";
+import { getErrorMessage } from "@/services/apiError";
 
 export function useCreateEvent() {
   const route = useRoute();
@@ -17,7 +18,7 @@ export function useCreateEvent() {
       if (isDemo.value) return createDemoEvent(payload);
       return await eventsService.create(payload);
     } catch (e) {
-      error.value = e?.message || "Failed to create event";
+      error.value = getErrorMessage(e);
       throw e;
     } finally {
       loading.value = false;

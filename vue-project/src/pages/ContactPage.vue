@@ -66,6 +66,7 @@ import { ref } from "vue";
 import Header from "@/components/header/Header.vue";
 import Footer from "@/components/layout/Footer.vue";
 import { contactService } from "@/services/contact.service";
+import { getErrorMessage } from "@/services/apiError";
 
 const form = ref({
   name: "",
@@ -92,7 +93,7 @@ async function submit() {
     });
     success.value = true;
   } catch (e) {
-    error.value = e.message || "Something went wrong. Please try again.";
+    error.value = getErrorMessage(e);
   } finally {
     submitting.value = false;
   }

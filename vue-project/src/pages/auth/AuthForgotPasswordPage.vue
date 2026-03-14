@@ -69,6 +69,7 @@ import AuthCardTitle from "@/components/auth/AuthCardTitle.vue";
 import AuthInput from "@/components/auth/AuthInput.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import { requestPasswordReset } from "@/services/auth.service";
+import { getErrorMessage } from "@/services/apiError";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -85,7 +86,7 @@ async function onSendResetLink() {
     await requestPasswordReset(email.value);
     sent.value = true;
   } catch (e) {
-    formError.value = e?.response?.data?.message || e?.message || t('auth.forgot.error');
+    formError.value = getErrorMessage(e) || t('auth.forgot.error');
   } finally {
     isLoading.value = false;
   }

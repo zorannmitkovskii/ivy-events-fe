@@ -50,12 +50,6 @@ defineEmits(['select', 'preview']);
   }
 }
 
-@media (min-width: 1200px) {
-  .invitation-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
 .empty-state {
   text-align: center;
   padding: 48px 16px;

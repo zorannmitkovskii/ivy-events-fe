@@ -10,7 +10,7 @@
         class="thumbnail"
         :style="{ backgroundImage: `url(${thumbnailUrl})` }"
       />
-      <div v-else class="thumbnail thumbnail--placeholder" :style="placeholderStyle" />
+      <div v-else class="thumbnail thumbnail--placeholder" />
 
       <span v-if="selected" class="selected-badge">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -38,9 +38,8 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
 
-const props = defineProps({
+defineProps({
   name: { type: String, required: true },
   subtitle: { type: String, default: '' },
   thumbnailUrl: { type: String, default: '' },
@@ -49,19 +48,6 @@ const props = defineProps({
 });
 
 defineEmits(['select', 'preview']);
-
-const gradients = [
-  'linear-gradient(135deg, #f5e6d3 0%, #d4a574 50%, #c4956a 100%)',
-  'linear-gradient(135deg, #e8f5e9 0%, #a5d6a7 50%, #81c784 100%)',
-  'linear-gradient(135deg, #fce4ec 0%, #f48fb1 50%, #ec407a 100%)',
-  'linear-gradient(135deg, #e3f2fd 0%, #90caf9 50%, #64b5f6 100%)',
-  'linear-gradient(135deg, #f3e5f5 0%, #ce93d8 50%, #ba68c8 100%)',
-  'linear-gradient(135deg, #fff8e1 0%, #ffd54f 50%, #ffca28 100%)',
-];
-
-const placeholderStyle = computed(() => ({
-  background: gradients[props.colorIndex % gradients.length],
-}));
 </script>
 
 <style scoped>
@@ -101,6 +87,7 @@ const placeholderStyle = computed(() => ({
   display: flex;
   align-items: center;
   justify-content: center;
+  background: var(--neutral-100, #f3f4f6);
 }
 
 .selected-badge {

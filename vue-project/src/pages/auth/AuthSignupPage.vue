@@ -134,6 +134,7 @@ import { RouterLink, useRoute, useRouter } from "vue-router";
 import { register } from "@/services/auth.service";
 import { getRuntimeEnv, detectDefaultEnvFromLocation, computeKeycloakBaseUrl } from '@/services/env';
 import { setEmail, setTempPassword, setTempUsername } from "@/store/onboarding.store";
+import { ApiError } from "@/services/apiError";
 
 import AuthLayout from "@/components/layout/AuthLayout.vue";
 import AuthBrand from "@/components/auth/AuthBrand.vue";
@@ -208,6 +209,7 @@ const translations = {
     'register.error.termsRequired': 'You must accept the Terms and Privacy Policy.',
     'register.error.passwordMismatch': 'Passwords do not match.',
     'register.error.invalidPassword': 'Please fix password requirements before continuing.',
+    'register.error.alreadyExists': 'An account with this email already exists.',
     'register.error.default': 'Registration failed. Please try again.'
   },
   mk: {
@@ -247,6 +249,7 @@ const translations = {
     'register.error.termsRequired': 'Мора да ги прифатите Условите и Политиката за приватност.',
     'register.error.passwordMismatch': 'Лозинките не се совпаѓаат.',
     'register.error.invalidPassword': 'Ве молиме поправете ги барањата за лозинка пред да продолжите.',
+    'register.error.alreadyExists': 'Веќе постои сметка со оваа е-пошта.',
     'register.error.default': 'Регистрацијата не успеа. Ве молиме обидете се повторно.'
   }
 };
@@ -366,7 +369,21 @@ async function onRegister() {
     });
   } catch (e) {
     console.error('Registration error:', e);
-    formError.value = e?.message || t('register.error.default');
+    if (e instanceof ApiError) {
+      if (e.errorCode === 'VAL_REQUEST_BODY_INVALID' && e.validationErrors) {
+        // Show field-level errors as a list
+        const fields = Object.entries(e.validationErrors)
+          .map(([field, msg]) => `${field}: ${msg}`)
+          .join('\n');
+        formError.value = fields;
+      } else if (e.errorCode === 'CONFLICT_OBJECT_ALREADY_EXISTS') {
+        formError.value = e.detail || t('register.error.alreadyExists');
+      } else {
+        formError.value = e.detail || e.message;
+      }
+    } else {
+      formError.value = e?.message || t('register.error.default');
+    }
   } finally {
     isLoading.value = false;
   }
