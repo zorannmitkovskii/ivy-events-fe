@@ -18,12 +18,19 @@ const packages = ref([]);
 const loading = ref(true);
 const error = ref(null);
 
+const isGalleryEvent = computed(() => onboardingStore.selectedCategory === "GALLERY");
+
 const activeTab = ref("invitation");
 
-const tabList = computed(() => [
-  { key: "invitation", label: t("packages.tabs.invitation") },
-  { key: "gallery", label: t("packages.tabs.gallery") },
-]);
+const tabList = computed(() => {
+  if (isGalleryEvent.value) {
+    return [{ key: "gallery", label: t("packages.tabs.gallery") }];
+  }
+  return [
+    { key: "invitation", label: t("packages.tabs.invitation") },
+    { key: "gallery", label: t("packages.tabs.gallery") },
+  ];
+});
 
 const TAB_CATEGORY_MAP = {
   invitation: "WEDDING",
@@ -161,7 +168,10 @@ async function fetchPackages() {
 }
 
 watch(activeTab, () => fetchPackages());
-onMounted(fetchPackages);
+onMounted(() => {
+  if (isGalleryEvent.value) activeTab.value = "gallery";
+  fetchPackages();
+});
 </script>
 
 <template>
