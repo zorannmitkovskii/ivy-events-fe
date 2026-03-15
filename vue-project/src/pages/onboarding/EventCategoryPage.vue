@@ -33,16 +33,20 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import OnboardingFooterLinks from '@/components/onboarding/OnboardingFooterLinks.vue';
-import { setSelectedCategory, onboardingStore } from '@/store/onboarding.store';
+import { setSelectedCategory, setEventId, onboardingStore } from '@/store/onboarding.store';
+import { eventsService } from '@/services/events.service';
+import { getUsername } from '@/services/auth.service';
 import EventCategories from "@/components/landingPage/EventCategories.vue";
-import {categoryIdToEnum, enumToCategoryId} from "@/helper/CategoryMapping.helper.js";
+import { categoryIdToEnum, enumToCategoryId } from "@/helper/CategoryMapping.helper.js";
+import { EventCategoryEnum } from '@/enums/EventCategory';
 
 const router = useRouter();
 const route = useRoute();
 const lang = computed(() => route.params.lang || 'mk');
+const creatingEvent = ref(false);
 
 // Initialize with stored category (convert enum to ID for the component)
 const selectedCategoryId = ref(
@@ -57,8 +61,42 @@ watch(selectedCategoryId, async (newId) => {
     const enumValue = categoryIdToEnum(newId);
     if (enumValue) {
       setSelectedCategory(enumValue);
-      await router.push({ name: 'EventInvitationsPage', params: { lang: lang.value } });
+
+      // Gallery: no invitation needed — create event and go to dashboard
+      if (enumValue === EventCategoryEnum.GALLERY) {
+        await createGalleryEvent();
+      } else {
+        await router.push({ name: 'EventInvitationsPage', params: { lang: lang.value } });
+      }
     }
+  }
+});
+
+async function createGalleryEvent() {
+  if (creatingEvent.value) return;
+  creatingEvent.value = true;
+  try {
+    const payload = {
+      name: 'Gallery',
+      categoryType: EventCategoryEnum.GALLERY,
+      status: 'DRAFT',
+      username: getUsername(),
+      lang: lang.value,
+    };
+    const res = await eventsService.create(payload);
+    const eventId = res?.id || res?.eventId;
+    if (eventId) setEventId(eventId);
+    await router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
+  } catch (e) {
+    console.error('[EventCategoryPage] failed to create gallery event:', e);
+    creatingEvent.value = false;
+  }
+}
+
+// If Gallery was pre-selected (e.g. from home page), auto-create on mount
+onMounted(async () => {
+  if (onboardingStore.selectedCategory === EventCategoryEnum.GALLERY) {
+    await createGalleryEvent();
   }
 });
 
