@@ -54,13 +54,6 @@
     <AuthDivider :label="$t('auth.common.orContinue')" />
 
     <GoogleButton @click="onGoogle" />
-
-    <p class="auth-signup">
-      {{ $t('auth.login.noAccount') }}
-      <RouterLink :to="{ name: 'signup', params: { lang } }">
-        {{ $t('auth.login.createAccount') }}
-      </RouterLink>
-    </p>
   </form>
 </template>
 
@@ -184,19 +177,5 @@ function onGoogle() {
 .auth-submit-btn {
   width: 100%;
   justify-content: center;
-}
-.auth-signup {
-  margin: 6px 0 0;
-  font-size: 13px;
-  color: var(--neutral-500);
-  text-align: center;
-}
-.auth-signup a {
-  color: var(--brand-main);
-  font-weight: 600;
-  text-decoration: none;
-}
-.auth-signup a:hover {
-  text-decoration: underline;
 }
 </style>

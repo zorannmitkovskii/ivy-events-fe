@@ -75,7 +75,10 @@
                 <span class="pill" :class="getRolePillClass(row)">{{ displayRole(row) }}</span>
               </td>
               <td>
-                <span class="pill pill--gray">{{ row.packageType || '—' }}</span>
+                <template v-if="row.packageTypes && row.packageTypes.length">
+                  <span v-for="pt in row.packageTypes" :key="pt" class="pill pill--gray pill--gap">{{ pt }}</span>
+                </template>
+                <span v-else class="pill pill--gray">{{ row.packageType || '—' }}</span>
               </td>
               <td>
                 <span class="status" :class="row.active !== false ? 'status--green' : 'status--red'">
@@ -157,11 +160,13 @@
               </div>
             </div>
             <div class="form-group">
-              <label>Package Type</label>
-              <select v-model="form.packageType" class="form-input">
-                <option value="">None</option>
-                <option v-for="pt in packageTypeOptions" :key="pt" :value="pt">{{ pt }}</option>
-              </select>
+              <label>Package Types</label>
+              <div class="checkbox-group checkbox-group--wrap">
+                <label v-for="pt in packageTypeOptions" :key="pt" class="check-label">
+                  <input type="checkbox" :value="pt" v-model="form.packageTypes" />
+                  <span>{{ pt }}</span>
+                </label>
+              </div>
             </div>
             <div class="form-group form-group--full">
               <label>Event ID</label>
@@ -333,7 +338,7 @@ const defaultForm = () => ({
   email: "",
   password: "",
   roles: ["USER"],
-  packageType: "",
+  packageTypes: [],
   eventId: "",
 });
 
@@ -361,7 +366,7 @@ async function openEdit(user) {
       email: full.email || "",
       password: "",
       roles: Array.isArray(full.roles) ? [...full.roles] : (full.role ? [full.role] : ["USER"]),
-      packageType: full.packageType || "",
+      packageTypes: Array.isArray(full.packageTypes) ? [...full.packageTypes] : (full.packageType ? [full.packageType] : []),
       eventId: full.eventId || "",
     };
   } catch (e) {
@@ -391,7 +396,7 @@ async function save() {
     username: form.value.username.trim(),
     email: form.value.email.trim(),
     roles: form.value.roles,
-    packageType: form.value.packageType || null,
+    packageTypes: form.value.packageTypes.length ? form.value.packageTypes : null,
     eventId: form.value.eventId || null,
   };
 
@@ -559,6 +564,7 @@ async function saveDiscount() {
 .pill--blue { background: #eff6ff; color: #2563eb; }
 .pill--purple { background: #f3e8ff; color: #7c3aed; }
 .pill--gray { background: #f1f5f9; color: #475569; }
+.pill--gap { margin-right: 4px; margin-bottom: 2px; }
 
 .status { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
 .status-dot { width: 6px; height: 6px; border-radius: 50%; }
@@ -642,6 +648,7 @@ async function saveDiscount() {
 .form-input:focus { border-color: var(--brand-main); }
 
 .checkbox-group { display: flex; gap: 16px; margin-top: 4px; }
+.checkbox-group--wrap { flex-wrap: wrap; gap: 10px 16px; }
 .check-label {
   display: flex; align-items: center; gap: 8px;
   font-size: 14px; font-weight: 500; color: #475569; cursor: pointer;

@@ -1344,7 +1344,7 @@
       "organizer": "Organizer",
       "gallery": "Gallery"
     },
-    "choose": "Get Started",
+    "choose": "Activate",
     "popular": "Popular",
     "empty": "No packages available in this category yet.",
     "loadError": "Failed to load packages. Please try again.",
@@ -1352,7 +1352,14 @@
     "applyCode": "Apply",
     "validating": "Validating...",
     "invalidCode": "Invalid discount code",
-    "continuePayment": "Continue to Payment"
+    "continuePayment": "Activate",
+    "addToCart": "Add to Cart",
+    "inCart": "In Cart",
+    "cart": "Cart",
+    "cartEmpty": "Your cart is empty",
+    "cartTotal": "Total",
+    "checkout": "Proceed to Payment",
+    "removeFromCart": "Remove"
   },
   "about": {
     "title": "About Us",

@@ -38,7 +38,11 @@ watch(selectedCategory, async (newId) => {
     const enumValue = categoryIdToEnum(newId);
     if (enumValue) {
       setSelectedCategory(enumValue);
-      await router.push({ name: 'EventInvitationsPage', params: { lang: lang.value } });
+      if (newId === 'gallery') {
+        await router.push({ name: 'signup', params: { lang: lang.value } });
+      } else {
+        await router.push({ name: 'EventInvitationsPage', params: { lang: lang.value } });
+      }
     }
     selectedCategory.value = null;
   }

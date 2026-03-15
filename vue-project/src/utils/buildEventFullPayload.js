@@ -3,6 +3,8 @@
  *
  * Maps FE page state → BE DTO shape.
  */
+import { getUsername } from "@/services/auth.service";
+
 export function buildEventFullPayload({
   config,
   palette,
@@ -47,6 +49,7 @@ export function buildEventFullPayload({
     status: "DRAFT",
     date: config.weddingDateTime || "",
     lang: lang || "en",
+    username: getUsername(),
     invitationName: invitationName || "",
 
     groomName: config.groomName || "",
