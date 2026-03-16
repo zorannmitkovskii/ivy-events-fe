@@ -36,6 +36,19 @@
             <input type="checkbox" v-model="guest.isChild" />
             <span>{{ childLabel }}</span>
           </label>
+          <div class="guest-extra">
+            <select v-model="guest.dietary" class="field-input field-select field-select--sm">
+              <option v-for="opt in resolvedDietaryOptions" :key="opt.value" :value="opt.value" :disabled="!opt.value">
+                {{ opt.label }}
+              </option>
+            </select>
+            <input
+              v-model="guest.allergies"
+              type="text"
+              class="field-input field-input--sm"
+              :placeholder="t('invitation.allergiesPlaceholder')"
+            />
+          </div>
         </div>
         <button
           v-if="guests.length < maxGuests"
@@ -88,16 +101,6 @@
             <span>{{ declineLabel }}</span>
           </label>
         </div>
-      </div>
-
-      <!-- Dietary Preference -->
-      <div class="field-group">
-        <label class="field-label">{{ resolvedDietaryLabel }}</label>
-        <select v-model="dietary" class="field-input field-select">
-          <option v-for="opt in resolvedDietaryOptions" :key="opt.value" :value="opt.value" :disabled="!opt.value">
-            {{ opt.label }}
-          </option>
-        </select>
       </div>
 
       <!-- Message -->
@@ -169,12 +172,11 @@ const props = defineProps({
 
 const emit = defineEmits(['submit']);
 
-const guests = ref([{ fullName: '', isChild: false }]);
+const guests = ref([{ fullName: '', isChild: false, dietary: '', allergies: '' }]);
 const notificationType = ref('');
 const contactEmail = ref('');
 const contactPhone = ref('');
 const attendance = ref('');
-const dietary = ref('');
 const message = ref('');
 const isSubmitting = ref(false);
 const submitMessage = ref('');
@@ -197,7 +199,6 @@ const resolvedEmailOptionLabel = computed(() => props.emailOptionLabel || t('inv
 const resolvedSmsOptionLabel = computed(() => props.smsOptionLabel || t('invitation.sms'));
 const resolvedEmailLabel = computed(() => props.emailLabel || t('invitation.emailAddress'));
 const resolvedPhoneLabel = computed(() => props.phoneLabel || t('invitation.phoneNumber'));
-const resolvedDietaryLabel = computed(() => props.dietaryLabel || t('invitation.dietaryPreference'));
 const resolvedDietaryOptions = computed(() => props.dietaryOptions || [
   { value: '', label: t('invitation.selectDietary') },
   { value: 'no_restrictions', label: t('invitation.noRestrictions') },
@@ -211,7 +212,7 @@ const resolvedDietaryOptions = computed(() => props.dietaryOptions || [
 
 function addGuest() {
   if (guests.value.length < props.maxGuests) {
-    guests.value.push({ fullName: '', isChild: false });
+    guests.value.push({ fullName: '', isChild: false, dietary: '', allergies: '' });
   }
 }
 
@@ -226,12 +227,16 @@ async function onSubmit() {
   submitMessage.value = '';
 
   const payload = {
-    guests: guests.value.filter(g => g.fullName.trim()).map(g => ({ fullName: g.fullName.trim(), isChild: !!g.isChild })),
+    guests: guests.value.filter(g => g.fullName.trim()).map(g => ({
+      fullName: g.fullName.trim(),
+      isChild: !!g.isChild,
+      dietary: g.dietary || '',
+      allergies: g.allergies?.trim() || '',
+    })),
     notificationType: notificationType.value,
     email: notificationType.value === 'email' ? contactEmail.value.trim() : '',
     phone: notificationType.value === 'sms' ? contactPhone.value.trim() : '',
     attendance: attendance.value,
-    dietary: dietary.value,
     message: message.value.trim(),
   };
 
@@ -351,6 +356,25 @@ async function onSubmit() {
   height: 15px;
   accent-color: var(--rsvp-accent);
   cursor: pointer;
+}
+
+.guest-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.field-select--sm,
+.field-input--sm {
+  font-size: 13px;
+  padding: 8px 10px;
+}
+
+.field-select--sm {
+  padding-right: 32px;
+  background-size: 14px;
+  background-position: right 8px center;
 }
 
 .remove-guest-btn {

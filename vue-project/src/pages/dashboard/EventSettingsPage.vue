@@ -2,6 +2,7 @@
   <div class="dash-page">
     <div class="dash-page-header">
       <div>
+        <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
         <h1 class="dash-page-title">{{ t("settings.title") }}</h1>
         <p class="dash-page-subtitle">{{ t("settings.subtitle") }}</p>
       </div>
@@ -274,10 +275,10 @@ onMounted(loadEvent);
 .tabs-bar {
   display: flex;
   gap: 4px;
-  background: #fff;
-  border-radius: var(--radius-lg, 16px);
-  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.08));
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--dash-cream-card);
+  border-radius: var(--dash-radius);
+  border: 1px solid var(--dash-cream-border);
+  box-shadow: var(--dash-shadow-sm);
   padding: 4px;
   overflow-x: auto;
 }
@@ -286,32 +287,32 @@ onMounted(loadEvent);
   padding: 10px 18px;
   border: none;
   background: transparent;
-  border-radius: var(--radius-md, 8px);
-  font-size: 13px;
+  border-radius: 10px;
+  font-size: 12.5px;
   font-weight: 600;
-  color: var(--neutral-500);
+  font-family: 'Outfit', sans-serif;
+  color: var(--dash-muted);
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.15s ease;
 }
 
 .tab-btn:hover {
-  color: var(--neutral-700);
-  background: rgba(0, 0, 0, 0.04);
+  color: var(--dash-ink);
+  background: var(--dash-cream);
 }
 
 .tab-btn.active {
-  color: var(--brand-main, #2f3e36);
-  background: var(--bg-main, #f8f6f1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  color: var(--dash-sage-dark);
+  background: var(--dash-sage-ghost);
 }
 
 /* Cards */
 .s-card {
-  background: #fff;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--dash-cream-card);
+  border-radius: var(--dash-radius);
+  border: 1px solid var(--dash-cream-border);
+  box-shadow: var(--dash-shadow-sm);
   padding: 24px;
 }
 
@@ -322,8 +323,8 @@ onMounted(loadEvent);
 /* Save toast */
 .save-toast {
   padding: 12px 16px;
-  border-radius: var(--radius-md, 8px);
-  font-size: 14px;
+  border-radius: 10px;
+  font-size: 13px;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -331,25 +332,26 @@ onMounted(loadEvent);
 }
 
 .success-toast {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: var(--dash-sage-ghost);
+  color: var(--dash-sage);
 }
 
 .error-toast {
-  background: #fce4ec;
-  color: #c62828;
+  background: var(--dash-blush-pale);
+  color: #9a5e56;
 }
 
 .empty-title {
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--neutral-900);
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--dash-charcoal);
 }
 
 .empty-sub {
   margin-top: 6px;
   font-size: 13px;
-  color: var(--neutral-500);
+  color: var(--dash-muted);
 }
 
 @media (max-width: 640px) {
@@ -369,7 +371,7 @@ onMounted(loadEvent);
 
   .tab-btn {
     padding: 8px 12px;
-    font-size: 12px;
+    font-size: 11.5px;
   }
 }
 </style>

@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { eventDetailsService } from "@/services/eventDetails.service.js";
 import { onboardingStore } from "@/store/onboarding.store";
+import { getErrorMessage } from "@/services/apiError";
 
 export function useEventDetails() {
   const loading = ref(false);
@@ -18,7 +19,7 @@ export function useEventDetails() {
       const data = await eventDetailsService.listByEvent(eventId);
       items.value = Array.isArray(data) ? data : [];
     } catch (e) {
-      error.value = e?.message ?? "Failed to load event details";
+      error.value = getErrorMessage(e);
     } finally {
       loading.value = false;
     }

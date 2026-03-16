@@ -18,7 +18,6 @@ import AuthResetPasswordPage from "@/pages/auth/AuthResetPasswordPage.vue";
 import AuthVerifyEmailPage from "@/pages/auth/AuthVerifyEmailPage.vue";
 
 import EventCategoryPage from "@/pages/onboarding/EventCategoryPage.vue";
-import EventBasicDetailsPage from "@/pages/onboarding/EventBasicDetailsPage.vue";
 import EventInvitationsPage from "@/pages/onboarding/EventInvitationsPage.vue";
 import CheckoutPurchasePage from "@/pages/onboarding/CheckoutPurchasePage.vue";
 import EventLivePage from "@/pages/onboarding/EventLivePage.vue";
@@ -73,7 +72,6 @@ const routes = [
 
       // ONBOARDING
       { path: "event-category", name: "EventCategoryPage", component: EventCategoryPage, meta: { requiresAuth: true } },
-      { path: "event-details", name: "EventBasicDetailsPage", component: EventBasicDetailsPage, meta: { requiresAuth: true } },
       { path: "event-invitations", name: "EventInvitationsPage", component: EventInvitationsPage },
       { path: "checkout", name: "checkout", component: CheckoutPurchasePage, meta: { requiresAuth: true } },
       { path: "event-live", name: "event-live", component: EventLivePage, meta: { requiresAuth: true } },
@@ -220,7 +218,6 @@ router.beforeEach((to, from, next) => {
   // Onboarding guards
   const isVerifyPage = to.name === 'AuthVerifyEmailPage';
   const isCategoryPage = to.name === 'EventCategoryPage';
-  const isDetailsPage = to.name === 'EventBasicDetailsPage';
 
   // Block category page until email is verified (authenticated users are implicitly verified)
   if (isCategoryPage && !onboardingStore.isEmailVerified && !isAuthenticated()) {
@@ -228,22 +225,11 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  // Block details page until category selected
-  if (isDetailsPage && !onboardingStore.selectedCategory) {
-    next({ name: 'EventCategoryPage', params: { lang } });
-    return;
-  }
-
-  // Block invitations page until category selected and event created
-  // Skip guard if user already has an event (coming from dashboard)
+  // Block invitations page until category selected (for authenticated users in onboarding)
   // Allow unauthenticated users to browse freely (guest invitation flow)
   const isInvitationsPage = to.name === 'EventInvitationsPage';
-  if (isInvitationsPage && !onboardingStore.eventId && isAuthenticated()) {
-    if (!onboardingStore.selectedCategory) {
-      next({ name: 'EventCategoryPage', params: { lang } });
-      return;
-    }
-    next({ name: 'EventBasicDetailsPage', params: { lang } });
+  if (isInvitationsPage && !onboardingStore.selectedCategory && isAuthenticated() && !onboardingStore.eventId) {
+    next({ name: 'EventCategoryPage', params: { lang } });
     return;
   }
 

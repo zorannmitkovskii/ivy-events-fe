@@ -47,35 +47,38 @@ const pct = computed(() => {
 .item{
   width: 100%;
   text-align: left;
-  border: 2px solid var(--neutral-300);
-  background: #fff;
+  border: 1.5px solid var(--dash-cream-border);
+  background: var(--dash-cream-card);
   border-radius: 12px;
-  padding: 16px;
+  padding: 14px 16px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 .item:hover{
-  box-shadow: var(--shadow-sm);
+  border-color: var(--dash-sage-pale);
+  box-shadow: var(--dash-shadow-sm);
 }
 .selected{
-  background: var(--bg-main);
-  border-color: var(--brand-gold);
-  box-shadow: 0 4px 16px rgba(200,162,77,0.12);
+  background: var(--dash-cream);
+  border-color: var(--dash-gold);
+  box-shadow: 0 4px 16px rgba(184,149,78,0.12);
 }
-.top{ display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
-.name{ font-weight: 600; font-size: 15px; color: var(--brand-main); }
+.top{ display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 6px; }
+.name{ font-weight: 600; font-size: 13.5px; color: var(--dash-ink); }
 .tag{
   border-radius: 999px;
-  padding: 3px 10px;
-  font-size: 11px;
+  padding: 2px 10px;
+  font-size: 10px;
   font-weight: 600;
-  background: var(--brand-gold);
-  color: var(--brand-main);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--dash-gold-pale);
+  color: var(--dash-gold);
   white-space: nowrap;
 }
-.meta{ font-size: 13px; color: var(--neutral-500); }
-.progress{ display: flex; align-items: center; gap: 10px; margin-top: 10px; }
-.bar{ flex: 1; height: 8px; background: var(--neutral-300); border-radius: 999px; overflow: hidden; }
-.fill{ height: 100%; background: var(--brand-gold); border-radius: 999px; transition: width 0.3s ease; }
-.count{ font-size: 12px; color: var(--neutral-500); font-weight: 600; white-space: nowrap; }
+.meta{ font-size: 12px; color: var(--dash-muted); }
+.progress{ display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.bar{ flex: 1; height: 6px; background: var(--dash-sage-ghost); border-radius: 999px; overflow: hidden; }
+.fill{ height: 100%; background: linear-gradient(90deg, var(--dash-sage-light), var(--dash-sage)); border-radius: 999px; transition: width 0.4s ease; }
+.count{ font-size: 11px; color: var(--dash-muted); font-weight: 600; white-space: nowrap; }
 </style>

@@ -57,6 +57,7 @@ import AuthBrand from "@/components/auth/AuthBrand.vue";
 import AuthInput from "@/components/auth/AuthInput.vue";
 import { onboardingStore, setEmailVerified, setEventId, getTempPassword, getTempUsername, clearTempCredentials } from "@/store/onboarding.store";
 import { verifyEmail, exchangeOAuthCode, assignRole, refreshAccessToken, getEventId, hasRole, loginWithCredentials, isAuthenticated } from "@/services/auth.service";
+import { syncDraftToBackend } from "@/composables/useDraftSync";
 
 const router = useRouter();
 const route = useRoute();
@@ -95,12 +96,16 @@ onMounted(async () => {
 
     setEmailVerified(true);
     setEventId(getEventId());
+    const createdEvent = await syncDraftToBackend();
 
     // Login → dashboard, Signup → event creation flow
     const intent = sessionStorage.getItem("google_oauth_intent");
     sessionStorage.removeItem("google_oauth_intent");
 
-    if (intent === "login") {
+    if (createdEvent?.event?.id || createdEvent?.id) {
+      // Event was auto-created from draft — go straight to dashboard
+      await router.replace({ name: "dashboard.overview", params: { lang: lang.value } });
+    } else if (intent === "login") {
       if (hasRole("ADMIN")) {
         await router.replace({ name: "admin.events", params: { lang: lang.value } });
       } else {
@@ -124,10 +129,30 @@ async function onVerify() {
     setEmailVerified(true);
 
     // Auto-login with credentials stored during registration
+    let createdEvent = null;
     const tempPw = getTempPassword();
     if (tempPw && email.value) {
       try {
         await loginWithCredentials(email.value.trim(), tempPw);
+        console.log("[verify] auto-login OK");
+
+        // Assign USER role (same as OAuth path) so BE endpoints work
+        try {
+          await assignRole(email.value.trim(), "USER");
+          console.log("[verify] role assigned");
+        } catch (roleErr) {
+          console.warn("[verify] assignRole skipped:", roleErr?.message);
+        }
+
+        try {
+          await refreshAccessToken();
+          console.log("[verify] token refreshed");
+        } catch (refreshErr) {
+          console.warn("[verify] refreshToken failed:", refreshErr?.message);
+        }
+
+        createdEvent = await syncDraftToBackend();
+        console.log("[verify] syncDraft result:", createdEvent);
       } catch (loginErr) {
         console.warn("[auto-login] failed after verify:", loginErr?.message);
       } finally {
@@ -139,6 +164,12 @@ async function onVerify() {
     // send user to login page so they can authenticate before onboarding
     if (!isAuthenticated()) {
       await router.push({ name: "login", params: { lang: lang.value }, query: { email: email.value } });
+      return;
+    }
+
+    // Event was auto-created from draft — go straight to dashboard
+    if (createdEvent?.event?.id || createdEvent?.id) {
+      await router.push({ name: "dashboard.overview", params: { lang: lang.value } });
       return;
     }
 

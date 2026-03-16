@@ -1,24 +1,20 @@
 <template>
-  <section class="testimonials-section" :id="id">
-    <div class="container">
-      <SectionHeader
-        :title="$t('home.testimonials.title')"
-        :subtitle="$t('home.testimonials.subtitle')"
-      />
+  <section class="testimonials">
+    <div class="wrap">
+      <div class="s-head">
+        <span class="eyebrow">{{ $t('home.testimonials.eyebrow') }}</span>
+        <h2>{{ $t('home.testimonials.titleBefore') }} <em>{{ $t('home.testimonials.titleAccent') }}</em></h2>
+      </div>
 
-      <div class="grid">
-        <div v-for="(t, i) in testimonials" :key="i" class="card">
-          <svg class="quote-icon" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/>
-          </svg>
-
-          <p class="quote">{{ t.text }}</p>
-
-          <div class="author">
-            <img :src="t.avatar" :alt="t.name" class="avatar" loading="lazy" />
+      <div class="testi-grid">
+        <div v-for="(item, i) in testimonials" :key="i" class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <div class="testi-text">"{{ item.text }}"</div>
+          <div class="testi-author">
+            <div class="testi-avatar" :style="{ background: item.avatarBg }">{{ item.emoji }}</div>
             <div>
-              <div class="name">{{ t.name }}</div>
-              <div class="role">{{ t.role }}</div>
+              <div class="testi-name">{{ item.name }}</div>
+              <div class="testi-event">{{ item.event }}</div>
             </div>
           </div>
         </div>
@@ -28,91 +24,131 @@
 </template>
 
 <script setup>
-import SectionHeader from "@/components/ui/SectionHeader.vue";
+import { useI18n } from 'vue-i18n';
 
-defineProps({
-  id: { type: String, default: "testimonials" }
-});
+const { t } = useI18n();
 
 const testimonials = [
   {
-    text: "IvyEvents made planning our wedding so much easier! The invitation designs are stunning, and tracking RSVPs was effortless. Our guests loved how easy it was to respond.",
-    name: "Sarah & Michael",
-    role: "Wedding, June 2024",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop"
+    text: t('home.testimonials.items.first.text'),
+    name: t('home.testimonials.items.first.name'),
+    event: t('home.testimonials.items.first.event'),
+    emoji: "👰",
+    avatarBg: "rgba(191,210,164,.3)"
   },
   {
-    text: "As an event planner, IvyEvents has become my go-to tool. The professional templates and seamless guest management save me hours of work. My clients are always impressed!",
-    name: "Emily Rodriguez",
-    role: "Event Planner",
-    avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop"
+    text: t('home.testimonials.items.second.text'),
+    name: t('home.testimonials.items.second.name'),
+    event: t('home.testimonials.items.second.event'),
+    emoji: "🎂",
+    avatarBg: "rgba(200,162,77,.2)"
   },
   {
-    text: "We used IvyEvents for our daughter's birthday party and it was perfect! The mobile-friendly invitations made it easy for all parents to RSVP quickly. Highly recommend!",
-    name: "David Thompson",
-    role: "Birthday Party Host",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
+    text: t('home.testimonials.items.third.text'),
+    name: t('home.testimonials.items.third.name'),
+    event: t('home.testimonials.items.third.event'),
+    emoji: "🏢",
+    avatarBg: "rgba(93,106,87,.2)"
   }
 ];
 </script>
 
 <style scoped>
-.testimonials-section {
-  padding: 6rem 0;
+.testimonials {
+  padding: 96px 52px;
   background: var(--bg-main);
 }
-.container {
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-top: 12px;
-}
-.card {
-  background: var(--bg-white);
-  border-radius: 20px;
-  padding: 36px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-}
-.quote-icon {
-  color: var(--secondary-sage);
-  opacity: 0.5;
-  margin-bottom: 16px;
-}
-.quote {
-  color: var(--neutral-700);
-  font-size: 15px;
-  line-height: 1.7;
-  font-style: italic;
-  margin: 0 0 24px;
-}
-.author {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.avatar {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid var(--secondary-sage);
-}
-.name {
+
+.wrap { max-width: 1200px; margin: 0 auto; }
+
+.s-head { text-align: center; margin-bottom: 56px; }
+
+.eyebrow {
+  display: inline-block;
+  font-size: 13.5px;
   font-weight: 700;
-  font-size: 15px;
-  color: var(--neutral-900);
-}
-.role {
-  font-size: 13px;
-  color: var(--neutral-500);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--brand-main);
+  margin-bottom: 12px;
 }
 
-@media (max-width: 980px) {
-  .grid { grid-template-columns: 1fr; max-width: 560px; margin: 12px auto 0; }
+h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 4vw, 54px);
+  font-weight: 400;
+  line-height: 1.15;
+  margin: 0;
+  color: var(--brand-main);
+}
+
+h2 em { font-style: italic; color: var(--brand-gold); }
+
+/* Grid */
+.testi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.testi-card {
+  background: var(--bg-white);
+  border-radius: 14px;
+  padding: 28px;
+  border: 1.5px solid var(--soft-light);
+  transition: all 0.3s;
+}
+
+.testi-card:hover {
+  border-color: var(--brand-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.testi-stars {
+  color: var(--brand-gold);
+  font-size: 13px;
+  margin-bottom: 14px;
+  letter-spacing: 2px;
+}
+
+.testi-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--brand-main);
+  margin-bottom: 18px;
+}
+
+.testi-author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.testi-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+.testi-name {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--brand-main);
+}
+
+.testi-event {
+  font-size: 13px;
+  color: var(--neutral-700);
+}
+
+@media (max-width: 900px) {
+  .testimonials { padding: 64px 24px; }
+  .testi-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
 }
 </style>

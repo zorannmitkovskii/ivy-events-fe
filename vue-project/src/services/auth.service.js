@@ -26,7 +26,26 @@ export function getUsername() {
 }
 
 export function getEventId() {
-  return parseToken()?.eventId || null;
+  const ids = getEventIds();
+  return ids.length > 0 ? ids[0] : null;
+}
+
+export function getEventIds() {
+  const claims = parseToken();
+  if (!claims) return [];
+  const ids = claims.eventIds;
+  if (Array.isArray(ids)) return ids;
+  if (typeof ids === 'string') return [ids];
+  return [];
+}
+
+export function getPackages() {
+  const claims = parseToken();
+  if (!claims) return [];
+  const pkgs = claims.packages;
+  if (Array.isArray(pkgs)) return pkgs;
+  if (typeof pkgs === 'string') return [pkgs];
+  return [];
 }
 
 export function getRoles() {
@@ -113,6 +132,13 @@ export async function loginWithCredentials(email, password) {
 
   scheduleProactiveRefresh();
   return data;
+}
+
+export async function changePassword(email, currentPassword, newPassword) {
+  const res = await apiPublic.post("/public/users/change-password", {
+    email, currentPassword, newPassword
+  });
+  return res?.data || res;
 }
 
 // Assign a role to a user by email (e.g. after Google OAuth registration)

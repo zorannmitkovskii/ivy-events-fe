@@ -3,6 +3,7 @@ import { tablesService } from "@/services/tables.service";
 import { guestsService } from "@/services/guests.service";
 import { getDemoTablesSeating } from "@/demo/tables.demo";
 import { onboardingStore } from "@/store/onboarding.store";
+import { getErrorMessage } from "@/services/apiError";
 
 function mapTable(dto) {
   return {
@@ -51,7 +52,7 @@ export function useTablesSeating() {
       await loadGuests();
 
     } catch (e) {
-      error.value = e?.message || "Failed to load seating";
+      error.value = getErrorMessage(e);
     } finally {
       loading.value = false;
     }
@@ -81,7 +82,7 @@ export function useTablesSeating() {
     try {
       await loadGuests();
     } catch (e) {
-      error.value = e?.message || "Failed to load guests";
+      error.value = getErrorMessage(e);
     }
   });
 

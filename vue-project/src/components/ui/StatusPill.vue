@@ -16,10 +16,11 @@ const cls = computed(() => (props.status === "confirmed" ? "ok" : "wait"));
   display: inline-block;
   border-radius: 999px;
   padding: 4px 12px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
+  letter-spacing: 0.02em;
   white-space: nowrap;
 }
-.ok{ background: rgba(191,210,164,0.45); color: var(--brand-main); }
-.wait{ background: #fef9c3; color: #854d0e; }
+.ok{ background: var(--dash-sage-ghost, rgba(241,246,238,1)); color: var(--dash-sage, #5a7a52); }
+.wait{ background: var(--dash-gold-pale, #f5ead4); color: #8a6a30; }
 </style>

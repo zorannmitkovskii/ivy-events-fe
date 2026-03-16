@@ -1,102 +1,91 @@
 <template>
-  <div class="card card-pad-lg">
-    <div class="row" style="justify-content:space-between;">
-      <div style="font-weight:900;">{{ t("overview.rsvpSummary") }}</div>
-      <a class="kpi-sub" style="text-decoration:none; font-weight:800; cursor:pointer;">
-        {{ t("overview.viewDetails") }}
-      </a>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">{{ t("overview.rsvpSummary") }}</div>
+      <router-link :to="guestsLink" class="card-action">{{ t("overview.viewDetails") }} &rarr;</router-link>
     </div>
 
-    <div class="donut-wrap">
-      <div class="donut" :style="{ background: donutBg }"></div>
-      <div class="donut-center">
-        <div class="big">{{ rsvp.total }}</div>
-        <div class="kpi-sub">{{ t("overview.total") }}</div>
+    <div class="rsvp-layout" style="margin-top:14px;">
+      <div class="donut-wrap">
+        <canvas ref="donutCanvas" width="140" height="140"></canvas>
+        <div class="donut-center">
+          <div class="donut-center-num">{{ rsvp.total }}</div>
+          <div class="donut-center-lbl">{{ t("overview.total") }}</div>
+        </div>
       </div>
-    </div>
 
-    <div class="mini">
-      <div class="box">
-        <div class="num">{{ rsvp.comming }}</div>
-        <div class="kpi-sub">{{ t("overview.coming") }}</div>
-      </div>
-      <div class="box">
-        <div class="num">{{ rsvp.maybe }}</div>
-        <div class="kpi-sub">{{ t("overview.maybe") }}</div>
-      </div>
-      <div class="box">
-        <div class="num">{{ rsvp.decline }}</div>
-        <div class="kpi-sub">{{ t("overview.declined") }}</div>
-      </div>
-      <div class="box">
-        <div class="num">{{ rsvp.waiting }}</div>
-        <div class="kpi-sub">{{ t("overview.waiting") }}</div>
+      <div class="rsvp-legend">
+        <div v-for="item in legendItems" :key="item.label" class="legend-item">
+          <div class="legend-left">
+            <div class="legend-color" :style="{ background: item.color }"></div>
+            <div class="legend-name">{{ item.label }}</div>
+          </div>
+          <div class="legend-right">
+            <div class="legend-count">{{ item.value }}</div>
+            <div class="legend-pct">{{ item.pct }}%</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
+
 const { t } = useI18n();
+const route = useRoute();
+const lang = computed(() => route.params.lang || "mk");
+const guestsLink = computed(() => `/${lang.value}/dashboard/events/guests`);
 
 const props = defineProps({ rsvp: Object });
 
-const donutBg = computed(() => {
+const donutCanvas = ref(null);
+
+const legendItems = computed(() => {
   const total = props.rsvp?.total || 1;
-  const comming = props.rsvp?.comming || 0;
-  const maybe = props.rsvp?.maybe || 0;
-  const decline = props.rsvp?.decline || 0;
-
-  const a1 = Math.round((comming / total) * 360);
-  const a2 = a1 + Math.round((maybe / total) * 360);
-  const a3 = a2 + Math.round((decline / total) * 360);
-
-  return `conic-gradient(#2f3e36 0deg ${a1}deg, #C8A24D ${a1}deg ${a2}deg, #c27c7c ${a2}deg ${a3}deg, #e7e7e7 ${a3}deg 360deg)`;
+  return [
+    { label: t("overview.coming"), value: props.rsvp?.comming || 0, color: "#5a7a52", pct: Math.round(((props.rsvp?.comming || 0) / total) * 100) },
+    { label: t("overview.maybe"), value: props.rsvp?.maybe || 0, color: "#b8954e", pct: Math.round(((props.rsvp?.maybe || 0) / total) * 100) },
+    { label: t("overview.declined"), value: props.rsvp?.decline || 0, color: "#c4968e", pct: Math.round(((props.rsvp?.decline || 0) / total) * 100) },
+    { label: t("overview.waiting"), value: props.rsvp?.waiting || 0, color: "#e6dfd4", pct: Math.round(((props.rsvp?.waiting || 0) / total) * 100) },
+  ];
 });
-</script>
 
-<style scoped>
-.donut-wrap{
-  position: relative;
-  height: 230px;
-  display: grid;
-  place-items: center;
-  margin-top: 12px;
+function drawDonut() {
+  const canvas = donutCanvas.value;
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const size = 140;
+  const center = size / 2;
+  const outerR = 66;
+  const innerR = 46;
+  const total = props.rsvp?.total || 1;
+  const data = [
+    { val: props.rsvp?.comming || 0, color: "#5a7a52" },
+    { val: props.rsvp?.maybe || 0, color: "#b8954e" },
+    { val: props.rsvp?.decline || 0, color: "#c4968e" },
+    { val: props.rsvp?.waiting || 0, color: "#e6dfd4" },
+  ];
+
+  ctx.clearRect(0, 0, size, size);
+  let startAngle = -Math.PI / 2;
+
+  data.forEach(seg => {
+    if (seg.val <= 0) return;
+    const sliceAngle = (seg.val / total) * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.arc(center, center, outerR, startAngle, startAngle + sliceAngle);
+    ctx.arc(center, center, innerR, startAngle + sliceAngle, startAngle, true);
+    ctx.closePath();
+    ctx.fillStyle = seg.color;
+    ctx.fill();
+    startAngle += sliceAngle;
+  });
 }
-.donut{
-  width: 190px;
-  height: 190px;
-  border-radius: 999px;
-  position: relative;
-}
-.donut::after{
-  content:"";
-  position:absolute;
-  inset: 22px;
-  background: rgba(255,255,255,0.95);
-  border-radius: 999px;
-}
-.donut-center{
-  position:absolute;
-  display: grid;
-  place-items: center;
-  text-align: center;
-}
-.big{ font-size: 28px; font-weight: 950; color: var(--neutral-900); }
-.mini{
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-top: 12px;
-}
-.box{
-  background: rgba(0,0,0,0.02);
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 14px;
-  padding: 10px 12px;
-  text-align: center;
-}
-.num{ font-weight: 950; font-size: 16px; }
-</style>
+
+onMounted(drawDonut);
+watch(() => props.rsvp, drawDonut, { deep: true });
+</script>

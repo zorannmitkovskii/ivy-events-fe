@@ -2,6 +2,7 @@
   <div class="dash-page">
     <div class="dash-page-header">
       <div>
+        <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
         <h1 class="dash-page-title">{{ t("invitationLinks.title") }}</h1>
         <p class="dash-page-subtitle">{{ t("invitationLinks.subtitle") }}</p>
       </div>
@@ -68,6 +69,7 @@ import { onboardingStore, setSelectedCategory } from "@/store/onboarding.store";
 import { EventCategoryEnum } from "@/enums/EventCategory";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import LinkCard from "@/components/dashboard/settings/LinkCard.vue";
+import { getErrorMessage } from "@/services/apiError";
 
 const { t, locale } = useI18n();
 
@@ -80,6 +82,7 @@ const eventId = ref(onboardingStore.eventId);
 const isGallery = computed(() => onboardingStore.selectedCategory === EventCategoryEnum.GALLERY);
 
 const closeFriendsUrl = computed(() => {
+  if (event.value?.privateInvitationUrl) return event.value.privateInvitationUrl;
   const url = event.value?.invitationUrl;
   if (!url) return "";
   const sep = url.includes("?") ? "&" : "?";
@@ -107,7 +110,13 @@ async function loadEvent() {
     }
 
     const data = await eventsService.getById(eventId.value);
-    event.value = data;
+    const inv = data.invitation || {};
+    event.value = {
+      ...data,
+      invitationUrl: inv.invitationUrl || data.invitationUrl || '',
+      galleryUrl: inv.galleryUrl || data.galleryUrl || '',
+      privateInvitationUrl: inv.privateInvitationUrl || data.privateInvitationUrl || '',
+    };
 
     const cat = data?.categoryType || data?.category || "";
     if (cat) {
@@ -116,7 +125,7 @@ async function loadEvent() {
       setSelectedCategory(match || cat);
     }
   } catch (e) {
-    error.value = e?.message || "Failed to load event";
+    error.value = getErrorMessage(e);
   } finally {
     loading.value = false;
   }
@@ -133,10 +142,10 @@ onMounted(loadEvent);
 }
 
 .s-card {
-  background: #fff;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--dash-cream-card);
+  border-radius: var(--dash-radius);
+  border: 1px solid var(--dash-cream-border);
+  box-shadow: var(--dash-shadow-sm);
   padding: 24px;
 }
 
@@ -145,15 +154,16 @@ onMounted(loadEvent);
 }
 
 .empty-title {
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--neutral-900);
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--dash-charcoal);
 }
 
 .empty-sub {
   margin-top: 6px;
   font-size: 13px;
-  color: var(--neutral-500);
+  color: var(--dash-muted);
 }
 
 @media (max-width: 640px) {

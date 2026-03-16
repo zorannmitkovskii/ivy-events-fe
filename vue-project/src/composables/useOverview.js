@@ -6,7 +6,7 @@ import { guestsService } from "@/services/guests.service";
 import { budgetsService } from "@/services/budgets.service";
 import { tablesService } from "@/services/tables.service";
 import { mediaService } from "@/services/media.service";
-import { onboardingStore, setSelectedCategory, setEventStatus } from "@/store/onboarding.store";
+import { onboardingStore, setSelectedCategory, setEventStatus, setInvitationName } from "@/store/onboarding.store";
 import { EventCategoryEnum } from "@/enums/EventCategory";
 
 export function useOverview() {
@@ -30,6 +30,10 @@ export function useOverview() {
         const match = Object.values(EventCategoryEnum).find(v => v === upper);
         setSelectedCategory(match || cat);
       }
+
+      // Store invitation name for preselection
+      const invName = ev.invitation?.invitationName;
+      if (invName) setInvitationName(invName);
 
       if (ev.date || ev.eventDate) {
         const dateStr = ev.date || ev.eventDate;
@@ -142,6 +146,7 @@ export function useOverview() {
       overview.value.tablesAssigned = tables.filter(t => (t.assignedGuests || 0) >= (t.maxGuest || 1)).length;
       overview.value.assignedGuests = tables.reduce((sum, t) => sum + (t.assignedGuests || 0), 0);
       overview.value.totalGuestsForTables = tables.reduce((sum, t) => sum + (t.maxGuest || 0), 0);
+      overview.value.tablesRaw = tables;
     } catch {
       // keep demo data as fallback
     }

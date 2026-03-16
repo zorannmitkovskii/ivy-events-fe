@@ -1,20 +1,33 @@
 <template>
-  <div class="page">
-    <PageHeader title="Notifications" subtitle="Send updates and RSVPs to your guests">
-      <template #actions>
-        <Button variant="primary">New Notification</Button>
-      </template>
-    </PageHeader>
-    <div class="placeholder">This is a placeholder for notifications. Implement templates and composer here.</div>
+  <div class="dash-page">
+    <div class="dash-page-header">
+      <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
+      <h1 class="dash-page-title">{{ t("sidebar.notifications") }}</h1>
+      <p class="dash-page-subtitle">{{ t("notifications.subtitle") }}</p>
+    </div>
+    <div class="d-card d-card-pad placeholder">
+      {{ t("notifications.placeholder") }}
+    </div>
   </div>
 </template>
 
 <script setup>
-import PageHeader from '@/components/layout/PageHeader.vue'
-import Button from '@/components/ui/Button.vue'
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 </script>
 
 <style scoped>
-.page { display: grid; gap: 14px; }
-.placeholder { padding: 16px; border: 1px dashed #c9c9c9; border-radius: 12px; background: #fff; }
+.d-card {
+  background: var(--dash-cream-card);
+  border-radius: var(--dash-radius);
+  border: 1px solid var(--dash-cream-border);
+  box-shadow: var(--dash-shadow-sm);
+}
+.d-card-pad { padding: 24px; }
+.placeholder {
+  color: var(--dash-muted);
+  font-size: 13px;
+  text-align: center;
+  padding: 48px 24px;
+}
 </style>

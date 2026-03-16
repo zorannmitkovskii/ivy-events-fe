@@ -1,5 +1,5 @@
 <template>
-  <BaseModal :open="open" title="" @close="emit('close')">
+  <BaseModal :open="open" title="" :sub-modal="subModal" @close="emit('close')">
     <form class="form" @submit.prevent="submit">
       <div class="field" v-if="fieldConfig.type?.show">
         <label>{{ t("ourStory.form.type") }} {{ fieldConfig.type.required ? '*' : '' }}</label>
@@ -89,6 +89,7 @@ const props = defineProps({
   open: { type: Boolean, default: false },
   item: { type: Object, default: null },
   items: { type: Array, default: () => [] },
+  subModal: { type: Boolean, default: false },
 });
 
 const emit = defineEmits(["close", "submit", "delete"]);
@@ -167,7 +168,8 @@ watch(
       draft.storyDate = "";
       imagePreviewUrl.value = "";
     }
-  }
+  },
+  { immediate: true }
 );
 
 function validate() {

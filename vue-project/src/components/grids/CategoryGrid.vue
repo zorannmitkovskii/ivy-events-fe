@@ -9,6 +9,7 @@
       :descriptionKey="item.descriptionKey"
       :icon="item.icon"
       :chipClass="item.chipClass"
+      :thumbnail="item.thumbnail"
       :selected="item.id === modelValue"
       :disabled="!!item.disabled"
       @select="$emit('update:modelValue', item.id)"

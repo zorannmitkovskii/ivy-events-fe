@@ -37,10 +37,10 @@
         v-for="pkg in packages"
         :key="pkg.id"
         class="package-card"
-        :class="{ featured: pkg.packageType === 'INV_PRO' || pkg.packageType === 'IVY_PREMIUM' }"
+        :class="{ featured: pkg.packageType === 'INV_PRO' || pkg.packageType === 'INV_PREMIUM' }"
       >
         <span
-          v-if="pkg.packageType === 'INV_PRO' || pkg.packageType === 'IVY_PREMIUM'"
+          v-if="pkg.packageType === 'INV_PRO' || pkg.packageType === 'INV_PREMIUM'"
           class="badge-popular"
         >
           {{ $t("packages.popular") }}

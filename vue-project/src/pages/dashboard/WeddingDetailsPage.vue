@@ -1,6 +1,7 @@
 <template>
   <div class="dash-page">
     <div class="dash-page-header">
+      <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
       <h1 class="dash-page-title">{{ t('weddingDetails.title') }}</h1>
       <p class="dash-page-subtitle">{{ t('weddingDetails.subtitle') }}</p>
     </div>
@@ -356,16 +357,17 @@ async function onDelete(item) {
   gap: 6px;
   padding: 9px 18px;
   border: none;
-  border-radius: 10px;
-  background: var(--brand-main);
+  border-radius: 9px;
+  background: var(--dash-sage);
   color: #fff;
-  font-size: 14px;
-  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
   transition: background 0.15s;
 }
-.btn-add:hover { filter: brightness(0.95); }
-.btn-add:disabled { opacity: 0.5; cursor: not-allowed; filter: none; }
+.btn-add:hover { background: var(--dash-sage-dark); }
+.btn-add:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .loading-msg {
   display: flex;
@@ -373,38 +375,38 @@ async function onDelete(item) {
   gap: 12px;
   padding: 60px 0;
   justify-content: center;
-  color: var(--neutral-500);
-  font-size: 14px;
+  color: var(--dash-muted);
+  font-size: 13px;
 }
 .spinner {
   width: 20px; height: 20px;
-  border: 2.5px solid var(--neutral-200);
-  border-top-color: var(--brand-main);
+  border: 2.5px solid var(--dash-cream-border);
+  border-top-color: var(--dash-sage);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .empty-card {
-  background: #fff;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--dash-cream-card);
+  border-radius: var(--dash-radius);
+  border: 1px solid var(--dash-cream-border);
+  box-shadow: var(--dash-shadow-sm);
   padding: 48px 24px;
   text-align: center;
   display: grid;
   place-items: center;
   gap: 8px;
 }
-.empty-icon { color: var(--neutral-400); margin-bottom: 8px; }
-.empty-title { font-weight: 700; font-size: 16px; color: var(--neutral-900); margin: 0; }
-.empty-sub { font-size: 13px; color: var(--neutral-500); margin: 0 0 8px; }
+.empty-icon { color: var(--dash-light); margin-bottom: 8px; }
+.empty-title { font-family: 'Playfair Display', serif; font-weight: 400; font-size: 18px; color: var(--dash-charcoal); margin: 0; }
+.empty-sub { font-size: 13px; color: var(--dash-muted); margin: 0 0 8px; }
 
 /* ---- Hero Image ---- */
 .hero-image-card {
-  background: #fff;
-  border: 1px solid var(--neutral-200, #e5e7eb);
-  border-radius: 14px;
+  background: var(--dash-cream-card);
+  border: 1px solid var(--dash-cream-border);
+  border-radius: var(--dash-radius);
   padding: 20px;
   margin-bottom: 20px;
 }
@@ -417,15 +419,17 @@ async function onDelete(item) {
 }
 
 .hero-image-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--neutral-900);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--dash-muted);
   margin: 0;
 }
 
 .hero-image-desc {
-  font-size: 13px;
-  color: var(--neutral-500);
+  font-size: 12px;
+  color: var(--dash-light);
   margin: 4px 0 0;
 }
 
@@ -453,17 +457,18 @@ async function onDelete(item) {
   right: 12px;
   padding: 7px 16px;
   border: none;
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.6);
+  border-radius: 9px;
+  background: rgba(30, 36, 32, 0.65);
   color: #fff;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'Outfit', sans-serif;
   cursor: pointer;
   transition: background 0.15s;
 }
 
 .hero-change-btn:hover {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(30, 36, 32, 0.85);
 }
 
 .hero-change-btn:disabled {
@@ -472,7 +477,7 @@ async function onDelete(item) {
 }
 
 .hero-upload-area {
-  border: 2px dashed var(--neutral-300, #d1d5db);
+  border: 2px dashed var(--dash-cream-border);
   border-radius: 10px;
   padding: 40px 20px;
   display: flex;
@@ -481,17 +486,17 @@ async function onDelete(item) {
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  color: var(--neutral-400, #9ca3af);
+  color: var(--dash-light);
   transition: border-color 0.2s, color 0.2s;
 }
 
 .hero-upload-area:hover {
-  border-color: var(--brand-gold, #c8a24d);
-  color: var(--brand-gold, #c8a24d);
+  border-color: var(--dash-gold);
+  color: var(--dash-gold);
 }
 
 .hero-upload-text {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -499,7 +504,7 @@ async function onDelete(item) {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 /* ---- Cards Grid ---- */
@@ -510,14 +515,15 @@ async function onDelete(item) {
 }
 
 .detail-card {
-  background: #fff;
-  border: 1px solid var(--neutral-200, #e5e7eb);
-  border-radius: 14px;
+  background: var(--dash-cream-card);
+  border: 1px solid var(--dash-cream-border);
+  border-radius: var(--dash-radius);
   padding: 20px;
-  transition: box-shadow 0.2s;
+  transition: all 0.22s;
 }
 .detail-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--dash-shadow-md);
+  transform: translateY(-2px);
 }
 
 .detail-card-head {
@@ -530,7 +536,7 @@ async function onDelete(item) {
 .detail-icon {
   width: 36px; height: 36px;
   border-radius: 10px;
-  background: var(--neutral-100, #f3f4f6);
+  background: var(--dash-sage-ghost);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -551,26 +557,27 @@ async function onDelete(item) {
   border-radius: 8px;
   border: none;
   background: transparent;
-  color: var(--neutral-400);
+  color: var(--dash-light);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: all 0.15s;
 }
-.action-btn:hover { background: #eff6ff; color: #2563eb; }
-.action-btn--delete:hover { background: #fef2f2; color: #dc2626; }
+.action-btn:hover { background: var(--dash-sage-ghost); color: var(--dash-sage); }
+.action-btn--delete:hover { background: var(--dash-blush-pale); color: #9a5e56; }
 
 .detail-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--neutral-900);
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--dash-charcoal);
   margin: 0 0 4px;
 }
 
 .detail-meta {
-  font-size: 13px;
-  color: var(--neutral-500);
+  font-size: 12px;
+  color: var(--dash-muted);
   margin: 0 0 4px;
 }
 
@@ -583,37 +590,42 @@ async function onDelete(item) {
 }
 .detail-location-name {
   font-size: 12px;
-  color: var(--neutral-600, #4b5563);
+  color: var(--dash-ink);
 }
 .detail-map-btn {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
-  color: var(--brand-main);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--dash-sage);
   text-decoration: none;
   padding: 2px 8px;
-  border: 1px solid var(--brand-main);
+  border: 1px solid var(--dash-sage-light);
   border-radius: 6px;
   transition: all 0.15s;
 }
 .detail-map-btn:hover {
-  background: var(--brand-main);
+  background: var(--dash-sage);
   color: #fff;
+  border-color: var(--dash-sage);
 }
 
 /* ---- Modal Form ---- */
 .modal-form { display: flex; flex-direction: column; gap: 16px; }
 .form-group { display: flex; flex-direction: column; gap: 4px; }
-.form-label { font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+.form-label { font-size: 10.5px; font-weight: 600; color: var(--dash-muted); text-transform: uppercase; letter-spacing: 0.08em; }
 .form-input {
   padding: 9px 14px;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  font-size: 14px;
-  background: #fff;
+  border: 1.5px solid var(--dash-cream-border);
+  border-radius: 9px;
+  font-size: 13px;
+  font-family: 'Outfit', sans-serif;
+  background: var(--dash-cream);
+  color: var(--dash-ink);
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-.form-input:focus { border-color: var(--brand-main); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+.form-input:focus { border-color: var(--dash-sage-light); box-shadow: 0 0 0 3px rgba(90, 122, 82, 0.1); background: var(--dash-cream-card); }
 .form-textarea { resize: vertical; font-family: inherit; }
 
 .form-row {
@@ -624,27 +636,29 @@ async function onDelete(item) {
 
 .form-error {
   padding: 8px 12px;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  background: var(--dash-blush-pale);
+  border: 1px solid var(--dash-blush);
   border-radius: 8px;
-  color: #dc2626;
-  font-size: 13px;
+  color: #9a5e56;
+  font-size: 12px;
   font-weight: 500;
 }
 
 .btn-cancel {
-  padding: 9px 20px; border: 1px solid #e2e8f0; border-radius: 8px;
-  background: #fff; color: #475569; font-size: 14px; font-weight: 500;
+  padding: 9px 20px; border: 1.5px solid var(--dash-cream-border); border-radius: 9px;
+  background: var(--dash-cream-card); color: var(--dash-ink); font-size: 13px; font-weight: 500;
+  font-family: 'Outfit', sans-serif;
   cursor: pointer; transition: all 0.15s;
 }
-.btn-cancel:hover { background: #f8fafc; }
+.btn-cancel:hover { border-color: var(--dash-sage-light); }
 
 .btn-save {
-  padding: 9px 20px; border: none; border-radius: 8px;
-  background: var(--brand-main); color: #fff; font-size: 14px; font-weight: 600;
+  padding: 9px 20px; border: none; border-radius: 9px;
+  background: var(--dash-sage); color: #fff; font-size: 13px; font-weight: 500;
+  font-family: 'Outfit', sans-serif;
   cursor: pointer; transition: all 0.15s;
 }
-.btn-save:hover { filter: brightness(0.95); }
+.btn-save:hover { background: var(--dash-sage-dark); }
 .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
 
 @media (max-width: 600px) {

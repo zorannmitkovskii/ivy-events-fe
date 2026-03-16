@@ -58,6 +58,7 @@ async function onDelete(id) {
 <template>
   <div class="dash-page">
     <div class="dash-page-header">
+      <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
       <h1 class="dash-page-title">{{ t('agenda.title') }}</h1>
       <p class="dash-page-subtitle">{{ t('agenda.subtitle', { event: '', dateRange: '' }) }}</p>
     </div>
@@ -117,31 +118,33 @@ async function onDelete(id) {
 <style scoped>
 .loading-msg {
   padding: 18px 0;
-  color: var(--neutral-500);
+  color: var(--dash-muted);
 }
 
 .error-msg {
   padding: 18px 0;
-  color: #b00020;
+  color: #9a5e56;
 }
 
 .empty-card {
-  background: #fff;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  padding: 20px 24px;
+  background: var(--dash-cream-card);
+  border-radius: var(--dash-radius);
+  border: 1px solid var(--dash-cream-border);
+  box-shadow: var(--dash-shadow-sm);
+  padding: 24px;
+  text-align: center;
 }
 
 .empty-title {
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--neutral-900);
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--dash-charcoal);
 }
 
 .empty-sub {
   margin-top: 6px;
   font-size: 13px;
-  color: var(--neutral-500);
+  color: var(--dash-muted);
 }
 </style>

@@ -1,11 +1,21 @@
 <template>
-  <Teleport to="body">
+  <Teleport to="body" :disabled="editPanelMode">
     <Transition name="modal">
-      <div v-if="open" class="ivy-overlay" @mousedown.self="$emit('close')">
-        <div class="ivy-modal" role="dialog" aria-modal="true">
-          <header class="ivy-modal__header">
-            <h3 class="ivy-modal__title">{{ title }}</h3>
-            <button class="ivy-modal__close" type="button" @click="$emit('close')">&times;</button>
+      <div v-if="open"
+        :class="editPanelMode ? 'ivy-panel' : 'ivy-overlay'"
+        @mousedown.self="!editPanelMode && $emit('close')"
+      >
+        <div class="ivy-modal" :class="{ 'ivy-modal--panel': editPanelMode }" role="dialog" aria-modal="true">
+          <!-- Hide header in panel mode — accordion header serves this purpose -->
+          <header v-if="!editPanelMode || subModal" class="ivy-modal__header" :class="{ 'ivy-modal__header--panel': editPanelMode }">
+            <button v-if="editPanelMode && subModal" class="ivy-modal__back" type="button" @click="$emit('close')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              {{ title }}
+            </button>
+            <template v-else>
+              <h3 class="ivy-modal__title">{{ title }}</h3>
+              <button class="ivy-modal__close" type="button" @click="$emit('close')">&times;</button>
+            </template>
           </header>
 
           <section class="ivy-modal__body">
@@ -22,11 +32,14 @@
 </template>
 
 <script setup>
-import { watch, onBeforeUnmount } from "vue";
+import { watch, inject, ref, onBeforeUnmount } from "vue";
+
+const editPanelMode = inject("editPanelMode", ref(false));
 
 const props = defineProps({
   open: Boolean,
-  title: String
+  title: String,
+  subModal: { type: Boolean, default: false },
 });
 
 const emit = defineEmits(["close"]);
@@ -40,10 +53,14 @@ watch(
   (v) => {
     if (v) {
       document.addEventListener("keydown", onEsc);
-      document.body.style.overflow = "hidden";
+      if (!editPanelMode.value) {
+        document.body.style.overflow = "hidden";
+      }
     } else {
       document.removeEventListener("keydown", onEsc);
-      document.body.style.overflow = "";
+      if (!editPanelMode.value) {
+        document.body.style.overflow = "";
+      }
     }
   }
 );
@@ -135,6 +152,41 @@ onBeforeUnmount(() => {
 .modal-enter-from .ivy-modal,
 .modal-leave-to .ivy-modal {
   transform: translateY(16px);
+}
+
+/* ---- Panel mode (inside sidebar) ---- */
+.ivy-panel {
+  display: block;
+}
+
+.ivy-modal--panel {
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  width: 100%;
+  max-width: none;
+  max-height: none;
+}
+
+.ivy-modal__header--panel {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.ivy-modal__back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--brand-main);
+  cursor: pointer;
+  padding: 0;
+}
+
+.ivy-modal__back:hover {
+  opacity: 0.8;
 }
 
 /* Google Places autocomplete dropdown renders in body —

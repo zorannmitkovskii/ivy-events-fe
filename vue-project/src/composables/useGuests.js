@@ -4,6 +4,7 @@ import { tablesService } from "@/services/tables.service";
 import { getDemoGuests } from "@/demo/guests.demo";
 import { onboardingStore } from "@/store/onboarding.store";
 import { checkDraftLimit } from "@/utils/draftLimits";
+import { getErrorMessage } from "@/services/apiError";
 
 /**
  * Maps a BE guest DTO to the UI model used by GuestsTable / GuestsTableRow.
@@ -86,7 +87,7 @@ export function useGuests() {
       const demo = getDemoGuests("demo");
       rawList.value = demo.items;
       tables.value = demo.tables;
-      error.value = e?.message || "Failed to load guests";
+      error.value = getErrorMessage(e);
     } finally {
       loading.value = false;
     }

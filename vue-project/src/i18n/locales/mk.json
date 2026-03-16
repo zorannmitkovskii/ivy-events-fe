@@ -191,6 +191,9 @@
     "section": {
       "title": "Совршено за секоја прослава",
       "subtitle": "Прекрасни покани за сите ваши посебни моменти",
+      "eyebrow": "Категории",
+      "titleBefore": "Совршено за",
+      "titleAccent": "секоја прослава",
       "continue": "Следно",
       "description": "Може подоцна да се смени"
     },
@@ -309,7 +312,9 @@
     "category": {
       "title": "Изберете категорија на настан",
       "subtitle": "Изберете го типот на настанот што го планирате. Може да го промените подоцна.",
-      "continue": "Продолжи"
+      "continue": "Продолжи",
+      "next": "Следно",
+      "create": "Креирај"
     },
     "eventBasics": {
       "title": "Основни детали",
@@ -414,16 +419,33 @@
   },
   "home": {
     "hero": {
-      "titleLine1": "Креирајте прекрасни",
+      "pill": "Дигитални покани",
+      "titleLine1": "Креирајте",
+      "titleAccent1": "прекрасни",
       "titleLine2": "покани. Планирајте",
-      "titleLine3": "незаборавни настани.",
+      "titleAccent2": "незаборавни",
+      "titleLine3": "покани.",
       "subtitle": "Сè-во-едно платформа за елегантни дигитални покани, лесно следење на RSVP и безстресно управување со настани.",
-      "primaryCta": "Започни",
-      "secondaryCta": "Погледни дизајни"
+      "primaryCta": "✦ Започни бесплатно",
+      "secondaryCta": "Погледни дизајни",
+      "statTemplates": "Шаблони",
+      "statSent": "Покани испратени",
+      "statSatisfied": "Задоволни корисници",
+      "chipConfirm": "Нова потврда!",
+      "chipConfirmSub": "Марија потврди присуство",
+      "chipGuests": "47 / 80 гости",
+      "chipGuestsSub": "потврдиле присуство",
+      "cardLabel": "Вие сте поканети на",
+      "cardNames": "Ана & Марко",
+      "cardDate": "15 Јуни 2025 · 18:00",
+      "cardLocation": "Охрид, Македонија"
     },
     "howItWorks": {
+      "eyebrow": "Како функционира",
       "title": "Како функционира",
-      "subtitle": "Четири едноставни чекори до совршен настан",
+      "titleBefore": "Четири чекори до",
+      "titleAccent": "совршена покана",
+      "subtitle": "Од шаблон до испратена покана — за помалку од 10 минути",
       "steps": {
         "chooseTemplate": {
           "title": "Избери шаблон",
@@ -466,31 +488,54 @@
       }
     },
     "templates": {
+      "eyebrow": "Дизајни",
       "title": "Прекрасни дизајни за секоја прилика",
+      "titleBefore": "Прекрасни шаблони за",
+      "titleAccent": "секоја прилика",
       "subtitle": "Професионално дизајнирани, целосно приспособливи покани",
-      "cta": "Погледни дизајни",
+      "cta": "Погледни ги сите шаблони",
       "items": {
         "elegantWedding": {
-          "title": "Елегантна свадба",
-          "subtitle": "Класично и вечно"
+          "title": "Класична свадба",
+          "subtitle": "Елегантен стил · Forest",
+          "cardNames": "Ана & Бобан",
+          "cardDate": "15 Јуни · Охрид"
         },
         "birthday": {
-          "title": "Роденденска прослава",
-          "subtitle": "Забавно и весело"
+          "title": "Боем свадба",
+          "subtitle": "Топол стил · Sage",
+          "cardNames": "Сара & Дарко",
+          "cardDate": "3 Август · Скопје"
         },
         "corporate": {
-          "title": "Корпоративен настан",
-          "subtitle": "Професионално и модерно"
-        },
-        "babyShower": {
-          "title": "Бејби шауер",
-          "subtitle": "Слатко и шармантно"
+          "title": "Модерна прослава",
+          "subtitle": "Природен стил · Garden",
+          "cardNames": "18-ти роденден",
+          "cardDate": "12 Мај · Битола"
         }
       }
     },
     "features": {
+      "eyebrow": "Можности",
       "title": "Можности за секоја етапа од организацијата",
-      "subtitle": "Сè што ви е потребно за да планирате, управувате и прославите",
+      "titleBefore": "Сè за секоја",
+      "titleAccent": "етапа од организацијата",
+      "subtitle": "Платформата ги покрива сите аспекти — од дизајн до следење на гости — за беспрекорно искуство.",
+      "rsvpLabel": "Live RSVP преглед",
+      "rsvpTitle": "Следи кој доаѓа — во реално време",
+      "rsvpConfirmed": "Потврдени",
+      "rsvpGuest1": "Ана Стојановска",
+      "rsvpTime1": "пред 2 мин",
+      "rsvpYes": "Потврдена ✓",
+      "rsvpGuest2": "Марко Петровски",
+      "rsvpTime2": "пред 15 мин",
+      "rsvpNo": "Не може ✕",
+      "rsvpGuest3": "Ивана Николовска",
+      "rsvpTime3": "пред 1 час",
+      "rsvpMaybe": "Можеби ?",
+      "rsvpGuest4": "Бобан Ристески",
+      "rsvpTime4": "пред 2 часа",
+      "rsvpYes2": "Потврден ✓",
       "items": {
         "beautifulDesigns": {
           "title": "Прекрасни дизајни на покани",
@@ -559,12 +604,36 @@
       "satisfaction": "98% Задоволство на клиенти"
     },
     "testimonials": {
+      "eyebrow": "Искуства",
       "title": "Обожавани од илјадници задоволни парови",
-      "subtitle": "Вистински приказни од вистински прослави"
+      "titleBefore": "Што велат нашите",
+      "titleAccent": "корисници",
+      "subtitle": "Вистински приказни од вистински прослави",
+      "items": {
+        "first": {
+          "text": "Ivy Events го направи целиот процес неверојатно лесен. Поканите беа прекрасни и гостите беа воодушевени.",
+          "name": "Ана & Марко",
+          "event": "Свадба · Охрид 2024"
+        },
+        "second": {
+          "text": "Совршена платформа за следење на RSVP. Знаевме точно кој доаѓа, без стрес и без телефонски јавувања.",
+          "name": "Сара Ристеска",
+          "event": "Роденден · Скопје 2024"
+        },
+        "third": {
+          "text": "Го користевме за корпоративна гала вечер. Едноставно, елегантно и професионално. Препорачувам!",
+          "name": "Иван Николоски",
+          "event": "Корпоративна гала · 2024"
+        }
+      }
     },
     "finalCta": {
+      "eyebrow": "Подготвени?",
       "title": "Подготвени да го создадете вашиот совршен настан?",
-      "subtitle": "Придружете се на илјадници задоволни парови и организатори кои му веруваат на IvyEvents. Започнете со планирање на вашата незаборавна прослава – бесплатно е!",
+      "titleLine1": "Создадете го вашиот совршен",
+      "titleAccent": "настан",
+      "titleLine2": "денес",
+      "subtitle": "Приклучете се на илјадници задоволни корисници — започнете бесплатно",
       "primaryCta": "Започни со планирање",
       "secondaryCta": "Погледни дизајни"
     }
@@ -578,14 +647,17 @@
     "totalGuests": "Вкупно гости",
     "tablesAssigned": "Распоредени маси",
     "tablesSeated": "од масите се пополнети",
-    "budgetStatus": "Статус на буџет",
+    "budgetStatus": "Буџет – трошоци",
+    "budgetRemaining": "Буџет преостанато",
     "of": "од",
     "budget": "буџет",
     "remaining": "Преостанато",
     "used": "Потрошено",
-    "rsvpSummary": "RSVP преглед",
-    "viewDetails": "Види детали",
-    "total": "ВКУПНО",
+    "spent": "потрошено",
+    "totalBudget": "Вкупен буџет",
+    "rsvpSummary": "RSVP Статус",
+    "viewDetails": "Детали",
+    "total": "Вкупно",
     "coming": "Доаѓаат",
     "maybe": "Можеби",
     "declined": "Одбиени",
@@ -602,7 +674,18 @@
     "guestsAssigned": "гости распоредени",
     "viewAllTasks": "Види сите задачи",
     "onTrackTitle": "Сè е под контрола!",
-    "viewTimeline": "Види тајмлајн"
+    "viewTimeline": "Види тајмлајн",
+    "readiness": "Подготвеност",
+    "live": "Во живо",
+    "weddingEvent": "Свадбен настан",
+    "event": "Настан",
+    "activeTasks": "Задачи активни",
+    "highPriority": "со висок приоритет",
+    "tablesSeating": "Маси пополнети",
+    "seated": "распоредени",
+    "unseated": "Нераспоредени",
+    "tables": "Маси",
+    "tableNum": "Маса {n}"
   },
   "guests": {
     "title": "Гости",
@@ -649,7 +732,17 @@
     "adults": "Возрасни",
     "children": "Деца",
     "note": "Забелешка",
-    "notePh": "Опциона забелешка..."
+    "notePh": "Опциона забелешка...",
+    "totalGuests": "Вкупно Гости"
+  },
+  "notifications": {
+    "subtitle": "Испратете ажурирања и RSVP до вашите гости",
+    "placeholder": "Шаблони за известувања наскоро."
+  },
+  "team": {
+    "title": "Тим и Ко-домаќини",
+    "subtitle": "Управувајте со членови на тимот и дозволи",
+    "placeholder": "Управување со тим наскоро."
   },
   "agenda": {
     "title": "Агенда",
@@ -843,10 +936,13 @@
     "support": "Поддршка",
     "premium": "ПРЕМИУМ",
     "eventPlanner": "Организатор",
+    "weddingPlanner": "Wedding Planner",
     "eventSettings": "Подесувања на настан",
+    "notifications": "Известувања",
     "signOut": "Одјави се",
     "addGuest": "Додади гостин",
-    "addTask": "Додади задача"
+    "addTask": "Додади задача",
+    "navigation": "Навигација"
   },
   "admin": {
     "sidebar": {
@@ -1102,6 +1198,7 @@
     "totalBudget": "Вкупен буџет",
     "totalSpent": "Вкупно потрошено",
     "remaining": "Преостанато",
+    "progress": "Прогрес",
     "monthly": "Месечно",
     "fixedAndVariable": "Фиксно и варијабилно",
     "safeToSpend": "Безбедно за трошење",
@@ -1249,7 +1346,7 @@
       "organizer": "Организатор",
       "gallery": "Галерија"
     },
-    "choose": "Започни",
+    "choose": "Активирај",
     "popular": "Популарно",
     "empty": "Нема достапни пакети во оваа категорија.",
     "loadError": "Не успеа вчитувањето на пакетите. Обидете се повторно.",
@@ -1257,7 +1354,14 @@
     "applyCode": "Примени",
     "validating": "Се проверува...",
     "invalidCode": "Невалиден код за попуст",
-    "continuePayment": "Продолжи со плаќање"
+    "continuePayment": "Активирај",
+    "addToCart": "Додади во кошничка",
+    "inCart": "Во кошничка",
+    "cart": "Кошничка",
+    "cartEmpty": "Вашата кошничка е празна",
+    "cartTotal": "Вкупно",
+    "checkout": "Продолжи со плаќање",
+    "removeFromCart": "Отстрани"
   },
   "about": {
     "title": "За нас",
@@ -1501,6 +1605,8 @@
     "fish": "Риба",
     "glutenFree": "Без глутен",
     "otherDietary": "Друго",
+    "allergiesLabel": "Алергии",
+    "allergiesPlaceholder": "пр. ореви, школки, глутен...",
     "sending": "Се испраќа...",
     "rsvpSuccess": "Ви благодариме! Вашиот RSVP е примен.",
     "rsvpError": "Нешто тргна наопаку. Обидете се повторно.",
@@ -1566,6 +1672,102 @@
     "hero": "Уреди херо",
     "details": "Уреди детали",
     "agenda": "Уреди агенда",
-    "ourStory": "Уреди приказна"
+    "ourStory": "Уреди приказна",
+    "entry": "Уреди влез",
+    "colors": "Бои",
+    "fonts": "Фонтови",
+    "headingFont": "Фонт за наслов",
+    "bodyFont": "Фонт за текст",
+    "accentColor": "Акцент",
+    "secondaryColor": "Секундарна",
+    "tertiaryColor": "Терциерна",
+    "backgroundColor": "Позадина",
+    "textColor": "Текст",
+    "resetDefaults": "Врати на стандардно",
+    "colorPresets": "Палети на бои",
+    "customColors": "Прилагодено",
+    "customize": "Прилагоди",
+    "save": "Зачувај",
+    "mobile": "Мобилен",
+    "tablet": "Таблет",
+    "desktop": "Десктоп",
+    "unsavedChanges": "Имате незачувани промени. Дали сакате да излезете без да зачувате?",
+    "sections": "Секции",
+    "style": "Стил",
+    "gallery": "Галерија",
+    "rsvp": "RSVP",
+    "buttons": "Копчиња и полиња",
+    "background": "Позадина и картички",
+    "spacing": "Растојание",
+    "uploadPhoto": "Додади фотографија",
+    "deletePhoto": "Избриши",
+    "rsvpDeadline": "Краен рок за RSVP",
+    "maxGuests": "Максимум гости",
+    "showDietary": "Прикажи диететски опции",
+    "buttonBg": "Боја на копче",
+    "buttonText": "Боја на текст",
+    "borderRadius": "Заоблени агли",
+    "sectionBg": "Позадина на секција",
+    "cardBg": "Позадина на картичка",
+    "cardShadow": "Сенка на картичка",
+    "cardRadius": "Агли на картичка",
+    "cardBorder": "Рамка на картичка",
+    "shadowNone": "Без",
+    "shadowSubtle": "Суптилна",
+    "shadowMedium": "Средна",
+    "shadowStrong": "Силна",
+    "compact": "Компактно",
+    "balanced": "Балансирано",
+    "spacious": "Просторно",
+    "layoutSpacing": "Распоред",
+    "preview": "Преглед",
+    "contentTab": "Содржина",
+    "layoutTab": "Распоред",
+    "advancedTab": "Напредно",
+    "addSection": "Додади секција",
+    "sectionOutline": "Преглед на секции",
+    "sectionVisible": "Прикажи секција",
+    "sectionHidden": "Сокриј секција",
+    "showSection": "Прикажи секција",
+    "hideSection": "Сокриј секција",
+    "anchorId": "Anchor ID",
+    "animation": "Анимација",
+    "animationNone": "Без",
+    "animationFade": "Појавување",
+    "animationSlide": "Лизгање нагоре",
+    "overrideTheme": "Преиначи тема",
+    "statusComplete": "Комплетно",
+    "statusMissing": "Недостасува инфо",
+    "allowPlusOne": "Дозволи +1",
+    "childOption": "Опција за дете",
+    "contactMethod": "Метод на контакт",
+    "emailOption": "Е-пошта",
+    "smsOption": "СМС",
+    "bothOption": "Двете",
+    "customQuestions": "Прашања",
+    "mealPreference": "Оброк",
+    "allergies": "Алергии",
+    "songRequest": "Барање за песна",
+    "addQuestion": "Додади прашање",
+    "confirmationMessage": "Порака за потврда",
+    "antiSpam": "Анти-спам заштита",
+    "syncGuests": "Синхронизирај со листа на гости",
+    "layoutCentered": "Центрирано",
+    "layoutLeftAligned": "Лево порамнето",
+    "layoutSplit": "Поделено",
+    "layoutCards": "Картички",
+    "layoutList": "Листа",
+    "layoutTimeline": "Временска линија",
+    "layoutGrid": "Мрежа",
+    "layoutCompact": "Компактно",
+    "layoutMinimal": "Минимално",
+    "nameFields": "Полиња за име",
+    "requireLastName": "Потребно презиме",
+    "guestConfig": "Конфигурација на гости",
+    "info": "Инфо",
+    "brideName": "Име на невеста",
+    "groomName": "Име на младоженец",
+    "weddingDate": "Датум на свадба",
+    "venue": "Место / Локација"
   }
 }

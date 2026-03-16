@@ -61,9 +61,9 @@ import CategoryFilterBar from '@/components/onboarding/CategoryFilterBar.vue';
 import InvitationGrid from '@/components/onboarding/InvitationGrid.vue';
 import ButtonMain from '@/components/generic/ButtonMain.vue';
 import OnboardingFooterLinks from '@/components/onboarding/OnboardingFooterLinks.vue';
-import { onboardingStore, setInvitationName } from '@/store/onboarding.store';
+import { onboardingStore, setInvitationName, setEventId } from '@/store/onboarding.store';
 import { eventsService } from '@/services/events.service';
-import { isAuthenticated } from '@/services/auth.service';
+import { isAuthenticated, getUsername } from '@/services/auth.service';
 import { EventCategoryEnum } from '@/enums/EventCategory';
 import { invitationTemplateService } from '@/services/invitationTemplate.service';
 import { useI18n } from 'vue-i18n';
@@ -75,6 +75,7 @@ const lang = computed(() => route.params.lang || 'mk');
 
 const loading = ref(false);
 const error = ref('');
+const fromDashboard = computed(() => route.query.from === 'dashboard');
 
 const displayCategory = computed(() =>
   onboardingStore.selectedCategory || EventCategoryEnum.WEDDING
@@ -106,11 +107,23 @@ const templates = ref([]);
 const fetchLoading = ref(false);
 
 const filteredInvitations = computed(() => {
-  return templates.value.map(t => ({
+  const mapped = templates.value.map(t => ({
     id: t.id,
     name: t.name,
-    thumbnailUrl: t.thumbnailImage || '',
+    thumbnailUrl: t.thumbnailImage || (t.path ? `/thumbnails/${t.path.split('/').pop()}.svg` : ''),
   }));
+  // Show the last 3 (newest) templates
+  const newest = mapped.slice(-3).reverse();
+  // Put the selected invitation first if it's among the newest
+  const sel = onboardingStore.invitationName;
+  if (sel) {
+    const idx = newest.findIndex(i => i.id === sel);
+    if (idx > 0) {
+      const [item] = newest.splice(idx, 1);
+      newest.unshift(item);
+    }
+  }
+  return newest;
 });
 
 onMounted(async () => {
@@ -118,12 +131,27 @@ onMounted(async () => {
   try {
     const data = await invitationTemplateService.listByCategory(displayCategory.value);
     templates.value = (data || []).filter(t => t.active !== false);
+
+    // Preselect invitation: resolve stored name (path/slug from BE) to template id
+    if (onboardingStore.invitationName) {
+      const match = resolveTemplate(onboardingStore.invitationName);
+      if (match) setInvitationName(match.id);
+    }
   } catch (e) {
     console.error('Failed to load invitation templates:', e);
   } finally {
     fetchLoading.value = false;
   }
 });
+
+// Match an invitationName (could be id, path, or slug) to a template
+function resolveTemplate(name) {
+  if (!name) return null;
+  return templates.value.find(t =>
+    t.id === name || t.path === name || t.slug === name ||
+    t.name?.toLowerCase().replace(/\s+/g, '-') === name
+  );
+}
 
 function onSelectInvitation(id) {
   setInvitationName(id);
@@ -137,10 +165,12 @@ function onPreview(id) {
 }
 
 function onBack() {
-  if (!isAuthenticated()) {
+  if (fromDashboard.value) {
+    router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
+  } else if (!isAuthenticated()) {
     router.push({ name: 'home', params: { lang: lang.value } });
   } else {
-    router.push({ name: 'EventBasicDetailsPage', params: { lang: lang.value } });
+    router.push({ name: 'EventCategoryPage', params: { lang: lang.value } });
   }
 }
 
@@ -157,8 +187,23 @@ async function onContinue() {
   loading.value = true;
 
   try {
-    const eventId = onboardingStore.eventId;
+    let eventId = onboardingStore.eventId;
 
+    // Create event if it doesn't exist yet
+    if (!eventId) {
+      const payload = {
+        name: 'New Event',
+        categoryType: onboardingStore.selectedCategory,
+        status: 'DRAFT',
+        username: getUsername(),
+        lang: lang.value,
+      };
+      const res = await eventsService.create(payload);
+      eventId = res?.id || res?.eventId;
+      setEventId(eventId);
+    }
+
+    // Attach selected invitation to the event
     if (eventId) {
       const selected = templates.value.find(t => t.id === onboardingStore.invitationName);
       const path = selected?.path || onboardingStore.invitationName;

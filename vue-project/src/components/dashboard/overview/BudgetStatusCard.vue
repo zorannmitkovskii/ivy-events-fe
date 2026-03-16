@@ -1,28 +1,48 @@
 <template>
-  <div class="card card-pad-lg">
-    <div class="card-head">
-      <div class="card-label">{{ t("overview.budgetStatus") }}</div>
-      <div class="card-icon">{{ symbol }}</div>
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">{{ t("overview.budgetStatus") }}</div>
+        <div class="budget-big">
+          {{ fmt(budget.used) }}
+          <span class="budget-big-label">{{ t("overview.spent") }}</span>
+        </div>
+      </div>
+      <router-link :to="budgetLink" class="card-action">{{ t("overview.viewDetails") }} &rarr;</router-link>
     </div>
 
-    <div class="donut-wrap">
-      <div class="donut" :style="{ background: donutBg }"></div>
-      <div class="donut-center">
-        <div class="big">{{ fmt(budget.remaining) }}</div>
-        <div class="kpi-sub">{{ t("overview.remaining") }}</div>
+    <!-- Budget breakdown bars -->
+    <div class="budget-bars">
+      <div v-for="(item, i) in budget.items" :key="item.name" class="budget-bar-row">
+        <div class="bb-label">{{ item.name }}</div>
+        <div class="bb-track">
+          <div class="bb-fill" :style="{ width: barWidth(item), background: catColor(i) }"></div>
+        </div>
+        <div class="bb-val">{{ fmt(item.used) }}</div>
+      </div>
+
+      <div class="budget-bar-row">
+        <div class="bb-label">{{ t("overview.remaining") }}</div>
+        <div class="bb-track">
+          <div class="bb-fill" :style="{ width: remainPct + '%', background: '#b2c9aa' }"></div>
+        </div>
+        <div class="bb-val">{{ fmt(budget.remaining) }}</div>
       </div>
     </div>
 
-    <div class="legend">
-      <div v-for="(item, i) in budget.items" :key="item.name" class="legend-item">
-        <span class="swatch" :style="{ background: catColor(i) }"></span>
-        <span class="legend-name">{{ item.name }}</span>
-        <span class="legend-val">{{ fmt(item.used) }}</span>
+    <!-- Summary -->
+    <div class="budget-summary">
+      <div class="bs-item">
+        <span class="bs-dot" style="background: var(--dash-sage)"></span>
+        <span>{{ t("overview.totalBudget") }}: {{ fmt(budget.total) }}</span>
       </div>
-      <div class="legend-item">
-        <span class="swatch" style="background: #BFD2A4"></span>
-        <span class="legend-name">{{ t("overview.remaining") }}</span>
-        <span class="legend-val">{{ fmt(budget.remaining) }}</span>
+      <div class="bs-item">
+        <span class="bs-dot" style="background: var(--dash-gold)"></span>
+        <span>{{ t("overview.spent") }}: {{ fmt(budget.used) }}</span>
+      </div>
+      <div class="bs-item">
+        <span class="bs-dot" style="background: var(--dash-sage-light)"></span>
+        <span>{{ t("overview.remaining") }}: {{ fmt(budget.remaining) }}</span>
       </div>
     </div>
   </div>
@@ -30,43 +50,19 @@
 
 <script setup>
 import { computed } from "vue";
+import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
+
 const { t } = useI18n();
+const route = useRoute();
+const lang = computed(() => route.params.lang || "mk");
+const budgetLink = computed(() => `/${lang.value}/dashboard/events/budget`);
 
 const props = defineProps({ budget: Object });
 
-const REMAINING_COLOR = "#BFD2A4";
-const COLORS = ["#C8A24D", "#c27c7c", "#5D6A57", "#ED6E69", "#6B8EAE", "#D4A373"];
+const COLORS = ["#b8954e", "#c4968e", "#5a7a52", "#7a9db8", "#d4a373"];
 
-function catColor(i) {
-  return COLORS[i % COLORS.length];
-}
-
-const symbol = computed(() => {
-  try {
-    return new Intl.NumberFormat(undefined, { style: "currency", currency: props.budget?.currency || "EUR" })
-      .formatToParts(0)
-      .find((p) => p.type === "currency")?.value || "$";
-  } catch {
-    return "$";
-  }
-});
-
-const donutBg = computed(() => {
-  const total = props.budget?.total || 1;
-  const items = props.budget?.items || [];
-  let angle = 0;
-  const stops = [];
-  items.forEach((item, i) => {
-    const deg = Math.round((item.used / total) * 360);
-    if (deg > 0) {
-      stops.push(`${catColor(i)} ${angle}deg ${angle + deg}deg`);
-      angle += deg;
-    }
-  });
-  stops.push(`${REMAINING_COLOR} ${angle}deg 360deg`);
-  return `conic-gradient(${stops.join(", ")})`;
-});
+function catColor(i) { return COLORS[i % COLORS.length]; }
 
 function fmt(value) {
   try {
@@ -80,66 +76,99 @@ function fmt(value) {
     return `${value || 0}`;
   }
 }
+
+function barWidth(item) {
+  const total = props.budget?.total || 1;
+  return Math.min(Math.round((item.used / total) * 100), 100) + "%";
+}
+
+const remainPct = computed(() => {
+  const total = props.budget?.total || 1;
+  return Math.round((props.budget?.remaining || 0) / total * 100);
+});
 </script>
 
 <style scoped>
-.donut-wrap {
-  position: relative;
-  height: 180px;
-  display: grid;
-  place-items: center;
-  margin-top: 12px;
-}
-.donut {
-  width: 160px;
-  height: 160px;
-  border-radius: 999px;
-  position: relative;
-}
-.donut::after {
-  content: "";
-  position: absolute;
-  inset: 20px;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 999px;
-}
-.donut-center {
-  position: absolute;
-  display: grid;
-  place-items: center;
-  text-align: center;
-}
-.big {
-  font-size: 20px;
-  font-weight: 950;
-  color: var(--neutral-900);
+.budget-big {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--dash-charcoal);
+  margin-top: 4px;
 }
 
-.legend {
-  display: grid;
-  gap: 8px;
-  margin-top: 14px;
+.budget-big-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  color: var(--dash-muted);
+  font-weight: 400;
 }
-.legend-item {
+
+.budget-bars {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.budget-bar-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
+  gap: 12px;
 }
-.swatch {
-  width: 10px;
-  height: 10px;
-  border-radius: 3px;
+
+.bb-label {
+  font-size: 12px;
+  color: var(--dash-ink);
+  width: 100px;
   flex-shrink: 0;
-}
-.legend-name {
-  flex: 1;
-  font-weight: 600;
-  color: var(--neutral-700);
   text-transform: capitalize;
 }
-.legend-val {
-  font-weight: 800;
-  color: var(--neutral-900);
+
+.bb-track {
+  flex: 1;
+  height: 6px;
+  background: var(--dash-sage-ghost);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.bb-fill {
+  height: 100%;
+  border-radius: 20px;
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bb-val {
+  font-size: 12px;
+  color: var(--dash-muted);
+  width: 60px;
+  text-align: right;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+
+.budget-summary {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--dash-cream-border);
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.bs-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--dash-muted);
+}
+
+.bs-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
 }
 </style>

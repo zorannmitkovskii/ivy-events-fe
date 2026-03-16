@@ -25,9 +25,10 @@ import { useAuthUser } from "@/composables/useAuthUser";
 import { getUserId } from "@/services/auth.service";
 import { cpayService } from "@/services/cpay.service";
 import { redirectToCpay } from "@/utils/redirectToCpay";
+import { getErrorMessage } from "@/services/apiError";
 
 const props = defineProps({
-  packageType: { type: String, default: "INV_BASIC" }, // INV_BASIC | INV_PRO | IVY_PREMIUM | GALLERY | ORGANIZER
+  packageType: { type: String, default: "INV_BASIC" }, // INV_BASIC | INV_PRO | INV_PREMIUM | GALLERY | ORGANIZER
   eventId: { type: String, default: "" },
   label: { type: String, default: "" },
   variant: { type: String, default: "default" }, // "default" | "gold" | "success" | "sidebar"
@@ -66,7 +67,7 @@ async function payWithCpay() {
 
     redirectToCpay(paymentUrl, fields);
   } catch (e) {
-    error.value = e?.message || t("cpay.initFailed");
+    error.value = getErrorMessage(e);
     loading.value = false;
   }
 }

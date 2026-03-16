@@ -42,12 +42,27 @@
       <span>Loading users...</span>
     </div>
 
+    <!-- Bulk Actions -->
+    <Transition name="bulk-fade">
+      <div v-if="selected.size > 0" class="bulk-bar">
+        <span class="bulk-count">{{ selected.size }} selected</span>
+        <button class="bulk-btn bulk-btn--danger" @click="bulkDelete">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          Delete
+        </button>
+        <button class="bulk-btn" @click="clearSelection">Clear</button>
+      </div>
+    </Transition>
+
     <!-- Table Card -->
-    <div v-else class="table-card">
+    <div v-if="!loading" class="table-card">
       <div class="table-wrap">
         <table class="table">
           <thead>
             <tr>
+              <th class="th-check">
+                <input type="checkbox" :checked="allPageSelected" :indeterminate="somePageSelected" @change="toggleAllPage" />
+              </th>
               <th>User</th>
               <th>Role</th>
               <th>Package</th>
@@ -57,9 +72,12 @@
           </thead>
           <tbody>
             <tr v-if="paginated.length === 0">
-              <td colspan="5" class="empty">No users found</td>
+              <td colspan="6" class="empty">No users found</td>
             </tr>
-            <tr v-for="row in paginated" :key="row.id" class="row-hover">
+            <tr v-for="row in paginated" :key="row.id" class="row-hover" :class="{ 'row-selected': selected.has(row.id) }">
+              <td class="td-check">
+                <input type="checkbox" :checked="selected.has(row.id)" @change="toggleRow(row.id)" />
+              </td>
               <td>
                 <div class="cell-main">
                   <div class="avatar" :class="avatarColor(row)">
@@ -75,7 +93,10 @@
                 <span class="pill" :class="getRolePillClass(row)">{{ displayRole(row) }}</span>
               </td>
               <td>
-                <span class="pill pill--gray">{{ row.packageType || '—' }}</span>
+                <template v-if="row.packageTypes && row.packageTypes.length">
+                  <span v-for="pt in row.packageTypes" :key="pt" class="pill pill--gray pill--gap">{{ pt }}</span>
+                </template>
+                <span v-else class="pill pill--gray">{{ row.packageType || '—' }}</span>
               </td>
               <td>
                 <span class="status" :class="row.active !== false ? 'status--green' : 'status--red'">
@@ -143,10 +164,6 @@
               <label>Email <span class="req">*</span></label>
               <input v-model="form.email" type="email" placeholder="john@example.com" class="form-input" />
             </div>
-            <div v-if="!editingId" class="form-group form-group--full">
-              <label>Password <span class="req">*</span></label>
-              <input v-model="form.password" type="password" placeholder="Enter password" class="form-input" />
-            </div>
             <div class="form-group">
               <label>Roles <span class="req">*</span></label>
               <div class="checkbox-group">
@@ -157,15 +174,29 @@
               </div>
             </div>
             <div class="form-group">
-              <label>Package Type</label>
-              <select v-model="form.packageType" class="form-input">
-                <option value="">None</option>
-                <option v-for="pt in packageTypeOptions" :key="pt" :value="pt">{{ pt }}</option>
-              </select>
+              <label>Package Types</label>
+              <div class="checkbox-group checkbox-group--wrap">
+                <label v-for="pt in packageTypeOptions" :key="pt" class="check-label">
+                  <input type="checkbox" :value="pt" v-model="form.packageTypes" />
+                  <span>{{ pt }}</span>
+                </label>
+              </div>
             </div>
             <div class="form-group form-group--full">
-              <label>Event ID</label>
-              <input v-model="form.eventId" type="text" placeholder="UUID (optional)" class="form-input" />
+              <label>Events</label>
+              <input
+                v-model="eventSearch"
+                type="text"
+                placeholder="Search events by name..."
+                class="form-input event-search-input"
+              />
+              <div class="checkbox-group checkbox-group--wrap checkbox-group--scroll">
+                <label v-for="ev in filteredEvents" :key="ev.id" class="check-label">
+                  <input type="checkbox" :value="ev.id" v-model="form.eventIds" />
+                  <span>{{ ev.name || 'Unnamed' }} — {{ ev.categoryType || '' }}</span>
+                </label>
+                <span v-if="eventSearch.length >= 3 && filteredEvents.length === 0" class="no-results">No events found</span>
+              </div>
             </div>
           </div>
 
@@ -224,6 +255,7 @@
 import { ref, computed, onMounted, watch } from "vue";
 import { getAdminUsers, getAdminUser, createAdminUser, updateAdminUser, deleteUser } from "@/services/userService";
 import { subscribeToDiscounts } from "@/services/backendApi";
+import { eventsService } from "@/services/events.service";
 import { PackageTypeEnum } from "@/enums/PackageType";
 
 const roleOptions = ["ADMIN", "USER"];
@@ -231,6 +263,26 @@ const packageTypeOptions = Object.values(PackageTypeEnum);
 
 const users = ref([]);
 const loading = ref(true);
+const allEvents = ref([]);
+const eventSearch = ref("");
+
+const filteredEvents = computed(() => {
+  if (eventSearch.value.length < 3) return allEvents.value;
+  const q = eventSearch.value.toLowerCase();
+  return allEvents.value.filter(ev =>
+    (ev.name || "").toLowerCase().includes(q) ||
+    (ev.categoryType || "").toLowerCase().includes(q)
+  );
+});
+
+async function fetchEvents() {
+  try {
+    const data = await eventsService.getAll();
+    allEvents.value = Array.isArray(data) ? data : [];
+  } catch (e) {
+    allEvents.value = [];
+  }
+}
 
 async function fetchUsers() {
   loading.value = true;
@@ -290,6 +342,52 @@ function next() { if (page.value < totalPages.value) page.value++; }
 function prev() { if (page.value > 1) page.value--; }
 function goto(n) { page.value = n; }
 
+/* ---- selection ---- */
+const selected = ref(new Set());
+
+function toggleRow(id) {
+  const s = new Set(selected.value);
+  if (s.has(id)) s.delete(id); else s.add(id);
+  selected.value = s;
+}
+
+const allPageSelected = computed(() =>
+  paginated.value.length > 0 && paginated.value.every(r => selected.value.has(r.id))
+);
+
+const somePageSelected = computed(() =>
+  !allPageSelected.value && paginated.value.some(r => selected.value.has(r.id))
+);
+
+function toggleAllPage() {
+  const s = new Set(selected.value);
+  if (allPageSelected.value) {
+    paginated.value.forEach(r => s.delete(r.id));
+  } else {
+    paginated.value.forEach(r => { if (!isAdmin(r)) s.add(r.id); });
+  }
+  selected.value = s;
+}
+
+function clearSelection() {
+  selected.value = new Set();
+}
+
+async function bulkDelete() {
+  const ids = [...selected.value];
+  if (!ids.length) return;
+  if (!confirm(`Delete ${ids.length} user(s)?`)) return;
+  for (const id of ids) {
+    try {
+      await deleteUser(id);
+      users.value = users.value.filter(u => u.id !== id);
+    } catch (e) {
+      console.error(`Failed to delete user ${id}:`, e);
+    }
+  }
+  selected.value = new Set();
+}
+
 /* ---- helpers ---- */
 const avatarColors = ["avatar--indigo", "avatar--teal", "avatar--rose", "avatar--amber"];
 
@@ -331,10 +429,9 @@ const defaultForm = () => ({
   lastName: "",
   username: "",
   email: "",
-  password: "",
   roles: ["USER"],
-  packageType: "",
-  eventId: "",
+  packageTypes: [],
+  eventIds: [],
 });
 
 const form = ref(defaultForm());
@@ -343,14 +440,18 @@ function openCreate() {
   editingId.value = null;
   form.value = defaultForm();
   formError.value = "";
+  eventSearch.value = "";
   dialogOpen.value = true;
+  fetchEvents();
 }
 
 async function openEdit(user) {
   editingId.value = user.id;
   formError.value = "";
+  eventSearch.value = "";
   form.value = defaultForm();
   dialogOpen.value = true;
+  fetchEvents();
 
   try {
     const full = await getAdminUser(user.id);
@@ -359,10 +460,9 @@ async function openEdit(user) {
       lastName: full.lastName || "",
       username: full.username || "",
       email: full.email || "",
-      password: "",
       roles: Array.isArray(full.roles) ? [...full.roles] : (full.role ? [full.role] : ["USER"]),
-      packageType: full.packageType || "",
-      eventId: full.eventId || "",
+      packageTypes: Array.isArray(full.packageTypes) ? [...full.packageTypes] : (full.packageType ? [full.packageType] : []),
+      eventIds: Array.isArray(full.eventIds) ? [...full.eventIds] : (full.eventId ? [full.eventId] : []),
     };
   } catch (e) {
     formError.value = "Failed to load user details";
@@ -382,7 +482,6 @@ async function save() {
   if (!form.value.lastName.trim()) { formError.value = "Last name is required"; return; }
   if (!form.value.username.trim()) { formError.value = "Username is required"; return; }
   if (!form.value.email.trim()) { formError.value = "Email is required"; return; }
-  if (!editingId.value && !form.value.password) { formError.value = "Password is required"; return; }
   if (!form.value.roles.length) { formError.value = "At least one role is required"; return; }
 
   const payload = {
@@ -391,13 +490,9 @@ async function save() {
     username: form.value.username.trim(),
     email: form.value.email.trim(),
     roles: form.value.roles,
-    packageType: form.value.packageType || null,
-    eventId: form.value.eventId || null,
+    packageTypes: form.value.packageTypes.length ? form.value.packageTypes : null,
+    eventIds: form.value.eventIds.length ? form.value.eventIds : null,
   };
-
-  if (!editingId.value) {
-    payload.password = form.value.password;
-  }
 
   saving.value = true;
   try {
@@ -479,6 +574,36 @@ async function saveDiscount() {
 </script>
 
 <style scoped>
+/* ---- Bulk bar ---- */
+.bulk-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+.bulk-count { font-size: 13px; font-weight: 600; color: #475569; }
+.bulk-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 14px; border: 1px solid #e2e8f0; border-radius: 8px;
+  font-size: 13px; font-weight: 500; background: #fff; color: #475569;
+  cursor: pointer; transition: all 0.15s;
+}
+.bulk-btn:hover { background: #f1f5f9; }
+.bulk-btn--danger { color: #dc2626; border-color: #fecaca; }
+.bulk-btn--danger:hover { background: #fef2f2; }
+
+.bulk-fade-enter-active, .bulk-fade-leave-active { transition: opacity 0.2s, transform 0.2s; }
+.bulk-fade-enter-from, .bulk-fade-leave-to { opacity: 0; transform: translateY(-8px); }
+
+/* ---- Selection ---- */
+.th-check, .td-check { width: 40px; text-align: center; }
+.th-check input, .td-check input { width: 16px; height: 16px; cursor: pointer; accent-color: var(--brand-main); }
+.row-selected { background: #f0f4ff !important; }
+
 .admin-page { max-width: 1200px; }
 
 .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }
@@ -559,6 +684,7 @@ async function saveDiscount() {
 .pill--blue { background: #eff6ff; color: #2563eb; }
 .pill--purple { background: #f3e8ff; color: #7c3aed; }
 .pill--gray { background: #f1f5f9; color: #475569; }
+.pill--gap { margin-right: 4px; margin-bottom: 2px; }
 
 .status { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
 .status-dot { width: 6px; height: 6px; border-radius: 50%; }
@@ -642,6 +768,10 @@ async function saveDiscount() {
 .form-input:focus { border-color: var(--brand-main); }
 
 .checkbox-group { display: flex; gap: 16px; margin-top: 4px; }
+.checkbox-group--wrap { flex-wrap: wrap; gap: 10px 16px; }
+.checkbox-group--scroll { max-height: 180px; overflow-y: auto; padding: 4px 0; }
+.event-search-input { margin-bottom: 8px; }
+.no-results { font-size: 13px; color: #94a3b8; padding: 8px 0; }
 .check-label {
   display: flex; align-items: center; gap: 8px;
   font-size: 14px; font-weight: 500; color: #475569; cursor: pointer;

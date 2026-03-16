@@ -1,5 +1,19 @@
 <template>
-  <div ref="rootRef" class="elegant-chateau">
+  <InvitationEditLayout
+    :edit-mode="isEditMode"
+    :sections="orderedSections"
+    :active-section="activeRootSection"
+    :dirty="dirty"
+    :preview-mode="previewMode"
+    :statuses="sectionStatuses"
+    :section-visibility="sectionVisibility"
+    @toggle-section="toggleSection"
+    @toggle-visibility="(k) => { toggleVisibility(k); markDirty(); }"
+    @save="onGlobalSave"
+    @set-preview="previewMode = $event"
+    @select-section="selectSection"
+  >
+  <div ref="rootRef" class="elegant-chateau" :style="rootStyle">
     <!-- Loading overlay -->
     <div v-if="loading" class="loading-overlay">
       <div class="loading-spinner"></div>
@@ -7,31 +21,25 @@
 
     <div v-show="!loading">
 
-      <!-- COVER SCREEN -->
-      <div v-if="showCover" class="cover-screen" :class="{ 'cover-hidden': coverFading }">
-        <SectionEditButton :visible="isEditMode" :label="t('editSection.collage')" variant="dark" @click="revealSite(); openModal('collage')" />
-        <div class="polaroid-stack" :class="{ expanding: polaroidExpanding }" @click="revealSite">
-          <div class="polaroid polaroid-1">
-            <img :src="config.collagePhotos[0].thumbUrl || config.collagePhotos[0].url" :alt="config.collagePhotos[0].alt" />
-          </div>
-          <div class="polaroid polaroid-2">
-            <img :src="config.collagePhotos[1].thumbUrl || config.collagePhotos[1].url" :alt="config.collagePhotos[1].alt" />
-          </div>
-          <div class="polaroid polaroid-3">
-            <img :src="config.collagePhotos[2].thumbUrl || config.collagePhotos[2].url" :alt="config.collagePhotos[2].alt" />
-            <div class="polaroid-label">{{ config.brideName }} & {{ config.groomName }}</div>
-          </div>
-        </div>
-
-        <div class="cover-hint">
-          <p class="cover-est">Est. {{ new Date().getFullYear() }}</p>
-          <p class="cover-tap">{{ t('invitation.tapToOpen') }}</p>
-        </div>
-      </div>
+      <!-- ENTRY OVERLAY -->
+      <InvitationEntry
+        ref="entryRef"
+        :type="entryType"
+        :design="entryDesign"
+        :visible="showEntry"
+        :photos="config.collagePhotos"
+        :bride-name="config.brideName"
+        :groom-name="config.groomName"
+        :tap-label="t('invitation.tapToOpen')"
+        :is-edit-mode="isEditMode"
+        :edit-label="t('editSection.entry')"
+        @fading="mainVisible = true"
+        @enter="showEntry = false"
+        @edit="openModal('entry')"
+      />
 
       <!-- HERO SECTION -->
-      <header v-show="mainVisible" class="ec-hero" :class="{ 'ec-hero-visible': mainVisible }" style="position:relative;">
-        <SectionEditButton :visible="isEditMode" :label="t('editSection.hero')" variant="dark" @click="openModal('hero')" />
+      <header v-show="mainVisible" data-edit-section="hero" class="ec-hero" :class="{ 'ec-hero-visible': mainVisible, 'section--editing': isEditMode && activeRootSection === 'hero' }" style="position:relative;">
         <div class="ec-hero-content">
           <p class="ec-hero-label">{{ config.inviteText }}</p>
           <h1 class="ec-hero-names">
@@ -61,9 +69,7 @@
       </header>
 
       <!-- OUR STORY SLIDER -->
-      <section v-if="showOurStory" v-show="mainVisible" id="story-section" class="ec-section ec-section--white" data-reveal style="position:relative;">
-        <SectionEditButton :visible="isEditMode" :label="t('editSection.ourStory')" @click="openModal('ourStoryList')" />
-        <SectionEditButton :visible="isEditMode" :label="t('ourStory.images.upload')" @click="openModal('ourStoryImages')" style="right: 180px;" />
+      <section v-if="(isEditMode || showOurStory) && isSectionVisible('ourStoryList')" v-show="mainVisible" id="story-section" data-edit-section="ourStoryList" :class="['ec-section ec-section--white', { 'section--editing': isEditMode && activeRootSection === 'ourStoryList' }]" data-reveal style="position:relative;">
         <div class="ec-section-inner">
           <div class="ec-story-header">
             <div>
@@ -98,8 +104,7 @@
       </section>
 
       <!-- DETAILS SECTION -->
-      <section v-if="showAgenda && !isPrivate" v-show="mainVisible" id="details-section" class="ec-section ec-section--warm" data-reveal style="position:relative;">
-        <SectionEditButton :visible="isEditMode" :label="t('editSection.details')" @click="openModal('details')" />
+      <section v-if="(isEditMode || (showAgenda && !isPrivate)) && isSectionVisible('details')" v-show="mainVisible" id="details-section" data-edit-section="details" :class="['ec-section ec-section--warm', { 'section--editing': isEditMode && activeRootSection === 'details' }]" data-reveal style="position:relative;">
         <div class="ec-section-inner">
           <div class="ec-section-header-center">
             <h2 class="ec-section-title">{{ t('invitation.theWeddingWeekend') }}</h2>
@@ -111,7 +116,7 @@
             <CountdownTimer
               :target-date="config.weddingDateTime"
               :show-seconds="false"
-              :colors="[palette.primary600, palette.primary600]"
+              :colors="[palette.accent, palette.accent]"
               :heading-font="fonts.heading"
               :body-font="fonts.body"
               unit-label-color="#666666"
@@ -144,7 +149,7 @@
       </section>
 
       <!-- RSVP SECTION -->
-      <section v-show="mainVisible" id="rsvp-section" class="ec-section ec-section--white ec-section--rsvp" data-reveal>
+      <section v-if="isSectionVisible('rsvp')" v-show="mainVisible" id="rsvp-section" data-edit-section="rsvp" :class="['ec-section ec-section--white ec-section--rsvp', { 'section--editing': isEditMode && activeRootSection === 'rsvp' }]" data-reveal>
         <div class="ec-rsvp-bg"></div>
         <div class="ec-section-inner ec-section-inner--narrow ec-rsvp-content">
           <div class="ec-section-header-center">
@@ -163,14 +168,15 @@
               :message-label="t('invitation.yourMessage')"
               :message-placeholder="t('invitation.messagePlaceholder')"
               :submit-label="t('invitation.sendRsvp')"
-              :accent-color="palette.primary500"
-              :accept-color="palette.primary200"
+              :accent-color="palette.accent"
+              :accept-color="palette.secondary"
               :decline-color="palette.neutral200"
-              :button-bg="palette.neutral900"
-              button-text="#fff"
+              :button-bg="buttonStyle.bg"
+              :button-text="buttonStyle.text"
               :heading-font="fonts.heading"
               :body-font="fonts.body"
-              border-radius="4px"
+              :border-radius="rsvpConfig.borderRadius"
+              :max-guests="rsvpConfig.maxGuests"
               @submit="onRsvpSubmit"
             />
           </div>
@@ -178,72 +184,206 @@
       </section>
 
     </div>
+  </div>
 
-    <!-- Edit Mode Modals -->
-    <template v-if="isEditMode">
-      <EditDetailsModal
-        :open="activeModal === 'details'"
-        :items="eventDetails.items.value"
-        @close="closeModal"
-        @add="onDetailsAdd"
-        @edit="onDetailsEdit"
-        @delete="onDetailsDelete"
-      />
-      <AddEventDetailModal
-        :open="activeModal === 'eventDetail'"
-        :item="editingItem"
-        :items="eventDetails.items.value"
-        @close="closeModal"
-        @submit="handleEventDetailSave"
-        @delete="handleEventDetailDelete"
-      />
-      <AddAgendaItemModal
-        :open="activeModal === 'agendaItem'"
-        :item="editingItem"
-        :items="agenda.items.value"
-        @close="closeModal"
-        @submit="handleAgendaSave"
-        @delete="handleAgendaDelete"
-      />
-      <EditOurStoryModal
-        :open="activeModal === 'ourStoryList'"
-        :items="ourStory.items.value"
-        @close="closeModal"
-        @add="onOurStoryAdd"
-        @edit="onOurStoryEdit"
-        @delete="onOurStoryDelete"
-      />
-      <AddOurStoryModal
-        :open="activeModal === 'ourStoryItem'"
-        :item="editingItem"
-        :items="ourStory.items.value"
-        @close="closeModal"
-        @submit="handleOurStorySave"
-        @delete="handleOurStoryDelete"
-      />
-      <OurStoryUploadModal
-        :open="activeModal === 'ourStoryImages'"
-        :images="ourStory.images.value"
-        @close="closeModal"
-        @uploaded="refreshAllData"
-      />
-      <EditCollageModal
-        :open="activeModal === 'collage'"
-        @close="closeModal"
-        @updated="refreshAllData"
-      />
-      <EditHeroModal
-        :open="activeModal === 'hero'"
-        :event="backendData?.event"
-        @close="closeModal"
-        @updated="refreshAllData"
+    <!-- Info Panel -->
+    <template v-if="isEditMode" #info-panel>
+      <EditInfoPanel
+        :bride-name="config.brideName"
+        :groom-name="config.groomName"
+        :wedding-date="config.weddingDateTime ? config.weddingDateTime.slice(0, 10) : ''"
+        :location="backendData?.event?.location || null"
+        @change="onInfoChange"
       />
     </template>
-  </div>
+
+    <template v-if="isEditMode" #section-entry="{ subTab }">
+      <template v-if="subTab === 'content'">
+        <EditEntryModal
+          :open="true"
+          :live-edit="true"
+          :current-type="entryType"
+          :current-design="entryDesign"
+          @close="toggleSection('entry')"
+          @change="onEntryChange"
+        />
+      </template>
+      <SectionLayoutPicker v-if="subTab === 'layout'" :layouts="SECTION_LAYOUTS.entry || []" :current="sectionLayouts.entry" @select="setLayout('entry', $event); markDirty()" />
+      <SectionAdvanced v-if="subTab === 'advanced'" section-key="entry" :visible="isSectionVisible('entry')" :anchor-id="sectionAdvancedState.entry?.anchorId || ''" :animation="sectionAdvancedState.entry?.animation || 'none'" :overrides="sectionOverrides.entry || null" @update="onAdvancedUpdate('entry', $event)" />
+    </template>
+
+    <template v-if="isEditMode" #section-hero="{ subTab }">
+      <template v-if="subTab === 'content'">
+        <EditHeroModal
+          :open="true"
+          :live-edit="true"
+          :event="heroEventData"
+          @close="toggleSection('hero')"
+          @updated="refreshAllData"
+          @change="onHeroChange"
+        />
+      </template>
+      <SectionLayoutPicker v-if="subTab === 'layout'" :layouts="SECTION_LAYOUTS.hero || []" :current="sectionLayouts.hero" @select="setLayout('hero', $event); markDirty()" />
+      <SectionAdvanced v-if="subTab === 'advanced'" section-key="hero" :visible="isSectionVisible('hero')" :anchor-id="sectionAdvancedState.hero?.anchorId || ''" :animation="sectionAdvancedState.hero?.animation || 'none'" :overrides="sectionOverrides.hero || null" @update="onAdvancedUpdate('hero', $event)" />
+    </template>
+
+    <template v-if="isEditMode" #section-details="{ subTab }">
+      <template v-if="subTab === 'content'">
+        <EditDetailsModal
+          v-if="!editingItem && activeModal === 'details'"
+          :open="true"
+          :items="eventDetails.items.value"
+          :max-items="2"
+          @close="toggleSection('details')"
+          @add="onDetailsAdd"
+          @delete="onDetailsDelete"
+          @update="handleEventDetailUpdate"
+        />
+        <AddEventDetailModal
+          v-if="editingItem || activeModal === 'eventDetail'"
+          :open="true"
+          sub-modal
+          :item="editingItem"
+          :items="eventDetails.items.value"
+          @close="closeModal"
+          @submit="handleEventDetailSave"
+          @delete="handleEventDetailDelete"
+        />
+      </template>
+      <SectionLayoutPicker v-if="subTab === 'layout'" :layouts="SECTION_LAYOUTS.details || []" :current="sectionLayouts.details" @select="setLayout('details', $event); markDirty()" />
+      <SectionAdvanced v-if="subTab === 'advanced'" section-key="details" :visible="isSectionVisible('details')" :anchor-id="sectionAdvancedState.details?.anchorId || ''" :animation="sectionAdvancedState.details?.animation || 'none'" :overrides="sectionOverrides.details || null" @update="onAdvancedUpdate('details', $event)" />
+    </template>
+
+    <template v-if="isEditMode" #section-ourStoryList="{ subTab }">
+      <template v-if="subTab === 'content'">
+        <EditOurStoryModal
+          v-if="!editingItem && activeModal === 'ourStoryList'"
+          :open="true"
+          :items="ourStory.items.value"
+          :max-items="3"
+          :field-config="OUR_STORY_FIELD_CONFIG['elegant-chateau']"
+          @close="toggleSection('ourStoryList')"
+          @add="onOurStoryAdd"
+          @delete="onOurStoryDelete"
+          @update="handleOurStoryUpdate"
+        />
+        <AddOurStoryModal
+          v-if="editingItem || activeModal === 'ourStoryItem'"
+          :open="true"
+          sub-modal
+          :item="editingItem"
+          :items="ourStory.items.value"
+          @close="closeModal"
+          @submit="handleOurStorySave"
+          @delete="handleOurStoryDelete"
+        />
+        <OurStoryUploadModal
+          v-if="activeModal === 'ourStoryImages'"
+          :open="true"
+          sub-modal
+          :images="ourStory.images.value"
+          @close="closeModal"
+          @uploaded="refreshAllData"
+          @files-collected="onOurStoryFiles"
+        />
+      </template>
+      <SectionLayoutPicker v-if="subTab === 'layout'" :layouts="SECTION_LAYOUTS.ourStoryList || []" :current="sectionLayouts.ourStoryList" @select="setLayout('ourStoryList', $event); markDirty()" />
+      <SectionAdvanced v-if="subTab === 'advanced'" section-key="ourStoryList" :visible="isSectionVisible('ourStoryList')" :anchor-id="sectionAdvancedState.ourStoryList?.anchorId || ''" :animation="sectionAdvancedState.ourStoryList?.animation || 'none'" :overrides="sectionOverrides.ourStoryList || null" @update="onAdvancedUpdate('ourStoryList', $event)" />
+    </template>
+
+    <template v-if="isEditMode" #section-collage>
+      <EditCollageModal
+        :open="true"
+        @close="toggleSection('collage')"
+        @updated="refreshAllData"
+        @files-collected="onCollageFiles"
+      />
+    </template>
+
+    <template v-if="isEditMode" #section-colors>
+      <EditColorsModal
+        :open="true"
+        :live-edit="true"
+        :fields="colorFields"
+        :presets="PALETTE_PRESETS"
+        @close="toggleSection('colors')"
+        @change="onColorsChange"
+      />
+    </template>
+
+    <template v-if="isEditMode" #section-fonts>
+      <EditFontsModal
+        :open="true"
+        :live-edit="true"
+        :current-heading="extractFontName(fonts.heading)"
+        :current-body="extractFontName(fonts.body)"
+        @close="toggleSection('fonts')"
+        @change="onFontsChange"
+      />
+    </template>
+
+    <template v-if="isEditMode" #section-rsvp="{ subTab }">
+      <template v-if="subTab === 'content'">
+        <EditRsvpModal
+          :open="true"
+          :live-edit="true"
+          :rsvp-deadline="rsvpConfig.deadline"
+          :max-guests="rsvpConfig.maxGuests"
+          :show-dietary="rsvpConfig.showDietary"
+          :border-radius="rsvpConfig.borderRadius"
+          :allow-plus-one="rsvpConfig.allowPlusOne"
+          :show-child="rsvpConfig.showChild"
+          :contact-method="rsvpConfig.contactMethod"
+          :custom-questions="rsvpConfig.customQuestions"
+          :require-last-name="rsvpConfig.requireLastName"
+          @close="toggleSection('rsvp')"
+          @change="onRsvpChange"
+        />
+      </template>
+      <SectionLayoutPicker v-if="subTab === 'layout'" :layouts="SECTION_LAYOUTS.rsvp || []" :current="sectionLayouts.rsvp" @select="setLayout('rsvp', $event); markDirty()" />
+      <SectionAdvanced v-if="subTab === 'advanced'" section-key="rsvp" :visible="isSectionVisible('rsvp')" :anchor-id="sectionAdvancedState.rsvp?.anchorId || ''" :animation="sectionAdvancedState.rsvp?.animation || 'none'" :overrides="sectionOverrides.rsvp || null" @update="onAdvancedUpdate('rsvp', $event)" />
+    </template>
+
+    <template v-if="isEditMode" #section-buttons>
+      <EditButtonsModal
+        :open="true"
+        :live-edit="true"
+        :current-bg="buttonStyle.bg"
+        :current-text="buttonStyle.text"
+        :current-radius="buttonStyle.radius"
+        @close="toggleSection('buttons')"
+        @change="onButtonsChange"
+      />
+    </template>
+
+    <template v-if="isEditMode" #section-background>
+      <EditBackgroundModal
+        :open="true"
+        :live-edit="true"
+        :current-section-bg="cardStyle.sectionBg"
+        :current-card-bg="cardStyle.cardBg"
+        :current-card-shadow="cardStyle.cardShadow"
+        :current-card-radius="cardStyle.cardRadius"
+        :current-card-border="cardStyle.cardBorder"
+        @close="toggleSection('background')"
+        @change="onBackgroundChange"
+      />
+    </template>
+
+    <template v-if="isEditMode" #section-spacing>
+      <EditSpacingModal
+        :open="true"
+        :live-edit="true"
+        :current-preset="spacingPreset"
+        @close="toggleSection('spacing')"
+        @change="onSpacingChange"
+      />
+    </template>
+  </InvitationEditLayout>
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, computed } from 'vue';
+import { reactive, ref, onMounted, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
@@ -251,67 +391,452 @@ import { rsvpService } from '@/services/rsvp.service';
 import { useInvitationData } from '@/composables/useInvitationData';
 import { useScrollReveal } from '@/composables/useScrollReveal';
 import { buildLocationAddress, buildMapUrl, formatTimeRange } from '@/utils/invitation';
+import { getFutureWeddingDate, formatWeddingDate, toLocalISO, formatRsvpDeadline } from '@/utils/date.js';
 import { EventDetailTypeSortOrder } from '@/enums/EventDetailType';
 import CountdownTimer from '@/components/invitations/shared/CountdownTimer.vue';
 import RsvpForm from '@/components/invitations/shared/RsvpForm.vue';
-import SectionEditButton from '@/components/invitations/shared/SectionEditButton.vue';
+import InvitationEntry from '@/components/invitations/entries/InvitationEntry.vue';
+import EditEntryModal from '@/components/modals/EditEntryModal.vue';
+import EditColorsModal from '@/components/modals/EditColorsModal.vue';
+import EditFontsModal from '@/components/modals/EditFontsModal.vue';
 import { invitationPhotosApi } from '@/services/invitationPhotos.service';
 import { useInvitationEditMode } from '@/composables/useInvitationEditMode';
+import { useToast } from '@/composables/useToast';
+import { getDraftTheme, setDraftTheme, getDraftSectionState, setDraftSectionState, setDraftFullPayload } from '@/store/invitationDraft.store';
+import { isAuthenticated } from '@/services/auth.service';
 import AddAgendaItemModal from '@/components/modals/AddAgendaItemModal.vue';
 import AddOurStoryModal from '@/components/modals/AddOurStoryModal.vue';
 import OurStoryUploadModal from '@/components/modals/OurStoryUploadModal.vue';
 import EditOurStoryModal from '@/components/modals/EditOurStoryModal.vue';
+import { OUR_STORY_FIELD_CONFIG } from '@/config/ourStoryFieldConfig.js';
 import EditCollageModal from '@/components/modals/EditCollageModal.vue';
 import EditHeroModal from '@/components/modals/EditHeroModal.vue';
 import EditDetailsModal from '@/components/modals/EditDetailsModal.vue';
 import AddEventDetailModal from '@/components/modals/AddEventDetailModal.vue';
+import { buildEventFullPayload } from '@/utils/buildEventFullPayload';
 import EditAgendaModal from '@/components/modals/EditAgendaModal.vue';
+import EditRsvpModal from '@/components/modals/EditRsvpModal.vue';
+import EditButtonsModal from '@/components/modals/EditButtonsModal.vue';
+import EditBackgroundModal from '@/components/modals/EditBackgroundModal.vue';
+import EditSpacingModal from '@/components/modals/EditSpacingModal.vue';
+import InvitationEditLayout from '@/components/invitations/shared/InvitationEditLayout.vue';
+import EditInfoPanel from '@/components/invitations/shared/EditInfoPanel.vue';
+import { useSectionState } from '@/composables/useSectionState';
+import SectionLayoutPicker from '@/components/invitations/shared/SectionLayoutPicker.vue';
+import SectionAdvanced from '@/components/invitations/shared/SectionAdvanced.vue';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const { eventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
 
 const {
-  isEditMode, activeModal, editingItem,
-  openModal, closeModal, refreshCallback, agenda, eventDetails, ourStory,
-  handleAgendaSave, handleAgendaDelete,
-  handleEventDetailSave, handleEventDetailDelete,
-  handleOurStorySave, handleOurStoryDelete,
+  isEditMode, activeModal, activeRootSection, editingItem,
+  openModal, closeModal, closeAllModals, refreshCallback, agenda, eventDetails, ourStory,
+  handleAgendaSave, handleAgendaUpdate, handleAgendaDelete,
+  handleEventDetailSave, handleEventDetailUpdate, handleEventDetailDelete,
+  handleOurStorySave, handleOurStoryUpdate, handleOurStoryDelete,
+  loadEditData, fetchInvitationConfig,
+  dirty, previewMode, markDirty, clearDirty, toggleSection, selectSection, setupUnsavedGuard,
+  saveFullEvent, saving,
 } = useInvitationEditMode();
+const toast = useToast();
 
 const rootRef = ref(null);
+const entryRef = ref(null);
 const showAgenda = ref(true);
 const showOurStory = ref(true);
 const isPrivate = computed(() => route.query.isPrivate === 'true');
-const showCover = ref(true);
-const coverFading = ref(false);
-const polaroidExpanding = ref(false);
+const showEntry = ref(true);
 const mainVisible = ref(false);
+const entryType = ref('gallery');
+const entryDesign = ref('polaroid');
+
+// Auto-open entry section when entry overlay is visible in edit mode
+watch(showEntry, (visible) => {
+  if (!isEditMode.value) return;
+  if (visible) {
+    toggleSection('entry');
+  } else if (activeRootSection.value === 'entry') {
+    toggleSection('entry');
+  }
+}, { immediate: true });
+
+const SIDEBAR_SECTIONS = [
+  // Tab 1: Sections
+  { key: 'entry', label: t('editSection.entry'), tab: 'sections', mandatory: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>' },
+  { key: 'hero', label: t('editSection.hero'), tab: 'sections', mandatory: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>' },
+  { key: 'details', label: t('editSection.details'), tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' },
+  { key: 'ourStoryList', label: t('editSection.ourStory'), tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>' },
+  { key: 'collage', label: t('editSection.collage'), tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>' },
+  { key: 'rsvp', label: t('editSection.rsvp'), tab: 'sections', mandatory: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' },
+  // Tab 2: Style
+  { key: 'colors', label: t('editSection.colors'), tab: 'style', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="19" cy="13" r="2.5"/><circle cx="14.5" cy="19.5" r="2.5"/><circle cx="6" cy="17" r="2.5"/><circle cx="4.5" cy="9.5" r="2.5"/></svg>' },
+  { key: 'fonts', label: t('editSection.fonts'), tab: 'style', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>' },
+  { key: 'buttons', label: t('editSection.buttons'), tab: 'style', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="8" rx="4"/><line x1="8" y1="12" x2="16" y2="12"/></svg>' },
+  { key: 'background', label: t('editSection.background'), tab: 'style', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>' },
+  { key: 'spacing', label: t('editSection.spacing'), tab: 'style', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" y1="3" x2="3" y2="3"/><line x1="21" y1="21" x2="3" y2="21"/><line x1="12" y1="8" x2="12" y2="16"/><polyline points="8 12 12 8 16 12"/><polyline points="8 12 12 16 16 12"/></svg>' },
+];
+
+// Section state (order, visibility, layouts, overrides)
+const {
+  sectionOrder, sectionVisibility, sectionLayouts, sectionOverrides,
+  orderedSections, isSectionVisible, toggleVisibility,
+  reorder, setLayout, setOverride, clearOverride, getSectionStatus,
+  getState: getSectionState, loadState: loadSectionState,
+} = useSectionState(SIDEBAR_SECTIONS);
+
+const sectionAdvancedState = reactive({});
+
+const sectionStatuses = computed(() => {
+  const result = {};
+  SIDEBAR_SECTIONS.filter(s => s.tab === 'sections').forEach(s => {
+    result[s.key] = getSectionStatus(s.key, config);
+  });
+  return result;
+});
+
+const SECTION_LAYOUTS = {
+  hero: [
+    { key: 'centered', label: t('editSection.layoutCentered'), diagram: '<svg viewBox="0 0 64 48"><rect x="16" y="4" width="32" height="6" rx="1" fill="#9ca3af"/><rect x="8" y="14" width="48" height="14" rx="1" fill="#d1d5db"/><rect x="20" y="34" width="24" height="6" rx="1" fill="#9ca3af"/></svg>' },
+    { key: 'left', label: t('editSection.layoutLeftAligned'), diagram: '<svg viewBox="0 0 64 48"><rect x="4" y="4" width="28" height="6" rx="1" fill="#9ca3af"/><rect x="4" y="14" width="36" height="14" rx="1" fill="#d1d5db"/><rect x="4" y="34" width="20" height="6" rx="1" fill="#9ca3af"/></svg>' },
+    { key: 'split', label: t('editSection.layoutSplit'), diagram: '<svg viewBox="0 0 64 48"><rect x="2" y="2" width="28" height="44" rx="2" fill="#d1d5db"/><rect x="34" y="8" width="26" height="6" rx="1" fill="#9ca3af"/><rect x="34" y="18" width="26" height="10" rx="1" fill="#e5e7eb"/><rect x="34" y="34" width="18" height="6" rx="1" fill="#9ca3af"/></svg>' },
+  ],
+  details: [
+    { key: 'cards', label: t('editSection.layoutCards'), diagram: '<svg viewBox="0 0 64 48"><rect x="2" y="4" width="18" height="18" rx="2" fill="#d1d5db"/><rect x="23" y="4" width="18" height="18" rx="2" fill="#d1d5db"/><rect x="44" y="4" width="18" height="18" rx="2" fill="#d1d5db"/><rect x="12" y="28" width="40" height="6" rx="1" fill="#e5e7eb"/></svg>' },
+    { key: 'list', label: t('editSection.layoutList'), diagram: '<svg viewBox="0 0 64 48"><rect x="4" y="4" width="56" height="10" rx="2" fill="#d1d5db"/><rect x="4" y="18" width="56" height="10" rx="2" fill="#d1d5db"/><rect x="4" y="32" width="56" height="10" rx="2" fill="#d1d5db"/></svg>' },
+  ],
+  agendaList: [
+    { key: 'timeline', label: t('editSection.layoutTimeline'), diagram: '<svg viewBox="0 0 64 48"><line x1="32" y1="4" x2="32" y2="44" stroke="#9ca3af" stroke-width="2"/><circle cx="32" cy="10" r="3" fill="#d1d5db"/><circle cx="32" cy="24" r="3" fill="#d1d5db"/><circle cx="32" cy="38" r="3" fill="#d1d5db"/><rect x="38" y="7" width="22" height="6" rx="1" fill="#e5e7eb"/><rect x="4" y="21" width="22" height="6" rx="1" fill="#e5e7eb"/><rect x="38" y="35" width="22" height="6" rx="1" fill="#e5e7eb"/></svg>' },
+    { key: 'cards', label: t('editSection.layoutCards'), diagram: '<svg viewBox="0 0 64 48"><rect x="4" y="2" width="56" height="12" rx="2" fill="#d1d5db"/><rect x="4" y="18" width="56" height="12" rx="2" fill="#d1d5db"/><rect x="4" y="34" width="56" height="12" rx="2" fill="#d1d5db"/></svg>' },
+  ],
+  ourStoryList: [
+    { key: 'gallery', label: t('editSection.layoutGrid'), diagram: '<svg viewBox="0 0 64 48"><rect x="2" y="2" width="28" height="20" rx="2" fill="#d1d5db"/><rect x="34" y="2" width="28" height="20" rx="2" fill="#d1d5db"/><rect x="2" y="26" width="28" height="20" rx="2" fill="#d1d5db"/><rect x="34" y="26" width="28" height="20" rx="2" fill="#d1d5db"/></svg>' },
+    { key: 'timeline', label: t('editSection.layoutTimeline'), diagram: '<svg viewBox="0 0 64 48"><line x1="32" y1="4" x2="32" y2="44" stroke="#9ca3af" stroke-width="2"/><rect x="4" y="6" width="24" height="14" rx="2" fill="#d1d5db"/><rect x="36" y="28" width="24" height="14" rx="2" fill="#d1d5db"/></svg>' },
+  ],
+  rsvp: [
+    { key: 'card', label: t('editSection.layoutCards'), diagram: '<svg viewBox="0 0 64 48"><rect x="8" y="4" width="48" height="40" rx="4" fill="#d1d5db"/><rect x="14" y="12" width="36" height="6" rx="1" fill="#9ca3af"/><rect x="14" y="22" width="36" height="6" rx="1" fill="#9ca3af"/><rect x="20" y="34" width="24" height="6" rx="2" fill="#6b7280"/></svg>' },
+    { key: 'compact', label: t('editSection.layoutCompact'), diagram: '<svg viewBox="0 0 64 48"><rect x="4" y="10" width="56" height="28" rx="2" fill="#d1d5db"/><rect x="8" y="16" width="24" height="5" rx="1" fill="#9ca3af"/><rect x="8" y="24" width="24" height="5" rx="1" fill="#9ca3af"/><rect x="36" y="16" width="20" height="14" rx="2" fill="#6b7280"/></svg>' },
+  ],
+};
+
+function onAdvancedUpdate(key, data) {
+  if (data.visible !== undefined) {
+    if (data.visible) {
+      if (sectionVisibility.value[key] === false) toggleVisibility(key);
+    } else {
+      if (sectionVisibility.value[key] !== false) toggleVisibility(key);
+    }
+  }
+  sectionAdvancedState[key] = { anchorId: data.anchorId, animation: data.animation };
+  if (data.overrides) {
+    setOverride(key, data.overrides);
+  } else {
+    clearOverride(key);
+  }
+  markDirty();
+}
+
+// Live edit handlers
+function onEntryChange({ type, design }) {
+  entryType.value = type;
+  entryDesign.value = design;
+  markDirty();
+}
+
+const heroEventData = computed(() => ({
+  heroImageUrl: config.heroPhotoUrl || '',
+}));
+
+const heroFile = ref(null);
+const ourStoryFiles = ref([]);
+const collageFiles = ref([]);
+function onOurStoryFiles(files) { ourStoryFiles.value.push(...files); markDirty(); }
+function onCollageFiles(files) { collageFiles.value.push(...files); markDirty(); }
+function onHeroChange(data) {
+  if (data.heroImageUrl) config.heroPhotoUrl = data.heroImageUrl;
+  if (data.heroFile !== undefined) heroFile.value = data.heroFile;
+  markDirty();
+}
+
+function onInfoChange(data) {
+  if (data.brideName !== undefined) config.brideName = data.brideName;
+  if (data.groomName !== undefined) config.groomName = data.groomName;
+  if (data.date) {
+    config.weddingDateTime = data.date;
+    config.weddingDate = formatDate(data.date);
+    config.weddingTime = formatTime(data.date);
+  }
+  if (data.location) {
+    const loc = data.location;
+    if (loc.name) config.location = loc.name;
+    else if (loc.address) config.location = loc.address;
+    config.locationLat = loc.lat || null;
+    config.locationLng = loc.lng || null;
+    const mapUrl = buildMapUrl({ latitude: loc.lat, longitude: loc.lng });
+    if (mapUrl) config.heroMapUrl = mapUrl;
+  }
+  markDirty();
+}
+
+function onColorsChange(colors) {
+  Object.assign(palette, colors);
+  markDirty();
+}
+
+function onFontsChange({ heading, body }) {
+  const headingCss = `'${heading}', ${/Script|Vibes|Brush|Parisienne/.test(heading) ? 'cursive' : 'serif'}`;
+  fonts.heading = headingCss;
+  fonts.body = `'${body}', sans-serif`;
+  loadGoogleFont(heading);
+  loadGoogleFont(body);
+  markDirty();
+}
+
+function onRsvpChange(cfg) {
+  Object.assign(rsvpConfig, cfg);
+  markDirty();
+}
+
+function onButtonsChange({ bg, text, radius }) {
+  Object.assign(buttonStyle, { bg, text, radius });
+  markDirty();
+}
+
+function onBackgroundChange(style) {
+  Object.assign(cardStyle, style);
+  markDirty();
+}
+
+function onSpacingChange(preset) {
+  spacingPreset.value = preset;
+  markDirty();
+}
+
+async function onGlobalSave() {
+  if (isAuthenticated()) {
+    try {
+      const payload = buildEventFullPayload({
+        config,
+        palette,
+        fonts,
+        buttonStyle,
+        cardStyle,
+        spacingPreset: spacingPreset.value,
+        rsvpConfig,
+        entryType: entryType.value,
+        entryDesign: entryDesign.value,
+        sectionOrder: sectionOrder.value,
+        sectionVisibility: sectionVisibility.value,
+        sectionLayouts: { ...sectionLayouts },
+        eventDetailItems: eventDetails.items.value,
+        agendaItems: agenda.items.value,
+        ourStoryItems: ourStory.items.value,
+        invitationName: 'elegant-chateau',
+        lang: locale.value,
+      });
+      await saveFullEvent(payload, { heroImage: heroFile.value, ourStoryImages: ourStoryFiles.value.length ? ourStoryFiles.value : undefined, collageImages: collageFiles.value.length ? collageFiles.value : undefined });
+      clearDirty();
+      await router.push({ name: 'dashboard.overview', params: { lang: locale.value } });
+    } catch (e) {
+      toast.apiError(e);
+    }
+    return;
+  } else {
+    const payload = buildEventFullPayload({
+      config,
+      palette,
+      fonts,
+      buttonStyle,
+      cardStyle,
+      spacingPreset: spacingPreset.value,
+      rsvpConfig,
+      entryType: entryType.value,
+      entryDesign: entryDesign.value,
+      sectionOrder: sectionOrder.value,
+      sectionVisibility: sectionVisibility.value,
+      sectionLayouts: { ...sectionLayouts },
+      eventDetailItems: eventDetails.items.value,
+      agendaItems: agenda.items.value,
+      ourStoryItems: ourStory.items.value,
+      invitationName: 'elegant-chateau',
+      lang: locale.value,
+    });
+    saveThemeToDraft();
+    setDraftFullPayload(payload);
+    clearDirty();
+    router.push({ name: 'signup', params: { lang: locale.value } });
+    return;
+  }
+}
 const sliderRef = ref(null);
 
 useScrollReveal(rootRef);
 
-const palette = {
-  primary200: '#eaddd7',
-  primary500: '#9f8274',
-  primary600: '#8a6b5d',
+const DEFAULT_PALETTE = {
+  accent: '#9f8274',
+  secondary: '#eaddd7',
+  text: '#1a1a1a',
+  background: '#f9f8f6',
+  backgroundWarm: '#f2efe9',
   neutral200: '#c8c8c8',
-  neutral900: '#1a1a1a',
-  bg50: '#f9f8f6',
-  bg100: '#f2efe9',
 };
 
-const fonts = {
+const DEFAULT_FONTS = {
   heading: "'Playfair Display', serif",
   body: "'Lato', sans-serif",
 };
 
+const palette = reactive({ ...DEFAULT_PALETTE });
+const fonts = reactive({ ...DEFAULT_FONTS });
+
+const SHADOW_MAP = {
+  none: 'none',
+  subtle: '0px 4px 20px rgba(0,0,0,0.08)',
+  medium: '0px 6px 24px rgba(0,0,0,0.12)',
+  strong: '0px 10px 40px rgba(0,0,0,0.18)',
+};
+
+const SPACING_MAP = {
+  compact: { section: '48px 16px', gap: '24px', cardPadding: '20px' },
+  balanced: { section: '80px 24px', gap: '32px', cardPadding: '32px' },
+  spacious: { section: '120px 32px', gap: '48px', cardPadding: '40px' },
+};
+
+const buttonStyle = reactive({ bg: '#1f2937', text: '#ffffff', radius: '8px' });
+const cardStyle = reactive({
+  sectionBg: '#f9fafb', cardBg: '#ffffff',
+  cardShadow: 'subtle', cardRadius: '24px', cardBorder: '0px',
+});
+const spacingPreset = ref('balanced');
+const rsvpConfig = reactive({
+  deadline: '', maxGuests: 5, showDietary: true, borderRadius: '8px',
+});
+
+const shadows = computed(() => ({
+  card: SHADOW_MAP[cardStyle.cardShadow],
+  cardHover: cardStyle.cardShadow === 'none' ? 'none' : SHADOW_MAP.medium,
+}));
+
+const COLOR_FIELDS = [
+  { key: 'accent', label: t('editSection.accentColor') },
+  { key: 'secondary', label: t('editSection.secondaryColor') },
+  { key: 'text', label: t('editSection.textColor') },
+  { key: 'background', label: t('editSection.backgroundColor') },
+];
+
+const PALETTE_PRESETS = [
+  { name: 'Mocha', colors: { accent: '#9f8274', secondary: '#eaddd7', text: '#1a1a1a', background: '#f9f8f6' } },
+  { name: 'Sage', colors: { accent: '#6b8e6b', secondary: '#d4e4d4', text: '#1a2e1a', background: '#f5f9f5' } },
+  { name: 'Navy', colors: { accent: '#b8860b', secondary: '#e6d5b8', text: '#1b2838', background: '#f8f6f0' } },
+  { name: 'Slate', colors: { accent: '#6b8cae', secondary: '#d5e2ee', text: '#1a2838', background: '#f5f8fb' } },
+  { name: 'Wine', colors: { accent: '#8b3a3a', secondary: '#e8d2d2', text: '#2d1515', background: '#faf5f5' } },
+];
+
+const colorFields = computed(() =>
+  COLOR_FIELDS.map(f => ({ ...f, value: palette[f.key] }))
+);
+
+const rootStyle = computed(() => ({
+  '--font-heading': fonts.heading,
+  '--font-body': fonts.body,
+  '--theme-accent': palette.accent,
+  '--theme-secondary': palette.secondary,
+  '--theme-text': palette.text,
+  '--theme-bg': palette.background,
+  '--theme-bg-warm': palette.backgroundWarm,
+  '--btn-bg': buttonStyle.bg,
+  '--btn-text': buttonStyle.text,
+  '--btn-radius': buttonStyle.radius,
+  '--section-bg': cardStyle.sectionBg,
+  '--card-bg': cardStyle.cardBg,
+  '--card-shadow': SHADOW_MAP[cardStyle.cardShadow],
+  '--card-radius': cardStyle.cardRadius,
+  '--card-border-width': cardStyle.cardBorder,
+  '--section-padding': SPACING_MAP[spacingPreset.value].section,
+  '--content-gap': SPACING_MAP[spacingPreset.value].gap,
+  '--card-padding': SPACING_MAP[spacingPreset.value].cardPadding,
+}));
+
+function extractFontName(cssFontFamily) {
+  return cssFontFamily.replace(/^'|'.*$/g, '');
+}
+
+function loadGoogleFont(name) {
+  const url = `https://fonts.googleapis.com/css2?family=${name.replace(/ /g, '+')}:wght@400;500;600;700&display=swap`;
+  if (!document.querySelector(`link[href="${url}"]`)) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = url;
+    document.head.appendChild(link);
+  }
+}
+
+function saveThemeToDraft() {
+  if (!isAuthenticated()) {
+    setDraftTheme({
+      palette: { ...palette },
+      fonts: { ...fonts },
+      buttonStyle: { ...buttonStyle },
+      cardStyle: { ...cardStyle },
+      spacingPreset: spacingPreset.value,
+      rsvpConfig: { ...rsvpConfig },
+    });
+    setDraftSectionState({
+      ...getSectionState(),
+      advanced: { ...sectionAdvancedState },
+    });
+  }
+}
+
+function loadThemeFromDraft(invConfig) {
+  let theme, rsvpData, entry, sectionState;
+
+  if (invConfig) {
+    theme = invConfig.theme;
+    rsvpData = invConfig.rsvpConfig;
+    entry = invConfig.entry;
+    if (invConfig.sectionOrder) {
+      const order = Object.entries(invConfig.sectionOrder).sort(([,a],[,b]) => a - b).map(([k]) => k);
+      sectionState = { order, visibility: invConfig.sectionVisibility || {}, layouts: invConfig.sectionLayouts || {} };
+    }
+  } else if (!isAuthenticated()) {
+    theme = getDraftTheme();
+    sectionState = getDraftSectionState();
+  }
+
+  if (theme) {
+    if (theme.palette) Object.assign(palette, theme.palette);
+    if (theme.fonts) {
+      Object.assign(fonts, theme.fonts);
+      loadGoogleFont(extractFontName(fonts.heading));
+      loadGoogleFont(extractFontName(fonts.body));
+    }
+    if (theme.buttonStyle) Object.assign(buttonStyle, theme.buttonStyle);
+    if (theme.cardStyle) Object.assign(cardStyle, theme.cardStyle);
+    if (theme.spacingPreset) spacingPreset.value = theme.spacingPreset;
+  }
+  if (rsvpData || theme?.rsvpConfig) Object.assign(rsvpConfig, rsvpData || theme.rsvpConfig);
+  if (entry) {
+    entryType.value = entry.type || entryType.value;
+    entryDesign.value = entry.design || entryDesign.value;
+  }
+  if (sectionState) {
+    loadSectionState(sectionState);
+    if (sectionState.advanced) Object.assign(sectionAdvancedState, sectionState.advanced);
+  }
+}
+
+const _futureDate = getFutureWeddingDate();
+const _dayBefore = new Date(_futureDate); _dayBefore.setDate(_dayBefore.getDate() - 1);
+const _dayAfter = new Date(_futureDate); _dayAfter.setDate(_dayAfter.getDate() + 1);
+function _shortDate(d) { return d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }); }
+
 const config = reactive({
   brideName: 'Sophie',
   groomName: 'Alexander',
-  weddingDate: 'September 14, 2024',
-  weddingDateTime: '2024-09-14T16:00:00',
+  weddingDate: formatWeddingDate(_futureDate),
+  weddingDateTime: toLocalISO(_futureDate, '16:00:00'),
   inviteText: t('invitation.weAreGettingMarried'),
   location: 'Chateau de Santeny, France',
   heroMapUrl: '',
@@ -329,7 +854,7 @@ const config = reactive({
     {
       icon: 'drinks',
       title: 'Welcome Drinks',
-      eventDate: 'Friday, Sept 13',
+      eventDate: _shortDate(_dayBefore),
       time: '6:00 PM',
       description: '',
       mapUrl: '',
@@ -338,7 +863,7 @@ const config = reactive({
     {
       icon: 'heart',
       title: 'The Ceremony',
-      eventDate: 'Saturday, Sept 14',
+      eventDate: _shortDate(_futureDate),
       time: '4:00 PM',
       description: '',
       mapUrl: '',
@@ -347,7 +872,7 @@ const config = reactive({
     {
       icon: 'coffee',
       title: 'Farewell Brunch',
-      eventDate: 'Sunday, Sept 15',
+      eventDate: _shortDate(_dayAfter),
       time: '10:00 AM',
       description: '',
       mapUrl: '',
@@ -377,24 +902,25 @@ const config = reactive({
     },
   ],
 
-  rsvpDeadline: 'August 1st, 2024',
+  rsvpDeadline: formatRsvpDeadline(_futureDate),
 });
-
-function revealSite() {
-  polaroidExpanding.value = true;
-  setTimeout(() => {
-    coverFading.value = true;
-    mainVisible.value = true;
-    setTimeout(() => {
-      showCover.value = false;
-    }, 800);
-  }, 600);
-}
 
 function scrollSlider(direction) {
   if (!sliderRef.value) return;
   const amount = direction === 'left' ? -420 : 420;
   sliderRef.value.scrollBy({ left: amount, behavior: 'smooth' });
+}
+
+function parseTimeToMinutes(str) {
+  if (!str) return 0;
+  const m = str.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+  if (!m) return 0;
+  let h = parseInt(m[1], 10);
+  const min = parseInt(m[2], 10);
+  const p = m[3]?.toUpperCase();
+  if (p === 'PM' && h !== 12) h += 12;
+  if (p === 'AM' && h === 12) h = 0;
+  return h * 60 + min;
 }
 
 function applyBackendData(data) {
@@ -439,7 +965,7 @@ function applyBackendData(data) {
 
     config.weddingDetails = sorted.map((d) => ({
       icon: typeToIcon[d.type] || 'heart',
-      title: d.description || t('detailTypes.' + d.type) || '',
+      title: t('detailTypes.' + d.type) || '',
       eventDate: d.eventDate || '',
       time: d.time || '',
       description: '',
@@ -523,9 +1049,10 @@ onMounted(async () => {
   await refreshAllData();
 
   if (isEditMode.value) {
-    agenda.loadAgenda();
-    eventDetails.loadEventDetails();
-    ourStory.loadStories();
+    loadEditData();
+    const invConfig = await fetchInvitationConfig();
+    loadThemeFromDraft(invConfig);
+    setupUnsavedGuard(router);
   }
 });
 
@@ -550,13 +1077,42 @@ async function refreshAllData() {
 
 refreshCallback.value = refreshAllData;
 
+// Sync composable items → config so preview updates after CRUD
+const ceremonyTypes = ['CEREMONY', 'CHURCH', 'REGISTRATION'];
+const typeToIconMap = {
+  REGISTRATION: 'heart', CHURCH: 'heart', RECEPTION: 'drinks',
+  LOCATION: 'coffee', COUNTDOWN: 'heart',
+};
+
+watch(() => eventDetails.items.value, (items) => {
+  if (!items.length) return;
+  const sorted = [...items].sort((a, b) => (EventDetailTypeSortOrder[a.type] || 99) - (EventDetailTypeSortOrder[b.type] || 99));
+  config.weddingDetails = sorted.map(d => ({
+    icon: typeToIconMap[d.type] || 'heart',
+    title: t('detailTypes.' + d.type) || '',
+    eventDate: d.eventDate || '',
+    time: d.time || '',
+    description: '',
+    mapUrl: buildMapUrl(d.location),
+    highlight: ceremonyTypes.includes(d.type),
+  }));
+}, { deep: true });
+
+watch(() => ourStory.items.value, (items) => {
+  if (!items.length) return;
+  config.stories = items.map(s => ({
+    date: s.storyDate || s.date || '',
+    title: s.type ? t('storyTypes.' + s.type) : (s.title || ''),
+    text: s.description || '',
+    imageUrl: s.imageUrl || '',
+  }));
+}, { deep: true });
+
 function onDetailsAdd() {
-  closeModal();
   openModal('eventDetail');
 }
 
 function onDetailsEdit(item) {
-  closeModal();
   openModal('eventDetail', item);
 }
 
@@ -565,12 +1121,10 @@ async function onDetailsDelete(id) {
 }
 
 function onAgendaAdd() {
-  closeModal();
   openModal('agendaItem');
 }
 
 function onAgendaEdit(item) {
-  closeModal();
   openModal('agendaItem', item);
 }
 
@@ -580,12 +1134,10 @@ async function onAgendaDelete(id) {
 }
 
 function onOurStoryAdd() {
-  closeModal();
   openModal('ourStoryItem');
 }
 
 function onOurStoryEdit(item) {
-  closeModal();
   openModal('ourStoryItem', item);
 }
 
@@ -612,19 +1164,13 @@ async function onRsvpSubmit(payload) {
 
 <style scoped>
 .elegant-chateau {
-  --font-heading: 'Playfair Display', serif;
-  --font-body: 'Lato', sans-serif;
-  --bg-warm: #f9f8f6;
-  --bg-warm-100: #f2efe9;
-  --primary-500: #9f8274;
-  --primary-600: #8a6b5d;
-
   font-family: var(--font-body);
-  background: var(--bg-warm);
-  color: #1a1a1a;
+  background: var(--theme-bg);
+  color: var(--theme-text);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  container-type: inline-size;
 }
 
 /* Loading */
@@ -633,112 +1179,17 @@ async function onRsvpSubmit(payload) {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: var(--bg-warm);
+  background: var(--theme-bg);
 }
 .loading-spinner {
   width: 40px;
   height: 40px;
   border: 3px solid rgba(0, 0, 0, 0.1);
-  border-top-color: var(--primary-500);
+  border-top-color: var(--theme-accent);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-/* ========== COVER SCREEN ========== */
-.cover-screen {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg-warm);
-  transition: opacity 0.8s ease, visibility 0.8s;
-}
-.cover-screen.cover-hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-/* Polaroid Stack */
-.polaroid-stack {
-  position: relative;
-  width: 280px;
-  height: 370px;
-  cursor: pointer;
-  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.polaroid-stack:hover {
-  transform: scale(1.02);
-}
-.polaroid {
-  position: absolute;
-  inset: 0;
-  background: #fff;
-  padding: 14px 14px 56px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
-  transform-origin: center;
-}
-.polaroid img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: sepia(10%);
-  display: block;
-}
-.polaroid-1 { transform: rotate(-6deg) translate(-10px, 5px); z-index: 1; }
-.polaroid-2 { transform: rotate(4deg) translate(10px, -5px); z-index: 2; }
-.polaroid-3 { transform: rotate(-2deg); z-index: 3; }
-.polaroid-label {
-  position: absolute;
-  bottom: 16px;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  font-family: var(--font-heading);
-  font-size: 18px;
-  font-style: italic;
-  color: #1a1a1a;
-}
-
-/* Expanding animation */
-.expanding .polaroid-1 { transform: translate(-150vw, -50vh) rotate(-45deg); opacity: 0; }
-.expanding .polaroid-2 { transform: translate(150vw, -50vh) rotate(45deg); opacity: 0; }
-.expanding .polaroid-3 { transform: scale(5); opacity: 0; z-index: 50; }
-
-.cover-hint {
-  margin-top: 48px;
-  text-align: center;
-  pointer-events: none;
-  animation: float-hint 6s ease-in-out infinite;
-}
-.cover-est {
-  font-size: 13px;
-  color: #666;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin: 0 0 8px;
-}
-.cover-tap {
-  font-family: var(--font-heading);
-  font-size: 22px;
-  font-style: italic;
-  color: #1a1a1a;
-  margin: 0;
-}
-@keyframes float-hint {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-@media (min-width: 640px) {
-  .polaroid-stack { width: 320px; height: 420px; }
-}
 
 /* ========== HERO ========== */
 .ec-hero {
@@ -758,7 +1209,7 @@ async function onRsvpSubmit(payload) {
 }
 .ec-hero-label {
   font-size: 13px;
-  color: var(--primary-600);
+  color: color-mix(in srgb, var(--theme-accent), black 15%);
   text-transform: uppercase;
   letter-spacing: 3px;
   margin: 0 0 24px;
@@ -766,7 +1217,7 @@ async function onRsvpSubmit(payload) {
 .ec-hero-names {
   font-family: var(--font-heading);
   font-size: 64px;
-  color: #1a1a1a;
+  color: var(--theme-text);
   margin: 0 0 32px;
   line-height: 1.05;
   letter-spacing: -0.02em;
@@ -790,13 +1241,13 @@ async function onRsvpSubmit(payload) {
   border-radius: 50%;
   background: #c8c8c8;
 }
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .ec-hero-names { font-size: 96px; }
   .ec-hero-meta { flex-direction: row; gap: 48px; }
   .ec-hero-dot { display: block; }
   .ec-hero { padding-top: 128px; padding-bottom: 128px; }
 }
-@media (min-width: 1024px) {
+@container (min-width: 1024px) {
   .ec-hero-names { font-size: 120px; }
 }
 
@@ -823,7 +1274,7 @@ async function onRsvpSubmit(payload) {
 }
 .ec-hero-main:hover img { transform: scale(1.05); }
 .ec-hero-side { display: none; }
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .ec-hero-grid { grid-template-columns: 8fr 4fr; }
   .ec-hero-main { height: 600px; }
   .ec-hero-side {
@@ -848,7 +1299,7 @@ async function onRsvpSubmit(payload) {
 .ec-hero-side-quote {
   height: 290px;
   border-radius: 16px;
-  background: #f5f5f4;
+  background: var(--theme-bg-warm);
   box-shadow: 0 10px 30px -5px rgba(40, 40, 40, 0.1);
   display: flex;
   align-items: center;
@@ -859,15 +1310,15 @@ async function onRsvpSubmit(payload) {
   font-family: var(--font-heading);
   font-size: 28px;
   font-style: italic;
-  color: #1a1a1a;
+  color: var(--theme-text);
   text-align: center;
   margin: 0;
 }
 
 /* ========== SECTIONS ========== */
-.ec-section { padding: 96px 24px; }
-.ec-section--white { background: #fff; }
-.ec-section--warm { background: var(--bg-warm-100); }
+.ec-section { padding: var(--section-padding, 96px 24px); }
+.ec-section--white { background: var(--card-bg, #fff); }
+.ec-section--warm { background: var(--section-bg, var(--theme-bg-warm)); }
 .ec-section-inner { max-width: 1280px; margin: 0 auto; }
 .ec-section-inner--narrow { max-width: 750px; }
 .ec-section-header-center { text-align: center; margin-bottom: 48px; }
@@ -875,7 +1326,7 @@ async function onRsvpSubmit(payload) {
   font-family: var(--font-heading);
   font-size: 36px;
   font-weight: 400;
-  color: #1a1a1a;
+  color: var(--theme-text);
   margin: 0 0 16px;
 }
 .ec-section-title--large { font-size: 42px; }
@@ -885,7 +1336,7 @@ async function onRsvpSubmit(payload) {
   margin: 0;
   max-width: 500px;
 }
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .ec-section-title { font-size: 48px; }
   .ec-section-title--large { font-size: 56px; }
 }
@@ -901,7 +1352,7 @@ async function onRsvpSubmit(payload) {
   margin-left: auto;
   margin-right: auto;
 }
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .ec-story-header {
     flex-direction: row;
     justify-content: space-between;
@@ -943,14 +1394,14 @@ async function onRsvpSubmit(payload) {
   scroll-snap-align: center;
   flex-shrink: 0;
 }
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .ec-slide { width: 600px; }
 }
 .ec-slide-card {
-  background: var(--bg-warm);
-  border-radius: 16px;
+  background: var(--card-bg, var(--theme-bg));
+  border-radius: var(--card-radius, 16px);
   overflow: hidden;
-  box-shadow: 0 10px 30px -5px rgba(40, 40, 40, 0.1);
+  box-shadow: var(--card-shadow, 0 10px 30px -5px rgba(40, 40, 40, 0.1));
 }
 .ec-slide-image {
   height: 400px;
@@ -976,13 +1427,13 @@ async function onRsvpSubmit(payload) {
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #1a1a1a;
+  color: var(--theme-text);
 }
 .ec-slide-body { padding: 32px; }
 .ec-slide-title {
   font-family: var(--font-heading);
   font-size: 24px;
-  color: #1a1a1a;
+  color: var(--theme-text);
   margin: 0 0 12px;
 }
 .ec-slide-text {
@@ -1003,48 +1454,48 @@ async function onRsvpSubmit(payload) {
 .ec-details-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 32px;
+  gap: var(--content-gap, 32px);
 }
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .ec-details-grid { grid-template-columns: repeat(3, 1fr); }
 }
 .ec-detail-card {
-  background: #fff;
-  padding: 32px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px -5px rgba(40, 40, 40, 0.1);
+  background: var(--card-bg, #fff);
+  padding: var(--card-padding, 32px);
+  border-radius: var(--card-radius, 16px);
+  box-shadow: var(--card-shadow, 0 10px 30px -5px rgba(40, 40, 40, 0.1));
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .ec-detail-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 40px -5px rgba(40, 40, 40, 0.15);
+  box-shadow: var(--card-shadow, 0 20px 40px -5px rgba(40, 40, 40, 0.15));
 }
 .ec-detail-card--highlight {
-  border-top: 4px solid var(--primary-500);
+  border-top: 4px solid var(--theme-accent);
 }
 .ec-detail-icon {
   width: 48px;
   height: 48px;
-  background: var(--bg-warm-100);
+  background: var(--theme-bg-warm);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 24px;
-  color: var(--primary-600);
+  color: color-mix(in srgb, var(--theme-accent), black 15%);
 }
 .ec-detail-icon svg { width: 24px; height: 24px; }
 .ec-detail-title {
   font-family: var(--font-heading);
   font-size: 24px;
-  color: #1a1a1a;
+  color: var(--theme-text);
   margin: 0 0 8px;
 }
 .ec-detail-time {
   font-size: 13px;
   font-weight: 700;
-  color: var(--primary-600);
+  color: color-mix(in srgb, var(--theme-accent), black 15%);
   text-transform: uppercase;
   letter-spacing: 1px;
   margin: 0 0 8px;
@@ -1065,16 +1516,16 @@ async function onRsvpSubmit(payload) {
   gap: 6px;
   font-size: 13px;
   font-weight: 700;
-  color: var(--primary-600);
+  color: color-mix(in srgb, var(--theme-accent), black 15%);
   text-decoration: none;
   padding: 8px 16px;
-  border: 1px solid #eaddd7;
+  border: 1px solid var(--theme-secondary);
   border-radius: 999px;
   transition: all 0.2s;
 }
 .ec-detail-map:hover {
-  background: var(--bg-warm);
-  border-color: var(--primary-500);
+  background: var(--theme-bg);
+  border-color: var(--theme-accent);
 }
 
 /* ========== RSVP ========== */
@@ -1090,12 +1541,12 @@ async function onRsvpSubmit(payload) {
 }
 .ec-rsvp-content { position: relative; z-index: 10; }
 .ec-rsvp-form-wrap {
-  background: var(--bg-warm);
-  padding: 32px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px -5px rgba(40, 40, 40, 0.1);
+  background: var(--card-bg, var(--theme-bg));
+  padding: var(--card-padding, 32px);
+  border-radius: var(--card-radius, 16px);
+  box-shadow: var(--card-shadow, 0 10px 30px -5px rgba(40, 40, 40, 0.1));
 }
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .ec-rsvp-form-wrap { padding: 48px; }
 }
 
@@ -1111,8 +1562,22 @@ async function onRsvpSubmit(payload) {
 }
 
 /* ========== RESPONSIVE ========== */
-@media (max-width: 767px) {
+@container (max-width: 767px) {
   .ec-section { padding: 64px 16px; }
   .ec-hero-names { font-size: 48px; }
+}
+
+.section--editing {
+  box-shadow: inset 0 0 0 2px #3b82f6;
+  position: relative;
+  z-index: 1;
+}
+</style>
+
+<style>
+/* In edit mode, skip scroll-reveal animation — sections always visible */
+.inv-layout--split [data-reveal] {
+  opacity: 1 !important;
+  transform: none !important;
 }
 </style>

@@ -1,15 +1,18 @@
 <template>
   <div class="dash-page">
     <div class="dash-page-header">
-      <h1 class="dash-page-title">{{ t("guests.title") }}</h1>
-      <p class="dash-page-subtitle">{{ t("guests.subtitle") }}</p>
+      <div>
+        <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
+        <h1 class="dash-page-title">{{ t("guests.title") }}</h1>
+        <p class="dash-page-subtitle">{{ t("guests.subtitle") }}</p>
+      </div>
     </div>
 
-    <div v-if="loading" class="g-card g-card-pad">
+    <div v-if="loading" class="d-card d-card-pad">
       {{ t("guests.loading") }}
     </div>
 
-    <div v-else-if="error" class="g-card g-card-pad">
+    <div v-else-if="error" class="d-card d-card-pad">
       <div class="empty-title">{{ t("guests.errorTitle") }}</div>
       <div class="empty-sub">{{ error }}</div>
       <div style="margin-top:12px;">
@@ -18,6 +21,34 @@
     </div>
 
     <template v-else>
+      <!-- Summary Stat Cards -->
+      <div class="summary-row" v-if="items.length > 0">
+        <div class="summary-card">
+          <div class="sc-accent accent-sage"></div>
+          <div class="sc-icon ic-sage">&#128101;</div>
+          <div class="sc-value">{{ totals?.total || 0 }}</div>
+          <div class="sc-label">{{ t("guests.totalGuests") }}</div>
+        </div>
+        <div class="summary-card">
+          <div class="sc-accent accent-green"></div>
+          <div class="sc-icon ic-green">&#10003;</div>
+          <div class="sc-value">{{ totals?.confirmed || 0 }}</div>
+          <div class="sc-label">{{ t("guests.confirmed") }}</div>
+        </div>
+        <div class="summary-card">
+          <div class="sc-accent accent-gold"></div>
+          <div class="sc-icon ic-gold">&#9679;</div>
+          <div class="sc-value">{{ totals?.pending || 0 }}</div>
+          <div class="sc-label">{{ t("guests.pending") }}</div>
+        </div>
+        <div class="summary-card">
+          <div class="sc-accent accent-blush"></div>
+          <div class="sc-icon ic-blush">&#10007;</div>
+          <div class="sc-value">{{ totals?.declined || 0 }}</div>
+          <div class="sc-label">{{ t("guests.declined") }}</div>
+        </div>
+      </div>
+
       <GuestsToolbar
         v-model="filters"
         :tables="tables"
@@ -31,7 +62,7 @@
         @apply="applyFilters"
       />
 
-      <div v-if="items.length === 0" class="g-card g-card-pad">
+      <div v-if="items.length === 0" class="d-card d-card-pad empty-state">
         <div class="empty-title">{{ t("guests.emptyTitle") }}</div>
         <div class="empty-sub">{{ t("guests.emptyMessage") }}</div>
         <div style="margin-top:12px;">
@@ -178,26 +209,120 @@ async function onRemove(guestId) {
 </script>
 
 <style scoped>
-.g-card {
-  background: #fff;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+.d-card {
+  background: var(--dash-cream-card);
+  border-radius: var(--dash-radius);
+  border: 1px solid var(--dash-cream-border);
+  box-shadow: var(--dash-shadow-sm);
 }
 
-.g-card-pad {
-  padding: 20px 24px;
+.d-card-pad {
+  padding: 24px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
 }
 
 .empty-title {
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--neutral-900);
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--dash-charcoal);
 }
 
 .empty-sub {
   margin-top: 6px;
   font-size: 13px;
-  color: var(--neutral-500);
+  color: var(--dash-muted);
+}
+
+/* Summary Cards */
+.summary-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.summary-card {
+  background: var(--dash-cream-card);
+  border: 1px solid var(--dash-cream-border);
+  border-radius: var(--dash-radius);
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.22s;
+}
+
+.summary-card:hover {
+  border-color: var(--dash-sage-pale);
+  box-shadow: var(--dash-shadow-md);
+  transform: translateY(-2px);
+}
+
+.sc-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  border-radius: var(--dash-radius) var(--dash-radius) 0 0;
+}
+
+.accent-sage { background: linear-gradient(90deg, var(--dash-sage-light), var(--dash-sage-pale)); }
+.accent-green { background: linear-gradient(90deg, #5a7a52, #b2c9aa); }
+.accent-gold { background: linear-gradient(90deg, var(--dash-gold), var(--dash-gold-light)); }
+.accent-blush { background: linear-gradient(90deg, var(--dash-blush), #d4b0a8); }
+
+.sc-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.ic-sage { background: rgba(90, 122, 82, 0.1); }
+.ic-green { background: rgba(90, 122, 82, 0.12); color: var(--dash-sage); }
+.ic-gold { background: rgba(184, 149, 78, 0.1); }
+.ic-blush { background: rgba(196, 150, 142, 0.12); }
+
+.sc-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--dash-charcoal);
+}
+
+.sc-label {
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dash-muted);
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.summary-row > *:nth-child(1) { animation: fadeUp 0.4s 0.05s ease both; }
+.summary-row > *:nth-child(2) { animation: fadeUp 0.4s 0.1s ease both; }
+.summary-row > *:nth-child(3) { animation: fadeUp 0.4s 0.15s ease both; }
+.summary-row > *:nth-child(4) { animation: fadeUp 0.4s 0.2s ease both; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 1100px) {
+  .summary-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .summary-row { grid-template-columns: 1fr; }
 }
 </style>

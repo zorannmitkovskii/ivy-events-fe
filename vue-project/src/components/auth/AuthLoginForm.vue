@@ -54,13 +54,6 @@
     <AuthDivider :label="$t('auth.common.orContinue')" />
 
     <GoogleButton @click="onGoogle" />
-
-    <p class="auth-signup">
-      {{ $t('auth.login.noAccount') }}
-      <RouterLink :to="{ name: 'signup', params: { lang } }">
-        {{ $t('auth.login.createAccount') }}
-      </RouterLink>
-    </p>
   </form>
 </template>
 
@@ -73,7 +66,9 @@ import GoogleButton from '@/components/auth/GoogleButton.vue';
 import ButtonMain from '@/components/generic/ButtonMain.vue';
 import { loginWithCredentials, getEventId, hasRole } from '@/services/auth.service';
 import { setEventId } from '@/store/onboarding.store';
+import { syncDraftToBackend } from '@/composables/useDraftSync';
 import { getRuntimeEnv, detectDefaultEnvFromLocation, computeKeycloakBaseUrl } from '@/services/env';
+import { ApiError } from '@/services/apiError';
 
 const route = useRoute();
 const router = useRouter();
@@ -101,8 +96,17 @@ async function onSubmit() {
   isLoading.value = true;
 
   try {
-    await loginWithCredentials(email.value.trim(), password.value);
+    const loginData = await loginWithCredentials(email.value.trim(), password.value);
+
+    if (loginData.mustChangePassword) {
+      sessionStorage.setItem('temp_email', email.value.trim());
+      sessionStorage.setItem('temp_password', password.value);
+      await router.push({ name: 'reset-password', params: { lang: lang.value }, query: { temp: '1' } });
+      return;
+    }
+
     setEventId(getEventId());
+    await syncDraftToBackend();
 
     const redirect = route.query.redirect;
     if (hasRole('ADMIN')) {
@@ -113,7 +117,11 @@ async function onSubmit() {
       await router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
     }
   } catch (e) {
-    formError.value = e?.message || 'Login failed. Please try again.';
+    if (e instanceof ApiError) {
+      formError.value = e.detail || e.message;
+    } else {
+      formError.value = e?.message || 'Login failed. Please try again.';
+    }
   } finally {
     isLoading.value = false;
   }
@@ -177,19 +185,5 @@ function onGoogle() {
 .auth-submit-btn {
   width: 100%;
   justify-content: center;
-}
-.auth-signup {
-  margin: 6px 0 0;
-  font-size: 13px;
-  color: var(--neutral-500);
-  text-align: center;
-}
-.auth-signup a {
-  color: var(--brand-main);
-  font-weight: 600;
-  text-decoration: none;
-}
-.auth-signup a:hover {
-  text-decoration: underline;
 }
 </style>

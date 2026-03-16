@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { ourStoryApi } from "@/services/ourStory.service.js";
 import { onboardingStore } from "@/store/onboarding.store";
+import { getErrorMessage } from "@/services/apiError";
 
 export function useOurStory() {
   const loading = ref(false);
@@ -20,7 +21,7 @@ export function useOurStory() {
       items.value = Array.isArray(data.stories) ? data.stories : [];
       images.value = Array.isArray(data.images) ? data.images : [];
     } catch (e) {
-      error.value = e?.message ?? "Failed to load stories";
+      error.value = getErrorMessage(e);
     } finally {
       loading.value = false;
     }

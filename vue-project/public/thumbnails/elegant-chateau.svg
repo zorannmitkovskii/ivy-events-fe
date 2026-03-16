@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none">
+  <!-- Cream background -->
+  <rect width="400" height="600" fill="#fefce8"/>
+
+  <!-- Gold ornamental border -->
+  <rect x="20" y="20" width="360" height="560" rx="8" stroke="#d4a373" stroke-width="2" fill="none"/>
+  <rect x="28" y="28" width="344" height="544" rx="6" stroke="#d4a373" stroke-width="0.5" fill="none" opacity="0.6"/>
+
+  <!-- Corner ornaments -->
+  <g stroke="#d4a373" stroke-width="1.5" fill="none" opacity="0.7">
+    <path d="M40 40 Q50 60 70 50 Q60 70 40 70"/>
+    <path d="M360 40 Q350 60 330 50 Q340 70 360 70"/>
+    <path d="M40 560 Q50 540 70 550 Q60 530 40 530"/>
+    <path d="M360 560 Q350 540 330 550 Q340 530 360 530"/>
+  </g>
+
+  <!-- Chateau outline -->
+  <g transform="translate(120, 120)" stroke="#d4a373" stroke-width="1.5" fill="none">
+    <!-- Main building -->
+    <rect x="20" y="60" width="120" height="80" rx="2"/>
+    <!-- Roof -->
+    <path d="M10 60 L80 20 L150 60"/>
+    <!-- Tower left -->
+    <rect x="0" y="40" width="25" height="100" rx="1"/>
+    <path d="M-5 40 L12.5 15 L30 40"/>
+    <!-- Tower right -->
+    <rect x="135" y="40" width="25" height="100" rx="1"/>
+    <path d="M130 40 L147.5 15 L165 40"/>
+    <!-- Door -->
+    <path d="M65 140 L65 110 Q80 100 95 110 L95 140"/>
+    <!-- Windows -->
+    <rect x="35" y="75" width="18" height="22" rx="9 9 0 0"/>
+    <rect x="107" y="75" width="18" height="22" rx="9 9 0 0"/>
+    <!-- Flag -->
+    <line x1="80" y1="20" x2="80" y2="5"/>
+    <path d="M80 5 L95 10 L80 15" fill="#d4a373" stroke="none"/>
+  </g>
+
+  <!-- Floral accents -->
+  <g fill="#d4a373" opacity="0.4">
+    <circle cx="80" cy="320" r="4"/>
+    <circle cx="90" cy="310" r="3"/>
+    <circle cx="75" cy="305" r="3.5"/>
+    <circle cx="320" cy="320" r="4"/>
+    <circle cx="310" cy="310" r="3"/>
+    <circle cx="325" cy="305" r="3.5"/>
+  </g>
+
+  <!-- Divider -->
+  <line x1="100" y1="350" x2="300" y2="350" stroke="#d4a373" stroke-width="0.8" opacity="0.5"/>
+  <circle cx="200" cy="350" r="4" fill="#d4a373" opacity="0.5"/>
+
+  <!-- Text placeholder -->
+  <text x="200" y="400" text-anchor="middle" font-family="serif" font-size="24" font-weight="600" fill="#92400e">Elegant Chateau</text>
+  <text x="200" y="425" text-anchor="middle" font-family="serif" font-size="13" fill="#b45309" opacity="0.7">French Chateau Wedding</text>
+
+  <!-- Bottom floral garland -->
+  <g transform="translate(100, 470)" stroke="#d4a373" stroke-width="1" fill="none" opacity="0.5">
+    <path d="M0 0 Q25 -15 50 0 Q75 15 100 0 Q125 -15 150 0 Q175 15 200 0"/>
+    <circle cx="0" cy="0" r="3" fill="#d4a373"/>
+    <circle cx="50" cy="0" r="3" fill="#d4a373"/>
+    <circle cx="100" cy="0" r="3" fill="#d4a373"/>
+    <circle cx="150" cy="0" r="3" fill="#d4a373"/>
+    <circle cx="200" cy="0" r="3" fill="#d4a373"/>
+  </g>
+</svg>

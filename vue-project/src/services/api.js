@@ -166,23 +166,30 @@ window.addEventListener("storage", (e) => {
   }
 });
 
-// Normalize errors so services/composables get a readable message
+import { ApiError, extractApiError } from "./apiError";
+
+// Build an ApiError or a plain Error from an axios failure
 function normalizeAxiosError(err) {
-  // Axios error shape
+  // Try structured backend error first
+  const apiErr = extractApiError(err);
+  if (apiErr) return apiErr;
+
+  // Fallback: legacy / unstructured responses
   const status = err?.response?.status;
   const data = err?.response?.data;
 
-  // Prefer BE message if any
-  if (typeof data === "string" && data.trim()) return data;
-  if (data?.message) return data.message;
-  if (data?.error) return data.error;
+  if (typeof data === "string" && data.trim()) return new Error(data);
+  if (data?.message) return new Error(data.message);
+  if (data?.error) return new Error(data.error);
+  if (status) return new Error(`HTTP ${status}`);
 
-  if (status) return `HTTP ${status}`;
-  return err?.message || "Network error";
+  return new Error(err?.message || "Network error");
 }
 
 /**
  * Generic API wrapper.
+ * Throws ApiError when the backend returns a structured error,
+ * or a plain Error for legacy / network failures.
  */
 export const api = {
   async get(path, config = {}) {
@@ -190,7 +197,7 @@ export const api = {
       const res = await apiClient.get(path, config);
       return res.data;
     } catch (err) {
-      throw new Error(normalizeAxiosError(err));
+      throw normalizeAxiosError(err);
     }
   },
 
@@ -199,7 +206,7 @@ export const api = {
       const res = await apiClient.post(path, body, config);
       return res.data;
     } catch (err) {
-      throw new Error(normalizeAxiosError(err));
+      throw normalizeAxiosError(err);
     }
   },
 
@@ -208,7 +215,7 @@ export const api = {
       const res = await apiClient.put(path, body, config);
       return res.data;
     } catch (err) {
-      throw new Error(normalizeAxiosError(err));
+      throw normalizeAxiosError(err);
     }
   },
 
@@ -217,7 +224,7 @@ export const api = {
       const res = await apiClient.patch(path, body, config);
       return res.data;
     } catch (err) {
-      throw new Error(normalizeAxiosError(err));
+      throw normalizeAxiosError(err);
     }
   },
 
@@ -226,7 +233,7 @@ export const api = {
       const res = await apiClient.delete(path, config);
       return res.data;
     } catch (err) {
-      throw new Error(normalizeAxiosError(err));
+      throw normalizeAxiosError(err);
     }
   }
 };

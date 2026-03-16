@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { agendaApi } from "@/services/agenda.service.js";
 import { onboardingStore } from "@/store/onboarding.store";
+import { getErrorMessage } from "@/services/apiError";
 
 export function useAgenda() {
   const loading = ref(false);
@@ -19,7 +20,7 @@ export function useAgenda() {
       const data = await agendaApi.list(eventId);
       items.value = Array.isArray(data) ? data : [];
     } catch (e) {
-      error.value = e?.message ?? "Failed to load agenda";
+      error.value = getErrorMessage(e);
     } finally {
       loading.value = false;
     }

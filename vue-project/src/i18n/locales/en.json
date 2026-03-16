@@ -191,6 +191,9 @@
     "section": {
       "title": "Perfect for Every Celebration",
       "subtitle": "Beautiful invitations for all your special moments",
+      "eyebrow": "Categories",
+      "titleBefore": "Perfect for",
+      "titleAccent": "every celebration",
       "continue": "Continue",
       "description": "You can change this later in settings"
     },
@@ -308,7 +311,9 @@
     "category": {
       "title": "Choose Your Event Category",
       "subtitle": "Select the type of event you're planning. You can change this later.",
-      "continue": "Continue"
+      "continue": "Continue",
+      "next": "Next",
+      "create": "Create"
     },
     "eventBasics": {
       "title": "Event Basics",
@@ -413,16 +418,33 @@
   },
   "home": {
     "hero": {
-      "titleLine1": "Create beautiful",
+      "pill": "Digital Invitations",
+      "titleLine1": "Create",
+      "titleAccent1": "beautiful",
       "titleLine2": "invitations. Plan",
-      "titleLine3": "unforgettable events.",
+      "titleAccent2": "unforgettable",
+      "titleLine3": "invitations.",
       "subtitle": "The all-in-one platform for elegant digital invitations, seamless RSVP tracking, and stress-free event management.",
-      "primaryCta": "Get Started",
-      "secondaryCta": "View Templates"
+      "primaryCta": "✦ Get Started Free",
+      "secondaryCta": "View Templates",
+      "statTemplates": "Templates",
+      "statSent": "Invitations Sent",
+      "statSatisfied": "Satisfied Users",
+      "chipConfirm": "New confirmation!",
+      "chipConfirmSub": "Maria confirmed attendance",
+      "chipGuests": "47 / 80 guests",
+      "chipGuestsSub": "confirmed attendance",
+      "cardLabel": "You are invited to",
+      "cardNames": "Ana & Marko",
+      "cardDate": "June 15, 2025 · 6:00 PM",
+      "cardLocation": "Ohrid, Macedonia"
     },
     "howItWorks": {
+      "eyebrow": "How It Works",
       "title": "How It Works",
-      "subtitle": "Four simple steps to your perfect event",
+      "titleBefore": "Four steps to a",
+      "titleAccent": "perfect invitation",
+      "subtitle": "From template to sent invitation — in less than 10 minutes",
       "steps": {
         "chooseTemplate": {
           "title": "Choose a Template",
@@ -465,31 +487,54 @@
       }
     },
     "templates": {
+      "eyebrow": "Designs",
       "title": "Stunning Templates for Every Occasion",
+      "titleBefore": "Beautiful templates for",
+      "titleAccent": "every occasion",
       "subtitle": "Professionally designed, fully customizable invitations",
-      "cta": "View Templates",
+      "cta": "View all templates",
       "items": {
         "elegantWedding": {
-          "title": "Elegant Wedding",
-          "subtitle": "Classic & Timeless"
+          "title": "Classic Wedding",
+          "subtitle": "Elegant style · Forest",
+          "cardNames": "Ana & Boban",
+          "cardDate": "June 15 · Ohrid"
         },
         "birthday": {
-          "title": "Birthday Celebration",
-          "subtitle": "Fun & Festive"
+          "title": "Bohemian Wedding",
+          "subtitle": "Warm style · Sage",
+          "cardNames": "Sara & Darko",
+          "cardDate": "Aug 3 · Skopje"
         },
         "corporate": {
-          "title": "Corporate Event",
-          "subtitle": "Professional & Modern"
-        },
-        "babyShower": {
-          "title": "Baby Shower",
-          "subtitle": "Sweet & Charming"
+          "title": "Modern Celebration",
+          "subtitle": "Natural style · Garden",
+          "cardNames": "18th Birthday",
+          "cardDate": "May 12 · Bitola"
         }
       }
     },
     "features": {
+      "eyebrow": "Features",
       "title": "Features for Every Stage of Event Management",
-      "subtitle": "Everything you need to plan, manage, and celebrate",
+      "titleBefore": "Everything for every",
+      "titleAccent": "stage of planning",
+      "subtitle": "The platform covers all aspects — from design to guest tracking — for a seamless experience.",
+      "rsvpLabel": "Live RSVP Overview",
+      "rsvpTitle": "Track who's coming — in real time",
+      "rsvpConfirmed": "Confirmed",
+      "rsvpGuest1": "Ana Stojanovska",
+      "rsvpTime1": "2 min ago",
+      "rsvpYes": "Confirmed ✓",
+      "rsvpGuest2": "Marko Petrovski",
+      "rsvpTime2": "15 min ago",
+      "rsvpNo": "Can't make it ✕",
+      "rsvpGuest3": "Ivana Nikolovska",
+      "rsvpTime3": "1 hour ago",
+      "rsvpMaybe": "Maybe ?",
+      "rsvpGuest4": "Boban Risteski",
+      "rsvpTime4": "2 hours ago",
+      "rsvpYes2": "Confirmed ✓",
       "items": {
         "beautifulDesigns": {
           "title": "Beautiful Invitation Designs",
@@ -558,13 +603,37 @@
       "satisfaction": "98% Customer Satisfaction"
     },
     "testimonials": {
+      "eyebrow": "Testimonials",
       "title": "Loved by Thousands of Happy Couples",
-      "subtitle": "Real stories from real celebrations"
+      "titleBefore": "What our",
+      "titleAccent": "users say",
+      "subtitle": "Real stories from real celebrations",
+      "items": {
+        "first": {
+          "text": "Ivy Events made the entire process incredibly easy. The invitations were beautiful and the guests were thrilled.",
+          "name": "Ana & Marko",
+          "event": "Wedding · Ohrid 2024"
+        },
+        "second": {
+          "text": "Perfect platform for RSVP tracking. We knew exactly who was coming, no stress and no phone calls.",
+          "name": "Sara Risteska",
+          "event": "Birthday · Skopje 2024"
+        },
+        "third": {
+          "text": "We used it for a corporate gala dinner. Simple, elegant, and professional. Highly recommend!",
+          "name": "Ivan Nikoloski",
+          "event": "Corporate Gala · 2024"
+        }
+      }
     },
     "finalCta": {
+      "eyebrow": "Ready?",
       "title": "Ready to Create Your Perfect Event?",
-      "subtitle": "Join thousands of happy couples and event planners who trust IvyEvents. Start planning your unforgettable celebration today – it's free to get started!",
-      "primaryCta": "Start Planning Your Event",
+      "titleLine1": "Create your perfect",
+      "titleAccent": "event",
+      "titleLine2": "today",
+      "subtitle": "Join thousands of satisfied users — get started for free",
+      "primaryCta": "Start Planning",
       "secondaryCta": "View Templates"
     }
   },
@@ -613,7 +682,17 @@
     "adults": "Adults",
     "children": "Children",
     "note": "Note",
-    "notePh": "Optional note..."
+    "notePh": "Optional note...",
+    "totalGuests": "Total Guests"
+  },
+  "notifications": {
+    "subtitle": "Send updates and RSVPs to your guests",
+    "placeholder": "Notification templates and composer coming soon."
+  },
+  "team": {
+    "title": "Team & Co-hosts",
+    "subtitle": "Manage team members and permissions",
+    "placeholder": "Team management coming soon."
   },
    "agenda": {
     "title": "Agenda",
@@ -807,10 +886,13 @@
     "support": "Support",
     "premium": "PREMIUM",
     "eventPlanner": "Event Planner",
+    "weddingPlanner": "Wedding Planner",
     "eventSettings": "Event Settings",
+    "notifications": "Notifications",
     "signOut": "Sign Out",
     "addGuest": "Add Guest",
-    "addTask": "Add Task"
+    "addTask": "Add Task",
+    "navigation": "Navigation"
   },
   "admin": {
     "sidebar": {
@@ -973,14 +1055,17 @@
     "totalGuests": "Total Guests",
     "tablesAssigned": "Tables Assigned",
     "tablesSeated": "of tables seated",
-    "budgetStatus": "Budget Status",
+    "budgetStatus": "Budget – Expenses",
+    "budgetRemaining": "Budget Remaining",
     "of": "of",
     "budget": "budget",
     "remaining": "Remaining",
     "used": "Used",
-    "rsvpSummary": "RSVP Summary",
-    "viewDetails": "View Details",
-    "total": "TOTAL",
+    "spent": "spent",
+    "totalBudget": "Total Budget",
+    "rsvpSummary": "RSVP Status",
+    "viewDetails": "Details",
+    "total": "Total",
     "coming": "Coming",
     "maybe": "Maybe",
     "declined": "Declined",
@@ -997,7 +1082,18 @@
     "guestsAssigned": "guests assigned",
     "viewAllTasks": "View All Tasks",
     "onTrackTitle": "Everything is on track!",
-    "viewTimeline": "View Timeline"
+    "viewTimeline": "View Timeline",
+    "readiness": "Readiness",
+    "live": "Live",
+    "weddingEvent": "Wedding Event",
+    "event": "Event",
+    "activeTasks": "Active Tasks",
+    "highPriority": "high priority",
+    "tablesSeating": "Tables Filled",
+    "seated": "seated",
+    "unseated": "Unseated",
+    "tables": "Tables",
+    "tableNum": "Table {n}"
   },
   "common": {
     "edit": "Edit",
@@ -1101,6 +1197,7 @@
     "totalBudget": "Total Budget",
     "totalSpent": "Total Spent",
     "remaining": "Remaining",
+    "progress": "Progress",
     "monthly": "Monthly",
     "fixedAndVariable": "Fixed & Variable",
     "safeToSpend": "Safe to spend",
@@ -1249,7 +1346,7 @@
       "organizer": "Organizer",
       "gallery": "Gallery"
     },
-    "choose": "Get Started",
+    "choose": "Activate",
     "popular": "Popular",
     "empty": "No packages available in this category yet.",
     "loadError": "Failed to load packages. Please try again.",
@@ -1257,7 +1354,14 @@
     "applyCode": "Apply",
     "validating": "Validating...",
     "invalidCode": "Invalid discount code",
-    "continuePayment": "Continue to Payment"
+    "continuePayment": "Activate",
+    "addToCart": "Add to Cart",
+    "inCart": "In Cart",
+    "cart": "Cart",
+    "cartEmpty": "Your cart is empty",
+    "cartTotal": "Total",
+    "checkout": "Proceed to Payment",
+    "removeFromCart": "Remove"
   },
   "about": {
     "title": "About Us",
@@ -1501,6 +1605,8 @@
     "fish": "Fish",
     "glutenFree": "Gluten-Free",
     "otherDietary": "Other",
+    "allergiesLabel": "Allergies",
+    "allergiesPlaceholder": "e.g. nuts, shellfish, gluten...",
     "sending": "Sending...",
     "rsvpSuccess": "Thank you! Your RSVP has been received.",
     "rsvpError": "Something went wrong. Please try again.",
@@ -1566,6 +1672,102 @@
     "hero": "Edit Hero",
     "details": "Edit Details",
     "agenda": "Edit Agenda",
-    "ourStory": "Edit Story"
+    "ourStory": "Edit Story",
+    "entry": "Edit Entry",
+    "colors": "Colors",
+    "fonts": "Fonts",
+    "headingFont": "Heading Font",
+    "bodyFont": "Body Font",
+    "accentColor": "Accent",
+    "secondaryColor": "Secondary",
+    "tertiaryColor": "Tertiary",
+    "backgroundColor": "Background",
+    "textColor": "Text",
+    "resetDefaults": "Reset to Defaults",
+    "colorPresets": "Color Palettes",
+    "customColors": "Custom",
+    "customize": "Customize",
+    "save": "Save",
+    "mobile": "Mobile",
+    "tablet": "Tablet",
+    "desktop": "Desktop",
+    "unsavedChanges": "You have unsaved changes. Leave without saving?",
+    "sections": "Sections",
+    "style": "Style",
+    "gallery": "Gallery",
+    "rsvp": "RSVP",
+    "buttons": "Buttons & Inputs",
+    "background": "Background & Cards",
+    "spacing": "Spacing",
+    "uploadPhoto": "Upload Photo",
+    "deletePhoto": "Delete",
+    "rsvpDeadline": "RSVP Deadline",
+    "maxGuests": "Max Guests",
+    "showDietary": "Show Dietary Options",
+    "buttonBg": "Button Color",
+    "buttonText": "Text Color",
+    "borderRadius": "Border Radius",
+    "sectionBg": "Section Background",
+    "cardBg": "Card Background",
+    "cardShadow": "Card Shadow",
+    "cardRadius": "Card Corners",
+    "cardBorder": "Card Border",
+    "shadowNone": "None",
+    "shadowSubtle": "Subtle",
+    "shadowMedium": "Medium",
+    "shadowStrong": "Strong",
+    "compact": "Compact",
+    "balanced": "Balanced",
+    "spacious": "Spacious",
+    "layoutSpacing": "Layout Spacing",
+    "preview": "Preview",
+    "contentTab": "Content",
+    "layoutTab": "Layout",
+    "advancedTab": "Advanced",
+    "addSection": "Add Section",
+    "sectionOutline": "Section Outline",
+    "sectionVisible": "Show Section",
+    "sectionHidden": "Hide Section",
+    "showSection": "Show section",
+    "hideSection": "Hide section",
+    "anchorId": "Anchor ID",
+    "animation": "Animation",
+    "animationNone": "None",
+    "animationFade": "Fade In",
+    "animationSlide": "Slide Up",
+    "overrideTheme": "Override Theme",
+    "statusComplete": "Complete",
+    "statusMissing": "Missing info",
+    "allowPlusOne": "Allow +1",
+    "childOption": "Child Option",
+    "contactMethod": "Contact Method",
+    "emailOption": "Email",
+    "smsOption": "SMS",
+    "bothOption": "Both",
+    "customQuestions": "Custom Questions",
+    "mealPreference": "Meal Preference",
+    "allergies": "Allergies",
+    "songRequest": "Song Request",
+    "addQuestion": "Add Question",
+    "confirmationMessage": "Confirmation Message",
+    "antiSpam": "Anti-spam Protection",
+    "syncGuests": "Sync with Guest List",
+    "layoutCentered": "Centered",
+    "layoutLeftAligned": "Left Aligned",
+    "layoutSplit": "Split",
+    "layoutCards": "Cards",
+    "layoutList": "List",
+    "layoutTimeline": "Timeline",
+    "layoutGrid": "Grid",
+    "layoutCompact": "Compact",
+    "layoutMinimal": "Minimal",
+    "nameFields": "Name Fields",
+    "requireLastName": "Require Last Name",
+    "guestConfig": "Guest Configuration",
+    "info": "Info",
+    "brideName": "Bride Name",
+    "groomName": "Groom Name",
+    "weddingDate": "Wedding Date",
+    "venue": "Venue / Location"
   }
 }

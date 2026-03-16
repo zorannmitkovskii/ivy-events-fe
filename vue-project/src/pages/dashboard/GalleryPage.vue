@@ -1,6 +1,7 @@
 <template>
   <div class="dash-page">
     <div class="dash-page-header">
+      <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
       <h1 class="dash-page-title">{{ t("gallery.title") }}</h1>
       <p class="dash-page-subtitle">{{ t("gallery.subtitle") }}</p>
     </div>
@@ -44,17 +45,17 @@
       </template>
     </DashboardToolbar>
 
-    <div v-if="initialLoading" class="g-card g-card-pad">
+    <div v-if="initialLoading" class="d-card d-card-pad">
       {{ t("gallery.loading") }}
     </div>
 
-    <div v-else-if="error && images.length === 0" class="g-card g-card-pad">
+    <div v-else-if="error && images.length === 0" class="d-card d-card-pad">
       <div class="empty-title">{{ t("gallery.errorTitle") }}</div>
       <div class="empty-sub">{{ error }}</div>
     </div>
 
     <template v-else>
-      <div v-if="images.length === 0" class="g-card g-card-pad empty-state">
+      <div v-if="images.length === 0" class="d-card d-card-pad empty-state">
         {{ t("gallery.empty") }}
       </div>
 
@@ -288,33 +289,34 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.g-card {
-  background: #fff;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+.d-card {
+  background: var(--dash-cream-card);
+  border-radius: var(--dash-radius);
+  border: 1px solid var(--dash-cream-border);
+  box-shadow: var(--dash-shadow-sm);
 }
 
-.g-card-pad {
-  padding: 20px 24px;
+.d-card-pad {
+  padding: 24px;
 }
 
 .empty-title {
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--neutral-900);
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--dash-charcoal);
 }
 
 .empty-sub {
   margin-top: 6px;
   font-size: 13px;
-  color: var(--neutral-500);
+  color: var(--dash-muted);
 }
 
 .empty-state {
   text-align: center;
-  color: var(--neutral-500);
-  font-size: 14px;
+  color: var(--dash-muted);
+  font-size: 13px;
   padding: 48px 24px;
 }
 
@@ -341,11 +343,11 @@ onBeforeUnmount(() => {
 
 .gallery-item {
   position: relative;
-  border-radius: var(--radius-md);
+  border-radius: var(--dash-radius);
   overflow: hidden;
   cursor: pointer;
   aspect-ratio: 3 / 2;
-  background: var(--neutral-200);
+  background: var(--dash-cream);
 }
 
 .gallery-item img {
@@ -360,7 +362,7 @@ onBeforeUnmount(() => {
 }
 
 .gallery-item.selected {
-  outline: 3px solid var(--brand-gold, #C8A24D);
+  outline: 3px solid var(--dash-gold);
   outline-offset: -3px;
 }
 
@@ -377,13 +379,13 @@ onBeforeUnmount(() => {
 }
 
 .gallery-item.selected .select-check {
-  color: var(--brand-gold, #C8A24D);
+  color: var(--dash-gold);
 }
 
 .gallery-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(30, 36, 32, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -408,12 +410,12 @@ onBeforeUnmount(() => {
 
 .loading-more {
   font-size: 13px;
-  color: var(--neutral-500);
+  color: var(--dash-muted);
 }
 
 .no-more {
   font-size: 13px;
-  color: var(--neutral-400);
+  color: var(--dash-light);
 }
 
 /* Preview */
@@ -424,7 +426,7 @@ onBeforeUnmount(() => {
 .preview-img {
   max-width: 100%;
   max-height: 70vh;
-  border-radius: var(--radius-md);
+  border-radius: var(--dash-radius);
 }
 
 .download-link {
@@ -432,20 +434,20 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  border: 1px solid var(--neutral-300);
-  background: #fff;
-  border-radius: var(--radius-md);
+  border: 1.5px solid var(--dash-cream-border);
+  background: var(--dash-cream-card);
+  border-radius: 9px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--brand-main);
+  color: var(--dash-sage);
   text-decoration: none;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .download-link:hover {
-  border-color: var(--brand-gold);
-  background: rgba(200, 162, 77, 0.06);
+  border-color: var(--dash-sage-light);
+  background: var(--dash-sage-ghost);
 }
 
 /* Responsive */

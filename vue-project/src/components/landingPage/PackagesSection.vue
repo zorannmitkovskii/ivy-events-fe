@@ -141,7 +141,7 @@ onMounted(fetchPackages);
 
 <style scoped>
 .packages-section {
-  background: var(--bg-main);
+  background: var(--bg-white);
   padding: 76px 20px;
 }
 
@@ -157,7 +157,7 @@ onMounted(fetchPackages);
 
 .packages-title {
   font-family: var(--font-family), serif;
-  font-size: 42px;
+  font-size: 48px;
   font-weight: 500;
   margin: 0 0 10px;
   color: var(--neutral-900);
@@ -166,7 +166,7 @@ onMounted(fetchPackages);
 .packages-subtitle {
   margin: 0;
   color: var(--neutral-700);
-  font-size: 16px;
+  font-size: 17px;
 }
 
 /* ---- Switch Toggle ---- */
@@ -181,7 +181,7 @@ onMounted(fetchPackages);
 
 .switch-btn {
   padding: 10px 24px;
-  border: none;
+  border: 1.5px solid var(--soft-light);
   border-radius: 8px;
   background: transparent;
   color: var(--neutral-600, #4b5563);
@@ -194,6 +194,7 @@ onMounted(fetchPackages);
 .switch-btn.active {
   background: var(--brand-gold, #c8a24d);
   color: #fff;
+  border-color: var(--brand-gold);
   box-shadow: 0 2px 8px rgba(200, 162, 77, 0.3);
 }
 
@@ -254,8 +255,8 @@ onMounted(fetchPackages);
 }
 
 .package-desc {
-  font-size: 13px;
-  color: var(--neutral-500, #6b7280);
+  font-size: 14.5px;
+  color: var(--neutral-700);
   margin: 0;
   line-height: 1.4;
 }
@@ -322,7 +323,7 @@ onMounted(fetchPackages);
 }
 
 .packages-empty {
-  color: var(--neutral-500, #6b7280);
+  color: var(--neutral-700);
   padding: 40px 0;
   font-size: 15px;
 }

@@ -1,5 +1,6 @@
 import { ref } from "vue";
 import { invitationPhotosApi } from "@/services/invitationPhotos.service";
+import { getErrorMessage } from "@/services/apiError";
 
 export function useCollagePhotos() {
   const photos = ref([]);
@@ -13,7 +14,7 @@ export function useCollagePhotos() {
       const data = await invitationPhotosApi.list(eventId);
       photos.value = Array.isArray(data) ? data : [];
     } catch (e) {
-      error.value = e?.message || "Failed to load photos";
+      error.value = getErrorMessage(e);
     } finally {
       loading.value = false;
     }
@@ -29,7 +30,7 @@ export function useCollagePhotos() {
       }
       return result;
     } catch (e) {
-      error.value = e?.message || "Upload failed";
+      error.value = getErrorMessage(e);
       throw e;
     }
   }
@@ -39,7 +40,7 @@ export function useCollagePhotos() {
       await invitationPhotosApi.remove(eventId, url);
       photos.value = photos.value.filter((p) => p.url !== url);
     } catch (e) {
-      error.value = e?.message || "Delete failed";
+      error.value = getErrorMessage(e);
       throw e;
     }
   }

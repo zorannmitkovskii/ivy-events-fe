@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { baseUrl } from './baseUrl'
+import { extractApiError } from './apiError'
 
 // Centralized API client for all backend calls (no suffix; used for /public/* endpoints)
 const api = axios.create({
@@ -8,6 +9,16 @@ const api = axios.create({
     'Content-Type': 'application/json'
   }
 })
+
+// Parse structured backend errors so callers receive ApiError instances
+api.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    const apiErr = extractApiError(error)
+    if (apiErr) return Promise.reject(apiErr)
+    return Promise.reject(error)
+  }
+)
 
 /**
  * Subscribe to discount notifications
