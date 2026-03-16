@@ -17,6 +17,14 @@ export const eventsService = {
     return api.post("/events", payload);
   },
 
+  createAdmin(payload) {
+    return api.post("/events/admin", payload);
+  },
+
+  activateEvent(eventId, packageType) {
+    return api.put(`/events/${encodeURIComponent(eventId)}/activate`, { packageType });
+  },
+
   update(eventId, payload) {
     return api.put(`/events/${encodeURIComponent(eventId)}`, payload);
   },
