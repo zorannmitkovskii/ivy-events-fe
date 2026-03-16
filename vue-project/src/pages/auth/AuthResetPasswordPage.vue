@@ -41,11 +41,15 @@
           </template>
         </AuthInput>
 
+        <p v-if="formError" class="auth-error">{{ formError }}</p>
+
         <ButtonMain
-          :label="$t('auth.reset.cta')"
+          :label="isLoading ? 'Saving...' : $t('auth.reset.cta')"
           variant="main"
           type="submit"
           class="auth-submit-btn"
+          :loading="isLoading"
+          :disabled="isLoading"
         />
       </form>
 
@@ -63,22 +67,71 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
-import { RouterLink, useRoute } from "vue-router";
+import { computed, ref, onMounted } from "vue";
+import { RouterLink, useRoute, useRouter } from "vue-router";
 import AuthShell from "@/components/auth/AuthShell.vue";
 import AuthCard from "@/components/auth/AuthCard.vue";
 import AuthHeader from "@/components/auth/AuthHeader.vue";
 import AuthCardTitle from "@/components/auth/AuthCardTitle.vue";
 import AuthInput from "@/components/auth/AuthInput.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
+import { changePassword, loginWithCredentials, getEventId, hasRole } from "@/services/auth.service";
+import { setEventId } from "@/store/onboarding.store";
 
 const route = useRoute();
+const router = useRouter();
 const lang = computed(() => route.params.lang || 'mk');
 const password = ref("");
 const confirmPassword = ref("");
+const isLoading = ref(false);
+const formError = ref("");
+const isTempFlow = ref(false);
 
-function onReset() {
-  console.log("reset password", password.value, confirmPassword.value);
+onMounted(() => {
+  isTempFlow.value = route.query.temp === '1';
+});
+
+async function onReset() {
+  formError.value = "";
+
+  if (password.value.length < 8) {
+    formError.value = "Password must be at least 8 characters";
+    return;
+  }
+  if (password.value !== confirmPassword.value) {
+    formError.value = "Passwords do not match";
+    return;
+  }
+
+  if (isTempFlow.value) {
+    const tempEmail = sessionStorage.getItem("temp_email");
+    const tempPassword = sessionStorage.getItem("temp_password");
+    if (!tempEmail || !tempPassword) {
+      formError.value = "Session expired. Please log in again.";
+      return;
+    }
+
+    isLoading.value = true;
+    try {
+      await changePassword(tempEmail, tempPassword, password.value);
+      sessionStorage.removeItem("temp_email");
+      sessionStorage.removeItem("temp_password");
+
+      // Log in with new password
+      await loginWithCredentials(tempEmail, password.value);
+      setEventId(getEventId());
+
+      if (hasRole('ADMIN')) {
+        await router.push(`/${lang.value}/admin/events`);
+      } else {
+        await router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
+      }
+    } catch (e) {
+      formError.value = e?.message || "Failed to change password";
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }
 </script>
 

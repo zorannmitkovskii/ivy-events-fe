@@ -28,25 +28,42 @@
       />
     </div>
 
+    <!-- Sticky footer with action button -->
+    <div v-if="selectedEnum && loggedIn" class="sticky-footer">
+      <div class="footer-inner">
+        <button
+          class="action-btn"
+          :disabled="creatingEvent"
+          @click="onAction"
+        >
+          <span v-if="creatingEvent" class="btn-spinner"></span>
+          {{ actionLabel }}
+        </button>
+      </div>
+    </div>
+
     <OnboardingFooterLinks />
   </main>
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import OnboardingFooterLinks from '@/components/onboarding/OnboardingFooterLinks.vue';
 import { setSelectedCategory, setEventId, onboardingStore } from '@/store/onboarding.store';
 import { eventsService } from '@/services/events.service';
-import { getUsername } from '@/services/auth.service';
+import { isAuthenticated, getUsername } from '@/services/auth.service';
 import EventCategories from "@/components/landingPage/EventCategories.vue";
 import { categoryIdToEnum, enumToCategoryId } from "@/helper/CategoryMapping.helper.js";
 import { EventCategoryEnum } from '@/enums/EventCategory';
 
+const { t } = useI18n();
 const router = useRouter();
 const route = useRoute();
 const lang = computed(() => route.params.lang || 'mk');
 const creatingEvent = ref(false);
+const loggedIn = computed(() => isAuthenticated());
 
 // Initialize with stored category (convert enum to ID for the component)
 const selectedCategoryId = ref(
@@ -55,22 +72,36 @@ const selectedCategoryId = ref(
     : null
 );
 
-// Watch for selection changes, sync to store and auto-navigate
-watch(selectedCategoryId, async (newId) => {
+const selectedEnum = computed(() =>
+  selectedCategoryId.value ? categoryIdToEnum(selectedCategoryId.value) : null
+);
+
+const isGallery = computed(() => selectedEnum.value === EventCategoryEnum.GALLERY);
+
+const actionLabel = computed(() => {
+  if (creatingEvent.value) return '...';
+  return isGallery.value
+    ? t('onboarding.category.create')
+    : t('onboarding.category.next');
+});
+
+// Sync selection to store
+watch(selectedCategoryId, (newId) => {
   if (newId) {
     const enumValue = categoryIdToEnum(newId);
-    if (enumValue) {
-      setSelectedCategory(enumValue);
-
-      // Gallery: no invitation needed — create event and go to dashboard
-      if (enumValue === EventCategoryEnum.GALLERY) {
-        await createGalleryEvent();
-      } else {
-        await router.push({ name: 'EventInvitationsPage', params: { lang: lang.value } });
-      }
-    }
+    if (enumValue) setSelectedCategory(enumValue);
   }
 });
+
+async function onAction() {
+  if (!selectedEnum.value) return;
+
+  if (isGallery.value) {
+    await createGalleryEvent();
+  } else {
+    await router.push({ name: 'EventInvitationsPage', params: { lang: lang.value } });
+  }
+}
 
 async function createGalleryEvent() {
   if (creatingEvent.value) return;
@@ -93,17 +124,9 @@ async function createGalleryEvent() {
   }
 }
 
-// If Gallery was pre-selected (e.g. from home page), auto-create on mount
-onMounted(async () => {
-  if (onboardingStore.selectedCategory === EventCategoryEnum.GALLERY) {
-    await createGalleryEvent();
-  }
-});
-
 function onBack() {
   router.push({ name: 'home', params: { lang: lang.value } });
 }
-
 </script>
 
 <style scoped>
@@ -181,7 +204,65 @@ function onBack() {
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 24px 24px 40px;
+  padding: 24px 24px 120px;
+}
+
+/* ===== Sticky footer ===== */
+.sticky-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: #fff;
+  border-top: 1px solid rgba(16, 24, 40, 0.08);
+  box-shadow: 0 -2px 8px rgba(16, 24, 40, 0.06);
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 36px;
+  border: none;
+  border-radius: 12px;
+  background: var(--brand-main, #334338);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.action-btn:hover:not(:disabled) {
+  background: var(--brand-dark, #263029);
+  transform: translateY(-1px);
+}
+
+.action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 /* ===== Responsive ===== */
@@ -199,7 +280,16 @@ function onBack() {
   }
 
   .content {
-    padding: 16px 16px 32px;
+    padding: 16px 16px 120px;
+  }
+
+  .footer-inner {
+    padding: 12px 16px;
+  }
+
+  .action-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 </style>

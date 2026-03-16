@@ -32,12 +32,28 @@
       <span>Loading events...</span>
     </div>
 
+    <!-- Bulk Actions -->
+    <Transition name="bulk-fade">
+      <div v-if="selected.size > 0" class="bulk-bar">
+        <span class="bulk-count">{{ selected.size }} selected</span>
+        <button class="bulk-btn bulk-btn--danger" @click="bulkDelete">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          Delete
+        </button>
+        <button class="bulk-btn" @click="clearSelection">Clear</button>
+        <span v-if="bulkError" class="bulk-error">{{ bulkError }}</span>
+      </div>
+    </Transition>
+
     <!-- Table Card -->
-    <div v-else class="table-card">
+    <div v-if="!loading" class="table-card">
       <div class="table-wrap">
         <table class="table">
           <thead>
             <tr>
+              <th class="th-check">
+                <input type="checkbox" :checked="allPageSelected" :indeterminate="somePageSelected" @change="toggleAllPage" />
+              </th>
               <th>Event Name</th>
               <th>Category</th>
               <th>Date</th>
@@ -47,9 +63,12 @@
           </thead>
           <tbody>
             <tr v-if="paginated.length === 0">
-              <td colspan="5" class="empty">No events found</td>
+              <td colspan="6" class="empty">No events found</td>
             </tr>
-            <tr v-for="row in paginated" :key="row.id" class="row-hover">
+            <tr v-for="row in paginated" :key="row.id" class="row-hover" :class="{ 'row-selected': selected.has(row.id) }">
+              <td class="td-check">
+                <input type="checkbox" :checked="selected.has(row.id)" @change="toggleRow(row.id)" />
+              </td>
               <td>
                 <div class="cell-main">
                   <div class="icon-box icon-box--indigo">
@@ -112,6 +131,9 @@
         </div>
       </div>
     </div>
+
+    <!-- Delete error -->
+    <p v-if="deleteError" class="inline-error">{{ deleteError }}</p>
 
     <!-- Activate Dialog -->
     <div v-if="activateDialogOpen" class="dialog-overlay" @click.self="closeActivateDialog">
@@ -204,6 +226,7 @@
 import { ref, computed, onMounted, watch } from "vue";
 import { eventsService } from "@/services/events.service";
 import { EventCategoryEnum } from "@/enums/EventCategory";
+import { getErrorMessage } from "@/services/apiError";
 
 const categoryOptions = Object.values(EventCategoryEnum);
 const events = ref([]);
@@ -260,6 +283,53 @@ const endIndex = computed(() =>
 function next() { if (page.value < totalPages.value) page.value++; }
 function prev() { if (page.value > 1) page.value--; }
 function goto(n) { page.value = n; }
+
+/* ---- selection ---- */
+const selected = ref(new Set());
+
+function toggleRow(id) {
+  const s = new Set(selected.value);
+  if (s.has(id)) s.delete(id); else s.add(id);
+  selected.value = s;
+}
+
+const allPageSelected = computed(() =>
+  paginated.value.length > 0 && paginated.value.every(r => selected.value.has(r.id))
+);
+
+const somePageSelected = computed(() =>
+  !allPageSelected.value && paginated.value.some(r => selected.value.has(r.id))
+);
+
+function toggleAllPage() {
+  const s = new Set(selected.value);
+  if (allPageSelected.value) {
+    paginated.value.forEach(r => s.delete(r.id));
+  } else {
+    paginated.value.forEach(r => s.add(r.id));
+  }
+  selected.value = s;
+}
+
+function clearSelection() {
+  selected.value = new Set();
+}
+
+const bulkError = ref("");
+
+async function bulkDelete() {
+  const ids = [...selected.value];
+  if (!ids.length) return;
+  bulkError.value = "";
+  try {
+    await eventsService.bulkDelete(ids);
+    const idSet = new Set(ids);
+    events.value = events.value.filter(e => !idSet.has(e.id));
+    selected.value = new Set();
+  } catch (e) {
+    bulkError.value = getErrorMessage(e);
+  }
+}
 
 /* ---- dialog ---- */
 const dialogOpen = ref(false);
@@ -392,13 +462,16 @@ async function activateEvent() {
 }
 
 /* ---- delete ---- */
-async function remove(event) {
-  if (!confirm(`Delete event "${event.name}"?`)) return;
+const deleteError = ref("");
+
+async function remove(ev) {
+  if (!confirm(`Delete event "${ev.name}"?`)) return;
+  deleteError.value = "";
   try {
-    await eventsService.remove(event.id);
-    events.value = events.value.filter(e => e.id !== event.id);
+    await eventsService.remove(ev.id);
+    events.value = events.value.filter(e => e.id !== ev.id);
   } catch (e) {
-    console.error("Failed to delete event:", e);
+    deleteError.value = getErrorMessage(e);
   }
 }
 
@@ -416,6 +489,54 @@ function formatDate(d) {
 </script>
 
 <style scoped>
+/* ---- Bulk bar ---- */
+.bulk-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+.bulk-count { font-size: 13px; font-weight: 600; color: #475569; }
+.bulk-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 14px; border: 1px solid #e2e8f0; border-radius: 8px;
+  font-size: 13px; font-weight: 500; background: #fff; color: #475569;
+  cursor: pointer; transition: all 0.15s;
+}
+.bulk-btn:hover { background: #f1f5f9; }
+.bulk-btn--danger { color: #dc2626; border-color: #fecaca; }
+.bulk-btn--danger:hover { background: #fef2f2; }
+
+.bulk-error {
+  font-size: 13px;
+  color: #dc2626;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.inline-error {
+  margin: 10px 0 0;
+  padding: 10px 16px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.bulk-fade-enter-active, .bulk-fade-leave-active { transition: opacity 0.2s, transform 0.2s; }
+.bulk-fade-enter-from, .bulk-fade-leave-to { opacity: 0; transform: translateY(-8px); }
+
+/* ---- Selection ---- */
+.th-check, .td-check { width: 40px; text-align: center; }
+.th-check input, .td-check input { width: 16px; height: 16px; cursor: pointer; accent-color: var(--brand-main); }
+.row-selected { background: #f0f4ff !important; }
+
 .admin-page { max-width: 1200px; }
 
 .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }

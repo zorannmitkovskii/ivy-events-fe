@@ -35,5 +35,9 @@ export const eventsService = {
 
   remove(eventId) {
     return api.del(`/events/${encodeURIComponent(eventId)}`);
+  },
+
+  bulkDelete(ids) {
+    return api.del("/events/delete", { data: ids });
   }
 };

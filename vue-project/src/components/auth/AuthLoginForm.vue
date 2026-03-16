@@ -96,7 +96,15 @@ async function onSubmit() {
   isLoading.value = true;
 
   try {
-    await loginWithCredentials(email.value.trim(), password.value);
+    const loginData = await loginWithCredentials(email.value.trim(), password.value);
+
+    if (loginData.mustChangePassword) {
+      sessionStorage.setItem('temp_email', email.value.trim());
+      sessionStorage.setItem('temp_password', password.value);
+      await router.push({ name: 'reset-password', params: { lang: lang.value }, query: { temp: '1' } });
+      return;
+    }
+
     setEventId(getEventId());
     await syncDraftToBackend();
 

@@ -42,7 +42,6 @@
   <!-- Map modal -->
   <BaseModal :open="openModal" :title="pickOnMapLabel" @close="openModal = false">
     <div class="map-tools">
-      <input ref="searchInputRef" class="search-input" type="text" :placeholder="searchPlaceholder" />
       <button class="btn-locate" type="button" @click="locateMe" :disabled="locating">
         <i class="bi bi-crosshair"></i>
         <span>{{ locating ? locatingLabelLoading : locatingLabel }}</span>
@@ -111,14 +110,14 @@ const props = defineProps({
 });
 
 const addressInputRef = ref(null);
-const searchInputRef = ref(null);
 const mapRef = ref(null);
 const openModal = ref(false);
 const locating = ref(false);
 
+const MIN_CHARS = 3;
+
 const mapsReady = ref(false);
 let addressAutocomplete = null;
-let searchAutocomplete = null;
 let map = null;
 let marker = null;
 let geocoder = null;
@@ -138,7 +137,6 @@ const temp = ref({
 
 onMounted(async () => {
   mapsReady.value = await loadGoogleMaps();
-  if (mapsReady.value) initAddressAutocomplete();
 });
 
 watch(openModal, async (val) => {
@@ -181,6 +179,16 @@ function onManualInput(e) {
     lng: null,
     placeId: null
   });
+
+  // Enable/disable autocomplete based on input length
+  if (mapsReady.value) {
+    if (address.length >= MIN_CHARS && !addressAutocomplete) {
+      initAddressAutocomplete();
+    } else if (address.length < MIN_CHARS && addressAutocomplete) {
+      destroyAutocomplete(addressAutocomplete);
+      addressAutocomplete = null;
+    }
+  }
 }
 
 function initAddressAutocomplete() {
@@ -215,6 +223,12 @@ function initAddressAutocomplete() {
       placeId: place.place_id || null
     });
   });
+}
+
+function destroyAutocomplete(instance) {
+  if (!instance) return;
+  window.google?.maps?.event?.clearInstanceListeners(instance);
+  document.querySelectorAll(".pac-container").forEach(c => c.remove());
 }
 
 function initMapModal() {
@@ -259,28 +273,6 @@ function initMapModal() {
     reverseGeocode(e.latLng);
   });
 
-  // Autocomplete inside modal search
-  if (window.google.maps.places && searchInputRef.value) {
-    searchAutocomplete = new window.google.maps.places.Autocomplete(searchInputRef.value, {
-      fields: ["place_id", "name", "formatted_address", "geometry"]
-    });
-
-    searchAutocomplete.addListener("place_changed", () => {
-      const place = searchAutocomplete.getPlace();
-      const loc = place.geometry?.location;
-      if (!loc) return;
-
-      map.panTo(loc);
-      map.setZoom(15);
-      marker.setPosition(loc);
-
-      temp.value.lat = loc.lat();
-      temp.value.lng = loc.lng();
-      temp.value.address = place.formatted_address || "";
-      temp.value.name = place.name || temp.value.address;
-      temp.value.placeId = place.place_id || null;
-    });
-  }
 }
 
 function getInitialCenter() {
@@ -441,14 +433,6 @@ function loadGoogleMaps() {
 .map { width: 100%; height: 360px; border-radius: 12px; border: 1px solid var(--neutral-300); }
 
 .map-tools { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
-
-.search-input {
-  flex: 1;
-  border: 1px solid var(--neutral-300);
-  border-radius: 10px;
-  padding: 10px 12px;
-  outline: none;
-}
 
 .btn-locate {
   border: 1px solid var(--neutral-300);

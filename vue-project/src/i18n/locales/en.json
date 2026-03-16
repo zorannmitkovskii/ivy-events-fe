@@ -311,7 +311,9 @@
     "category": {
       "title": "Choose Your Event Category",
       "subtitle": "Select the type of event you're planning. You can change this later.",
-      "continue": "Continue"
+      "continue": "Continue",
+      "next": "Next",
+      "create": "Create"
     },
     "eventBasics": {
       "title": "Event Basics",
