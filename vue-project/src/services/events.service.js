@@ -13,6 +13,10 @@ export const eventsService = {
     return api.get("/events/overview", { params: { eventId } });
   },
 
+  getAdminDetail(eventId) {
+    return api.get(`/events/${encodeURIComponent(eventId)}/admin-detail`);
+  },
+
   create(payload) {
     return api.post("/events", payload);
   },

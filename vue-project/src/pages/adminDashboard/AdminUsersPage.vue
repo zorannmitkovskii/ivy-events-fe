@@ -156,11 +156,7 @@
               <label>Last Name <span class="req">*</span></label>
               <input v-model="form.lastName" type="text" placeholder="Doe" class="form-input" />
             </div>
-            <div class="form-group">
-              <label>Username <span class="req">*</span></label>
-              <input v-model="form.username" type="text" placeholder="johndoe" class="form-input" />
-            </div>
-            <div class="form-group">
+            <div class="form-group form-group--full">
               <label>Email <span class="req">*</span></label>
               <input v-model="form.email" type="email" placeholder="john@example.com" class="form-input" />
             </div>
@@ -376,7 +372,6 @@ function clearSelection() {
 async function bulkDelete() {
   const ids = [...selected.value];
   if (!ids.length) return;
-  if (!confirm(`Delete ${ids.length} user(s)?`)) return;
   for (const id of ids) {
     try {
       await deleteUser(id);
@@ -427,7 +422,6 @@ const formError = ref("");
 const defaultForm = () => ({
   firstName: "",
   lastName: "",
-  username: "",
   email: "",
   roles: ["USER"],
   packageTypes: [],
@@ -458,7 +452,6 @@ async function openEdit(user) {
     form.value = {
       firstName: full.firstName || "",
       lastName: full.lastName || "",
-      username: full.username || "",
       email: full.email || "",
       roles: Array.isArray(full.roles) ? [...full.roles] : (full.role ? [full.role] : ["USER"]),
       packageTypes: Array.isArray(full.packageTypes) ? [...full.packageTypes] : (full.packageType ? [full.packageType] : []),
@@ -480,17 +473,15 @@ async function save() {
 
   if (!form.value.firstName.trim()) { formError.value = "First name is required"; return; }
   if (!form.value.lastName.trim()) { formError.value = "Last name is required"; return; }
-  if (!form.value.username.trim()) { formError.value = "Username is required"; return; }
   if (!form.value.email.trim()) { formError.value = "Email is required"; return; }
   if (!form.value.roles.length) { formError.value = "At least one role is required"; return; }
 
   const payload = {
     firstName: form.value.firstName.trim(),
     lastName: form.value.lastName.trim(),
-    username: form.value.username.trim(),
     email: form.value.email.trim(),
     roles: form.value.roles,
-    packageTypes: form.value.packageTypes.length ? form.value.packageTypes : null,
+    packages: form.value.packageTypes.length ? form.value.packageTypes : null,
     eventIds: form.value.eventIds.length ? form.value.eventIds : null,
   };
 
