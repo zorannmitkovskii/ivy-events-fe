@@ -24,12 +24,12 @@
           </router-link>
         </div>
 
-        <div class="hero-nums">
-          <div v-for="stat in stats" :key="stat.labelKey" class="hero-num">
-            <div class="hero-num-val">{{ stat.value }}</div>
-            <div class="hero-num-lbl">{{ $t(stat.labelKey) }}</div>
-          </div>
-        </div>
+<!--        <div class="hero-nums">-->
+<!--          <div v-for="stat in stats" :key="stat.labelKey" class="hero-num">-->
+<!--            <div class="hero-num-val">{{ stat.value }}</div>-->
+<!--            <div class="hero-num-lbl">{{ $t(stat.labelKey) }}</div>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
 
       <!-- Right: Invitation card visual -->

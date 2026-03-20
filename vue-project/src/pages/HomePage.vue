@@ -6,6 +6,7 @@
   <TemplatesGallery id="templates" />
   <CoreFeatures id="features" />
   <PackagesSection id="pricing" />
+  <FinalCtaSection />
   <Footer />
   <router-view />
 </template>
@@ -23,6 +24,7 @@ import Footer from "@/components/layout/Footer.vue";
 import TemplatesGallery from "@/components/landingPage/TemplatesGallery.vue";
 import { setSelectedCategory } from '@/store/onboarding.store';
 import { categoryIdToEnum } from '@/helper/CategoryMapping.helper.js';
+import FinalCtaSection from "@/components/landingPage/FinalCtaSection.vue";
 
 const router = useRouter();
 const route = useRoute();
