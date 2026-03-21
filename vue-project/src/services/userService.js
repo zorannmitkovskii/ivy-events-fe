@@ -13,7 +13,7 @@ export function createUser(data) {
 }
 
 export function deleteUser(id) {
-  return api.del(`/users/${encodeURIComponent(id)}`);
+  return api.del(`/admin/users/${encodeURIComponent(id)}`);
 }
 
 // Admin user endpoints

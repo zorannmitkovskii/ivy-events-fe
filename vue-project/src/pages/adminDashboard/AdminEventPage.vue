@@ -75,7 +75,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                   </div>
                   <div>
-                    <div class="cell-title">{{ row.name || '—' }}</div>
+                    <div class="cell-title cell-title--link" @click="openDetail(row)">{{ row.name || '—' }}</div>
                     <div class="text-sub">ID: {{ row.id }}</div>
                   </div>
                 </div>
@@ -134,6 +134,95 @@
 
     <!-- Delete error -->
     <p v-if="deleteError" class="inline-error">{{ deleteError }}</p>
+
+    <!-- Detail Dialog -->
+    <div v-if="detailOpen" class="dialog-overlay" @click.self="closeDetail">
+      <div class="dialog dialog--wide">
+        <div class="dialog-header">
+          <h3>{{ detail?.name || 'Event Detail' }}</h3>
+          <button class="dialog-close" @click="closeDetail">&times;</button>
+        </div>
+
+        <div class="dialog-body" v-if="detailLoading">
+          <div class="loading"><div class="spinner"></div><span>Loading...</span></div>
+        </div>
+
+        <div class="dialog-body" v-else-if="detail">
+          <!-- Info -->
+          <div class="detail-section">
+            <h4 class="detail-heading">Info</h4>
+            <div class="detail-grid">
+              <div class="detail-item"><span class="detail-label">Category</span><span class="pill pill--blue">{{ detail.categoryType }}</span></div>
+              <div class="detail-item"><span class="detail-label">Status</span><span class="status" :class="statusClass(detail.status)"><span class="status-dot"></span>{{ detail.status }}</span></div>
+              <div class="detail-item"><span class="detail-label">Date</span><span>{{ formatDate(detail.date) }}</span></div>
+              <div class="detail-item"><span class="detail-label">Admin Created</span><span>{{ detail.adminCreated ? 'Yes' : 'No' }}</span></div>
+              <div v-if="detail.groomName" class="detail-item"><span class="detail-label">Groom</span><span>{{ detail.groomName }}</span></div>
+              <div v-if="detail.brideName" class="detail-item"><span class="detail-label">Bride</span><span>{{ detail.brideName }}</span></div>
+            </div>
+          </div>
+
+          <!-- URLs / QR -->
+          <div class="detail-section" v-if="detail.galleryUrl || detail.invitationUrl">
+            <h4 class="detail-heading">URLs & QR Codes</h4>
+            <div class="qr-grid">
+              <div v-if="detail.galleryUrl" class="qr-card">
+                <div class="qr-label">Gallery</div>
+                <img :src="qrUrl(detail.galleryUrl)" alt="Gallery QR" class="qr-img" />
+                <a :href="detail.galleryUrl" target="_blank" class="qr-link">{{ detail.galleryUrl }}</a>
+              </div>
+              <div v-if="detail.invitationUrl" class="qr-card">
+                <div class="qr-label">Invitation</div>
+                <img :src="qrUrl(detail.invitationUrl)" alt="Invitation QR" class="qr-img" />
+                <a :href="detail.invitationUrl" target="_blank" class="qr-link">{{ detail.invitationUrl }}</a>
+              </div>
+              <div v-if="detail.privateInvitationUrl" class="qr-card">
+                <div class="qr-label">Private Invitation</div>
+                <img :src="qrUrl(detail.privateInvitationUrl)" alt="Private QR" class="qr-img" />
+                <a :href="detail.privateInvitationUrl" target="_blank" class="qr-link">{{ detail.privateInvitationUrl }}</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Packages -->
+          <div class="detail-section">
+            <h4 class="detail-heading">Packages</h4>
+            <div v-if="!detail.packages?.length" class="detail-empty">No packages assigned</div>
+            <div v-else class="pkg-list">
+              <div v-for="pkg in detail.packages" :key="pkg.id" class="pkg-card">
+                <div class="pkg-header">
+                  <span class="pill pill--blue">{{ pkg.packageType }}</span>
+                  <span class="status" :class="pkg.status === 'ACTIVE' ? 'status--green' : 'status--red'">
+                    <span class="status-dot"></span>{{ pkg.status }}
+                  </span>
+                </div>
+                <div class="pkg-details">
+                  <span>Storage limit: {{ pkg.storageLimitFormatted }}</span>
+                  <span v-if="pkg.accessUntil">Access until: {{ formatDateTime(pkg.accessUntil) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Storage -->
+          <div class="detail-section">
+            <h4 class="detail-heading">Gallery Storage</h4>
+            <div class="storage-bar-wrap">
+              <div class="storage-info">
+                <span>Used: <strong>{{ detail.storageUsedFormatted }}</strong></span>
+                <span v-if="storageLimit">/ {{ storageLimit }}</span>
+              </div>
+              <div v-if="storagePct !== null" class="storage-bar">
+                <div class="storage-fill" :style="{ width: Math.min(storagePct, 100) + '%' }" :class="{ 'storage-fill--warn': storagePct > 80 }"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dialog-footer">
+          <button class="btn-cancel" @click="closeDetail">Close</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Activate Dialog -->
     <div v-if="activateDialogOpen" class="dialog-overlay" @click.self="closeActivateDialog">
@@ -461,6 +550,52 @@ async function activateEvent() {
   }
 }
 
+/* ---- detail ---- */
+const detailOpen = ref(false);
+const detail = ref(null);
+const detailLoading = ref(false);
+
+async function openDetail(row) {
+  detailOpen.value = true;
+  detailLoading.value = true;
+  detail.value = null;
+  try {
+    const res = await eventsService.getAdminDetail(row.id);
+    detail.value = res?.data ?? res;
+  } catch (e) {
+    console.error("Failed to load event detail:", e);
+  } finally {
+    detailLoading.value = false;
+  }
+}
+
+function closeDetail() {
+  detailOpen.value = false;
+  detail.value = null;
+}
+
+const storageLimit = computed(() => {
+  if (!detail.value?.packages?.length) return null;
+  const active = detail.value.packages.find(p => p.status === "ACTIVE");
+  return active?.storageLimitFormatted || null;
+});
+
+const storagePct = computed(() => {
+  if (!detail.value?.packages?.length) return null;
+  const active = detail.value.packages.find(p => p.status === "ACTIVE");
+  if (!active || !active.storageLimitBytes) return null;
+  return (detail.value.storageUsedBytes / active.storageLimitBytes) * 100;
+});
+
+function qrUrl(text) {
+  return `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(text)}`;
+}
+
+function formatDateTime(dt) {
+  if (!dt) return "—";
+  return new Date(dt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
 /* ---- delete ---- */
 const deleteError = ref("");
 
@@ -602,6 +737,8 @@ function formatDate(d) {
 .icon-box--indigo { background: #eef2ff; color: #4f46e5; }
 
 .cell-title { font-weight: 600; color: var(--brand-main); }
+.cell-title--link { cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.cell-title--link:hover { opacity: 0.8; }
 .text-sub { font-size: 12px; color: #94a3b8; margin-top: 2px; }
 .text-muted { color: #64748b; }
 
@@ -744,6 +881,37 @@ function formatDate(d) {
   font-size: 14px; color: #475569; margin: 0 0 16px;
   line-height: 1.5;
 }
+
+/* ---- Detail dialog ---- */
+.dialog--wide { max-width: 720px; }
+
+.detail-section { margin-bottom: 20px; }
+.detail-section:last-child { margin-bottom: 0; }
+.detail-heading { font-size: 14px; font-weight: 700; color: #0f172a; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 1px solid #f1f5f9; }
+
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
+.detail-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.detail-label { color: #64748b; font-weight: 500; min-width: 110px; }
+.detail-empty { font-size: 13px; color: #94a3b8; }
+
+.qr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+.qr-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; text-align: center; }
+.qr-label { font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.qr-img { width: 120px; height: 120px; border-radius: 8px; }
+.qr-link { display: block; margin-top: 8px; font-size: 11px; color: #2563eb; word-break: break-all; text-decoration: none; }
+.qr-link:hover { text-decoration: underline; }
+
+.pkg-list { display: flex; flex-direction: column; gap: 8px; }
+.pkg-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px; }
+.pkg-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.pkg-details { display: flex; gap: 20px; font-size: 12px; color: #64748b; }
+
+.storage-bar-wrap { padding: 4px 0; }
+.storage-info { font-size: 13px; color: #475569; margin-bottom: 6px; }
+.storage-info strong { color: #0f172a; }
+.storage-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+.storage-fill { height: 100%; background: #059669; border-radius: 4px; transition: width 0.3s; }
+.storage-fill--warn { background: #d97706; }
 
 @media (max-width: 600px) {
   .form-grid { grid-template-columns: 1fr; }

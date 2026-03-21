@@ -103,34 +103,37 @@ async function onReset() {
     return;
   }
 
-  if (isTempFlow.value) {
-    const tempEmail = sessionStorage.getItem("temp_email");
-    const tempPassword = sessionStorage.getItem("temp_password");
-    if (!tempEmail || !tempPassword) {
-      formError.value = "Session expired. Please log in again.";
-      return;
+  if (!isTempFlow.value) {
+    formError.value = "Use the forgot-password flow to reset your password.";
+    return;
+  }
+
+  const tempEmail = sessionStorage.getItem("temp_email");
+  const tempPassword = sessionStorage.getItem("temp_password");
+  if (!tempEmail || !tempPassword) {
+    formError.value = "Session expired. Please log in again.";
+    return;
+  }
+
+  isLoading.value = true;
+  try {
+    await changePassword(tempEmail, tempPassword, password.value);
+    sessionStorage.removeItem("temp_email");
+    sessionStorage.removeItem("temp_password");
+
+    // Log in with new password
+    await loginWithCredentials(tempEmail, password.value);
+    setEventId(getEventId());
+
+    if (hasRole('ADMIN')) {
+      await router.push(`/${lang.value}/admin/events`);
+    } else {
+      await router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
     }
-
-    isLoading.value = true;
-    try {
-      await changePassword(tempEmail, tempPassword, password.value);
-      sessionStorage.removeItem("temp_email");
-      sessionStorage.removeItem("temp_password");
-
-      // Log in with new password
-      await loginWithCredentials(tempEmail, password.value);
-      setEventId(getEventId());
-
-      if (hasRole('ADMIN')) {
-        await router.push(`/${lang.value}/admin/events`);
-      } else {
-        await router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
-      }
-    } catch (e) {
-      formError.value = e?.message || "Failed to change password";
-    } finally {
-      isLoading.value = false;
-    }
+  } catch (e) {
+    formError.value = e?.message || "Failed to change password";
+  } finally {
+    isLoading.value = false;
   }
 }
 </script>
