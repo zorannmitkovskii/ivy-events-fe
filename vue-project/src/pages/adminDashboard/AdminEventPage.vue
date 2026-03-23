@@ -281,7 +281,14 @@
             </div>
             <div class="form-group">
               <label>Event Date</label>
-              <input v-model="form.date" type="date" class="form-input" />
+              <input
+                v-model="form.dateDisplay"
+                type="text"
+                placeholder="dd/mm/yyyy"
+                maxlength="10"
+                class="form-input"
+                @input="onDateInput"
+              />
             </div>
             <div class="form-group">
               <label>Groom Name</label>
@@ -292,8 +299,20 @@
               <input v-model="form.brideName" type="text" placeholder="Bride name" class="form-input" />
             </div>
             <div class="form-group form-group--full">
-              <label>Location</label>
-              <input v-model="form.locationName" type="text" placeholder="Venue name or address" class="form-input" />
+              <AuthLocationInput
+                v-model="form.location"
+                label="Location"
+                placeholder="Venue name or address"
+              />
+            </div>
+            <div v-if="!editingId" class="form-group form-group--full">
+              <label>Invitation Template</label>
+              <select v-model="form.invitationName" class="form-input">
+                <option value="">None (set later)</option>
+                <option v-for="tpl in templates" :key="tpl.id" :value="tpl.path">
+                  {{ tpl.name }}
+                </option>
+              </select>
             </div>
           </div>
 
@@ -314,12 +333,15 @@
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
 import { eventsService } from "@/services/events.service";
+import { invitationTemplateService } from "@/services/invitationTemplate.service";
 import { EventCategoryEnum } from "@/enums/EventCategory";
 import { getErrorMessage } from "@/services/apiError";
+import AuthLocationInput from "@/components/auth/AuthLocationInput.vue";
 
 const categoryOptions = Object.values(EventCategoryEnum);
 const events = ref([]);
 const loading = ref(true);
+const templates = ref([]);
 
 async function fetchEvents() {
   loading.value = true;
@@ -430,12 +452,41 @@ const defaultForm = () => ({
   name: "",
   categoryType: "",
   date: "",
+  dateDisplay: "",
   groomName: "",
   brideName: "",
-  locationName: "",
+  location: { name: "", address: "", lat: null, lng: null, placeId: null },
+  invitationName: "",
 });
 
+function onDateInput(e) {
+  let v = e.target.value.replace(/[^0-9]/g, "");
+  if (v.length > 8) v = v.slice(0, 8);
+  // Auto-insert slashes: dd/mm/yyyy
+  if (v.length >= 5) v = v.slice(0, 2) + "/" + v.slice(2, 4) + "/" + v.slice(4);
+  else if (v.length >= 3) v = v.slice(0, 2) + "/" + v.slice(2);
+  form.value.dateDisplay = v;
+  // Parse to ISO when complete
+  if (v.length === 10) {
+    const [dd, mm, yyyy] = v.split("/");
+    form.value.date = `${yyyy}-${mm}-${dd}`;
+  } else {
+    form.value.date = "";
+  }
+}
+
 const form = ref(defaultForm());
+
+async function fetchTemplates(category) {
+  if (!category) { templates.value = []; return; }
+  try {
+    templates.value = await invitationTemplateService.listByCategory(category);
+  } catch { templates.value = []; }
+}
+
+watch(() => form.value.categoryType, (cat) => {
+  if (!editingId.value) fetchTemplates(cat);
+});
 
 function openCreate() {
   editingId.value = null;
@@ -452,13 +503,23 @@ async function openEdit(event) {
 
   try {
     const full = await eventsService.getById(event.id);
+    const loc = full.location || {};
+    const isoDate = full.date ? full.date.substring(0, 10) : "";
     form.value = {
       name: full.name || "",
       categoryType: full.categoryType || "",
-      date: full.date ? full.date.substring(0, 10) : "",
+      date: isoDate,
+      dateDisplay: isoDate ? isoDate.slice(8, 10) + "/" + isoDate.slice(5, 7) + "/" + isoDate.slice(0, 4) : "",
       groomName: full.invitation?.groomName || "",
       brideName: full.invitation?.brideName || "",
-      locationName: full.location?.name || "",
+      location: {
+        name: loc.name || "",
+        address: loc.addressLine || loc.address || "",
+        lat: loc.latitude ?? loc.lat ?? null,
+        lng: loc.longitude ?? loc.lng ?? null,
+        placeId: loc.placeId ?? null,
+      },
+      invitationName: full.invitation?.invitationName || "",
     };
   } catch (e) {
     formError.value = "Failed to load event details";
@@ -477,13 +538,23 @@ async function save() {
   if (!form.value.name.trim()) { formError.value = "Event name is required"; return; }
   if (!form.value.categoryType) { formError.value = "Category is required"; return; }
 
+  const loc = form.value.location || {};
+  const hasLocation = loc.name || loc.address || loc.lat != null;
   const payload = {
     name: form.value.name.trim(),
     categoryType: form.value.categoryType,
     date: form.value.date || null,
     groomName: form.value.groomName.trim() || null,
     brideName: form.value.brideName.trim() || null,
-    location: form.value.locationName.trim() ? { name: form.value.locationName.trim() } : null,
+    location: hasLocation ? {
+      name: loc.name || loc.address || null,
+      type: "VENUE",
+      addressLine: loc.address || null,
+      latitude: loc.lat,
+      longitude: loc.lng,
+      isActive: true,
+    } : null,
+    invitationName: form.value.invitationName || null,
   };
 
   saving.value = true;

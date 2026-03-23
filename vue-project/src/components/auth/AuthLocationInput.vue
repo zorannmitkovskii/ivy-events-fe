@@ -13,7 +13,6 @@
         class="field__input"
         type="text"
         :placeholder="placeholder"
-        :value="displayValue"
         :disabled="disabled"
         @input="onManualInput"
         autocomplete="off"
@@ -68,7 +67,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, nextTick, computed } from "vue";
+import { ref, watch, onMounted, onBeforeUnmount, nextTick, computed } from "vue";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 
@@ -114,8 +113,6 @@ const mapRef = ref(null);
 const openModal = ref(false);
 const locating = ref(false);
 
-const MIN_CHARS = 3;
-
 const mapsReady = ref(false);
 let addressAutocomplete = null;
 let map = null;
@@ -137,7 +134,30 @@ const temp = ref({
 
 onMounted(async () => {
   mapsReady.value = await loadGoogleMaps();
+  // Set initial input value
+  if (addressInputRef.value) {
+    addressInputRef.value.value = displayValue.value;
+  }
+  // Initialize autocomplete once on mount
+  if (mapsReady.value) {
+    initAddressAutocomplete();
+  }
 });
+
+onBeforeUnmount(() => {
+  if (addressAutocomplete) {
+    destroyAutocomplete(addressAutocomplete);
+    addressAutocomplete = null;
+  }
+});
+
+// Sync input value when modelValue changes externally (e.g. map pick, parent reset)
+watch(() => props.modelValue, () => {
+  if (!addressInputRef.value) return;
+  // Don't overwrite while user is actively typing
+  if (document.activeElement === addressInputRef.value) return;
+  addressInputRef.value.value = displayValue.value;
+}, { deep: true });
 
 watch(openModal, async (val) => {
   if (!val || !mapsReady.value) return;
@@ -179,16 +199,6 @@ function onManualInput(e) {
     lng: null,
     placeId: null
   });
-
-  // Enable/disable autocomplete based on input length
-  if (mapsReady.value) {
-    if (address.length >= MIN_CHARS && !addressAutocomplete) {
-      initAddressAutocomplete();
-    } else if (address.length < MIN_CHARS && addressAutocomplete) {
-      destroyAutocomplete(addressAutocomplete);
-      addressAutocomplete = null;
-    }
-  }
 }
 
 function initAddressAutocomplete() {

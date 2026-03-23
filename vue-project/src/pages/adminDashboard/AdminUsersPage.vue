@@ -93,8 +93,8 @@
                 <span class="pill" :class="getRolePillClass(row)">{{ displayRole(row) }}</span>
               </td>
               <td>
-                <template v-if="row.packageTypes && row.packageTypes.length">
-                  <span v-for="pt in row.packageTypes" :key="pt" class="pill pill--gray pill--gap">{{ pt }}</span>
+                <template v-if="row.packages && row.packages.length">
+                  <span v-for="pt in row.packages" :key="pt" class="pill pill--gray pill--gap">{{ pt }}</span>
                 </template>
                 <span v-else class="pill pill--gray">{{ row.packageType || '—' }}</span>
               </td>
@@ -454,7 +454,7 @@ async function openEdit(user) {
       lastName: full.lastName || "",
       email: full.email || "",
       roles: Array.isArray(full.roles) ? [...full.roles] : (full.role ? [full.role] : ["USER"]),
-      packageTypes: Array.isArray(full.packageTypes) ? [...full.packageTypes] : (full.packageType ? [full.packageType] : []),
+      packageTypes: Array.isArray(full.packages) ? [...full.packages] : (full.packageType ? [full.packageType] : []),
       eventIds: Array.isArray(full.eventIds) ? [...full.eventIds] : (full.eventId ? [full.eventId] : []),
     };
   } catch (e) {
