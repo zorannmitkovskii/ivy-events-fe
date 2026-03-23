@@ -23,13 +23,13 @@ export function useInvitationEditMode() {
   const isEditMode = computed(() => route.query.edit === "true");
 
   // Sync eventId into onboarding store so CRUD composables can find it
-  const eventId = route.query.eventId || onboardingStore.eventId;
-  if (isEditMode.value && eventId && onboardingStore.eventId !== eventId) {
-    setEventId(eventId);
+  const eventId = computed(() => route.query.eventId || onboardingStore.eventId || null);
+  if (isEditMode.value && eventId.value && onboardingStore.eventId !== eventId.value) {
+    setEventId(eventId.value);
   }
 
   // Helper: true when we can make direct API calls (authenticated + event exists)
-  const canUseApi = () => isAuthenticated() && onboardingStore.eventId;
+  const canUseApi = () => isAuthenticated() && eventId.value;
 
   // Modal state
   const activeModal = ref(null);
@@ -38,7 +38,7 @@ export function useInvitationEditMode() {
   const modalHistory = ref([]);
 
   // Dirty state & preview mode — enable save immediately for existing events
-  const dirty = ref(!!eventId);
+  const dirty = ref(!!eventId.value);
   const previewMode = ref('desktop');
 
   function markDirty() { dirty.value = true; }
@@ -341,9 +341,9 @@ export function useInvitationEditMode() {
 
   // ---- Fetch invitation config from event DTO ----
   async function fetchInvitationConfig() {
-    if (!eventId || !isAuthenticated()) return null;
+    if (!eventId.value || !isAuthenticated()) return null;
     try {
-      const ev = await eventsService.getById(eventId);
+      const ev = await eventsService.getById(eventId.value);
       return ev.invitation || null;
     } catch (e) {
       console.warn("[editMode] failed to fetch invitation config:", e);
@@ -358,16 +358,16 @@ export function useInvitationEditMode() {
     saving.value = true;
     try {
       let response;
-      if (eventId) {
+      if (eventId.value) {
         // Existing event → update
-        response = await eventFullService.updateFull(eventId, payload, files);
+        response = await eventFullService.updateFull(eventId.value, payload, files);
       } else {
         // New event → create
         response = await eventFullService.createFull(payload, files);
       }
       const result = response.data?.data || response.data;
       const newEventId = result?.event?.id || result?.id;
-      if (newEventId && !eventId) {
+      if (newEventId && !eventId.value) {
         setEventId(newEventId);
       }
       clearDirty();

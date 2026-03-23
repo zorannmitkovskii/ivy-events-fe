@@ -105,9 +105,9 @@ watch(() => [props.brideName, props.groomName, props.weddingDate, props.location
   }
 }, { deep: true });
 
-// Switch back to readonly once a location is picked
+// Switch back to readonly once a real location is picked (has coordinates)
 watch(() => draft.location, (loc) => {
-  if (editingLocation.value && (loc.name || loc.address)) {
+  if (editingLocation.value && loc.lat != null && loc.lng != null) {
     editingLocation.value = false;
   }
 }, { deep: true });

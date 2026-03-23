@@ -98,6 +98,9 @@ async function onSubmit() {
   try {
     const loginData = await loginWithCredentials(email.value.trim(), password.value);
 
+    // Always set eventId from JWT right after token is stored
+    setEventId(getEventId());
+
     if (loginData.mustChangePassword) {
       sessionStorage.setItem('temp_email', email.value.trim());
       sessionStorage.setItem('temp_password', password.value);
@@ -105,7 +108,6 @@ async function onSubmit() {
       return;
     }
 
-    setEventId(getEventId());
     await syncDraftToBackend();
 
     const redirect = route.query.redirect;

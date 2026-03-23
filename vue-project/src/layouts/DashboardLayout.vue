@@ -20,7 +20,8 @@ import { ref, computed, watch, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import SidebarNav from "@/components/layout/SidebarNav.vue";
 import TopBar from "@/components/layout/TopBar.vue";
-import { onboardingStore } from "@/store/onboarding.store";
+import { onboardingStore, setEventId } from "@/store/onboarding.store";
+import { isAuthenticated, getEventId } from "@/services/auth.service";
 import { EventCategoryEnum } from "@/enums/EventCategory.js";
 
 const drawerOpen = ref(false);
@@ -42,7 +43,14 @@ function redirectGalleryIfNeeded() {
   }
 }
 
-onMounted(redirectGalleryIfNeeded);
+onMounted(() => {
+  // Fallback: if eventId is empty but user is logged in, read from JWT
+  if (!onboardingStore.eventId && isAuthenticated()) {
+    const id = getEventId();
+    if (id) setEventId(id);
+  }
+  redirectGalleryIfNeeded();
+});
 watch(isGallery, redirectGalleryIfNeeded);
 </script>
 

@@ -1,38 +1,76 @@
-# vue-project
+# Ivy Events - Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+Vue 3 + Vite frontend for the Ivy Events platform.
 
-## Recommended IDE Setup
+## Requirements
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Node.js 18+
+- npm
 
-## Recommended Browser Setup
+## Quick Start
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
+```bash
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
+## Build
 
-```sh
+```bash
 npm run build
 ```
+
+## Environment Variables
+
+Configure in `.env` or via `window.__ENV__` at runtime:
+
+| Variable | Description |
+|----------|-------------|
+| `VITE_API_BASE_URL` | Backend API URL (default: `http://localhost:8081`) |
+| `VITE_GOOGLE_MAPS_API_KEY` | Google Maps API key (for location autocomplete) |
+| `APP_ENV` | Environment: `local`, `test`, `prod` |
+
+## Architecture
+
+- **Framework**: Vue 3 Composition API
+- **Router**: Vue Router with lang prefix (`/:lang/...`)
+- **State**: Reactive stores (`reactive()`) - no Pinia/Vuex
+- **Styling**: Bootstrap 5 + scoped CSS
+- **API**: Axios with auto token refresh
+- **i18n**: vue-i18n
+
+### Key Directories
+
+| Directory | Description |
+|-----------|-------------|
+| `src/pages/adminDashboard/` | Admin panel pages |
+| `src/pages/auth/` | Login, signup, verify, reset password |
+| `src/pages/dashboard/` | User dashboard |
+| `src/pages/onboarding/` | Event creation flow |
+| `src/composables/` | Reusable logic (edit mode, draft sync) |
+| `src/services/` | API clients |
+| `src/store/` | Reactive stores |
+
+### Auth Service (`auth.service.js`)
+
+Key exports:
+- `loginWithCredentials(email, password)` - login + handle mustChangePassword redirect
+- `getEventId()` / `getEventIds()` - read from JWT
+- `getPackages()` - read from JWT
+- `hasRole(role)` - check role from JWT
+- `changePassword(email, currentPassword, newPassword)` - change password flow
+
+## Testing
+
+```bash
+npm run test
+```
+
+## Documentation
+
+See `/docs` folder for detailed documentation:
+- [Architecture Overview](../../docs/architecture.md)
+- [Admin Panel](../../docs/admin-panel.md)
+- [Authentication](../../docs/authentication.md)
+- [Events & Invitations](../../docs/events-and-invitations.md)
+- [API Reference](../../docs/api-reference.md)
