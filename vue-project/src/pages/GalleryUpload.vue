@@ -97,9 +97,23 @@ const error = ref('');
 const existingImageCount = ref(0);
 const isDraft = ref(false);
 
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB per file
+const MAX_TOTAL_SIZE = 100 * 1024 * 1024; // 100 MB total per upload
+
+function formatSize(bytes) {
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
 function addFiles(files) {
   const list = Array.from(files);
+  const rejected = [];
+
   list.forEach(f => {
+    if (f.size > MAX_FILE_SIZE) {
+      rejected.push(`"${f.name}" (${formatSize(f.size)}) exceeds ${formatSize(MAX_FILE_SIZE)} limit`);
+      return;
+    }
     selectedFiles.value.push(f);
     const isImage = f.type.startsWith('image/');
     previews.value.push({
@@ -108,8 +122,14 @@ function addFiles(files) {
       url: isImage ? URL.createObjectURL(f) : null
     });
   });
+
   success.value = false;
-  error.value = '';
+
+  if (rejected.length) {
+    error.value = rejected.join('. ');
+  } else {
+    error.value = '';
+  }
 }
 
 function onFileSelect(e) {
@@ -150,6 +170,12 @@ async function upload() {
       error.value = `Draft limit: maximum ${DRAFT_LIMITS.galleryImages} gallery images. Upgrade your plan to add more.`;
       return;
     }
+  }
+
+  const totalSize = selectedFiles.value.reduce((sum, f) => sum + (f.size || 0), 0);
+  if (totalSize > MAX_TOTAL_SIZE) {
+    error.value = `Total upload size (${formatSize(totalSize)}) exceeds ${formatSize(MAX_TOTAL_SIZE)} limit. Remove some files and try again.`;
+    return;
   }
 
   uploading.value = true;
