@@ -93,7 +93,7 @@ export default {
   background: linear-gradient(to bottom, rgba(253, 251, 247, 0.1), rgba(212, 165, 165, 0.15));
 }
 
-@media (max-width: 768px) {
+@container (max-width: 768px) {
   .photo-grid {
     grid-template-columns: 1fr;
   }

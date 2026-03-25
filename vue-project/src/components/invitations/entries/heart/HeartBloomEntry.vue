@@ -143,7 +143,7 @@ defineExpose({ enterSite });
   50% { transform: translateY(-8px); }
 }
 
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .bloom-heart { width: 220px; height: 210px; }
   .bloom-names { font-size: 48px; }
 }

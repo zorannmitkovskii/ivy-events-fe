@@ -188,7 +188,7 @@ function scrollToRsvp() {
   transform: translateY(-2px);
 }
 
-@media (min-width: 1024px) {
+@container (min-width: 1024px) {
   .hero {
     flex-direction: row;
     min-height: 600px;
@@ -221,7 +221,7 @@ function scrollToRsvp() {
   }
 }
 
-@media (max-width: 480px) {
+@container (max-width: 480px) {
   .glass-card {
     padding: 32px 24px;
   }

@@ -6,7 +6,15 @@
       <p class="dash-page-subtitle">{{ t("gallery.subtitle") }}</p>
     </div>
 
-    <DashboardToolbar v-if="images.length > 0">
+    <!-- No gallery package -->
+    <div v-if="!hasGalleryAccess" class="no-access-card">
+      <i class="bi bi-lock"></i>
+      <h3>Gallery not available</h3>
+      <p>You need a Gallery package to use this feature. Upgrade your plan to enable photo uploads and sharing.</p>
+      <ButtonMain variant="main" @click="goToPackages">View Packages</ButtonMain>
+    </div>
+
+    <DashboardToolbar v-else-if="images.length > 0">
       <template #actions>
         <ButtonMain
           v-if="!selectMode"
@@ -115,15 +123,33 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, onBeforeUnmount } from "vue";
+import { ref, reactive, computed, onMounted, onBeforeUnmount } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRouter, useRoute } from "vue-router";
 import { mediaService } from "@/services/media.service";
 import { onboardingStore } from "@/store/onboarding.store";
+import { getPackages } from "@/services/auth.service";
+import { EventCategoryEnum } from "@/enums/EventCategory.js";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import DashboardToolbar from "@/components/dashboard/DashboardToolbar.vue";
 
 const { t } = useI18n();
+const router = useRouter();
+const route = useRoute();
+const lang = computed(() => route.params.lang || "mk");
+
+const isGalleryEvent = computed(() => onboardingStore.selectedCategory === EventCategoryEnum.GALLERY);
+const hasGalleryAccess = computed(() => {
+  // Gallery events always have access (that's their purpose)
+  if (isGalleryEvent.value) return true;
+  // Other events need a GALLERY_ package
+  return getPackages().some(p => p.startsWith("GALLERY_"));
+});
+
+function goToPackages() {
+  router.push({ name: "dashboard.packages", params: { lang: lang.value } });
+}
 
 const images = ref([]);
 const initialLoading = ref(false);
@@ -289,6 +315,35 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+.no-access-card {
+  text-align: center;
+  padding: 48px 24px;
+  background: var(--dash-cream-card, #fff);
+  border: 1px solid var(--dash-cream-border, #e2e8f0);
+  border-radius: 16px;
+  margin-top: 16px;
+}
+.no-access-card i {
+  font-size: 40px;
+  color: #94a3b8;
+  margin-bottom: 12px;
+  display: block;
+}
+.no-access-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px;
+}
+.no-access-card p {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 20px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .d-card {
   background: var(--dash-cream-card);
   border-radius: var(--dash-radius);

@@ -3,8 +3,8 @@
     :is="entryComponent"
     ref="innerRef"
     v-bind="$attrs"
-    @enter="$emit('enter')"
-    @fading="$emit('fading')"
+    @enter="emit('enter')"
+    @fading="emit('fading')"
   >
     <template #edit-button>
       <div @click.stop>
@@ -12,7 +12,7 @@
           :visible="isEditMode"
           :label="editLabel"
           variant="dark"
-          @click="$emit('edit')"
+          @click="emit('edit')"
         />
       </div>
     </template>
@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { computed, ref, defineAsyncComponent } from 'vue';
+import { computed, ref, watch, provide, defineAsyncComponent } from 'vue';
 import SectionEditButton from '@/components/invitations/shared/SectionEditButton.vue';
 
 defineOptions({ inheritAttrs: false });
@@ -28,23 +28,41 @@ defineOptions({ inheritAttrs: false });
 const props = defineProps({
   type: { type: String, required: true },
   design: { type: String, required: true },
+  visible: { type: Boolean, default: true },
   isEditMode: { type: Boolean, default: false },
   editLabel: { type: String, default: '' },
 });
 
-defineEmits(['enter', 'fading', 'edit']);
+const emit = defineEmits(['enter', 'fading', 'edit']);
+
+// Provide design key so child entries (e.g. VideoEntry) can read it
+provide('entryDesign', computed(() => props.design));
+
+const videoLoader = () => import('./videos/VideoEntry.vue');
 
 const ENTRY_REGISTRY = {
-  'envelop/classic': () => import('./envelop/ClassicEnvelopEntry.vue'),
-  'envelop/airmail': () => import('./envelop/AirmailEnvelopEntry.vue'),
+  // Envelope
+  'envelop/blue-red-seal': videoLoader,
+  'envelop/white-blue-seal': videoLoader,
+  'envelop/white-gold-seal': videoLoader,
+  'envelop/red-blue-seal': videoLoader,
+  'envelop/blue-blue-seal': videoLoader,
+  // Heart
   'heart/bloom': () => import('./heart/HeartBloomEntry.vue'),
   'heart/pulse': () => import('./heart/HeartPulseEntry.vue'),
+  // Gallery
   'gallery/collage': () => import('./gallery/CollageEntry.vue'),
   'gallery/polaroid': () => import('./gallery/PolaroidEntry.vue'),
+  // Wax
   'wax/seal': () => import('./wax/WaxSealEntry.vue'),
   'wax/melt': () => import('./wax/WaxMeltEntry.vue'),
-  'door/doors': () => import('./door/DoubleDoorEntry.vue'),
-  'door/curtain': () => import('./door/CurtainEntry.vue'),
+  // Door
+  'door/baroque-doors': videoLoader,
+  'door/rustic-doors': videoLoader,
+  'door/white-doors': videoLoader,
+  'door/french-doors': videoLoader,
+  'door/red-curtain': videoLoader,
+  'door/red-curtain-dark': videoLoader,
 };
 
 // Pre-build async components so each key is only created once
@@ -61,6 +79,15 @@ const entryComponent = computed(() => {
   const key = `${props.type}/${props.design}`;
   return ENTRY_COMPONENTS[key] || null;
 });
+
+// If entry type/design is invalid, skip the entry overlay
+watch(
+  () => entryComponent.value,
+  (comp) => {
+    if (!comp && props.visible) emit('enter');
+  },
+  { immediate: true },
+);
 
 defineExpose({
   enterSite: () => innerRef.value?.enterSite(),

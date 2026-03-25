@@ -251,6 +251,7 @@ function onPreviewClick(e) {
 
 /* Preview frame — always wraps the slot */
 .preview-frame--constrained {
+  position: relative;
   border: 12px solid #1f2937;
   border-radius: 36px;
   overflow: hidden;
@@ -259,13 +260,10 @@ function onPreviewClick(e) {
     0 25px 60px -12px rgba(0, 0, 0, 0.25),
     inset 0 0 0 2px #374151;
   flex-shrink: 0;
-  /* contain fixed-positioned children (e.g. entry overlays) */
-  transform: translateZ(0);
-}
-
-.preview-frame--constrained > :deep(*) {
   max-height: calc(100vh - 140px);
   overflow-y: auto;
+  /* contain fixed-positioned children (e.g. entry overlays) */
+  transform: translateZ(0);
 }
 
 .preview-frame--tablet {

@@ -287,7 +287,7 @@ textarea:focus {
   transform: translateY(0);
 }
 
-@media (max-width: 768px) {
+@container (max-width: 768px) {
   .rsvp-container {
     padding: 2.5rem 1.5rem;
   }

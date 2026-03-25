@@ -110,7 +110,7 @@ const cssVars = computed(() => ({
   line-height: 1.6;
 }
 
-@media (max-width: 640px) {
+@container (max-width: 640px) {
   .timeline-title {
     font-size: 32px;
   }

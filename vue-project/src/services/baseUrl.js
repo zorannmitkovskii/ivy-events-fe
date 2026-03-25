@@ -1,7 +1,7 @@
 // Central place to get the backend base URL (host + port), configured at RUNTIME via window.__ENV__
 // Fallbacks:
-// - local: default to current host with port 8081 (e.g., http://localhost:8081 or http://<lan-ip>:8081) for real-device testing
-// - test/prod: default to same host but BE port 8081 or dedicated public API domains to avoid hitting FE Nginx
+// - local: default to current host with port 8282 (e.g., http://localhost:8282 or http://<lan-ip>:8282) for real-device testing
+// - test/prod: default to same host but BE port 8282 or dedicated public API domains to avoid hitting FE Nginx
 import { detectDefaultEnvFromLocation, getRuntimeEnv } from './env'
 const runtimeEnv = getRuntimeEnv();
 
@@ -18,14 +18,14 @@ function isLocalhostUrl(url) {
 // Compute a safe default API base URL when not explicitly provided
 function computeDefaultApiBaseUrl(env) {
   // Server-side rendering or unknown window
-  if (typeof window === 'undefined') return 'http://localhost:8081';
+  if (typeof window === 'undefined') return 'http://localhost:8282';
 
   const { protocol, hostname } = window.location || {};
   const usedProtocol = protocol || (env === 'local' ? 'http:' : 'https:');
   const usedHost = (hostname || 'localhost').toLowerCase();
   if (env === 'local') {
     // Use the current host so mobile devices on the same LAN can reach the backend
-    return `${usedProtocol}//${usedHost}:8081`;
+    return `${usedProtocol}//${usedHost}:8282`;
   }
 
   // Prefer dedicated public API domains in known environments
@@ -36,8 +36,8 @@ function computeDefaultApiBaseUrl(env) {
     return 'https://api.test.ivyevents.mk'
   };
 
-  // Fallback: use same origin with backend port 8081 (may require CORS/SSL on that port)
-  return `${usedProtocol}//${usedHost}:8081`;
+  // Fallback: use same origin with backend port 8282 (may require CORS/SSL on that port)
+  return `${usedProtocol}//${usedHost}:8282`;
 }
 
 const rawAppEnv = runtimeEnv.APP_ENV;
@@ -63,7 +63,7 @@ if (appEnv !== 'local') {
     const isLocalPageHost = pageHost === 'localhost' || pageHost === '127.0.0.1';
     if (!isLocalPageHost && isLocalhostUrl(runtimeUrl)) {
       const usedProtocol = protocol || 'http:';
-      effectiveUrl = `${usedProtocol}//${pageHost}:8081`;
+      effectiveUrl = `${usedProtocol}//${pageHost}:8282`;
     } else {
       effectiveUrl = runtimeUrl;
     }

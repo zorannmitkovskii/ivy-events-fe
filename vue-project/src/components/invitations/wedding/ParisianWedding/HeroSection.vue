@@ -184,7 +184,7 @@ function scrollToRsvp() {
   box-shadow: 0 4px 20px -2px rgba(120, 100, 100, 0.1);
 }
 
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .hero-invite {
     font-size: 28px;
   }

@@ -188,7 +188,7 @@ const cssVars = computed(() => ({
 }
 
 /* Desktop: alternating center timeline */
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .agenda-line {
     display: block;
     position: absolute;
@@ -231,7 +231,7 @@ const cssVars = computed(() => ({
   }
 }
 
-@media (max-width: 767px) {
+@container (max-width: 767px) {
   .agenda-title {
     font-size: 36px;
   }

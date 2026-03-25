@@ -11,18 +11,21 @@
 
       <!-- Design selector -->
       <label class="field-label">Design</label>
-      <div class="design-grid">
-        <button
-          v-for="d in currentDesigns"
-          :key="d.key"
-          type="button"
-          class="design-card"
-          :class="{ 'design-card--active': selectedDesign === d.key }"
-          @click="selectedDesign = d.key"
-        >
-          {{ d.label }}
-        </button>
-      </div>
+      <template v-for="(group, gi) in designGroups" :key="gi">
+        <p v-if="group.label" class="group-label">{{ group.label }}</p>
+        <div class="design-grid">
+          <button
+            v-for="d in group.items"
+            :key="d.key"
+            type="button"
+            class="design-card"
+            :class="{ 'design-card--active': selectedDesign === d.key }"
+            @click="selectedDesign = d.key"
+          >
+            {{ d.label }}
+          </button>
+        </div>
+      </template>
     </div>
 
     <template v-if="!liveEdit" #footer>
@@ -45,8 +48,11 @@ const ENTRY_TYPES = {
   envelop: {
     label: 'Envelope',
     designs: [
-      { key: 'classic', label: 'Classic' },
-      { key: 'airmail', label: 'Airmail' },
+      { key: 'blue-red-seal', label: 'Blue / Red Seal' },
+      { key: 'white-blue-seal', label: 'White / Blue Seal' },
+      { key: 'white-gold-seal', label: 'White / Gold Seal' },
+      { key: 'red-blue-seal', label: 'Red / Blue Seal' },
+      { key: 'blue-blue-seal', label: 'Blue / Blue Seal' },
     ],
   },
   heart: {
@@ -71,10 +77,14 @@ const ENTRY_TYPES = {
     ],
   },
   door: {
-    label: 'Door',
+    label: 'Door & Curtain',
     designs: [
-      { key: 'doors', label: 'Double Door' },
-      { key: 'curtain', label: 'Curtain' },
+      { key: 'baroque-doors', label: 'Golden Baroque Doors' },
+      { key: 'rustic-doors', label: 'Rustic Wooden Doors' },
+      { key: 'white-doors', label: 'White Wooden Doors' },
+      { key: 'french-doors', label: 'French Double Doors' },
+      { key: 'red-curtain', label: 'Red Velvet Curtains' },
+      { key: 'red-curtain-dark', label: 'Red Velvet Curtains (Dark)' },
     ],
   },
 };
@@ -93,6 +103,24 @@ const selectedDesign = ref(props.currentDesign);
 
 const currentDesigns = computed(() => {
   return ENTRY_TYPES[selectedType.value]?.designs || [];
+});
+
+// Group designs by their `group` field (if present), else single group
+const designGroups = computed(() => {
+  const designs = currentDesigns.value;
+  if (!designs.some((d) => d.group)) {
+    return [{ label: '', items: designs }];
+  }
+  const groups = [];
+  let current = null;
+  for (const d of designs) {
+    if (!current || current.label !== (d.group || '')) {
+      current = { label: d.group || '', items: [] };
+      groups.push(current);
+    }
+    current.items.push(d);
+  }
+  return groups;
 });
 
 // Reset design when type changes (pick first available)
@@ -152,6 +180,15 @@ function onSave() {
 
 .field-select:focus {
   border-color: var(--brand-main, #6b7280);
+}
+
+.group-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 8px 0 4px;
 }
 
 .design-grid {

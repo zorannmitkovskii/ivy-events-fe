@@ -549,7 +549,7 @@ async function onSubmit() {
   border: 0;
 }
 
-@media (max-width: 480px) {
+@container (max-width: 480px) {
   .attendance-row {
     flex-direction: column;
     gap: 8px;

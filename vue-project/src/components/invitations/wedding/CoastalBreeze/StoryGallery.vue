@@ -115,13 +115,13 @@ const cssVars = computed(() => ({
   line-height: 1.6;
 }
 
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .gallery-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (min-width: 1024px) {
+@container (min-width: 1024px) {
   .gallery-grid {
     grid-template-columns: repeat(3, 1fr);
   }

@@ -131,7 +131,7 @@ onUnmounted(() => {
   padding-top: 4px;
 }
 
-@media (max-width: 480px) {
+@container (max-width: 480px) {
   .countdown-value {
     font-size: 36px;
   }

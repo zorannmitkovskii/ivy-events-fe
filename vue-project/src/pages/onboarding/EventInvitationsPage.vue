@@ -111,19 +111,17 @@ const filteredInvitations = computed(() => {
     id: t.id,
     name: t.name,
     thumbnailUrl: t.thumbnailImage || (t.path ? `/thumbnails/${t.path.split('/').pop()}.svg` : ''),
-  }));
-  // Show the last 3 (newest) templates
-  const newest = mapped.slice(-3).reverse();
-  // Put the selected invitation first if it's among the newest
+  })).reverse();
+  // Put the selected invitation first
   const sel = onboardingStore.invitationName;
   if (sel) {
-    const idx = newest.findIndex(i => i.id === sel);
+    const idx = mapped.findIndex(i => i.id === sel);
     if (idx > 0) {
-      const [item] = newest.splice(idx, 1);
-      newest.unshift(item);
+      const [item] = mapped.splice(idx, 1);
+      mapped.unshift(item);
     }
   }
-  return newest;
+  return mapped;
 });
 
 onMounted(async () => {
