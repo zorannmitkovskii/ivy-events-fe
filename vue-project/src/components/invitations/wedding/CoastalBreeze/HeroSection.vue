@@ -203,7 +203,7 @@ function scrollToRsvp() {
   background: var(--h-accent-hover);
 }
 
-@media (min-width: 1024px) {
+@container (min-width: 1024px) {
   .hero-inner {
     flex-direction: row;
     gap: 64px;

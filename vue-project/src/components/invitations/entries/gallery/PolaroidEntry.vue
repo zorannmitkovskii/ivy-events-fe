@@ -143,7 +143,7 @@ defineExpose({ enterSite });
   50% { transform: translateY(-10px); }
 }
 
-@media (min-width: 640px) {
+@container (min-width: 640px) {
   .polaroid-stack { width: 320px; height: 420px; }
 }
 </style>

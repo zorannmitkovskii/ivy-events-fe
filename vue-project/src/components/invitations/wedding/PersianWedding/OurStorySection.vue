@@ -132,7 +132,7 @@ function gridPhotoClass(idx) {
   margin-top: -32px;
 }
 
-@media (min-width: 1024px) {
+@container (min-width: 1024px) {
   .story-layout {
     grid-template-columns: 1fr 1fr;
     gap: 48px;
@@ -143,7 +143,7 @@ function gridPhotoClass(idx) {
   }
 }
 
-@media (max-width: 640px) {
+@container (max-width: 640px) {
   .story-title {
     font-size: 32px;
   }

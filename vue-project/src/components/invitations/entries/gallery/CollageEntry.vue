@@ -84,7 +84,7 @@ defineExpose({ enterSite });
   opacity: 0;
 }
 
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .collage-grid {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
@@ -163,11 +163,11 @@ defineExpose({ enterSite });
   50% { transform: translateY(-6px); }
 }
 
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .entry-names { font-size: 48px; }
 }
 
-@media (max-width: 767px) {
+@container (max-width: 767px) {
   .entry-names { font-size: 32px; }
   .entry-card { padding: 24px 20px; }
 }

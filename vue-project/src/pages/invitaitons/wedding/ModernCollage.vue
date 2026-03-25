@@ -23,6 +23,7 @@
 
       <!-- ENTRY OVERLAY -->
       <InvitationEntry
+        v-if="isSectionVisible('entry')"
         ref="entryRef"
         :type="entryType"
         :design="entryDesign"
@@ -39,7 +40,7 @@
       />
 
       <!-- HERO SECTION -->
-      <section v-show="!showEntry" class="hero-section" data-reveal style="position:relative;" data-edit-section="hero" :class="{ 'section--editing': isEditMode && activeRootSection === 'hero' }">
+      <section v-show="!entryActive" class="hero-section" data-reveal style="position:relative;" data-edit-section="hero" :class="{ 'section--editing': isEditMode && activeRootSection === 'hero' }">
         <div class="hero-bg">
           <img :src="config.heroPhotoUrl" alt="Hero" class="hero-img" />
           <div class="hero-overlay"></div>
@@ -63,7 +64,7 @@
       </section>
 
       <!-- DETAILS SECTION -->
-      <section v-show="!showEntry" v-if="isSectionVisible('details')" id="details-section" :class="['section section--cream', { 'section--editing': isEditMode && activeRootSection === 'details' }]" data-reveal style="position:relative;" data-edit-section="details">
+      <section v-show="!entryActive" v-if="isSectionVisible('details')" id="details-section" :class="['section section--cream', { 'section--editing': isEditMode && activeRootSection === 'details' }]" data-reveal style="position:relative;" data-edit-section="details">
         <div class="section-inner">
           <div class="section-header">
             <h2 class="section-title">{{ t('invitation.countingDown') }}</h2>
@@ -112,7 +113,7 @@
       </section>
 
       <!-- AGENDA SECTION -->
-      <section v-if="(isEditMode || (showAgenda && !isPrivate)) && isSectionVisible('agendaList')" v-show="!showEntry" id="agenda-section" :class="['section section--white', { 'section--editing': isEditMode && activeRootSection === 'agendaList' }]" data-reveal style="position:relative;" data-edit-section="agendaList">
+      <section v-if="(isEditMode || (showAgenda && !isPrivate)) && isSectionVisible('agendaList')" v-show="!entryActive" id="agenda-section" :class="['section section--white', { 'section--editing': isEditMode && activeRootSection === 'agendaList' }]" data-reveal style="position:relative;" data-edit-section="agendaList">
         <div class="section-inner">
           <div class="section-header">
             <h2 class="section-title">{{ t('invitation.orderOfEvents') }}</h2>
@@ -130,7 +131,7 @@
       </section>
 
       <!-- OUR STORY SECTION -->
-      <section v-if="(isEditMode || showOurStory) && isSectionVisible('ourStoryList')" v-show="!showEntry" id="story-section" :class="['section section--cream', { 'section--editing': isEditMode && activeRootSection === 'ourStoryList' }]" data-reveal style="position:relative;" data-edit-section="ourStoryList">
+      <section v-if="(isEditMode || showOurStory) && isSectionVisible('ourStoryList')" v-show="!entryActive" id="story-section" :class="['section section--cream', { 'section--editing': isEditMode && activeRootSection === 'ourStoryList' }]" data-reveal style="position:relative;" data-edit-section="ourStoryList">
         <div class="section-inner">
           <div class="section-header">
             <h2 class="section-title">{{ t('invitation.ourLoveStory') }}</h2>
@@ -153,7 +154,7 @@
       </section>
 
       <!-- RSVP SECTION -->
-      <section v-show="!showEntry" v-if="isSectionVisible('rsvp')" id="rsvp-section" :class="['section section--dark', { 'section--editing': isEditMode && activeRootSection === 'rsvp' }]" data-reveal data-edit-section="rsvp">
+      <section v-show="!entryActive" v-if="isSectionVisible('rsvp')" id="rsvp-section" :class="['section section--dark', { 'section--editing': isEditMode && activeRootSection === 'rsvp' }]" data-reveal data-edit-section="rsvp">
         <div class="section-inner section-inner--narrow">
           <div class="rsvp-glow rsvp-glow--left"></div>
           <div class="rsvp-glow rsvp-glow--right"></div>
@@ -479,8 +480,9 @@ const showAgenda = ref(true);
 const showOurStory = ref(true);
 const isPrivate = computed(() => route.query.isPrivate === 'true');
 const showEntry = ref(true);
-const entryType = ref('gallery');
-const entryDesign = ref('collage');
+const entryActive = computed(() => showEntry.value && isSectionVisible('entry'));
+const entryType = ref('envelop');
+const entryDesign = ref('blue-red-seal');
 
 // Auto-open entry section when entry overlay is visible in edit mode
 watch(showEntry, (visible) => {
@@ -494,8 +496,10 @@ watch(showEntry, (visible) => {
 
 // Live edit handlers
 function onEntryChange({ type, design }) {
+  const changed = entryType.value !== type || entryDesign.value !== design;
   entryType.value = type;
   entryDesign.value = design;
+  if (changed) showEntry.value = true;
   markDirty();
 }
 
@@ -629,7 +633,7 @@ useScrollReveal(rootRef);
 
 const SIDEBAR_SECTIONS = [
   // Tab 1: Sections
-  { key: 'entry', label: t('editSection.entry'), tab: 'sections', mandatory: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>' },
+  { key: 'entry', label: t('editSection.entry'), tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>' },
   { key: 'hero', label: t('editSection.hero'), tab: 'sections', mandatory: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>' },
   { key: 'details', label: t('editSection.details'), tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' },
   { key: 'agendaList', label: t('editSection.agenda'), tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>' },
@@ -857,8 +861,8 @@ function loadThemeFromDraft(invConfig) {
 const _futureDate = getFutureWeddingDate();
 
 const config = reactive({
-  brideName: 'Sarah',
-  groomName: 'James',
+  brideName: 'Билјана',
+  groomName: 'Зоран',
   weddingDate: formatWeddingDate(_futureDate),
   weddingDateTime: toLocalISO(_futureDate, '15:00:00'),
   inviteText: t('invitation.gettingMarried'),
@@ -1193,6 +1197,7 @@ async function onRsvpSubmit(payload) {
 
 <style scoped>
 .modern-collage {
+  container-type: inline-size;
   font-family: var(--font-body);
   background: var(--theme-bg);
   color: var(--theme-text);

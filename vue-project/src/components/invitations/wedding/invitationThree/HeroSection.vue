@@ -155,7 +155,7 @@ export default {
   border-color: var(--dusty-rose);
 }
 
-@media (max-width: 768px) {
+@container (max-width: 768px) {
   .hero {
     height: 100svh;
   }

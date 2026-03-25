@@ -179,7 +179,7 @@ defineExpose({ enterSite });
   50% { transform: translateY(-8px); }
 }
 
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .pulse-names { font-size: 48px; }
   .pulse-circle { width: 160px; height: 160px; }
   .pulse-inner { width: 120px; height: 120px; }

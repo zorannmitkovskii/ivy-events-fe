@@ -181,7 +181,7 @@ defineProps({
   line-height: 1.5;
 }
 
-@media (max-width: 768px) {
+@container (max-width: 768px) {
   .timeline-line {
     left: 16px;
   }

@@ -118,7 +118,7 @@ export default {
   line-height: 1.6;
 }
 
-@media (max-width: 768px) {
+@container (max-width: 768px) {
   .timeline {
     padding-left: 2rem;
   }

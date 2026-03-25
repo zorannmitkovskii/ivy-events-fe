@@ -190,7 +190,7 @@ defineExpose({ enterSite });
   50% { transform: translateY(-8px); }
 }
 
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .melt-circle { width: 200px; height: 200px; }
   .melt-initials { font-size: 34px; }
   .melt-names { font-size: 48px; }

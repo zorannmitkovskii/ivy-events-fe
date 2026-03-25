@@ -155,7 +155,7 @@ defineProps({
   line-height: 1.7;
 }
 
-@media (max-width: 768px) {
+@container (max-width: 768px) {
   .story-block {
     flex-direction: column !important;
     gap: 24px;

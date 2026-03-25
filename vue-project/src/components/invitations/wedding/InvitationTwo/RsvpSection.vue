@@ -355,7 +355,7 @@ async function handleSubmit() {
   color: #7A6B5A;
 }
 
-@media (max-width: 768px) {
+@container (max-width: 768px) {
   .card-heading {
     font-size: 34px;
   }

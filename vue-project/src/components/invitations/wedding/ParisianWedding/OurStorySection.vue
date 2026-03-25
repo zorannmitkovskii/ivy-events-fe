@@ -111,7 +111,7 @@ const cssVars = computed(() => ({
   opacity: 0.6;
 }
 
-@media (min-width: 1024px) {
+@container (min-width: 1024px) {
   .story-layout {
     flex-direction: row;
     gap: 64px;

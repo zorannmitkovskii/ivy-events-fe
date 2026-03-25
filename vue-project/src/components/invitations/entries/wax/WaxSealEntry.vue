@@ -206,7 +206,7 @@ defineExpose({ enterSite });
   50% { transform: translateY(-8px); }
 }
 
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .wax-circle { width: 200px; height: 200px; }
   .wax-initials { font-size: 34px; }
   .wax-names { font-size: 48px; }

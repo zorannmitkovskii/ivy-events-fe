@@ -23,6 +23,7 @@
 
     <!-- ENTRY OVERLAY -->
     <InvitationEntry
+      v-if="isSectionVisible('entry')"
       ref="entryRef"
       :type="entryType"
       :design="entryDesign"
@@ -39,7 +40,7 @@
     />
 
     <!-- Hero -->
-    <div v-show="!showEntry" data-edit-section="hero" :class="{ 'section--editing': isEditMode && activeRootSection === 'hero' }" style="position:relative;">
+    <div v-show="!entryActive" data-edit-section="hero" :class="{ 'section--editing': isEditMode && activeRootSection === 'hero' }" style="position:relative;">
       <HeroSection
         :bride-name="config.brideName"
         :groom-name="config.groomName"
@@ -53,7 +54,7 @@
     </div>
 
     <!-- Details Section -->
-    <section v-show="!showEntry" v-if="isSectionVisible('details')" data-edit-section="details" :class="['section section--blush', { 'section--editing': isEditMode && activeRootSection === 'details' }]" data-reveal style="position:relative;">
+    <section v-show="!entryActive" v-if="isSectionVisible('details')" data-edit-section="details" :class="['section section--blush', { 'section--editing': isEditMode && activeRootSection === 'details' }]" data-reveal style="position:relative;">
       <div class="section-inner">
         <div class="section-header">
           <h2 class="section-title">{{ t('invitation.theDetails') }}</h2>
@@ -114,7 +115,7 @@
     </section>
 
     <!-- Our Story -->
-    <section v-if="(isEditMode || showOurStory) && isSectionVisible('ourStoryList')" v-show="!showEntry" data-edit-section="ourStoryList" :class="['section section--white', { 'section--editing': isEditMode && activeRootSection === 'ourStoryList' }]" data-reveal style="position:relative;">
+    <section v-if="(isEditMode || showOurStory) && isSectionVisible('ourStoryList')" v-show="!entryActive" data-edit-section="ourStoryList" :class="['section section--white', { 'section--editing': isEditMode && activeRootSection === 'ourStoryList' }]" data-reveal style="position:relative;">
       <div class="section-inner">
         <OurStorySection
           :title="t('invitation.ourStory')"
@@ -129,7 +130,7 @@
     </section>
 
     <!-- Agenda Timeline -->
-    <section v-if="(isEditMode || (showAgenda && !isPrivate)) && isSectionVisible('agendaList')" v-show="!showEntry" data-edit-section="agendaList" :class="['section section--champagne', { 'section--editing': isEditMode && activeRootSection === 'agendaList' }]" data-reveal style="position:relative;">
+    <section v-if="(isEditMode || (showAgenda && !isPrivate)) && isSectionVisible('agendaList')" v-show="!entryActive" data-edit-section="agendaList" :class="['section section--champagne', { 'section--editing': isEditMode && activeRootSection === 'agendaList' }]" data-reveal style="position:relative;">
       <div class="section-inner">
         <AgendaTimeline
           :title="t('invitation.theAgenda')"
@@ -167,7 +168,7 @@
     </section>
 
     <!-- RSVP -->
-    <section v-show="!showEntry" v-if="isSectionVisible('rsvp')" id="rsvp-section" data-edit-section="rsvp" :class="['section section--white', { 'section--editing': isEditMode && activeRootSection === 'rsvp' }]" data-reveal>
+    <section v-show="!entryActive" v-if="isSectionVisible('rsvp')" id="rsvp-section" data-edit-section="rsvp" :class="['section section--white', { 'section--editing': isEditMode && activeRootSection === 'rsvp' }]" data-reveal>
       <div class="section-inner section-inner--narrow">
         <div class="rsvp-wrapper">
           <RsvpForm
@@ -487,11 +488,12 @@ const toast = useToast();
 const rootRef = ref(null);
 const entryRef = ref(null);
 const showEntry = ref(true);
+const entryActive = computed(() => showEntry.value && isSectionVisible('entry'));
 const showAgenda = ref(true);
 const showOurStory = ref(true);
 const isPrivate = computed(() => route.query.isPrivate === 'true');
 const entryType = ref('door');
-const entryDesign = ref('curtain');
+const entryDesign = ref('french-doors');
 
 // Auto-open entry section when entry overlay is visible in edit mode
 watch(showEntry, (visible) => {
@@ -505,7 +507,7 @@ watch(showEntry, (visible) => {
 
 const SIDEBAR_SECTIONS = [
   // Tab 1: Sections
-  { key: 'entry', label: t('editSection.entry'), tab: 'sections', mandatory: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>' },
+  { key: 'entry', label: t('editSection.entry'), tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>' },
   { key: 'hero', label: t('editSection.hero'), tab: 'sections', mandatory: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>' },
   { key: 'details', label: t('editSection.details'), tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' },
   { key: 'agendaList', label: t('editSection.agenda'), tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>' },
@@ -584,8 +586,10 @@ function onAdvancedUpdate(key, data) {
 }
 
 function onEntryChange({ type, design }) {
+  const changed = entryType.value !== type || entryDesign.value !== design;
   entryType.value = type;
   entryDesign.value = design;
+  if (changed) showEntry.value = true;
   markDirty();
 }
 
@@ -893,14 +897,14 @@ function loadThemeFromDraft(invConfig) {
 
 const _futureDate = getFutureWeddingDate();
 const config = reactive({
-  brideName: 'Chloe',
-  groomName: 'Alexandre',
+  brideName: 'Сара',
+  groomName: 'Филип',
   weddingDate: formatWeddingDate(_futureDate),
   weddingDateTime: toLocalISO(_futureDate, '15:00:00'),
   inviteText: t('invitation.youAreInvited'),
   location: 'Paris, France',
   heroMapUrl: '',
-  ctaLabel: 'RSVP',
+  ctaLabel: t('invitation.rsvpNow'),
   heroPhotoUrl: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=2070&q=80',
 
   galleryPhotos: [],
@@ -913,7 +917,7 @@ const config = reactive({
   receptionTime: '6:00 PM',
   receptionMapUrl: '',
 
-  storyTitle: 'Our Story',
+  storyTitle: t('invitation.ourStory'),
   storyParagraphs: [
     'It began with a chance encounter at a small caf\u00e9 in Montmartre. A shared table, a spilled espresso, and a conversation that lasted until the streetlights flickered on.',
     'Three years later, under the golden glow of the Eiffel Tower, Alexandre asked the question that would change our lives forever. We are thrilled to invite you back to the city where our hearts first met.',
@@ -921,7 +925,7 @@ const config = reactive({
   storyImageUrl: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=2070&q=80',
   signatureUrl: '',
 
-  agendaTitle: 'The Agenda',
+  agendaTitle: t('invitation.theAgenda'),
   agendaEvents: [
     { time: '2:00 PM', title: 'Welcome Drinks', venue: 'Le Bar Parisien', description: 'Guests arrive and enjoy light refreshments before the ceremony begins.' },
     { time: '3:00 PM', title: 'Ceremony', venue: 'The Chapel', description: 'We exchange vows in an intimate ceremony surrounded by loved ones.' },
@@ -1193,6 +1197,7 @@ async function onRsvpSubmit(payload) {
 
 <style scoped>
 .parisian-wedding {
+  container-type: inline-size;
   font-family: var(--font-body);
   background: var(--theme-bg);
   color: #374151;

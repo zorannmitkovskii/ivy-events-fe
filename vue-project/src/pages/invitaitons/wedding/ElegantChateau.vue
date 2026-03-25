@@ -23,6 +23,7 @@
 
       <!-- ENTRY OVERLAY -->
       <InvitationEntry
+        v-if="isSectionVisible('entry')"
         ref="entryRef"
         :type="entryType"
         :design="entryDesign"
@@ -39,7 +40,7 @@
       />
 
       <!-- HERO SECTION -->
-      <header v-show="mainVisible" data-edit-section="hero" class="ec-hero" :class="{ 'ec-hero-visible': mainVisible, 'section--editing': isEditMode && activeRootSection === 'hero' }" style="position:relative;">
+      <header v-show="mainVisible || !isSectionVisible('entry')" data-edit-section="hero" class="ec-hero" :class="{ 'ec-hero-visible': mainVisible, 'section--editing': isEditMode && activeRootSection === 'hero' }" style="position:relative;">
         <div class="ec-hero-content">
           <p class="ec-hero-label">{{ config.inviteText }}</p>
           <h1 class="ec-hero-names">
@@ -69,7 +70,7 @@
       </header>
 
       <!-- OUR STORY SLIDER -->
-      <section v-if="(isEditMode || showOurStory) && isSectionVisible('ourStoryList')" v-show="mainVisible" id="story-section" data-edit-section="ourStoryList" :class="['ec-section ec-section--white', { 'section--editing': isEditMode && activeRootSection === 'ourStoryList' }]" data-reveal style="position:relative;">
+      <section v-if="(isEditMode || showOurStory) && isSectionVisible('ourStoryList')" v-show="mainVisible || !isSectionVisible('entry')" id="story-section" data-edit-section="ourStoryList" :class="['ec-section ec-section--white', { 'section--editing': isEditMode && activeRootSection === 'ourStoryList' }]" data-reveal style="position:relative;">
         <div class="ec-section-inner">
           <div class="ec-story-header">
             <div>
@@ -104,7 +105,7 @@
       </section>
 
       <!-- DETAILS SECTION -->
-      <section v-if="(isEditMode || (showAgenda && !isPrivate)) && isSectionVisible('details')" v-show="mainVisible" id="details-section" data-edit-section="details" :class="['ec-section ec-section--warm', { 'section--editing': isEditMode && activeRootSection === 'details' }]" data-reveal style="position:relative;">
+      <section v-if="(isEditMode || (showAgenda && !isPrivate)) && isSectionVisible('details')" v-show="mainVisible || !isSectionVisible('entry')" id="details-section" data-edit-section="details" :class="['ec-section ec-section--warm', { 'section--editing': isEditMode && activeRootSection === 'details' }]" data-reveal style="position:relative;">
         <div class="ec-section-inner">
           <div class="ec-section-header-center">
             <h2 class="ec-section-title">{{ t('invitation.theWeddingWeekend') }}</h2>
@@ -149,7 +150,7 @@
       </section>
 
       <!-- RSVP SECTION -->
-      <section v-if="isSectionVisible('rsvp')" v-show="mainVisible" id="rsvp-section" data-edit-section="rsvp" :class="['ec-section ec-section--white ec-section--rsvp', { 'section--editing': isEditMode && activeRootSection === 'rsvp' }]" data-reveal>
+      <section v-if="isSectionVisible('rsvp')" v-show="mainVisible || !isSectionVisible('entry')" id="rsvp-section" data-edit-section="rsvp" :class="['ec-section ec-section--white ec-section--rsvp', { 'section--editing': isEditMode && activeRootSection === 'rsvp' }]" data-reveal>
         <div class="ec-rsvp-bg"></div>
         <div class="ec-section-inner ec-section-inner--narrow ec-rsvp-content">
           <div class="ec-section-header-center">
@@ -449,8 +450,9 @@ const showOurStory = ref(true);
 const isPrivate = computed(() => route.query.isPrivate === 'true');
 const showEntry = ref(true);
 const mainVisible = ref(false);
-const entryType = ref('gallery');
-const entryDesign = ref('polaroid');
+const entryActive = computed(() => showEntry.value && isSectionVisible('entry'));
+const entryType = ref('door');
+const entryDesign = ref('baroque-doors');
 
 // Auto-open entry section when entry overlay is visible in edit mode
 watch(showEntry, (visible) => {
@@ -464,7 +466,7 @@ watch(showEntry, (visible) => {
 
 const SIDEBAR_SECTIONS = [
   // Tab 1: Sections
-  { key: 'entry', label: t('editSection.entry'), tab: 'sections', mandatory: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>' },
+  { key: 'entry', label: t('editSection.entry'), tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>' },
   { key: 'hero', label: t('editSection.hero'), tab: 'sections', mandatory: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>' },
   { key: 'details', label: t('editSection.details'), tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' },
   { key: 'ourStoryList', label: t('editSection.ourStory'), tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>' },
@@ -539,8 +541,10 @@ function onAdvancedUpdate(key, data) {
 
 // Live edit handlers
 function onEntryChange({ type, design }) {
+  const changed = entryType.value !== type || entryDesign.value !== design;
   entryType.value = type;
   entryDesign.value = design;
+  if (changed) showEntry.value = true;
   markDirty();
 }
 
@@ -833,14 +837,14 @@ const _dayAfter = new Date(_futureDate); _dayAfter.setDate(_dayAfter.getDate() +
 function _shortDate(d) { return d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }); }
 
 const config = reactive({
-  brideName: 'Sophie',
-  groomName: 'Alexander',
+  brideName: 'Сара',
+  groomName: 'Филип',
   weddingDate: formatWeddingDate(_futureDate),
   weddingDateTime: toLocalISO(_futureDate, '16:00:00'),
   inviteText: t('invitation.weAreGettingMarried'),
   location: 'Chateau de Santeny, France',
   heroMapUrl: '',
-  ctaLabel: 'RSVP',
+  ctaLabel: t('invitation.rsvpNow'),
   heroPhotoUrl: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1600&q=80',
   heroQuote: '',
 
@@ -853,7 +857,7 @@ const config = reactive({
   weddingDetails: [
     {
       icon: 'drinks',
-      title: 'Welcome Drinks',
+      title: t('invitation.welcomeDrinks'),
       eventDate: _shortDate(_dayBefore),
       time: '6:00 PM',
       description: '',
@@ -862,7 +866,7 @@ const config = reactive({
     },
     {
       icon: 'heart',
-      title: 'The Ceremony',
+      title: t('invitation.theCeremony'),
       eventDate: _shortDate(_futureDate),
       time: '4:00 PM',
       description: '',
@@ -871,7 +875,7 @@ const config = reactive({
     },
     {
       icon: 'coffee',
-      title: 'Farewell Brunch',
+      title: t('invitation.farewellBrunch'),
       eventDate: _shortDate(_dayAfter),
       time: '10:00 AM',
       description: '',
@@ -880,7 +884,7 @@ const config = reactive({
     },
   ],
 
-  storyTitle: 'Our Story',
+  storyTitle: t('invitation.ourStory'),
   stories: [
     {
       date: '2019',
@@ -1164,6 +1168,7 @@ async function onRsvpSubmit(payload) {
 
 <style scoped>
 .elegant-chateau {
+  container-type: inline-size;
   font-family: var(--font-body);
   background: var(--theme-bg);
   color: var(--theme-text);

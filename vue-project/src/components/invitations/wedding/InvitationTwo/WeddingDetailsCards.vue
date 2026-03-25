@@ -291,7 +291,7 @@ onUnmounted(() => {
   display: block;
 }
 
-@media (max-width: 768px) {
+@container (max-width: 768px) {
   .cards-row {
     flex-direction: column;
     align-items: center;

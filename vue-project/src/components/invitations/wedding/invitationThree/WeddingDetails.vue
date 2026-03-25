@@ -240,7 +240,7 @@ export default {
   color: var(--rose-accent);
 }
 
-@media (max-width: 768px) {
+@container (max-width: 768px) {
   .details-container {
     grid-template-columns: 1fr;
   }

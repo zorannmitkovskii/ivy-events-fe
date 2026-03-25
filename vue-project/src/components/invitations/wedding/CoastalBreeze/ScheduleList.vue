@@ -130,7 +130,7 @@ const cssVars = computed(() => ({
   line-height: 1.5;
 }
 
-@media (min-width: 1024px) {
+@container (min-width: 1024px) {
   .schedule-title {
     font-size: 48px;
   }

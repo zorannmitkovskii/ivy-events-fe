@@ -160,7 +160,7 @@ useScrollReveal(rootRef);
 const _futureDate = getFutureWeddingDate();
 
 const data = reactive({
-  coupleName: "Emily & James",
+  coupleName: "Сара & Филип",
   dateLabel: formatWeddingDate(_futureDate),
   respondByLabel: formatRsvpDeadline(_futureDate),
   locationHtml: "Sunset Garden Estate<br>Santa Barbara, California",

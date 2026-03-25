@@ -58,7 +58,7 @@ import SidebarBrand from "@/components/sidebar/SidebarBrand.vue";
 import SidebarNavItem from "@/components/sidebar/SidebarNavItem.vue";
 import SidebarAccount from "@/components/sidebar/SidebarAccount.vue";
 import { Icons } from "@/utils/icons.js";
-import { getFullName, logout } from "@/services/auth.service";
+import { getFullName, logout, getPackages } from "@/services/auth.service";
 import { onboardingStore, clearOnboarding } from "@/store/onboarding.store";
 import { EventCategoryEnum } from "@/enums/EventCategory.js";
 import { eventsService } from "@/services/events.service";
@@ -80,6 +80,11 @@ const isActive = (section) => {
 
 const isGallery = computed(() => onboardingStore.selectedCategory === EventCategoryEnum.GALLERY);
 
+const hasGalleryPackage = computed(() => {
+  const pkgs = getPackages();
+  return pkgs.some(p => p.startsWith("GALLERY_"));
+});
+
 const allNavItems = [
   { key: "overview", path: "overview", labelKey: "sidebar.overview", icon: Icons.grid },
   { key: "guests", path: "guests", labelKey: "sidebar.guests", icon: Icons.users },
@@ -96,7 +101,12 @@ const navItems = computed(() => {
   if (isGallery.value) {
     return allNavItems.filter(it => GALLERY_NAV_KEYS.includes(it.key));
   }
-  return allNavItems.filter(it => !GALLERY_NAV_KEYS.includes(it.key) || it.key === 'gallery');
+  // Hide gallery if user has no GALLERY_ package
+  return allNavItems.filter(it => {
+    if (it.key === 'gallery' && !hasGalleryPackage.value) return false;
+    if (GALLERY_NAV_KEYS.includes(it.key) && it.key !== 'gallery') return false;
+    return true;
+  });
 });
 
 const userName = computed(() => getFullName() || "User");

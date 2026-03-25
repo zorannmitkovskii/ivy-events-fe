@@ -172,7 +172,7 @@ const cssVars = computed(() => ({
 }
 
 /* Mobile: stack vertically, line on left */
-@media (max-width: 640px) {
+@container (max-width: 640px) {
   .timeline-line {
     left: 22px;
     transform: none;

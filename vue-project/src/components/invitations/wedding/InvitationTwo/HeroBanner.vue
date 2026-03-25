@@ -177,7 +177,7 @@ function scrollToRsvp() {
   box-shadow: 0 10px 30px rgba(139, 158, 126, 0.45);
 }
 
-@media (max-width: 768px) {
+@container (max-width: 768px) {
   .couple-names {
     font-size: 38px;
   }
