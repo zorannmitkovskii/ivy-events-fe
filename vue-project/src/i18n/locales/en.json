@@ -350,7 +350,19 @@
       "continue": "Continue",
       "back": "Back to details",
       "loading": "Loading invitations...",
-      "emptyState": "No invitation designs available for this category yet. We're working on it!"
+      "emptyState": "No invitation designs available for this category yet. We're working on it!",
+      "buildYourOwn": "Build Your Own Invitation",
+      "editCurrent": "Edit Current Invitation"
+    },
+    "builder": {
+      "title": "Invitation Builder",
+      "save": "Save & Continue",
+      "heroStyle": "Hero Style",
+      "scheduleStyle": "Schedule Style",
+      "storyStyle": "Our Story Style",
+      "entryStyle": "Entry Animation",
+      "colors": "Color Palette",
+      "fonts": "Font Pair"
     },
     "footer": {
       "help": "Help Center",
@@ -1615,6 +1627,10 @@
     "rsvpNow": "RSVP Now",
     "welcomeDrinks": "Welcome Drinks",
     "farewellBrunch": "Farewell Brunch",
+    "firstDance": "First Dance",
+    "howWeMetDefault": "A chance encounter at a coffee shop that changed everything.",
+    "firstDateDefault": "A sunset picnic by the lake, a conversation that lasted for hours.",
+    "theProposalDefault": "Under the stars, a question was asked and a promise was made.",
     "rsvpMessage": "Please respond by {date}. We can't wait to celebrate with you!",
     "contactQuestion": "For questions or additional information, please contact us at"
   },
@@ -1649,7 +1665,11 @@
   "editOurStory": {
     "title": "Our Story",
     "empty": "No story items yet",
-    "addItem": "Add Story"
+    "addItem": "Add Story",
+    "photos": "Photos",
+    "storyImage": "Story Image",
+    "manageImages": "Manage Photos",
+    "coastalHint": "Images are managed per story card in the Our Story section above."
   },
   "eventDetail": {
     "addTitle": "Add Event Detail",
@@ -1678,6 +1698,10 @@
     "fonts": "Fonts",
     "headingFont": "Heading Font",
     "bodyFont": "Body Font",
+    "chooseTheme": "Choose Theme",
+    "customColors": "Custom Colors",
+    "cardBg": "Cards",
+    "sectionBg": "Sections",
     "accentColor": "Accent",
     "secondaryColor": "Secondary",
     "tertiaryColor": "Tertiary",
@@ -1768,6 +1792,7 @@
     "brideName": "Bride Name",
     "groomName": "Groom Name",
     "weddingDate": "Wedding Date",
-    "venue": "Venue / Location"
+    "venue": "Venue / Location",
+    "storyImages": "Story Images"
   }
 }

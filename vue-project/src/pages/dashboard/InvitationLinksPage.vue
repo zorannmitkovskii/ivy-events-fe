@@ -21,6 +21,14 @@
     </div>
 
     <template v-else-if="event">
+      <!-- Edit invitation button -->
+      <div v-if="editInvitationUrl" class="edit-inv-bar">
+        <ButtonMain variant="main" @click="openEditInvitation">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+          {{ t('invitationLinks.editInvitation') || 'Уреди покана' }}
+        </ButtonMain>
+      </div>
+
       <div class="links-grid">
         <!-- Regular Invitation (hidden for Gallery) -->
         <LinkCard
@@ -89,6 +97,19 @@ const closeFriendsUrl = computed(() => {
   return `${url}${sep}isPrivate=true`;
 });
 
+const editInvitationUrl = computed(() => {
+  if (!event.value?.invitationUrl) return '';
+  const url = event.value.invitationUrl;
+  const sep = url.includes('?') ? '&' : '?';
+  return `${url}${sep}edit=true`;
+});
+
+function openEditInvitation() {
+  if (editInvitationUrl.value) {
+    window.open(editInvitationUrl.value, '_blank');
+  }
+}
+
 const tableLookupUrl = computed(() => {
   if (!eventId.value) return "";
   return `${window.location.origin}/${locale.value}/table-lookup?eventId=${eventId.value}`;
@@ -109,13 +130,15 @@ async function loadEvent() {
       return;
     }
 
-    const data = await eventsService.getById(eventId.value);
-    const inv = data.invitation || {};
+    const res = await eventsService.getById(eventId.value);
+    const data = res?.data || res;
+    const inv = data?.invitation || {};
     event.value = {
       ...data,
       invitationUrl: inv.invitationUrl || data.invitationUrl || '',
       galleryUrl: inv.galleryUrl || data.galleryUrl || '',
       privateInvitationUrl: inv.privateInvitationUrl || data.privateInvitationUrl || '',
+      invitationName: inv.invitationName || '',
     };
 
     const cat = data?.categoryType || data?.category || "";
@@ -135,6 +158,10 @@ onMounted(loadEvent);
 </script>
 
 <style scoped>
+.edit-inv-bar {
+  margin-bottom: 16px;
+}
+
 .links-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));

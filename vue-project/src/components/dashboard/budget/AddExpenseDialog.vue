@@ -4,7 +4,7 @@
       <div class="two">
         <div class="field">
           <label>{{ t("budget.expense.date") }} *</label>
-          <input class="input" type="date" v-model="draft.date" required />
+          <DateInput input-class="input" v-model="draft.date" />
         </div>
 
         <div class="field">
@@ -71,6 +71,7 @@ import { reactive, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
+import DateInput from "@/components/generic/DateInput.vue";
 
 const { t } = useI18n();
 

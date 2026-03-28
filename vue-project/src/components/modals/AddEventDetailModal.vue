@@ -13,7 +13,7 @@
         </div>
         <div class="field">
           <label>{{ t("eventDetail.form.eventDate") }}</label>
-          <input type="date" class="input" v-model="draft.eventDate" />
+          <DateInput input-class="input" v-model="draft.eventDate" />
         </div>
       </div>
 
@@ -76,6 +76,7 @@ import { reactive, ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
+import DateInput from "@/components/generic/DateInput.vue";
 import AuthLocationInput from "@/components/auth/AuthLocationInput.vue";
 import { EventDetailType } from "@/enums/EventDetailType";
 

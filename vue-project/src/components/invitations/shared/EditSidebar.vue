@@ -88,7 +88,7 @@
       <template v-else>
       <div v-for="s in filteredSections" :key="s.key" class="accordion-section">
         <!-- Accordion header -->
-        <button
+        <div
           class="accordion-header"
           :class="{ 'accordion-header--active': activeSection === s.key }"
           @click="emit('toggle-section', s.key)"
@@ -113,17 +113,15 @@
           >
             <polyline points="9 18 15 12 9 6"/>
           </svg>
-        </button>
+        </div>
 
         <!-- Accordion content (collapsible) -->
         <Transition name="accordion">
           <div v-if="activeSection === s.key" class="accordion-content">
-            <!-- Sub-tab bar hidden for now — only contentTab active -->
-            <!-- <div v-if="s.tab === 'sections'" class="sub-tab-bar">
+            <div v-if="showLayoutTab && s.tab === 'sections'" class="sub-tab-bar">
               <button class="sub-tab-btn" :class="{ 'sub-tab-btn--active': activeSubTab === 'content' }" @click="activeSubTab = 'content'">{{ t('editSection.contentTab') }}</button>
               <button class="sub-tab-btn" :class="{ 'sub-tab-btn--active': activeSubTab === 'layout' }" @click="activeSubTab = 'layout'">{{ t('editSection.layoutTab') }}</button>
-              <button class="sub-tab-btn" :class="{ 'sub-tab-btn--active': activeSubTab === 'advanced' }" @click="activeSubTab = 'advanced'">{{ t('editSection.advancedTab') }}</button>
-            </div> -->
+            </div>
             <slot :name="s.key" :sub-tab="s.tab === 'sections' ? activeSubTab : 'content'" />
           </div>
         </Transition>
@@ -163,6 +161,10 @@ const props = defineProps({
   sectionVisibility: {
     type: Object,
     default: () => ({}),
+  },
+  showLayoutTab: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -412,6 +414,7 @@ provide("editPanelMode", ref(true));
 .accordion-content {
   display: block;
   overflow: hidden;
+  padding: 12px 16px 16px;
 }
 
 /* Sub-tab bar */
@@ -419,6 +422,7 @@ provide("editPanelMode", ref(true));
   display: flex;
   border-bottom: 1px solid #e5e7eb;
   background: #fafafa;
+  margin: -12px -16px 12px;
 }
 
 .sub-tab-btn {

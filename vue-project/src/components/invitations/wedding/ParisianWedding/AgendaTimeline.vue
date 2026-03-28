@@ -78,7 +78,7 @@ const cssVars = computed(() => ({
   font-family: var(--at-heading-font);
   font-size: 48px;
   font-weight: 400;
-  color: #1f2937;
+  color: var(--theme-text, #1f2937);
   margin: 0 0 16px;
 }
 
@@ -167,7 +167,7 @@ const cssVars = computed(() => ({
   font-family: var(--at-heading-font);
   font-size: 24px;
   font-weight: 400;
-  color: #1f2937;
+  color: var(--theme-text, #1f2937);
   margin: 0;
 }
 
@@ -175,7 +175,7 @@ const cssVars = computed(() => ({
   font-family: var(--at-body-font);
   font-style: italic;
   font-size: 16px;
-  color: #6b7280;
+  color: var(--theme-text-muted, #6b7280);
   margin: 2px 0 0;
 }
 
@@ -183,7 +183,7 @@ const cssVars = computed(() => ({
   font-family: var(--at-body-font);
   font-size: 18px;
   line-height: 1.6;
-  color: #4b5563;
+  color: var(--theme-text-muted, #4b5563);
   margin: 0;
 }
 

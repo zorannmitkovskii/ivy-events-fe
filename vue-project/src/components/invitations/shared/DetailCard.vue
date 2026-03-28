@@ -72,7 +72,7 @@ const iconStyle = computed(() => ({
   align-items: center;
   justify-content: center;
   margin: 0 auto 20px;
-  color: #333;
+  color: var(--theme-text, #333);
 }
 
 .icon-fallback {
@@ -83,7 +83,7 @@ const iconStyle = computed(() => ({
   font-family: var(--card-heading-font);
   font-size: 22px;
   font-weight: 600;
-  color: #333;
+  color: var(--theme-text, #333);
   margin: 0 0 12px;
 }
 
@@ -96,25 +96,25 @@ const iconStyle = computed(() => ({
 :slotted(p) {
   font-family: var(--card-body-font);
   margin: 0 0 4px;
-  color: #666;
+  color: var(--theme-text-muted, #666);
   font-size: 15px;
   line-height: 1.5;
 }
 
 :slotted(.bold) {
   font-weight: 700;
-  color: #555;
+  color: var(--theme-text-muted, #555);
 }
 
 :slotted(a) {
   font-size: 14px;
   font-weight: 700;
-  color: #555;
+  color: var(--theme-text-muted, #555);
   text-decoration: underline;
   text-underline-offset: 4px;
 }
 
 :slotted(a):hover {
-  color: #333;
+  color: var(--theme-text, #333);
 }
 </style>

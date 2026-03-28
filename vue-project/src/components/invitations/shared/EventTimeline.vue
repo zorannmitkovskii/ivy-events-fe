@@ -60,7 +60,7 @@ const cssVars = computed(() => ({
   font-family: var(--tl-heading-font);
   font-size: 32px;
   font-weight: 600;
-  color: #333;
+  color: var(--theme-text, #333);
   text-align: center;
   margin: 0 0 48px;
 }
@@ -150,14 +150,14 @@ const cssVars = computed(() => ({
   font-family: var(--tl-heading-font);
   font-size: 22px;
   font-weight: 600;
-  color: #333;
+  color: var(--theme-text, #333);
   margin: 0;
 }
 
 .event-subtitle {
   font-family: var(--tl-body-font);
   font-size: 14px;
-  color: #888;
+  color: var(--theme-text-muted, #888);
   margin: 2px 0 0;
 }
 
@@ -168,7 +168,7 @@ const cssVars = computed(() => ({
   font-family: var(--tl-body-font);
   font-size: 14px;
   font-weight: 700;
-  color: #333;
+  color: var(--theme-text, #333);
 }
 
 /* Mobile: stack vertically, line on left */

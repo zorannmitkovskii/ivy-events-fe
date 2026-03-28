@@ -55,7 +55,7 @@ const cssVars = computed(() => ({
   font-family: var(--vt-heading-font);
   font-size: 40px;
   font-weight: 500;
-  color: #333;
+  color: var(--theme-text, #333);
   text-align: center;
   margin: 0 0 48px;
 }
@@ -98,14 +98,14 @@ const cssVars = computed(() => ({
   font-family: var(--vt-heading-font);
   font-size: 20px;
   font-weight: 600;
-  color: #333;
+  color: var(--theme-text, #333);
   margin: 0 0 8px;
 }
 
 .event-subtitle {
   font-family: var(--vt-body-font);
   font-size: 15px;
-  color: #666;
+  color: var(--theme-text-muted, #666);
   margin: 0;
   line-height: 1.6;
 }

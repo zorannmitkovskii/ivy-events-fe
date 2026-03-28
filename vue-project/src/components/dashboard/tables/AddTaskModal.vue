@@ -24,7 +24,7 @@
       <div class="two">
         <div class="field">
           <label>{{ t("tables.tasks.form.dueDate") }}</label>
-          <input class="input" type="date" v-model="dueDate" />
+          <DateInput input-class="input" v-model="dueDate" />
         </div>
 
         <div v-if="isReminder" class="field">
@@ -68,6 +68,7 @@ import { ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
+import DateInput from "@/components/generic/DateInput.vue";
 
 const { t } = useI18n();
 

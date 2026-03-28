@@ -15,6 +15,7 @@ import {
   deleteDraftItem,
   generateLocalId,
 } from "@/store/invitationDraft.store";
+import { DESIGN_PRESETS } from "@/config/designPresets/index.js";
 
 export function useInvitationEditMode() {
   const route = useRoute();
@@ -278,64 +279,112 @@ export function useInvitationEditMode() {
   }
 
   // ---- Load data based on auth state ----
-  function loadEditData() {
+  async function loadEditData() {
     if (canUseApi()) {
-      eventDetails.loadEventDetails();
-      agenda.loadAgenda();
-      ourStory.loadStories();
+      await Promise.all([
+        eventDetails.loadEventDetails(),
+        agenda.loadAgenda(),
+        ourStory.loadStories(),
+      ]);
+      ensureDefaultsInMemory();
     } else {
       loadDraft();
-      eventDetails.items.value = getDraftItems("eventDetails").map((item) => ({
-        ...item,
-        id: item._localId,
-      }));
-      agenda.items.value = getDraftItems("agenda").map((item) => ({
-        ...item,
-        id: item._localId,
-      }));
-      ourStory.items.value = getDraftItems("ourStory").map((item) => ({
-        ...item,
-        id: item._localId,
-      }));
+      // Deduplicate draft items by type (prevent 3x duplication from stale localStorage)
+      function dedup(items, keyFn) {
+        const seen = new Set();
+        return items.filter(item => {
+          const key = keyFn(item);
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+      }
+      eventDetails.items.value = dedup(
+        getDraftItems("eventDetails").map(item => ({ ...item, id: item._localId })),
+        d => d.type || d._localId
+      );
+      agenda.items.value = dedup(
+        getDraftItems("agenda").map(item => ({ ...item, id: item._localId })),
+        a => `${a.type}_${a.time}` || a._localId
+      );
+      ourStory.items.value = dedup(
+        getDraftItems("ourStory").map(item => ({ ...item, id: item._localId })),
+        s => s.type || s._localId
+      );
       ensureDefaults();
     }
   }
 
+  // Resolve default items from the current preset (per-template defaults)
+  function getPresetDefaults() {
+    const presetId = route.params.design || onboardingStore.invitationName || route.query.design || '';
+    const preset = DESIGN_PRESETS[presetId];
+    return preset?.defaultItems || null;
+  }
+
+  // Fallback defaults when no preset is found
+  const FALLBACK_DEFAULTS = {
+    eventDetails: [
+      { type: 'CHURCH', time: '16:00', eventDate: '' },
+      { type: 'RECEPTION', time: '18:00', eventDate: '' },
+    ],
+    agenda: [
+      { type: 'START_GROOM', time: '14:00' },
+      { type: 'START_BRIDE', time: '14:30' },
+      { type: 'CHURCH', time: '15:00' },
+      { type: 'CEREMONY', time: '16:00' },
+      { type: 'RECEPTION', time: '18:00' },
+      { type: 'FIRST_DANCE', time: '20:00' },
+    ],
+    ourStory: [
+      { type: 'HOW_WE_MET', description: 'Случајна средба во кафуле што го промени се.', storyDate: '', imageUrl: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600&h=400&fit=crop' },
+      { type: 'FIRST_DATE', description: 'Пикник на заход на сонцето покрај езерото, разговор што траеше со часови.', storyDate: '', imageUrl: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&h=400&fit=crop' },
+      { type: 'PROPOSAL', description: 'Под ѕвездите, прашање беше поставено и ветување дадено.', storyDate: '', imageUrl: 'https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=600&h=400&fit=crop' },
+    ],
+  };
+
+  // Populate default items in-memory only (not persisted to DB or draft).
+  // They appear in the preview and get saved to DB only when user clicks save.
+  function ensureDefaultsInMemory() {
+    const defaults = getPresetDefaults() || FALLBACK_DEFAULTS;
+
+    if (eventDetails.items.value.length === 0 && defaults.eventDetails?.length) {
+      eventDetails.items.value = defaults.eventDetails.map(item => ({ ...item }));
+    }
+    if (agenda.items.value.length === 0 && defaults.agenda?.length) {
+      agenda.items.value = defaults.agenda.map(item => ({ ...item }));
+    }
+    if (ourStory.items.value.length === 0 && defaults.ourStory?.length) {
+      ourStory.items.value = defaults.ourStory.map(item => ({ ...item }));
+    }
+  }
+
   function ensureDefaults() {
-    if (eventDetails.items.value.length === 0) {
-      [
-        { type: 'CHURCH', time: '16:00', eventDate: '' },
-        { type: 'RECEPTION', time: '18:00', eventDate: '' },
-      ].forEach(item => {
+    const defaults = getPresetDefaults() || FALLBACK_DEFAULTS;
+
+    if (eventDetails.items.value.length === 0 && defaults.eventDetails?.length) {
+      const items = defaults.eventDetails.map(item => {
         const localId = generateLocalId();
-        const full = { ...item, _localId: localId, id: localId };
-        addDraftItem('eventDetails', full);
-        eventDetails.items.value.push(full);
+        return { ...item, _localId: localId, id: localId };
       });
+      eventDetails.items.value = items;
+      items.forEach(full => addDraftItem('eventDetails', full));
     }
-    if (agenda.items.value.length === 0) {
-      [
-        { type: 'CEREMONY', time: '16:00' },
-        { type: 'RECEPTION', time: '17:00' },
-        { type: 'FIRST_DANCE', time: '20:00' },
-      ].forEach(item => {
+    if (agenda.items.value.length === 0 && defaults.agenda?.length) {
+      const items = defaults.agenda.map(item => {
         const localId = generateLocalId();
-        const full = { ...item, _localId: localId, id: localId };
-        addDraftItem('agenda', full);
-        agenda.items.value.push(full);
+        return { ...item, _localId: localId, id: localId };
       });
+      agenda.items.value = items;
+      items.forEach(full => addDraftItem('agenda', full));
     }
-    if (ourStory.items.value.length === 0) {
-      [
-        { type: 'HOW_WE_MET' },
-        { type: 'FIRST_DATE' },
-        { type: 'PROPOSAL' },
-      ].forEach(item => {
+    if (ourStory.items.value.length === 0 && defaults.ourStory?.length) {
+      const items = defaults.ourStory.map(item => {
         const localId = generateLocalId();
-        const full = { ...item, description: '', storyDate: '', _localId: localId, id: localId };
-        addDraftItem('ourStory', full);
-        ourStory.items.value.push(full);
+        return { ...item, description: item.description || '', storyDate: item.storyDate || '', _localId: localId, id: localId };
       });
+      ourStory.items.value = items;
+      items.forEach(full => addDraftItem('ourStory', full));
     }
   }
 
@@ -343,8 +392,10 @@ export function useInvitationEditMode() {
   async function fetchInvitationConfig() {
     if (!eventId.value || !isAuthenticated()) return null;
     try {
-      const ev = await eventsService.getById(eventId.value);
-      return ev.invitation || null;
+      const res = await eventsService.getById(eventId.value);
+      // Unwrap ApiResponse wrapper if present
+      const ev = res?.data || res;
+      return ev?.invitation || null;
     } catch (e) {
       console.warn("[editMode] failed to fetch invitation config:", e);
       return null;

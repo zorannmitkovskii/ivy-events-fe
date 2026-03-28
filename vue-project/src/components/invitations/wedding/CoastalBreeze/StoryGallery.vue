@@ -7,8 +7,13 @@
 
     <div class="gallery-grid">
       <div v-for="(story, idx) in stories" :key="idx" class="story-card">
-        <div class="card-image">
-          <img :src="story.imageUrl" :alt="story.title" />
+        <div class="card-image" :class="{ 'card-image--empty': !story.imageUrl }">
+          <img v-if="story.imageUrl" :src="story.imageUrl" :alt="story.title || ''" />
+          <div v-else class="card-image-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </div>
         </div>
         <div class="card-text">
           <p v-if="story.date" class="card-date">{{ story.date }}</p>
@@ -48,7 +53,7 @@ const cssVars = computed(() => ({
   font-family: var(--sg-heading-font);
   font-size: 40px;
   font-weight: 400;
-  color: #1f2937;
+  color: var(--theme-text, #1f2937);
   margin: 0 0 16px;
 }
 
@@ -80,6 +85,17 @@ const cssVars = computed(() => ({
   height: 256px;
 }
 
+.card-image--empty {
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-image-placeholder {
+  color: #d1d5db;
+}
+
 .card-image img {
   width: 100%;
   height: 100%;
@@ -95,7 +111,7 @@ const cssVars = computed(() => ({
 .card-date {
   font-family: var(--sg-body-font);
   font-size: 13px;
-  color: #6b7280;
+  color: var(--theme-text-muted, #6b7280);
   margin: 0 0 8px;
 }
 
@@ -103,14 +119,14 @@ const cssVars = computed(() => ({
   font-family: var(--sg-heading-font);
   font-size: 22px;
   font-weight: 500;
-  color: #1f2937;
+  color: var(--theme-text, #1f2937);
   margin: 0 0 8px;
 }
 
 .card-description {
   font-family: var(--sg-body-font);
   font-size: 14px;
-  color: #4b5563;
+  color: var(--theme-text-muted, #4b5563);
   margin: 0;
   line-height: 1.6;
 }

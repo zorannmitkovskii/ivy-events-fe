@@ -36,12 +36,6 @@ import TeamPage from "@/pages/dashboard/TeamPage.vue";
 import EventSettingsPage from "@/pages/dashboard/EventSettingsPage.vue";
 import TasksPage from "@/pages/dashboard/TasksPage.vue";
 import BudgetPage from "@/pages/userDashboard/BudgetPage.vue";
-import SunsetGlass from "@/pages/invitaitons/wedding/SunsetGlass.vue";
-import PersianWedding from "@/pages/invitaitons/wedding/PersianWedding.vue";
-import ParisianWedding from "@/pages/invitaitons/wedding/ParisianWedding.vue";
-import CoastalBreeze from "@/pages/invitaitons/wedding/CoastalBreeze.vue";
-import ModernCollage from "@/pages/invitaitons/wedding/ModernCollage.vue";
-import ElegantChateau from "@/pages/invitaitons/wedding/ElegantChateau.vue";
 
 // Admin Dashboard
 import AdminDashboardLayout from "@/layouts/AdminDashboardLayout.vue";
@@ -73,6 +67,7 @@ const routes = [
       // ONBOARDING
       { path: "event-category", name: "EventCategoryPage", component: EventCategoryPage, meta: { requiresAuth: true } },
       { path: "event-invitations", name: "EventInvitationsPage", component: EventInvitationsPage },
+      { path: "invitation-builder", name: "InvitationBuilderPage", redirect: to => ({ path: `/${to.params.lang}/invitations/my-wedding`, query: { edit: 'true' } }) },
       { path: "checkout", name: "checkout", component: CheckoutPurchasePage, meta: { requiresAuth: true } },
       { path: "event-live", name: "event-live", component: EventLivePage, meta: { requiresAuth: true } },
 
@@ -88,13 +83,9 @@ const routes = [
       // PUBLIC TABLE LOOKUP (guests find their table)
       { path: "table-lookup", name: "TableLookup", component: () => import("@/pages/TableLookupPage.vue") },
 
-      // INVITATION PREVIEWS
-      { path: "invitations/persian-wedding", name: "persianWedding", component: PersianWedding },
-      { path: "invitations/parisian-wedding", name: "parisianWedding", component: ParisianWedding },
-      { path: "invitations/coastal-breeze", name: "coastalBreeze", component: CoastalBreeze },
-      { path: "invitations/sunset-glass", name: "sunsetGlass", component: SunsetGlass },
-      { path: "invitations/modern-collage", name: "modernCollage", component: ModernCollage },
-      { path: "invitations/elegant-chateau", name: "elegantChateau", component: ElegantChateau },
+      // INVITATION TEMPLATES (unified)
+      { path: "invitations/:design", name: "weddingInvitation", component: () => import("@/pages/invitaitons/wedding/UnifiedWeddingInvitation.vue") },
+      { path: "invitations/:design/private", name: "weddingInvitationPrivate", component: () => import("@/pages/invitaitons/wedding/UnifiedWeddingInvitation.vue") },
 
       // AUTH
       {

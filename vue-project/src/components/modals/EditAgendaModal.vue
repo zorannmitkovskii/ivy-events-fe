@@ -9,7 +9,7 @@
             <span class="item-time" v-if="!isExpanded(item.id)">{{ item.time || '' }}</span>
           </div>
           <div class="item-actions">
-            <button class="icon-btn icon-btn--danger" type="button" @click.stop="emit('delete', item.id)">
+            <button v-if="!noAdd" class="icon-btn icon-btn--danger" type="button" @click.stop="emit('delete', item.id)">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
               </svg>
@@ -61,7 +61,7 @@
       <ButtonMain variant="outline" type="button" @click="emit('close')">
         {{ t('common.close') }}
       </ButtonMain>
-      <ButtonMain v-if="!props.maxItems || items.length < props.maxItems" variant="main" type="button" @click="emit('add')">
+      <ButtonMain v-if="!props.noAdd && (!props.maxItems || items.length < props.maxItems)" variant="main" type="button" @click="emit('add')">
         {{ t('editAgenda.addItem') }}
       </ButtonMain>
     </template>
@@ -81,6 +81,7 @@ const props = defineProps({
   open: { type: Boolean, default: false },
   items: { type: Array, default: () => [] },
   maxItems: { type: Number, default: 0 },
+  noAdd: { type: Boolean, default: false },
 });
 
 const emit = defineEmits(["close", "add", "delete", "update"]);

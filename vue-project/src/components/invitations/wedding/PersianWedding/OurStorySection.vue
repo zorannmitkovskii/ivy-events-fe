@@ -68,7 +68,7 @@ function gridPhotoClass(idx) {
   font-family: var(--os-heading-font);
   font-size: 40px;
   font-weight: 500;
-  color: #333;
+  color: var(--theme-text, #333);
   text-align: center;
   margin: 0 0 48px;
 }
@@ -98,7 +98,7 @@ function gridPhotoClass(idx) {
   font-family: var(--os-heading-font);
   font-size: 24px;
   font-weight: 600;
-  color: #333;
+  color: var(--theme-text, #333);
   margin: 0 0 12px;
 }
 
@@ -106,7 +106,7 @@ function gridPhotoClass(idx) {
   font-family: var(--os-body-font);
   font-size: 16px;
   line-height: 1.7;
-  color: #666;
+  color: var(--theme-text-muted, #666);
   margin: 0;
 }
 

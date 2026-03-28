@@ -19,18 +19,16 @@
 
             <div class="col-md-3">
               <label class="form-label">Start Date</label>
-              <input
-                type="date"
-                class="form-control"
+              <DateInput
+                input-class="form-control"
                 v-model="filters.startDate"
               />
             </div>
 
             <div class="col-md-3">
               <label class="form-label">End Date</label>
-              <input
-                type="date"
-                class="form-control"
+              <DateInput
+                input-class="form-control"
                 v-model="filters.endDate"
               />
             </div>
@@ -160,9 +158,8 @@
 
               <div class="mb-3">
                 <label class="form-label">Due Date</label>
-                <input
-                  type="date"
-                  class="form-control"
+                <DateInput
+                  input-class="form-control"
                   v-model="modalForm.dueDate"
                 />
               </div>
@@ -196,6 +193,7 @@
 import { reactive, ref, computed, onMounted } from "vue";
 import * as bootstrap from "bootstrap";
 import DashboardLayout from "@/components/userDashboard/dashboard/DashboardLayout.vue";
+import DateInput from "@/components/generic/DateInput.vue";
 import axios from "axios";
 
 // Pagination

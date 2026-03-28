@@ -13,7 +13,7 @@
 
       <div class="field" v-if="fieldConfig.date?.show">
         <label>{{ t("ourStory.form.date") }} {{ fieldConfig.date.required ? '*' : '' }}</label>
-        <input class="input" type="date" v-model="draft.storyDate" />
+        <DateInput input-class="input" v-model="draft.storyDate" />
         <div v-if="errors.storyDate" class="err">{{ errors.storyDate }}</div>
       </div>
 
@@ -79,6 +79,7 @@ import { reactive, ref, watch, computed, onBeforeUnmount } from "vue";
 import { useI18n } from "vue-i18n";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
+import DateInput from "@/components/generic/DateInput.vue";
 import { StoryType } from "@/enums/StoryType";
 import { onboardingStore } from "@/store/onboarding.store.js";
 import { OUR_STORY_FIELD_CONFIG, DEFAULT_FIELD_CONFIG } from "@/config/ourStoryFieldConfig.js";

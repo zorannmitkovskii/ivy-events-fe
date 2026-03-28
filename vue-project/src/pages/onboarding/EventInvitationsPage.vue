@@ -26,6 +26,28 @@
 
     <!-- Scrollable content -->
     <div class="content">
+      <!-- Edit current invitation (logged in, has invitation) -->
+      <div v-if="fromDashboard && currentInvitationPath" class="builder-cta">
+        <button class="builder-btn builder-btn--edit" @click="onEditCurrent">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>
+          </svg>
+          <span>{{ $t('onboarding.invitations.editCurrent') }}</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      <!-- Build Your Own CTA -->
+      <div class="builder-cta">
+        <button class="builder-btn" @click="onOpenBuilder">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+          </svg>
+          <span>{{ $t('onboarding.invitations.buildYourOwn') }}</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
       <CategoryFilterBar
         :categories="categoryOptions"
         :model-value="displayCategory"
@@ -162,6 +184,24 @@ function onPreview(id) {
   window.open(resolved.href, '_blank');
 }
 
+const currentInvitationPath = computed(() => {
+  if (!onboardingStore.invitationName) return '';
+  const tpl = templates.value.find(t => t.id === onboardingStore.invitationName);
+  return tpl?.path || onboardingStore.invitationName;
+});
+
+function onEditCurrent() {
+  const path = currentInvitationPath.value;
+  if (!path) return;
+  const eventId = onboardingStore.eventId || route.query.eventId || '';
+  const url = `/${lang.value}/${path}?edit=true${eventId ? '&eventId=' + eventId : ''}`;
+  router.push(url);
+}
+
+function onOpenBuilder() {
+  router.push({ name: 'InvitationBuilderPage', params: { lang: lang.value } });
+}
+
 function onBack() {
   if (fromDashboard.value) {
     router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
@@ -295,6 +335,36 @@ async function onContinue() {
 }
 
 /* ===== Scrollable content ===== */
+/* Builder CTA */
+.builder-cta {
+  margin-bottom: 20px;
+}
+.builder-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-family: inherit;
+}
+.builder-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+.builder-btn span { flex: 1; text-align: left; }
+.builder-btn--edit {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
 .content {
   flex: 1;
   max-width: 1200px;

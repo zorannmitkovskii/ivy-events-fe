@@ -12,7 +12,7 @@
 
         <div class="detail-row">
           <label class="detail-label" for="s-date">{{ t("settings.eventDate") }}</label>
-          <input id="s-date" v-model="form.date" type="date" class="detail-input" />
+          <DateInput input-class="detail-input" v-model="form.date" />
         </div>
 
         <div class="detail-row detail-row--full">
@@ -94,6 +94,7 @@
 <script setup>
 import { useI18n } from "vue-i18n";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
+import DateInput from "@/components/generic/DateInput.vue";
 import AuthLocationInput from "@/components/auth/AuthLocationInput.vue";
 
 const { t } = useI18n();

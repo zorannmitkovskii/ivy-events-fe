@@ -262,14 +262,14 @@ async function onSubmit() {
   font-family: var(--rsvp-heading-font);
   font-size: 32px;
   font-weight: 600;
-  color: #333;
+  color: var(--theme-text, #333);
   text-align: center;
   margin: 0 0 4px;
 }
 
 .rsvp-subtitle {
   text-align: center;
-  color: #888;
+  color: var(--theme-text-muted, #888);
   font-family: var(--rsvp-body-font);
   font-size: 15px;
   margin: 0 0 28px;
@@ -286,7 +286,7 @@ async function onSubmit() {
   font-family: var(--rsvp-body-font);
   font-size: 13px;
   font-weight: 700;
-  color: #555;
+  color: var(--theme-text, #555);
   margin-bottom: 6px;
 }
 
@@ -294,11 +294,11 @@ async function onSubmit() {
   width: 100%;
   padding: 12px 16px;
   border-radius: var(--rsvp-radius);
-  background: #fafafa;
-  border: 2px solid #e5e5e5;
+  background: var(--item-bg, #fafafa);
+  border: 2px solid var(--border-color, #e5e5e5);
   font-family: var(--rsvp-body-font);
   font-size: 15px;
-  color: #333;
+  color: var(--theme-text, #333);
   transition: border-color 0.2s ease;
   box-sizing: border-box;
 }
@@ -309,7 +309,7 @@ async function onSubmit() {
 }
 
 .field-input::placeholder {
-  color: #bbb;
+  color: var(--theme-text-muted, #bbb);
 }
 
 .field-textarea {
@@ -347,7 +347,7 @@ async function onSubmit() {
   cursor: pointer;
   font-family: var(--rsvp-body-font);
   font-size: 13px;
-  color: #666;
+  color: var(--theme-text-muted, #666);
   padding-left: 2px;
 }
 
@@ -385,8 +385,8 @@ async function onSubmit() {
   height: 36px;
   border-radius: 50%;
   border: none;
-  background: #f5f5f5;
-  color: #999;
+  background: var(--item-bg, #f5f5f5);
+  color: var(--theme-text-muted, #999);
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.15s ease, color 0.15s ease;
@@ -408,14 +408,14 @@ async function onSubmit() {
   font-family: var(--rsvp-body-font);
   font-size: 14px;
   font-weight: 600;
-  color: #888;
+  color: var(--theme-text-muted, #888);
   cursor: pointer;
   transition: border-color 0.2s ease, color 0.2s ease;
 }
 
 .add-guest-btn:hover {
   border-color: var(--rsvp-accent);
-  color: #555;
+  color: var(--theme-text, #555);
 }
 
 /* Attendance radios */
@@ -439,8 +439,8 @@ async function onSubmit() {
   text-align: center;
   padding: 12px 16px;
   border-radius: var(--rsvp-radius);
-  border: 2px solid #e5e5e5;
-  color: #888;
+  border: 2px solid var(--border-color, #e5e5e5);
+  color: var(--theme-text-muted, #888);
   font-family: var(--rsvp-body-font);
   font-size: 14px;
   font-weight: 600;
@@ -454,19 +454,19 @@ async function onSubmit() {
 .radio-card--selected span {
   border-color: var(--rsvp-accept);
   background: color-mix(in srgb, var(--rsvp-accept) 20%, transparent);
-  color: #333;
+  color: var(--theme-text, #333);
 }
 
 .radio-card--selected-decline span {
   border-color: var(--rsvp-decline);
   background: color-mix(in srgb, var(--rsvp-decline) 20%, transparent);
-  color: #333;
+  color: var(--theme-text, #333);
 }
 
 .radio-card--selected-accent span {
   border-color: var(--rsvp-accent);
   background: color-mix(in srgb, var(--rsvp-accent) 20%, transparent);
-  color: #333;
+  color: var(--theme-text, #333);
 }
 
 /* Select dropdown */

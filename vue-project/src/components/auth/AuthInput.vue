@@ -8,7 +8,14 @@
         <slot name="icon" />
       </span>
 
+      <DateInput
+        v-if="type === 'date'"
+        input-class="field__input"
+        :model-value="modelValue"
+        @update:model-value="$emit('update:modelValue', $event)"
+      />
       <input
+        v-else
         class="field__input"
         :type="type"
         :placeholder="placeholder"
@@ -21,6 +28,8 @@
 </template>
 
 <script setup>
+import DateInput from "@/components/generic/DateInput.vue";
+
 defineEmits(["update:modelValue"]);
 
 defineProps({
