@@ -9,7 +9,7 @@
             <span class="item-desc" v-if="!isExpanded(item.id)">{{ item.description || '' }}</span>
           </div>
           <div class="item-actions">
-            <button class="icon-btn icon-btn--danger" type="button" @click.stop="emit('delete', item.id)">
+            <button v-if="!noAdd" class="icon-btn icon-btn--danger" type="button" @click.stop="emit('delete', item.id)">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
               </svg>
@@ -39,7 +39,7 @@
 
           <div class="field" v-if="fc.date?.show">
             <label>{{ t('ourStory.form.date') }}</label>
-            <input type="date" class="input" :value="item.storyDate || item.date || ''" @input="onFieldChange(item, 'storyDate', $event.target.value)" />
+            <DateInput input-class="input" :model-value="item.storyDate || item.date || ''" @update:model-value="onFieldChange(item, 'storyDate', $event)" />
           </div>
 
           <div class="field" v-if="fc.imageUrl?.show">
@@ -83,7 +83,7 @@
       <ButtonMain variant="outline" type="button" @click="emit('close')">
         {{ t('common.close') }}
       </ButtonMain>
-      <ButtonMain v-if="!props.maxItems || items.length < props.maxItems" variant="main" type="button" @click="emit('add')">
+      <ButtonMain v-if="!props.noAdd && (!props.maxItems || items.length < props.maxItems)" variant="main" type="button" @click="emit('add')">
         {{ t('editOurStory.addItem') }}
       </ButtonMain>
     </template>
@@ -95,6 +95,7 @@ import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
+import DateInput from "@/components/generic/DateInput.vue";
 import { StoryType } from "@/enums/StoryType";
 import { DEFAULT_FIELD_CONFIG } from "@/config/ourStoryFieldConfig.js";
 
@@ -105,6 +106,7 @@ const props = defineProps({
   items: { type: Array, default: () => [] },
   fieldConfig: { type: Object, default: () => null },
   maxItems: { type: Number, default: 0 },
+  noAdd: { type: Boolean, default: false },
 });
 
 const emit = defineEmits(["close", "add", "delete", "update"]);

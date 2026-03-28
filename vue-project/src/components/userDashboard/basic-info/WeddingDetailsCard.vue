@@ -8,7 +8,7 @@
       <div class="row g-3">
         <div class="col-md-6">
           <label class="form-label">Wedding Date</label>
-          <input type="date" class="form-control" v-model="form.date" />
+          <DateInput input-class="form-control" v-model="form.date" />
         </div>
         <div class="col-md-6">
           <label class="form-label">Wedding Time</label>
@@ -28,5 +28,7 @@
 </template>
 
 <script setup>
+import DateInput from "@/components/generic/DateInput.vue";
+
 defineProps(["form"]);
 </script>

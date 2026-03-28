@@ -7,6 +7,7 @@ import { getUsername } from "@/services/auth.service";
 
 export function buildEventFullPayload({
   config,
+  rootBg,
   palette,
   fonts,
   buttonStyle,
@@ -23,6 +24,9 @@ export function buildEventFullPayload({
   ourStoryItems,
   invitationName,
   lang,
+  heroFamily,
+  scheduleFamily,
+  storyFamily,
 }) {
   // Extract raw font name from CSS font-family like "'Cormorant Garamond', serif"
   const extractFont = (css) => (css || "").replace(/^'|'.*$/g, "");
@@ -47,7 +51,7 @@ export function buildEventFullPayload({
     name: `${config.brideName || ""} & ${config.groomName || ""}`,
     categoryType: "WEDDING",
     status: "DRAFT",
-    date: config.weddingDateTime || "",
+    date: (config.weddingDateTime || "").split("T")[0] || "",
     lang: lang || "en",
     username: getUsername(),
     invitationName: invitationName || "",
@@ -78,7 +82,7 @@ export function buildEventFullPayload({
     eventDetails: (eventDetailItems || []).map((item) => ({
       id: item.id && !item.id.startsWith("_local_") ? item.id : undefined,
       type: item.type || "",
-      eventDate: item.eventDate || "",
+      eventDate: item.eventDate || null,
       time: item.time || "",
       description: item.description || "",
       visibility: item.visibility || "PUBLIC",
@@ -97,7 +101,7 @@ export function buildEventFullPayload({
       type: item.type || "",
       description: item.description || "",
       descriptionI18n: item.descriptionI18n || null,
-      storyDate: item.storyDate || item.date || "",
+      storyDate: item.storyDate || item.date || null,
       displayOrder: i + 1,
     })),
 
@@ -114,6 +118,7 @@ export function buildEventFullPayload({
     },
 
     theme: {
+      rootBg: rootBg || "",
       palette: {
         accent: palette?.accent || "",
         secondary: palette?.secondary || "",
@@ -136,6 +141,9 @@ export function buildEventFullPayload({
         cardBorder: cardStyle?.cardBorder || "0px",
       },
       spacingPreset: spacingPreset || "balanced",
+      heroFamily: heroFamily || "",
+      scheduleFamily: scheduleFamily || "",
+      storyFamily: storyFamily || "",
     },
 
     sectionOrder: orderMap,

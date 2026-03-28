@@ -2,14 +2,14 @@
   <div v-if="visible" class="entry-overlay" :class="{ 'entry-fading': entryFading }">
     <slot name="edit-button" />
     <div class="polaroid-stack" :class="{ expanding: polaroidExpanding }" @click="enterSite">
-      <div class="polaroid polaroid-1">
-        <img :src="photos[0]?.thumbUrl || photos[0]?.url" :alt="photos[0]?.alt" />
+      <div v-if="photos[0]" class="polaroid polaroid-1">
+        <img :src="photos[0].thumbUrl || photos[0].url" :alt="photos[0].alt || ''" />
       </div>
-      <div class="polaroid polaroid-2">
-        <img :src="photos[1]?.thumbUrl || photos[1]?.url" :alt="photos[1]?.alt" />
+      <div v-if="photos[1]" class="polaroid polaroid-2">
+        <img :src="photos[1].thumbUrl || photos[1].url" :alt="photos[1].alt || ''" />
       </div>
       <div class="polaroid polaroid-3">
-        <img :src="photos[2]?.thumbUrl || photos[2]?.url" :alt="photos[2]?.alt" />
+        <img v-if="photos[2]" :src="photos[2].thumbUrl || photos[2].url" :alt="photos[2].alt || ''" />
         <div class="polaroid-label">{{ brideName }} & {{ groomName }}</div>
       </div>
     </div>

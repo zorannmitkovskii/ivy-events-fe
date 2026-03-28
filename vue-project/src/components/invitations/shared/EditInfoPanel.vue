@@ -12,7 +12,7 @@
 
     <div class="field">
       <label>{{ t('editSection.weddingDate') }}</label>
-      <input class="input" type="date" v-model="draft.date" />
+      <DateInput input-class="input" v-model="draft.date" />
     </div>
 
     <div class="field">
@@ -43,6 +43,7 @@
 import { reactive, ref, computed, watch, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import AuthLocationInput from "@/components/auth/AuthLocationInput.vue";
+import DateInput from "@/components/generic/DateInput.vue";
 
 const { t } = useI18n();
 

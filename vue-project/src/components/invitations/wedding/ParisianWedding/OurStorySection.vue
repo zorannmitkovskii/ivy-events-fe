@@ -3,7 +3,7 @@
     <div class="story-layout">
       <div class="story-image-wrap">
         <div class="image-border-offset"></div>
-        <img :src="imageUrl" :alt="title" class="story-image" />
+        <img v-if="imageUrl" :src="imageUrl" :alt="title" class="story-image" />
       </div>
 
       <div class="story-text">
@@ -25,7 +25,7 @@ import { computed } from 'vue';
 const props = defineProps({
   title: { type: String, default: 'Our Story' },
   paragraphs: { type: Array, default: () => [] },
-  imageUrl: { type: String, required: true },
+  imageUrl: { type: String, default: '' },
   signatureUrl: { type: String, default: '' },
   accentColor: { type: String, default: '#dec69a' },
   headingFont: { type: String, default: 'inherit' },
@@ -88,7 +88,7 @@ const cssVars = computed(() => ({
   font-family: var(--os-heading-font);
   font-size: 40px;
   font-weight: 400;
-  color: #1f2937;
+  color: var(--theme-text, #1f2937);
   margin: 0 0 32px;
 }
 
@@ -96,7 +96,7 @@ const cssVars = computed(() => ({
   font-family: var(--os-body-font);
   font-size: 20px;
   line-height: 1.7;
-  color: #4b5563;
+  color: var(--theme-text-muted, #4b5563);
   margin: 0 0 24px;
 }
 

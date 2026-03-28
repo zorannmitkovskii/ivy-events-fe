@@ -46,7 +46,7 @@ const VIDEO_MAP = {
 };
 
 /* ── props / emits ────────────────────────────────────────── */
-defineProps({
+const props = defineProps({
   visible: { type: Boolean, default: true },
   brideName: { type: String, required: true },
   groomName: { type: String, required: true },
@@ -54,6 +54,7 @@ defineProps({
   tapLabel: { type: String, default: 'Tap to open' },
   photos: { type: Array, default: () => [] },
 });
+
 
 const emit = defineEmits(['enter', 'fading']);
 
@@ -115,6 +116,8 @@ defineExpose({ enterSite });
   background: #000;
   transition: opacity 1s ease;
   overflow: hidden;
+  height: 100vh;
+  max-height: 100vh;
 }
 .entry-overlay.entry-fading {
   opacity: 0;
@@ -125,7 +128,7 @@ defineExpose({ enterSite });
   position: absolute;
   inset: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   object-fit: cover;
 }
 

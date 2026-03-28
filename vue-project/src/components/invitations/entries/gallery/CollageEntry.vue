@@ -1,12 +1,11 @@
 <template>
-  <div v-if="visible" class="entry-overlay" :class="{ 'entry-fading': entryFading }">
+  <div v-if="visible" class="entry-overlay" :class="{ 'entry-fading': entryFading }" @click="enterSite">
     <slot name="edit-button" />
-    <div class="collage-grid" :class="{ 'collage-zooming': collageZooming }">
+    <div v-if="photos.length" class="collage-grid" :class="{ 'collage-zooming': collageZooming }">
       <div
         v-for="(photo, i) in photos"
         :key="i"
         class="collage-item"
-        @click="enterSite"
       >
         <img :src="photo.thumbUrl || photo.url" :alt="photo.alt" loading="eager" />
       </div>
@@ -34,15 +33,17 @@ const props = defineProps({
   tapLabel: { type: String, default: 'Tap to enter' },
 });
 
-const emit = defineEmits(['enter']);
+const emit = defineEmits(['enter', 'fading']);
 
 const collageZooming = ref(false);
 const entryFading = ref(false);
 
 function enterSite() {
+  if (collageZooming.value) return;
   collageZooming.value = true;
   setTimeout(() => {
     entryFading.value = true;
+    emit('fading');
     setTimeout(() => {
       emit('enter');
     }, 800);

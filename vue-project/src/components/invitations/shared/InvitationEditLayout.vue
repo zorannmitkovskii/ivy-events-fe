@@ -37,6 +37,7 @@
       :preview-mode="previewMode"
       :statuses="statuses"
       :section-visibility="sectionVisibility"
+      :show-layout-tab="showLayoutTab"
       @toggle-section="emit('toggle-section', $event)"
       @toggle-visibility="emit('toggle-visibility', $event)"
       @save="emit('save')"
@@ -182,6 +183,10 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  showLayoutTab: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(["toggle-section", "toggle-visibility", "save", "set-preview", "select-section"]);
@@ -247,6 +252,7 @@ function onPreviewClick(e) {
 .preview-frame--edit {
   position: relative;
   transform: translateZ(0);
+  height: 100%;
 }
 
 /* Preview frame — always wraps the slot */

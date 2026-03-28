@@ -117,7 +117,7 @@
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">{{ t('weddingDetails.fields.date') }}</label>
-              <input type="date" v-model="form.date" class="form-input" />
+              <DateInput input-class="form-input" v-model="form.date" />
             </div>
             <div class="form-group">
               <label class="form-label">{{ t('weddingDetails.fields.time') }}</label>
@@ -157,6 +157,7 @@
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import BaseModal from "@/components/ui/BaseModal.vue";
+import DateInput from "@/components/generic/DateInput.vue";
 import AuthLocationInput from "@/components/auth/AuthLocationInput.vue";
 import { EventDetailType, EventDetailTypeIcon, EventDetailTypeSortOrder } from "@/enums/EventDetailType.js";
 import { eventDetailsService } from "@/services/eventDetails.service";
