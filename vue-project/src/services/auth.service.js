@@ -187,7 +187,7 @@ export async function refreshAccessToken() {
 
 // Request password reset link
 export async function requestPasswordReset(email) {
-  const res = await apiPublic.post("/public/password-reset/request", { email });
+  const res = await apiPublic.post("/public/auth/password-reset/request", { email });
   return res?.data || res;
 }
 
