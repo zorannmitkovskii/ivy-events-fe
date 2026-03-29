@@ -221,7 +221,14 @@ function initAddressAutocomplete() {
   addressAutocomplete.addListener("place_changed", () => {
     const place = addressAutocomplete.getPlace();
     const address = place.formatted_address || "";
-    const name = place.name || address;
+    // Use the establishment name if it looks clean, otherwise use first part of address
+    let name = '';
+    if (place.name && /^[\p{L}\p{N}\s.,\-'()&]+$/u.test(place.name)) {
+      name = place.name;
+    } else {
+      // Take the first meaningful part of the address (before the first comma)
+      name = address.split(',')[0]?.trim() || address;
+    }
     const lat = place.geometry?.location?.lat?.();
     const lng = place.geometry?.location?.lng?.();
 

@@ -823,7 +823,7 @@
     },
     "types": {
       "CHURCH": "Црква",
-      "CEREMONY": "Церемонија",
+      "CEREMONY": "Регистрација",
       "RECEPTION": "Прием",
       "FIRST_DANCE": "Прв танц",
       "START_GROOM": "Старт младоженец",
@@ -954,6 +954,7 @@
     "signOut": "Одјави се",
     "addGuest": "Додади гостин",
     "addTask": "Додади задача",
+    "upgrade": "Надградба",
     "navigation": "Навигација"
   },
   "admin": {
@@ -1528,8 +1529,8 @@
     "weddingDay": "Ден на свадбата",
     "eventDetails": "Детали за настанот",
     "theDetails": "Деталите",
-    "ceremony": "Церемонија",
-    "theCeremony": "Церемонијата",
+    "ceremony": "Регистрација",
+    "theCeremony": "Регистрацијата",
     "reception": "Прием",
     "theReception": "Приемот",
     "gallery": "Галерија",

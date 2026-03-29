@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { reactive, computed, onMounted, onUnmounted } from 'vue';
+import { reactive, computed, onMounted, onUnmounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -70,6 +70,8 @@ const wrapperVars = computed(() => ({
   '--ct-label-color': props.labelColor,
   '--ct-unit-label-color': props.unitLabelColor,
 }));
+
+watch(() => props.targetDate, () => update(), { immediate: false });
 
 onMounted(() => {
   update();

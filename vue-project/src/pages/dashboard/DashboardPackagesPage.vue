@@ -4,7 +4,7 @@ import { useI18n } from "vue-i18n";
 import { packageService } from "@/services/package.service";
 import { onboardingStore } from "@/store/onboarding.store";
 import { useAuthUser } from "@/composables/useAuthUser";
-import { getUserId } from "@/services/auth.service";
+import { getUserId, getPackages } from "@/services/auth.service";
 import { cpayService } from "@/services/cpay.service";
 import { redirectToCpay } from "@/utils/redirectToCpay";
 import { getErrorMessage } from "@/services/apiError";
@@ -20,12 +20,28 @@ const error = ref(null);
 
 const isGalleryEvent = computed(() => onboardingStore.selectedCategory === "GALLERY");
 
+const userPkgs = computed(() => getPackages() || []);
+const hasInvPremium = computed(() => userPkgs.value.includes("INV_PREMIUM"));
+const hasInvPro = computed(() => userPkgs.value.includes("INV_PRO"));
+
 const activeTab = ref("invitation");
 
 const tabList = computed(() => {
   if (isGalleryEvent.value) {
     return [{ key: "gallery", label: t("packages.tabs.gallery") }];
   }
+  // Premium has everything - show only gallery if they don't have it
+  if (hasInvPremium.value) {
+    return [{ key: "gallery", label: t("packages.tabs.gallery") }];
+  }
+  // Pro - show only premium upgrade + gallery
+  if (hasInvPro.value) {
+    return [
+      { key: "invitation", label: t("packages.tabs.invitation") },
+      { key: "gallery", label: t("packages.tabs.gallery") },
+    ];
+  }
+  // Basic or no package - show all
   return [
     { key: "invitation", label: t("packages.tabs.invitation") },
     { key: "gallery", label: t("packages.tabs.gallery") },
@@ -167,9 +183,29 @@ async function fetchPackages() {
   }
 }
 
+// Filter packages based on user's current tier
+const INV_TIER_ORDER = { INV_BASIC: 1, INV_PRO: 2, INV_PREMIUM: 3 };
+const currentInvTier = computed(() => {
+  if (hasInvPremium.value) return 3;
+  if (hasInvPro.value) return 2;
+  return 0;
+});
+
+const visiblePackages = computed(() => {
+  return packages.value.filter(pkg => {
+    const tier = INV_TIER_ORDER[pkg.packageType] || 0;
+    // Only show packages above current tier (upgrades)
+    if (tier > 0 && tier <= currentInvTier.value) return false;
+    // Already has this package type
+    if (userPkgs.value.includes(pkg.packageType)) return false;
+    return true;
+  });
+});
+
 watch(activeTab, () => fetchPackages());
 onMounted(() => {
   if (isGalleryEvent.value) activeTab.value = "gallery";
+  else if (hasInvPremium.value) activeTab.value = "gallery";
   fetchPackages();
 });
 </script>
@@ -296,7 +332,7 @@ onMounted(() => {
       <!-- Package Cards -->
       <div class="packages-grid">
         <div
-          v-for="pkg in packages"
+          v-for="pkg in visiblePackages"
           :key="pkg.id"
           class="package-card"
           :class="{

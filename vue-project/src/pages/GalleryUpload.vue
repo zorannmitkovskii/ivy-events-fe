@@ -109,7 +109,15 @@ function addFiles(files) {
   const list = Array.from(files);
   const rejected = [];
 
+  const ALLOWED_TYPES = /^(image\/(jpeg|png|gif|webp|heic|heif|svg\+xml)|video\/(mp4|quicktime|webm|x-msvideo|x-matroska))$/i;
+  const ALLOWED_EXT = /\.(jpg|jpeg|png|gif|webp|heic|heif|svg|mp4|mov|webm|avi|mkv|m4v)$/i;
+
   list.forEach(f => {
+    // Validate file type
+    if (!ALLOWED_TYPES.test(f.type) && !ALLOWED_EXT.test(f.name)) {
+      rejected.push(`"${f.name}" — ${t('gallery.invalidType') || 'Only images and videos are allowed'}`);
+      return;
+    }
     if (f.size > MAX_FILE_SIZE) {
       rejected.push(`"${f.name}" (${formatSize(f.size)}) exceeds ${formatSize(MAX_FILE_SIZE)} limit`);
       return;

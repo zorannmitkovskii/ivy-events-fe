@@ -787,6 +787,7 @@ const HERO_FAMILY_OPTIONS = [
   { key: 'coastal', label: 'Split Image + Text', diagram: '<svg viewBox="0 0 64 48"><rect x="2" y="2" width="28" height="44" rx="2" fill="#d1d5db"/><rect x="34" y="8" width="26" height="6" rx="1" fill="#9ca3af"/><rect x="34" y="18" width="26" height="10" rx="1" fill="#e5e7eb"/><rect x="34" y="34" width="18" height="6" rx="1" fill="#9ca3af"/></svg>' },
   { key: 'parisian', label: 'Full Image + Overlay', diagram: '<svg viewBox="0 0 64 48"><rect x="2" y="2" width="60" height="44" rx="2" fill="#d1d5db"/><rect x="12" y="12" width="40" height="6" rx="1" fill="#9ca3af"/><rect x="16" y="22" width="32" height="4" rx="1" fill="#e5e7eb"/><rect x="20" y="32" width="24" height="6" rx="1" fill="#9ca3af"/></svg>' },
   { key: 'persian', label: 'Image + Glass Panel', diagram: '<svg viewBox="0 0 64 48"><rect x="2" y="2" width="60" height="20" rx="2" fill="#d1d5db"/><rect x="10" y="26" width="44" height="18" rx="4" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/><rect x="18" y="30" width="28" height="4" rx="1" fill="#9ca3af"/><rect x="22" y="38" width="20" height="3" rx="1" fill="#9ca3af"/></svg>' },
+  { key: 'editorial', label: 'Editorial Split', diagram: '<svg viewBox="0 0 64 48"><rect x="2" y="2" width="28" height="44" rx="2" fill="#e5e7eb"/><rect x="10" y="10" width="12" height="16" rx="1" fill="#d1d5db"/><line x1="32" y1="2" x2="32" y2="46" stroke="#d1d5db" stroke-width="1"/><rect x="36" y="6" width="20" height="3" rx="1" fill="#9ca3af"/><rect x="36" y="12" width="24" height="6" rx="1" fill="#d1d5db"/><rect x="36" y="22" width="14" height="10" rx="1" fill="#9ca3af"/><rect x="36" y="38" width="22" height="5" rx="1" fill="#9ca3af"/></svg>' },
 ];
 
 const SCHEDULE_FAMILY_OPTIONS = [
@@ -794,6 +795,7 @@ const SCHEDULE_FAMILY_OPTIONS = [
   { key: 'parisian', label: 'Alternating Timeline', diagram: '<svg viewBox="0 0 64 48"><line x1="32" y1="4" x2="32" y2="44" stroke="#9ca3af" stroke-width="2"/><rect x="4" y="6" width="24" height="10" rx="2" fill="#d1d5db"/><rect x="36" y="20" width="24" height="10" rx="2" fill="#d1d5db"/><rect x="4" y="34" width="24" height="10" rx="2" fill="#d1d5db"/></svg>' },
   { key: 'persian', label: 'Vertical Pills', diagram: '<svg viewBox="0 0 64 48"><line x1="12" y1="4" x2="12" y2="44" stroke="#9ca3af" stroke-width="2"/><circle cx="12" cy="10" r="4" fill="#d1d5db"/><rect x="20" y="6" width="40" height="8" rx="2" fill="#e5e7eb"/><circle cx="12" cy="26" r="4" fill="#d1d5db"/><rect x="20" y="22" width="40" height="8" rx="2" fill="#e5e7eb"/><circle cx="12" cy="42" r="4" fill="#d1d5db"/><rect x="20" y="38" width="40" height="8" rx="2" fill="#e5e7eb"/></svg>' },
   { key: 'collage', label: 'Horizontal Timeline', diagram: '<svg viewBox="0 0 64 48"><line x1="4" y1="24" x2="60" y2="24" stroke="#9ca3af" stroke-width="2"/><circle cx="12" cy="24" r="4" fill="#d1d5db"/><circle cx="32" cy="24" r="4" fill="#d1d5db"/><circle cx="52" cy="24" r="4" fill="#d1d5db"/><rect x="4" y="6" width="16" height="10" rx="1" fill="#e5e7eb"/><rect x="24" y="6" width="16" height="10" rx="1" fill="#e5e7eb"/><rect x="44" y="6" width="16" height="10" rx="1" fill="#e5e7eb"/></svg>' },
+  { key: 'editorial', label: 'Table Rows', diagram: '<svg viewBox="0 0 64 48"><rect x="4" y="4" width="56" height="8" rx="1" fill="#e5e7eb"/><line x1="24" y1="4" x2="24" y2="12" stroke="#d1d5db"/><rect x="4" y="16" width="56" height="8" rx="1" fill="#e5e7eb"/><line x1="24" y1="16" x2="24" y2="24" stroke="#d1d5db"/><rect x="4" y="28" width="56" height="8" rx="1" fill="#e5e7eb"/><line x1="24" y1="28" x2="24" y2="36" stroke="#d1d5db"/><rect x="4" y="40" width="56" height="8" rx="1" fill="#e5e7eb"/><line x1="24" y1="40" x2="24" y2="48" stroke="#d1d5db"/></svg>' },
 ];
 
 // Story field config per family — controls which fields show in Our Story editor
@@ -808,6 +810,8 @@ const STORY_FIELD_CONFIGS = {
   collage: { title: { show: true, required: true }, type: { show: false }, description: { show: true, required: false }, date: { show: false }, imageUrl: { show: true, required: false } },
   // chateau: slider cards → title + description + image
   chateau: { title: { show: true, required: true }, type: { show: false }, description: { show: true, required: false }, date: { show: false }, imageUrl: { show: true, required: false } },
+  // editorial: chapters → title + date label + description text
+  editorial: { title: { show: true, required: true }, type: { show: false }, description: { show: true, required: true }, date: { show: true }, imageUrl: { show: false } },
 };
 const storyFieldConfig = computed(() =>
   STORY_FIELD_CONFIGS[storyFamily.value] || OUR_STORY_FIELD_CONFIG[preset.id] || STORY_FIELD_CONFIGS.coastal
@@ -842,6 +846,7 @@ const STORY_FAMILY_OPTIONS = [
   { key: 'coastal', label: 'Photo Grid', diagram: '<svg viewBox="0 0 64 48"><rect x="2" y="2" width="18" height="20" rx="2" fill="#d1d5db"/><rect x="23" y="2" width="18" height="20" rx="2" fill="#d1d5db"/><rect x="44" y="2" width="18" height="20" rx="2" fill="#d1d5db"/><rect x="2" y="26" width="60" height="4" rx="1" fill="#e5e7eb"/><rect x="2" y="34" width="60" height="4" rx="1" fill="#e5e7eb"/></svg>' },
   { key: 'parisian', label: 'Image + Story Text', diagram: '<svg viewBox="0 0 64 48"><rect x="2" y="2" width="28" height="44" rx="2" fill="#d1d5db"/><rect x="34" y="4" width="26" height="6" rx="1" fill="#9ca3af"/><rect x="34" y="14" width="26" height="16" rx="1" fill="#e5e7eb"/><rect x="34" y="34" width="18" height="6" rx="1" fill="#9ca3af"/></svg>' },
   { key: 'persian', label: 'Photo Grid + Text', diagram: '<svg viewBox="0 0 64 48"><rect x="2" y="2" width="28" height="20" rx="2" fill="#d1d5db"/><rect x="34" y="2" width="28" height="20" rx="2" fill="#d1d5db"/><rect x="2" y="26" width="28" height="20" rx="2" fill="#d1d5db"/><rect x="34" y="26" width="28" height="20" rx="2" fill="#d1d5db"/></svg>' },
+  { key: 'editorial', label: 'Chapters + Photos', diagram: '<svg viewBox="0 0 64 48"><rect x="2" y="2" width="28" height="12" rx="1" fill="#9ca3af"/><rect x="2" y="16" width="28" height="6" rx="1" fill="#e5e7eb"/><rect x="34" y="2" width="28" height="12" rx="1" fill="#9ca3af"/><rect x="34" y="16" width="28" height="6" rx="1" fill="#e5e7eb"/><rect x="2" y="28" width="14" height="18" rx="2" fill="#d1d5db"/><rect x="18" y="28" width="14" height="18" rx="2" fill="#d1d5db"/><rect x="34" y="28" width="14" height="18" rx="2" fill="#d1d5db"/><rect x="50" y="28" width="14" height="18" rx="2" fill="#d1d5db"/></svg>' },
 ];
 </script>
 
