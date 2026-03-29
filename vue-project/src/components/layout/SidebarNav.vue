@@ -265,23 +265,23 @@ function signOut() { logout(); clearOnboarding(); router.push(`/${lang.value}/au
 
 /* Sidebar CTAs */
 .sidebar-ctas {
-  padding: 14px;
+  padding: 10px 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 6px;
 }
 
 .cta-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 6px;
   width: 100%;
-  padding: 10px;
-  border-radius: 9px;
+  padding: 8px;
+  border-radius: 8px;
   font-family: 'Outfit', sans-serif;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.18s;
