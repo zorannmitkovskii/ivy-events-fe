@@ -28,7 +28,7 @@ export function useOurStory() {
   }
 
   async function createItem(payload, file) {
-    const eventId = onboardingStore.eventId;
+    const eventId = payload.eventId || onboardingStore.eventId;
     if (!eventId) throw new Error("Missing eventId");
     const created = await ourStoryApi.create({ ...payload, eventId }, file);
     items.value.push(created);
