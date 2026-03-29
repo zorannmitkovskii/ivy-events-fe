@@ -257,7 +257,25 @@ export function useInvitationEditMode() {
 
   async function handleOurStoryUpdate(payload, file) {
     if (canUseApi()) {
-      if (payload.id) await ourStory.updateItem(payload.id, payload, file);
+      if (payload.id) {
+        // Existing item with ID — update directly (file goes to /our-stories/{id})
+        await ourStory.updateItem(payload.id, payload, file);
+      } else {
+        // Default item without ID — create on BE first so it gets an ID for the file upload
+        const created = await ourStory.createItem(
+          { ...payload, eventId: eventId.value },
+          file
+        );
+        // Replace the in-memory default item with the real saved one
+        const idx = ourStory.items.value.findIndex(
+          (x) => !x.id && x.type === payload.type
+        );
+        if (idx !== -1) {
+          ourStory.items.value[idx] = created;
+        } else {
+          ourStory.items.value.push(created);
+        }
+      }
     } else if (payload.id && payload.id.startsWith("_local_")) {
       updateDraftItem("ourStory", payload.id, payload);
       const idx = ourStory.items.value.findIndex((x) => x.id === payload.id);
