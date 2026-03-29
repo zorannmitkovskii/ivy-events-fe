@@ -634,7 +634,8 @@ export function useWeddingInvitation(preset) {
     if (Array.isArray(data.ourStory) && data.ourStory.length) {
       config.stories = data.ourStory.map((s, i) => {
         const desc = localized(s.descriptionI18n, s.description);
-        const title = s.type ? t('storyTypes.' + s.type) : localized(s.titleI18n, s.title);
+        const storyType = s.storyType || s.type || '';
+        const title = storyType ? t('storyTypes.' + storyType) : localized(s.titleI18n, s.title);
         return {
           imageUrl:    ourStoryImages[i] || s.imageUrl || '',
           date:        s.date || '',
@@ -986,7 +987,8 @@ export function useWeddingInvitation(preset) {
     if (!items.length) return;
     config.stories = items.map((s, i) => {
       const desc = s.description || '';
-      const title = s.type ? t('storyTypes.' + s.type) : (s.title || '');
+      const sType = s.storyType || s.type || '';
+      const title = sType ? t('storyTypes.' + sType) : (s.title || '');
       return {
         imageUrl:    s.imageUrl || _defaultStoryImages[i] || '',
         date:        s.storyDate || s.date || '',

@@ -10,17 +10,7 @@
       </button>
     </div>
 
-    <!-- Event info card -->
-    <div v-if="eventName" class="event-info">
-      <div class="ei-names">{{ eventName }}</div>
-      <div class="ei-date">
-        <span v-if="eventDate">{{ eventDate }}</span>
-        <span v-if="eventStatusLabel" class="pill-draft">{{ eventStatusLabel }}</span>
-      </div>
-    </div>
-
     <nav class="nav">
-      <div class="nav-label">{{ t("sidebar.navigation") }}</div>
       <SidebarNavItem
         v-for="it in navItems"
         :key="it.key"
@@ -34,7 +24,11 @@
 
     <div v-if="!isGallery" class="sidebar-ctas">
       <button class="cta-btn cta-primary" @click="goToGuests">+ {{ t("sidebar.addGuest") }}</button>
-      <button class="cta-btn cta-outline" @click="goToTasks">+ {{ t("sidebar.addTask") }}</button>
+      <button v-if="showUpgrade" class="cta-btn cta-upgrade" @click="goToPackages">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        {{ t("sidebar.upgrade") }}
+      </button>
+      <button v-else class="cta-btn cta-outline" @click="goToTasks">+ {{ t("sidebar.addTask") }}</button>
     </div>
 
     <SidebarAccount
@@ -80,10 +74,12 @@ const isActive = (section) => {
 
 const isGallery = computed(() => onboardingStore.selectedCategory === EventCategoryEnum.GALLERY);
 
-const hasGalleryPackage = computed(() => {
-  const pkgs = getPackages();
-  return pkgs.some(p => p.startsWith("GALLERY_"));
-});
+const userPackages = computed(() => getPackages() || []);
+
+const hasGalleryPackage = computed(() => userPackages.value.some(p => p.startsWith("GALLERY_")));
+const hasInvPremium = computed(() => userPackages.value.includes("INV_PREMIUM"));
+const hasInvPro = computed(() => userPackages.value.includes("INV_PRO"));
+const showUpgrade = computed(() => !hasInvPremium.value);
 
 const allNavItems = [
   { key: "overview", path: "overview", labelKey: "sidebar.overview", icon: Icons.grid },
@@ -155,7 +151,8 @@ function signOut() { logout(); clearOnboarding(); router.push(`/${lang.value}/au
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .sidebar::before {
@@ -251,9 +248,9 @@ function signOut() { logout(); clearOnboarding(); router.push(`/${lang.value}/au
 .nav {
   display: flex;
   flex-direction: column;
-  padding: 20px 0;
+  padding: 12px 0;
   flex: 1;
-  overflow-y: auto;
+  min-height: 0;
 }
 
 .nav-label {
@@ -310,5 +307,17 @@ function signOut() { logout(); clearOnboarding(); router.push(`/${lang.value}/au
 .cta-outline:hover {
   border-color: rgba(255, 255, 255, 0.22);
   color: rgba(255, 255, 255, 0.75);
+}
+
+.cta-upgrade {
+  background: linear-gradient(135deg, var(--dash-gold), var(--dash-gold-light));
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.cta-upgrade:hover {
+  filter: brightness(1.1);
 }
 </style>

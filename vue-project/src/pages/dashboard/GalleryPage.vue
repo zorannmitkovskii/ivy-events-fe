@@ -75,7 +75,13 @@
           :class="{ selected: selectedIds.has(image.id) }"
           @click="onItemClick(image)"
         >
-          <img :src="image.thumb" :alt="image.name || ''" loading="lazy" />
+          <!-- Video -->
+          <template v-if="isVideo(image)">
+            <video :src="image.url" :poster="image.thumb !== image.url ? image.thumb : ''" muted playsinline preload="metadata" class="gallery-media" @mouseenter="$event.target.play()" @mouseleave="$event.target.pause(); $event.target.currentTime = 0" />
+            <div class="video-badge"><i class="bi bi-play-fill"></i></div>
+          </template>
+          <!-- Image -->
+          <img v-else :src="image.thumb" :alt="image.name || ''" loading="lazy" class="gallery-media" />
 
           <!-- Select checkbox -->
           <div v-if="selectMode" class="select-check" @click.stop="toggleSelect(image.id)">
@@ -102,7 +108,8 @@
     <!-- Preview Modal -->
     <BaseModal :open="previewOpen" :title="previewImage.name || ''" @close="previewOpen = false">
       <div class="preview-body">
-        <img :src="previewImage.url" :alt="previewImage.name || ''" class="preview-img" />
+        <video v-if="isVideo(previewImage)" :src="previewImage.url" controls playsinline class="preview-img" />
+        <img v-else :src="previewImage.url" :alt="previewImage.name || ''" class="preview-img" />
       </div>
 
       <template #footer>
@@ -214,6 +221,15 @@ function unwrap(data) {
     content: Array.isArray(inner?.content) ? inner.content : Array.isArray(inner) ? inner : [],
     last: inner?.last ?? true
   };
+}
+
+const VIDEO_EXTENSIONS = /\.(mp4|mov|webm|avi|mkv|m4v)(\?|$)/i;
+
+function isVideo(item) {
+  if (item.fileType?.startsWith('video')) return true;
+  if (item.url && VIDEO_EXTENSIONS.test(item.url)) return true;
+  if (item.name && VIDEO_EXTENSIONS.test(item.name)) return true;
+  return false;
 }
 
 function mapItems(list) {
@@ -405,11 +421,29 @@ onBeforeUnmount(() => {
   background: var(--dash-cream);
 }
 
-.gallery-item img {
+.gallery-item img,
+.gallery-item video,
+.gallery-media {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
+}
+
+.video-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 28px;
+  height: 28px;
+  background: rgba(0,0,0,0.6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  pointer-events: none;
 }
 
 .gallery-item:hover img {

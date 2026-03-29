@@ -20,8 +20,8 @@ defineProps({
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 11px;
-  padding: 10px 24px;
+  gap: 10px;
+  padding: 8px 20px;
   font-size: 13px;
   color: rgba(255, 255, 255, 0.44);
   cursor: pointer;

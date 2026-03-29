@@ -246,7 +246,7 @@ function goToPackages() {
 }
 
 function goToInvitations() {
-  router.push({ name: "EventInvitationsPage", params: { lang: locale.value } });
+  router.push({ name: "EventInvitationsPage", params: { lang: locale.value }, query: { from: 'dashboard' } });
 }
 
 function archiveEvent() {

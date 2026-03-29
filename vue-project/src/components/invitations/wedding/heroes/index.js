@@ -21,6 +21,9 @@ export const HERO_COMPONENTS = {
   collage: defineAsyncComponent(() =>
     import('@/components/invitations/wedding/CoastalBreeze/HeroSection.vue')
   ),
+  editorial: defineAsyncComponent(() =>
+    import('@/components/invitations/wedding/heroes/HeroEditorial.vue')
+  ),
 };
 
 /**
@@ -41,6 +44,9 @@ export const SCHEDULE_COMPONENTS = {
   ),
   collage: defineAsyncComponent(() =>
     import('@/components/invitations/shared/EventTimeline.vue')
+  ),
+  editorial: defineAsyncComponent(() =>
+    import('@/components/invitations/wedding/sections/ScheduleTable.vue')
   ),
 };
 
@@ -63,6 +69,9 @@ export const DETAILS_COMPONENTS = {
   collage: defineAsyncComponent(() =>
     import('@/components/invitations/wedding/sections/DetailsCollage.vue')
   ),
+  editorial: defineAsyncComponent(() =>
+    import('@/components/invitations/wedding/sections/DetailsCards.vue')
+  ),
 };
 
 /**
@@ -83,5 +92,8 @@ export const STORY_COMPONENTS = {
   ),
   collage: defineAsyncComponent(() =>
     import('@/components/invitations/wedding/CoastalBreeze/StoryGallery.vue')
+  ),
+  editorial: defineAsyncComponent(() =>
+    import('@/components/invitations/wedding/sections/StoryChapters.vue')
   ),
 };

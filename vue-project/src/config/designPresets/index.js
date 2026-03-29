@@ -4,6 +4,7 @@ import parisianWedding from './parisian-wedding.js';
 import persianWedding from './persian-wedding.js';
 import elegantChateau from './elegant-chateau.js';
 import modernCollage from './modern-collage.js';
+import editorial from './editorial.js';
 
 export const DESIGN_PRESETS = {
   'coastal-breeze': coastalBreeze,
@@ -11,6 +12,7 @@ export const DESIGN_PRESETS = {
   'persian-wedding': persianWedding,
   'elegant-chateau': elegantChateau,
   'modern-collage': modernCollage,
+  'editorial': editorial,
 };
 
 export const DESIGN_LIST = Object.values(DESIGN_PRESETS);

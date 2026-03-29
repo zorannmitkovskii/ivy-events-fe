@@ -185,9 +185,13 @@ function onPreview(id) {
 }
 
 const currentInvitationPath = computed(() => {
-  if (!onboardingStore.invitationName) return '';
-  const tpl = templates.value.find(t => t.id === onboardingStore.invitationName);
-  return tpl?.path || onboardingStore.invitationName;
+  // Try onboarding store first, then match from loaded templates
+  const name = onboardingStore.invitationName;
+  if (!name) return '';
+  const tpl = templates.value.find(t => t.id === name || t.path === name || t.name?.toLowerCase().replace(/\s+/g, '-') === name);
+  const path = tpl?.path || name;
+  // Ensure path starts with 'invitations/'
+  return path.startsWith('invitations/') ? path : 'invitations/' + path;
 });
 
 function onEditCurrent() {

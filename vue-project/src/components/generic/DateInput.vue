@@ -59,18 +59,26 @@ function parseDisplay(text) {
 }
 
 function onTextInput(e) {
-  let val = e.target.value.replace(/[^\d/]/g, '');
-  // Auto-insert slashes
-  const digits = val.replace(/\//g, '');
-  if (digits.length >= 4 && !val.includes('/')) {
-    val = digits.slice(0, 2) + '/' + digits.slice(2, 4) + '/' + digits.slice(4, 8);
-  } else if (digits.length >= 2 && val.split('/').length < 2) {
-    val = digits.slice(0, 2) + '/' + digits.slice(2);
-  }
-  e.target.value = val;
+  const input = e.target;
+  // Strip everything except digits
+  const digits = input.value.replace(/\D/g, '').slice(0, 8);
 
-  if (val.length === 10) {
-    const iso = parseDisplay(val);
+  // Build formatted string with auto-slashes
+  let formatted = '';
+  for (let i = 0; i < digits.length; i++) {
+    if (i === 2 || i === 4) formatted += '/';
+    formatted += digits[i];
+  }
+
+  input.value = formatted;
+
+  // Place cursor at end
+  const pos = formatted.length;
+  input.setSelectionRange(pos, pos);
+
+  // Emit when complete (dd/mm/yyyy = 10 chars)
+  if (formatted.length === 10) {
+    const iso = parseDisplay(formatted);
     if (iso) {
       emit('update:modelValue', iso);
       emit('input', iso);
