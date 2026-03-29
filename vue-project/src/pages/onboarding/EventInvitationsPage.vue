@@ -26,33 +26,34 @@
 
     <!-- Scrollable content -->
     <div class="content">
-      <!-- Edit current invitation (logged in, has invitation) -->
-      <div v-if="fromDashboard && currentInvitationPath" class="builder-cta">
-        <button class="builder-btn builder-btn--edit" @click="onEditCurrent">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>
-          </svg>
-          <span>{{ $t('onboarding.invitations.editCurrent') }}</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      <!-- Quick actions row -->
+      <div class="quick-actions">
+        <button v-if="fromDashboard && currentInvitationPath" class="action-card action-card--edit" @click="onEditCurrent">
+          <div class="action-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>
+            </svg>
+          </div>
+          <div class="action-text">
+            <span class="action-title">{{ $t('onboarding.invitations.editCurrent') }}</span>
+            <span class="action-desc">{{ $t('onboarding.invitations.editDesc') || 'Change colors, fonts, content' }}</span>
+          </div>
+          <svg class="action-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <button class="action-card action-card--build" @click="onOpenBuilder">
+          <div class="action-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+            </svg>
+          </div>
+          <div class="action-text">
+            <span class="action-title">{{ $t('onboarding.invitations.buildYourOwn') }}</span>
+            <span class="action-desc">{{ $t('onboarding.invitations.buildDesc') || 'Mix and match sections freely' }}</span>
+          </div>
+          <svg class="action-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
       </div>
-
-      <!-- Build Your Own CTA -->
-      <div class="builder-cta">
-        <button class="builder-btn" @click="onOpenBuilder">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
-          </svg>
-          <span>{{ $t('onboarding.invitations.buildYourOwn') }}</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
-      </div>
-
-      <CategoryFilterBar
-        :categories="categoryOptions"
-        :model-value="displayCategory"
-        :disabled="true"
-      />
 
       <div v-if="fetchLoading" class="loading-state">
         <span class="spinner" />
@@ -338,36 +339,51 @@ async function onContinue() {
   text-overflow: ellipsis;
 }
 
-/* ===== Scrollable content ===== */
-/* Builder CTA */
-.builder-cta {
-  margin-bottom: 20px;
+/* ===== Quick actions ===== */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
 }
-.builder-btn {
-  width: 100%;
+
+.action-card {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
-  color: #fff;
-  border: none;
-  border-radius: 14px;
-  font-size: 15px;
-  font-weight: 600;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   font-family: inherit;
+  text-align: left;
 }
-.builder-btn:hover {
+.action-card:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
-.builder-btn span { flex: 1; text-align: left; }
-.builder-btn--edit {
-  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+
+.action-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
+.action-card--edit .action-icon { background: #ecfdf5; color: #059669; }
+.action-card--build .action-icon { background: #f0f9ff; color: #0284c7; }
+
+.action-text { flex: 1; min-width: 0; }
+.action-title { display: block; font-size: 14px; font-weight: 600; color: #1f2937; }
+.action-desc { display: block; font-size: 12px; color: #9ca3af; margin-top: 1px; }
+
+.action-arrow { color: #d1d5db; flex-shrink: 0; transition: transform 0.15s; }
+.action-card:hover .action-arrow { transform: translateX(2px); color: #9ca3af; }
 
 .content {
   flex: 1;

@@ -298,12 +298,14 @@
       "sentMessage": "If an account exists with that email, we’ve sent a password reset link. Please check your inbox and spam folder.",
       "error": "Something went wrong. Please try again.",
       "cta": "Send reset link",
+      "resend": "Resend link",
       "backToLogin": "Back to login"
     },
     "reset": {
       "title": "Create a new password",
       "subtitle": "Please choose a secure password for your account.",
       "cta": "Reset password",
+      "successMessage": "Your password has been reset successfully. You can now sign in.",
       "backToLogin": "Back to login"
     }
   },
@@ -351,8 +353,10 @@
       "back": "Back to details",
       "loading": "Loading invitations...",
       "emptyState": "No invitation designs available for this category yet. We're working on it!",
-      "buildYourOwn": "Build Your Own Invitation",
-      "editCurrent": "Edit Current Invitation"
+      "buildYourOwn": "Build Your Own",
+      "buildDesc": "Mix and match sections freely",
+      "editCurrent": "Edit Current Invitation",
+      "editDesc": "Change colors, fonts, content"
     },
     "builder": {
       "title": "Invitation Builder",
