@@ -7,14 +7,17 @@
         <slot name="icon">📍</slot>
       </span>
 
-      <!-- Address input (Places Autocomplete) -->
+      <!-- Address input -->
       <input
         ref="addressInputRef"
         class="field__input"
         type="text"
         :placeholder="placeholder"
         :disabled="disabled"
-        @input="onManualInput"
+        @input="onInput"
+        @focus="onFocus"
+        @blur="onBlur"
+        @keydown="onKeydown"
         autocomplete="off"
       />
 
@@ -29,6 +32,38 @@
       >
         <i class="bi bi-geo-alt"></i>
       </button>
+
+      <!-- Custom autocomplete dropdown -->
+      <ul
+        v-if="showDropdown && predictions.length"
+        class="autocomplete-dropdown"
+        role="listbox"
+      >
+        <li
+          v-for="(pred, i) in predictions"
+          :key="pred.place_id"
+          class="autocomplete-item"
+          :class="{ 'autocomplete-item--active': i === activeIndex }"
+          role="option"
+          :aria-selected="i === activeIndex"
+          @mousedown.prevent="selectPrediction(pred)"
+          @mouseenter="activeIndex = i"
+        >
+          <i class="bi bi-geo-alt-fill autocomplete-item__icon"></i>
+          <div class="autocomplete-item__text">
+            <span
+              class="autocomplete-item__main"
+              v-html="highlightMatch(pred.structured_formatting.main_text, pred.structured_formatting.main_text_matched_substrings)"
+            ></span>
+            <span
+              v-if="pred.structured_formatting.secondary_text"
+              class="autocomplete-item__secondary"
+            >
+              {{ pred.structured_formatting.secondary_text }}
+            </span>
+          </div>
+        </li>
+      </ul>
     </div>
 
     <!-- coords preview -->
@@ -114,7 +149,16 @@ const openModal = ref(false);
 const locating = ref(false);
 
 const mapsReady = ref(false);
-let addressAutocomplete = null;
+
+// Custom autocomplete state
+const predictions = ref([]);
+const showDropdown = ref(false);
+const activeIndex = ref(-1);
+let autocompleteService = null;
+let placesService = null;
+let sessionToken = null;
+let debounceTimer = null;
+
 let map = null;
 let marker = null;
 let geocoder = null;
@@ -138,17 +182,13 @@ onMounted(async () => {
   if (addressInputRef.value) {
     addressInputRef.value.value = displayValue.value;
   }
-  // Initialize autocomplete once on mount
   if (mapsReady.value) {
-    initAddressAutocomplete();
+    initServices();
   }
 });
 
 onBeforeUnmount(() => {
-  if (addressAutocomplete) {
-    destroyAutocomplete(addressAutocomplete);
-    addressAutocomplete = null;
-  }
+  clearTimeout(debounceTimer);
 });
 
 // Sync input value when modelValue changes externally (e.g. map pick, parent reset)
@@ -175,6 +215,15 @@ watch(openModal, async (val) => {
   initMapModal();
 });
 
+// ---- Autocomplete logic ----
+
+function initServices() {
+  if (!window.google?.maps?.places) return;
+  autocompleteService = new window.google.maps.places.AutocompleteService();
+  placesService = new window.google.maps.places.PlacesService(document.createElement("div"));
+  sessionToken = new window.google.maps.places.AutocompleteSessionToken();
+}
+
 function emitValue(obj) {
   const payload = {
     name: obj.name || "",
@@ -188,65 +237,160 @@ function emitValue(obj) {
   emit("select", payload);
 }
 
-function onManualInput(e) {
-  const address = e.target.value;
+function onInput(e) {
+  const query = e.target.value.trim();
+  activeIndex.value = -1;
 
-  // user typed -> we keep address, reset coords
+  // Emit raw text so parent stays in sync (coords reset until a place is picked)
   emitValue({
     name: "",
-    address,
+    address: e.target.value,
     lat: null,
     lng: null,
     placeId: null
   });
+
+  clearTimeout(debounceTimer);
+
+  if (!query || query.length < 2 || !autocompleteService) {
+    predictions.value = [];
+    showDropdown.value = false;
+    return;
+  }
+
+  debounceTimer = setTimeout(() => fetchPredictions(query), 300);
 }
 
-function initAddressAutocomplete() {
-  if (!window.google?.maps?.places || !addressInputRef.value) return;
+function fetchPredictions(query) {
+  if (!autocompleteService) return;
 
-  const options = {
-    fields: ["place_id", "name", "formatted_address", "geometry"],
+  const request = {
+    input: query,
+    sessionToken,
   };
 
-  if (props.types.length) {
-    options.types = props.types;
-  }
+  if (props.types.length) request.types = props.types;
+  if (props.country) request.componentRestrictions = { country: props.country };
 
-  if (props.country) {
-    options.componentRestrictions = { country: props.country };
-  }
-
-  addressAutocomplete = new window.google.maps.places.Autocomplete(addressInputRef.value, options);
-
-  addressAutocomplete.addListener("place_changed", () => {
-    const place = addressAutocomplete.getPlace();
-    const address = place.formatted_address || "";
-    // Use the establishment name if it looks clean, otherwise use first part of address
-    let name = '';
-    if (place.name && /^[\p{L}\p{N}\s.,\-'()&]+$/u.test(place.name)) {
-      name = place.name;
+  autocompleteService.getPlacePredictions(request, (results, status) => {
+    if (status === window.google.maps.places.PlacesServiceStatus.OK && results) {
+      predictions.value = results;
+      showDropdown.value = true;
     } else {
-      // Take the first meaningful part of the address (before the first comma)
-      name = address.split(',')[0]?.trim() || address;
+      predictions.value = [];
+      showDropdown.value = false;
     }
-    const lat = place.geometry?.location?.lat?.();
-    const lng = place.geometry?.location?.lng?.();
-
-    emitValue({
-      name,
-      address,
-      lat: lat ?? null,
-      lng: lng ?? null,
-      placeId: place.place_id || null
-    });
   });
 }
 
-function destroyAutocomplete(instance) {
-  if (!instance) return;
-  window.google?.maps?.event?.clearInstanceListeners(instance);
-  document.querySelectorAll(".pac-container").forEach(c => c.remove());
+function selectPrediction(pred) {
+  if (!placesService) return;
+
+  showDropdown.value = false;
+  predictions.value = [];
+
+  placesService.getDetails(
+    {
+      placeId: pred.place_id,
+      fields: ["place_id", "name", "formatted_address", "geometry"],
+      sessionToken,
+    },
+    (place, status) => {
+      // New session after each selection (for billing optimization)
+      sessionToken = new window.google.maps.places.AutocompleteSessionToken();
+
+      if (status !== window.google.maps.places.PlacesServiceStatus.OK || !place) return;
+
+      const address = place.formatted_address || "";
+      let name = "";
+      if (place.name && /^[\p{L}\p{N}\s.,\-'()&]+$/u.test(place.name)) {
+        name = place.name;
+      } else {
+        name = address.split(",")[0]?.trim() || address;
+      }
+      const lat = place.geometry?.location?.lat?.();
+      const lng = place.geometry?.location?.lng?.();
+
+      const payload = {
+        name,
+        address,
+        lat: lat ?? null,
+        lng: lng ?? null,
+        placeId: place.place_id || null,
+      };
+
+      emitValue(payload);
+
+      if (addressInputRef.value) {
+        addressInputRef.value.value = address;
+      }
+    }
+  );
 }
+
+function onFocus() {
+  if (predictions.value.length) {
+    showDropdown.value = true;
+  }
+}
+
+function onBlur() {
+  setTimeout(() => {
+    showDropdown.value = false;
+  }, 150);
+}
+
+function onKeydown(e) {
+  if (!showDropdown.value || !predictions.value.length) return;
+
+  switch (e.key) {
+    case "ArrowDown":
+      e.preventDefault();
+      activeIndex.value = (activeIndex.value + 1) % predictions.value.length;
+      break;
+    case "ArrowUp":
+      e.preventDefault();
+      activeIndex.value = activeIndex.value <= 0
+        ? predictions.value.length - 1
+        : activeIndex.value - 1;
+      break;
+    case "Enter":
+      e.preventDefault();
+      if (activeIndex.value >= 0 && activeIndex.value < predictions.value.length) {
+        selectPrediction(predictions.value[activeIndex.value]);
+      }
+      break;
+    case "Escape":
+      showDropdown.value = false;
+      activeIndex.value = -1;
+      break;
+  }
+}
+
+// ---- Highlight helpers ----
+
+function highlightMatch(text, matchedSubstrings) {
+  if (!text) return "";
+  if (!matchedSubstrings?.length) return escapeHtml(text);
+
+  const sorted = [...matchedSubstrings].sort((a, b) => a.offset - b.offset);
+  let result = "";
+  let lastIndex = 0;
+
+  for (const { offset, length } of sorted) {
+    result += escapeHtml(text.slice(lastIndex, offset));
+    result += `<strong>${escapeHtml(text.slice(offset, offset + length))}</strong>`;
+    lastIndex = offset + length;
+  }
+  result += escapeHtml(text.slice(lastIndex));
+  return result;
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+// ---- Map modal logic ----
 
 function initMapModal() {
   if (!window.google?.maps || !mapRef.value) return;
@@ -289,7 +433,6 @@ function initMapModal() {
     temp.value.lng = e.latLng.lng();
     reverseGeocode(e.latLng);
   });
-
 }
 
 function getInitialCenter() {
@@ -304,8 +447,10 @@ function reverseGeocode(latLng) {
   if (!geocoder || !latLng) return;
 
   geocoder.geocode({ location: latLng }, (res, status) => {
-    if (status === "OK" && res?.[0]) {
-      temp.value.address = res[0].formatted_address;
+    if (status === "OK" && res?.length) {
+      // Prefer results that are not Plus Codes
+      const preferred = res.find(r => !r.types?.includes("plus_code")) || res[0];
+      temp.value.address = preferred.formatted_address;
       // name often not available from reverse geocode -> keep existing
       if (!temp.value.name) temp.value.name = temp.value.address;
     }
@@ -346,7 +491,7 @@ function applySelection() {
   openModal.value = false;
 }
 
-// ---- Google Maps loader (single)
+// ---- Google Maps loader (single) ----
 let mapsLoaderPromise;
 function loadGoogleMaps() {
   if (window.google?.maps?.places) return Promise.resolve(true);
@@ -380,7 +525,6 @@ function loadGoogleMaps() {
 </script>
 
 <style scoped>
-/* твојот CSS може да остане, само мали поправки */
 .field { display: grid; gap: 8px; }
 .field__label {
   font-size: 12px;
@@ -446,7 +590,74 @@ function loadGoogleMaps() {
   width: fit-content;
 }
 
-/* modal */
+/* ---- Custom autocomplete dropdown ---- */
+.autocomplete-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: #fff;
+  border: 1px solid var(--neutral-300);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.autocomplete-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.autocomplete-item--active {
+  background: rgba(147, 162, 154, 0.1);
+}
+
+.autocomplete-item__icon {
+  color: var(--brand-main, #5a7d65);
+  font-size: 16px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.autocomplete-item--active .autocomplete-item__icon {
+  opacity: 1;
+}
+
+.autocomplete-item__text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.autocomplete-item__main {
+  font-size: 14px;
+  color: var(--neutral-900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.autocomplete-item__secondary {
+  font-size: 12px;
+  color: rgba(51, 67, 56, 0.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- Map modal ---- */
 .map { width: 100%; height: 360px; border-radius: 12px; border: 1px solid var(--neutral-300); }
 
 .map-tools { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
