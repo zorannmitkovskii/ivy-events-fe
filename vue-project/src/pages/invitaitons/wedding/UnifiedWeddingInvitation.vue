@@ -94,7 +94,7 @@
     </section>
 
     <!-- Schedule -->
-    <section v-if="(isEditMode || (showAgenda && !isPrivate)) && isSectionVisible('agendaList')" v-show="!entryActive" data-edit-section="agendaList" :class="['section section--base', { 'section--editing': isEditMode && activeRootSection === 'agendaList' }]" data-reveal style="position:relative;">
+    <section v-if="(isEditMode || (showAgenda && isPrivate)) && isSectionVisible('agendaList')" v-show="!entryActive" data-edit-section="agendaList" :class="['section section--base', { 'section--editing': isEditMode && activeRootSection === 'agendaList' }]" data-reveal style="position:relative;">
       <SectionEditButton :visible="isEditMode" :label="t('editSection.agenda')" @click="selectSection('agendaList')" />
       <div class="section-inner">
         <component

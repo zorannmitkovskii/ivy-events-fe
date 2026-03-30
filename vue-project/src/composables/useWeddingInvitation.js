@@ -304,7 +304,11 @@ export function useWeddingInvitation(preset) {
   const entryActive = computed(() => showEntry.value && isSectionVisible('entry'));
 
   /* ---- isPrivate computed ---------------------------------------- */
-  const isPrivate = computed(() => route.query.isPrivate === 'true');
+  const isPrivate = computed(() =>
+    route.query.isPrivate === 'true' ||
+    route.name === 'weddingInvitationPrivate' ||
+    route.path.endsWith('/private')
+  );
 
   /* ---- Config reactive ------------------------------------------- */
   const _futureDate = getFutureWeddingDate();
