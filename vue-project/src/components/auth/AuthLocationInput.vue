@@ -165,7 +165,7 @@ let geocoder = null;
 
 const valueObj = computed(() => props.modelValue || {});
 
-const displayValue = computed(() => valueObj.value?.address || valueObj.value?.name || "");
+const displayValue = computed(() => valueObj.value?.name || valueObj.value?.address || "");
 
 // temporary while modal open
 const temp = ref({
@@ -301,13 +301,17 @@ function selectPrediction(pred) {
 
       if (status !== window.google.maps.places.PlacesServiceStatus.OK || !place) return;
 
-      const address = place.formatted_address || "";
-      let name = "";
-      if (place.name && /^[\p{L}\p{N}\s.,\-'()&]+$/u.test(place.name)) {
-        name = place.name;
-      } else {
-        name = address.split(",")[0]?.trim() || address;
-      }
+      const rawAddress = place.formatted_address || "";
+
+      // If formatted_address contains a Plus Code, fall back to prediction description
+      const plusCodeRe = /[A-Z0-9]{4,}\+[A-Z0-9]{2,}/;
+      const address = plusCodeRe.test(rawAddress)
+        ? (pred.description || rawAddress)
+        : rawAddress;
+
+      // Prefer the prediction's main_text as the name (always clean/readable)
+      const name = pred.structured_formatting?.main_text || place.name || address.split(",")[0]?.trim() || address;
+
       const lat = place.geometry?.location?.lat?.();
       const lng = place.geometry?.location?.lng?.();
 
@@ -322,7 +326,7 @@ function selectPrediction(pred) {
       emitValue(payload);
 
       if (addressInputRef.value) {
-        addressInputRef.value.value = address;
+        addressInputRef.value.value = name;
       }
     }
   );
