@@ -167,7 +167,6 @@ export function useInvitationEditMode() {
       if (idx !== -1) eventDetails.items.value[idx] = { ...payload, _localId: payload.id };
     }
     markDirty();
-    await refresh();
   }
 
   async function handleEventDetailDelete(id) {
@@ -215,7 +214,6 @@ export function useInvitationEditMode() {
       if (idx !== -1) agenda.items.value[idx] = { ...payload, _localId: payload.id };
     }
     markDirty();
-    await refresh();
   }
 
   async function handleAgendaDelete(id) {
@@ -282,7 +280,6 @@ export function useInvitationEditMode() {
       if (idx !== -1) ourStory.items.value[idx] = { ...payload, _localId: payload.id };
     }
     markDirty();
-    await refresh();
   }
 
   async function handleOurStoryDelete(id) {
