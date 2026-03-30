@@ -69,6 +69,21 @@ const videoEl = ref(null);
 const playing = ref(false);
 const fading = ref(false);
 
+/* ── show first frame so the video isn't black ───────────── */
+function showFirstFrame(video) {
+  if (!video) return;
+  video.currentTime = 0.001;
+}
+
+watch(videoEl, (video) => {
+  if (!video) return;
+  if (video.readyState >= 2) {
+    showFirstFrame(video);
+  } else {
+    video.addEventListener('loadeddata', () => showFirstFrame(video), { once: true });
+  }
+});
+
 /* ── reset when video changes (edit-mode preview) ────────── */
 watch(videoSrc, () => {
   playing.value = false;
@@ -77,6 +92,8 @@ watch(videoSrc, () => {
   if (video) {
     video.pause();
     video.currentTime = 0;
+    video.addEventListener('loadeddata', () => showFirstFrame(video), { once: true });
+    video.load();
   }
 });
 
