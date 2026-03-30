@@ -674,8 +674,10 @@ export function useWeddingInvitation(preset) {
     }
 
     // ---- Apply saved theme/config from public endpoint ----
+    // Only for builder ("my-wedding") — preset templates keep their own defaults.
     const theme = data.theme;
-    if (theme) {
+    const applyDesign = route.params.design === 'my-wedding' || route.query.design === 'my-wedding';
+    if (theme && applyDesign) {
       if (theme.rootBg) rootBg.value = theme.rootBg;
       if (theme.palette) Object.assign(palette, theme.palette);
       if (theme.fonts) {
@@ -693,7 +695,7 @@ export function useWeddingInvitation(preset) {
 
     if (data.rsvpConfig) Object.assign(rsvpConfig, data.rsvpConfig);
 
-    if (data.entry) {
+    if (data.entry && applyDesign) {
       entryType.value  = data.entry.type   || entryType.value;
       entryDesign.value = data.entry.design || entryDesign.value;
     }
@@ -804,7 +806,12 @@ export function useWeddingInvitation(preset) {
       sectionState = getDraftSectionState();
     }
 
-    if (theme) {
+    const currentDesign = route.params.design || route.query.design;
+    const isBuilder = currentDesign === 'my-wedding';
+
+    // For preset templates: skip all theme overrides — always show preset defaults.
+    // For builder ("my-wedding"): restore everything from saved theme.
+    if (theme && isBuilder) {
       if (theme.palette) Object.assign(palette, theme.palette);
       if (theme.fonts) {
         Object.assign(fonts, theme.fonts);
@@ -820,7 +827,7 @@ export function useWeddingInvitation(preset) {
       if (theme.storyFamily) storyFamily.value = theme.storyFamily;
     }
     if (rsvpData || theme?.rsvpConfig) Object.assign(rsvpConfig, rsvpData || theme.rsvpConfig);
-    if (entry) {
+    if (entry && isBuilder) {
       entryType.value  = entry.type   || entryType.value;
       entryDesign.value = entry.design || entryDesign.value;
     }
@@ -1010,6 +1017,39 @@ export function useWeddingInvitation(preset) {
   useScrollReveal(rootRef);
 
   /* ================================================================ */
+  /*  Reset preset (when navigating between designs)                  */
+  /* ================================================================ */
+
+  async function resetToPreset(p) {
+    // Reset visual state to new preset defaults
+    entryType.value = p.entryType || 'envelop';
+    entryDesign.value = p.entryDesign || 'white-gold-seal';
+    heroFamily.value = p.family || 'coastal';
+    scheduleFamily.value = p.family || 'coastal';
+    storyFamily.value = p.family || 'coastal';
+    rootBg.value = p.rootBg || '#fff';
+    Object.assign(palette, p.palette);
+    Object.assign(fonts, p.fonts);
+    Object.assign(buttonStyle, p.buttonStyle);
+    Object.assign(cardStyle, p.cardStyle);
+
+    // Load fonts for new preset
+    (p.fontUrls || []).forEach(href => {
+      if (!document.querySelector(`link[href="${href}"]`)) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = href;
+        document.head.appendChild(link);
+      }
+    });
+
+    // Re-fetch backend data & theme for the new design
+    await refreshAllData();
+    const invConfig = await fetchInvitationConfig();
+    if (invConfig) loadThemeFromDraft(invConfig);
+  }
+
+  /* ================================================================ */
   /*  onMounted                                                       */
   /* ================================================================ */
 
@@ -1086,7 +1126,7 @@ export function useWeddingInvitation(preset) {
     t, formatDate, formatTime,
     extractFontName, loadGoogleFont,
     setLayout, markDirty,
-    refreshAllData,
+    refreshAllData, resetToPreset,
     saveThemeToDraft, loadThemeFromDraft,
 
     // Edit-mode delegated handlers (for template wiring)

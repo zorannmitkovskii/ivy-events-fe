@@ -462,7 +462,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, reactive, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { DESIGN_PRESETS } from '@/config/designPresets/index.js';
 import { useWeddingInvitation } from '@/composables/useWeddingInvitation';
@@ -534,6 +534,11 @@ const {
   handleOurStorySave, handleOurStoryUpdate, handleOurStoryDelete,
   OUR_STORY_FIELD_CONFIG,
 } = inv;
+
+// Reset all state when design changes (e.g. navigating from coastal → persian)
+watch(preset, (newPreset) => {
+  inv.resetToPreset(newPreset);
+});
 
 // Lock scroll while entry overlay is active
 watch(entryActive, (active) => {
@@ -688,7 +693,7 @@ const scheduleComponent = computed(() => SCHEDULE_COMPONENTS[scheduleFamily.valu
 const storyComponent = computed(() => STORY_COMPONENTS[storyFamily.value] || null);
 
 // --- Theme palettes: original preset + 10 custom ---
-const ORIGINAL_PALETTE = {
+const ORIGINAL_PALETTE = reactive({
   name: 'Original',
   accent: preset.value.palette.accent,
   secondary: preset.value.palette.secondary,
@@ -698,7 +703,20 @@ const ORIGINAL_PALETTE = {
   sectionBg: preset.value.cardStyle.sectionBg,
   dark: false,
   original: true,
-};
+});
+
+// Sync ORIGINAL_PALETTE when preset changes (design switch)
+watch(preset, (p) => {
+  Object.assign(ORIGINAL_PALETTE, {
+    accent: p.palette.accent,
+    secondary: p.palette.secondary,
+    text: p.palette.text,
+    rootBg: p.rootBg || '#fff',
+    cardBg: p.cardStyle.cardBg,
+    sectionBg: p.cardStyle.sectionBg,
+  });
+  activePaletteName.value = 'Original';
+});
 
 const THEME_PALETTES = [
   ORIGINAL_PALETTE,
