@@ -9,8 +9,6 @@
           <line x1="3" y1="18" x2="21" y2="18" />
         </svg>
       </button>
-      <span class="breadcrumb">Ivy Events</span>
-      <span class="topbar-divider">&rsaquo;</span>
       <span class="topbar-page">{{ title }}</span>
       <span class="live-dot" :title="t('overview.live')"></span>
     </div>

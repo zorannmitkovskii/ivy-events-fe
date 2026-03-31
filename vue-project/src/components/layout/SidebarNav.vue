@@ -22,6 +22,13 @@
       />
     </nav>
 
+    <div v-if="hasMultipleEvents && isOrganizer" class="sidebar-switch">
+      <button class="switch-btn" @click="goToMyEvents">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+        {{ t('sidebar.switchEvent') }}
+      </button>
+    </div>
+
     <div v-if="!isGallery" class="sidebar-ctas">
       <button class="cta-btn cta-primary" @click="goToGuests">+ {{ t("sidebar.addGuest") }}</button>
       <button v-if="showUpgrade" class="cta-btn cta-upgrade" @click="goToPackages">
@@ -52,7 +59,7 @@ import SidebarBrand from "@/components/sidebar/SidebarBrand.vue";
 import SidebarNavItem from "@/components/sidebar/SidebarNavItem.vue";
 import SidebarAccount from "@/components/sidebar/SidebarAccount.vue";
 import { Icons } from "@/utils/icons.js";
-import { getFullName, logout, getPackages } from "@/services/auth.service";
+import { getFullName, logout, getPackages, hasRole } from "@/services/auth.service";
 import { onboardingStore, clearOnboarding } from "@/store/onboarding.store";
 import { EventCategoryEnum } from "@/enums/EventCategory.js";
 import { eventsService } from "@/services/events.service";
@@ -112,6 +119,8 @@ const avatarUrl = computed(() => "");
 // Event info
 const eventName = ref("");
 const eventDate = ref("");
+const hasMultipleEvents = ref(false);
+const isOrganizer = hasRole('ORGANIZER');
 const eventStatusLabel = computed(() => {
   const s = onboardingStore.eventStatus;
   if (!s || s === "ACTIVE") return "";
@@ -122,7 +131,12 @@ onMounted(async () => {
   try {
     const id = onboardingStore.eventId;
     if (!id || id === "demo") return;
-    const ev = await eventsService.getById(id);
+
+    const [ev, allEvents] = await Promise.all([
+      eventsService.getById(id),
+      eventsService.getAll().catch(() => []),
+    ]);
+
     eventName.value = ev.name || ev.title || "";
     if (ev.date || ev.eventDate) {
       const d = new Date(ev.date || ev.eventDate);
@@ -130,11 +144,15 @@ onMounted(async () => {
         day: "numeric", month: "short", year: "numeric"
       });
     }
+
+    const list = Array.isArray(allEvents) ? allEvents : (allEvents?.data || allEvents?.content || []);
+    hasMultipleEvents.value = list.length > 1;
   } catch {
     // keep empty
   }
 });
 
+function goToMyEvents() { router.push({ name: 'dashboard.organizer', params: { lang: lang.value } }); }
 function goToSettings() { router.push(`/${lang.value}/dashboard/events/settings`); }
 function goToInvitationLinks() { router.push(`/${lang.value}/dashboard/events/invitation-links`); }
 function goToPackages() { router.push({ name: "dashboard.packages", params: { lang: lang.value } }); }
@@ -261,6 +279,36 @@ function signOut() { logout(); clearOnboarding(); router.push(`/${lang.value}/au
   padding: 0 24px;
   margin-bottom: 4px;
   font-weight: 600;
+}
+
+/* Switch event */
+.sidebar-switch {
+  padding: 6px 14px;
+}
+
+.switch-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s;
+  border: 1.5px dashed rgba(255, 255, 255, 0.15);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.02em;
+}
+
+.switch-btn:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 /* Sidebar CTAs */
