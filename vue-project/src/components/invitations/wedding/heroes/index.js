@@ -70,7 +70,7 @@ export const DETAILS_COMPONENTS = {
     import('@/components/invitations/wedding/sections/DetailsCollage.vue')
   ),
   editorial: defineAsyncComponent(() =>
-    import('@/components/invitations/wedding/sections/DetailsCards.vue')
+    import('@/components/invitations/wedding/sections/DetailsEditorial.vue')
   ),
 };
 

@@ -69,18 +69,30 @@ const videoEl = ref(null);
 const playing = ref(false);
 const fading = ref(false);
 
-/* ── show first frame so the video isn't black ───────────── */
-function showFirstFrame(video) {
-  if (!video) return;
-  video.currentTime = 0.001;
+/* ── show first frame (iOS needs brief play+pause) ───────── */
+function renderFirstFrame(video) {
+  if (!video || playing.value) return;
+  // Briefly play to force iOS to render the frame, then pause
+  const p = video.play();
+  if (p && p.then) {
+    p.then(() => {
+      if (!playing.value) {
+        video.pause();
+        video.currentTime = 0;
+      }
+    }).catch(() => {
+      // Fallback for browsers that block even muted autoplay
+      video.currentTime = 0.001;
+    });
+  }
 }
 
 watch(videoEl, (video) => {
   if (!video) return;
   if (video.readyState >= 2) {
-    showFirstFrame(video);
+    renderFirstFrame(video);
   } else {
-    video.addEventListener('loadeddata', () => showFirstFrame(video), { once: true });
+    video.addEventListener('loadeddata', () => renderFirstFrame(video), { once: true });
   }
 });
 
@@ -92,7 +104,7 @@ watch(videoSrc, () => {
   if (video) {
     video.pause();
     video.currentTime = 0;
-    video.addEventListener('loadeddata', () => showFirstFrame(video), { once: true });
+    video.addEventListener('loadeddata', () => renderFirstFrame(video), { once: true });
     video.load();
   }
 });

@@ -74,6 +74,18 @@
               @input="onFieldChange(item, 'description', $event.target.value)"
             />
           </div>
+
+          <div class="field">
+            <label
+              class="toggle-row"
+              @click.prevent="onFieldChange(item, 'showTitle', !(item.showTitle !== false))"
+            >
+              <span class="toggle-switch" :class="{ on: item.showTitle !== false }">
+                <span class="toggle-knob" />
+              </span>
+              <span class="toggle-text">{{ t('ourStory.form.showTitle') }}</span>
+            </label>
+          </div>
         </div>
       </div>
     </div>
@@ -129,7 +141,17 @@ function getItemLabel(item, idx) {
   if (fc.value.type?.show && item.type) {
     return t(`storyTypes.${item.type}`);
   }
+  // Try type translation even if type field is hidden (item may still have a type)
+  if (item.type) {
+    const typeLabel = t(`storyTypes.${item.type}`);
+    if (typeLabel !== `storyTypes.${item.type}`) return typeLabel;
+  }
   if (item.title) return item.title;
+  // Use truncated description as label instead of generic "Paragraph N"
+  if (item.description) {
+    const text = item.description.length > 40 ? item.description.slice(0, 40) + '...' : item.description;
+    return text;
+  }
   return `${t('ourStory.form.paragraph')} ${idx + 1}`;
 }
 
@@ -168,6 +190,7 @@ function emitUpdate(item) {
     storyDate: item.storyDate || item.date || null,
     description: desc,
     imageUrl: imgUrl,
+    showTitle: item.showTitle !== false,
   };
   if (desc) payload.descriptionI18n = { [lang]: desc };
   emit('update', payload, selectedFiles.value[item.id] || null);
@@ -246,7 +269,7 @@ function emitUpdate(item) {
   gap: 12px;
 }
 
-.field label {
+.field label:not(.toggle-row) {
   font-size: 12px;
   font-weight: 700;
   color: var(--neutral-500);
@@ -371,5 +394,53 @@ function emitUpdate(item) {
   color: var(--neutral-500, #6b7280);
   font-size: 14px;
   padding: 24px 0;
+}
+
+/* ---- Show title toggle ---- */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  text-transform: none;
+  font-weight: 500;
+  margin: 0;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  background: var(--neutral-300, #d1d5db);
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.toggle-switch.on {
+  background: var(--brand-gold, #c8a24d);
+}
+
+.toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
+
+.toggle-switch.on .toggle-knob {
+  transform: translateX(18px);
+}
+
+.toggle-text {
+  font-size: 13px;
+  color: var(--dash-ink, #1a1a1a);
+  text-transform: none;
+  letter-spacing: normal;
 }
 </style>

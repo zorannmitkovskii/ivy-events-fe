@@ -73,11 +73,11 @@ function scrollToRsvp() {
 .hero-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 64px 24px;
+  padding: 0 0 48px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 48px;
+  gap: 40px;
 }
 
 /* Image column */
@@ -87,10 +87,8 @@ function scrollToRsvp() {
 
 .hero-image-wrap {
   position: relative;
-  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
-  height: 420px;
+  aspect-ratio: 3 / 4;
 }
 
 .hero-img {
@@ -110,15 +108,16 @@ function scrollToRsvp() {
 .hero-text-col {
   width: 100%;
   text-align: center;
+  padding: 0 24px;
 }
 
 .hero-label {
   font-family: var(--h-body-font);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: #6b7280;
+  color: var(--theme-text-muted, #6b7280);
   margin: 0 0 16px;
 }
 
@@ -126,7 +125,7 @@ function scrollToRsvp() {
   font-family: var(--h-heading-font);
   font-size: 52px;
   font-weight: 400;
-  color: #1f2937;
+  color: var(--theme-text, #1f2937);
   margin: 0 0 16px;
   line-height: 1.1;
 }
@@ -145,21 +144,21 @@ function scrollToRsvp() {
 .detail-primary {
   font-family: var(--h-body-font);
   font-size: 18px;
-  color: #4b5563;
+  color: var(--theme-text, #4b5563);
   margin: 0 0 8px;
 }
 
 .detail-secondary {
   font-family: var(--h-body-font);
   font-size: 16px;
-  color: #6b7280;
+  color: var(--theme-text-muted, #6b7280);
   margin: 0 0 4px;
 }
 
 .detail-muted {
   font-family: var(--h-body-font);
   font-size: 14px;
-  color: #9ca3af;
+  color: var(--theme-text-muted, #9ca3af);
   margin: 0;
 }
 
@@ -189,7 +188,7 @@ function scrollToRsvp() {
   display: block;
   padding: 16px 40px;
   background: var(--h-accent);
-  color: #374151;
+  color: var(--btn-text, #374151);
   font-family: var(--h-body-font);
   font-size: 14px;
   font-weight: 500;
@@ -201,6 +200,23 @@ function scrollToRsvp() {
 
 .hero-cta:hover {
   background: var(--h-accent-hover);
+}
+
+@container (min-width: 600px) {
+  .hero-inner {
+    padding: 48px 32px;
+  }
+
+  .hero-image-wrap {
+    border-radius: 24px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
+    aspect-ratio: 4 / 5;
+    max-height: 600px;
+  }
+
+  .hero-text-col {
+    padding: 0;
+  }
 }
 
 @container (min-width: 1024px) {
@@ -215,7 +231,10 @@ function scrollToRsvp() {
   }
 
   .hero-image-wrap {
-    height: 600px;
+    border-radius: 24px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
+    aspect-ratio: 3 / 4;
+    max-height: 600px;
   }
 
   .hero-text-col {

@@ -703,7 +703,11 @@
   },
   "notifications": {
     "subtitle": "Send updates and RSVPs to your guests",
-    "placeholder": "Notification templates and composer coming soon."
+    "placeholder": "Notification templates and composer coming soon.",
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No notifications yet",
+    "justNow": "Just now"
   },
   "team": {
     "title": "Team & Co-hosts",
@@ -813,7 +817,8 @@
       "imageUrlPh": "https://example.com/photo.jpg",
       "clickToUpload": "Click to upload image",
       "changeImage": "Change",
-      "paragraph": "Paragraph"
+      "paragraph": "Paragraph",
+      "showTitle": "Show title in invitation"
     },
     "addDialog": {
       "title": "Add Story",

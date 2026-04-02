@@ -237,7 +237,10 @@
           @delete="handleEventDetailDelete"
         />
       </template>
-      <SectionLayoutPicker v-if="subTab === 'layout'" :layouts="SECTION_LAYOUTS.details || []" :current="sectionLayouts.details" @select="setLayout('details', $event); markDirty()" />
+      <div v-if="subTab === 'layout'" class="family-picker-wrap">
+        <p class="family-picker-label">Details Style</p>
+        <SectionLayoutPicker :layouts="DETAILS_FAMILY_OPTIONS" :current="detailsFamily" @select="onDetailsFamilyChange($event)" />
+      </div>
       <SectionAdvanced v-if="subTab === 'advanced'" section-key="details" :visible="isSectionVisible('details')" :anchor-id="sectionAdvancedState.details?.anchorId || ''" :animation="sectionAdvancedState.details?.animation || 'none'" :overrides="sectionOverrides.details || null" @update="onAdvancedUpdate('details', $event)" />
     </template>
 
@@ -279,6 +282,7 @@
           :open="true"
           :items="ourStory.items.value"
           :field-config="storyFieldConfig"
+          :max-items="storyMaxItems"
           @close="toggleSection('ourStoryList')"
           @add="onOurStoryAdd"
           @delete="onOurStoryDelete"
@@ -507,8 +511,8 @@ const inv = useWeddingInvitation(preset.value);
 const {
   rootRef, entryRef, loading, config, palette, fonts, buttonStyle, cardStyle, spacingPreset, rsvpConfig,
   showEntry, entryActive, showAgenda, showOurStory, entryType, entryDesign, rootBg,
-  heroFamily, scheduleFamily, storyFamily,
-  onHeroFamilyChange, onScheduleFamilyChange, onStoryFamilyChange,
+  heroFamily, detailsFamily, scheduleFamily, storyFamily,
+  onHeroFamilyChange, onDetailsFamilyChange, onScheduleFamilyChange, onStoryFamilyChange,
   isEditMode, activeModal, activeRootSection, editingItem,
   openModal, closeModal, selectSection,
   dirty, previewMode, markDirty, saving,
@@ -688,7 +692,7 @@ function onCollageSlotSelected(e) {
 
 // Dynamic section components - reactive to user selection
 const heroComponent = computed(() => HERO_COMPONENTS[heroFamily.value] || null);
-const detailsComponent = computed(() => DETAILS_COMPONENTS[heroFamily.value] || DETAILS_COMPONENTS.coastal);
+const detailsComponent = computed(() => DETAILS_COMPONENTS[detailsFamily.value] || DETAILS_COMPONENTS.coastal);
 const scheduleComponent = computed(() => SCHEDULE_COMPONENTS[scheduleFamily.value] || null);
 const storyComponent = computed(() => STORY_COMPONENTS[storyFamily.value] || null);
 
@@ -808,6 +812,15 @@ const HERO_FAMILY_OPTIONS = [
   { key: 'editorial', label: 'Editorial Split', diagram: '<svg viewBox="0 0 64 48"><rect x="2" y="2" width="28" height="44" rx="2" fill="#e5e7eb"/><rect x="10" y="10" width="12" height="16" rx="1" fill="#d1d5db"/><line x1="32" y1="2" x2="32" y2="46" stroke="#d1d5db" stroke-width="1"/><rect x="36" y="6" width="20" height="3" rx="1" fill="#9ca3af"/><rect x="36" y="12" width="24" height="6" rx="1" fill="#d1d5db"/><rect x="36" y="22" width="14" height="10" rx="1" fill="#9ca3af"/><rect x="36" y="38" width="22" height="5" rx="1" fill="#9ca3af"/></svg>' },
 ];
 
+const DETAILS_FAMILY_OPTIONS = [
+  { key: 'coastal', label: 'Info Cards', diagram: '<svg viewBox="0 0 64 48"><rect x="2" y="4" width="18" height="18" rx="2" fill="#d1d5db"/><rect x="23" y="4" width="18" height="18" rx="2" fill="#d1d5db"/><rect x="44" y="4" width="18" height="18" rx="2" fill="#d1d5db"/><rect x="12" y="28" width="40" height="6" rx="1" fill="#e5e7eb"/></svg>' },
+  { key: 'parisian', label: 'Elegant Timeline', diagram: '<svg viewBox="0 0 64 48"><line x1="32" y1="4" x2="32" y2="44" stroke="#9ca3af" stroke-width="1"/><rect x="4" y="6" width="24" height="14" rx="2" fill="#d1d5db"/><rect x="36" y="14" width="24" height="14" rx="2" fill="#d1d5db"/><rect x="4" y="32" width="24" height="14" rx="2" fill="#d1d5db"/></svg>' },
+  { key: 'persian', label: 'Glass Panels', diagram: '<svg viewBox="0 0 64 48"><rect x="4" y="4" width="56" height="18" rx="4" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/><rect x="12" y="8" width="20" height="4" rx="1" fill="#9ca3af"/><rect x="12" y="14" width="30" height="3" rx="1" fill="#d1d5db"/><rect x="4" y="26" width="56" height="18" rx="4" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/><rect x="12" y="30" width="20" height="4" rx="1" fill="#9ca3af"/><rect x="12" y="36" width="30" height="3" rx="1" fill="#d1d5db"/></svg>' },
+  { key: 'chateau', label: 'Split Cards', diagram: '<svg viewBox="0 0 64 48"><rect x="2" y="2" width="28" height="20" rx="2" fill="#d1d5db"/><rect x="34" y="2" width="28" height="20" rx="2" fill="#e5e7eb"/><rect x="2" y="26" width="28" height="20" rx="2" fill="#e5e7eb"/><rect x="34" y="26" width="28" height="20" rx="2" fill="#d1d5db"/></svg>' },
+  { key: 'collage', label: 'Photo Collage', diagram: '<svg viewBox="0 0 64 48"><rect x="2" y="2" width="18" height="20" rx="2" fill="#d1d5db"/><rect x="23" y="2" width="18" height="20" rx="2" fill="#d1d5db"/><rect x="44" y="2" width="18" height="20" rx="2" fill="#d1d5db"/><rect x="8" y="26" width="48" height="6" rx="1" fill="#e5e7eb"/><rect x="12" y="36" width="40" height="6" rx="1" fill="#e5e7eb"/></svg>' },
+  { key: 'editorial', label: 'Minimal Cards', diagram: '<svg viewBox="0 0 64 48"><rect x="4" y="4" width="56" height="8" rx="1" fill="#e5e7eb"/><line x1="24" y1="4" x2="24" y2="12" stroke="#d1d5db"/><rect x="4" y="16" width="56" height="8" rx="1" fill="#e5e7eb"/><line x1="24" y1="16" x2="24" y2="24" stroke="#d1d5db"/><rect x="4" y="28" width="56" height="8" rx="1" fill="#e5e7eb"/></svg>' },
+];
+
 const SCHEDULE_FAMILY_OPTIONS = [
   { key: 'coastal', label: 'Card List', diagram: '<svg viewBox="0 0 64 48"><rect x="4" y="4" width="56" height="10" rx="2" fill="#d1d5db"/><rect x="4" y="18" width="56" height="10" rx="2" fill="#d1d5db"/><rect x="4" y="32" width="56" height="10" rx="2" fill="#d1d5db"/></svg>' },
   { key: 'parisian', label: 'Alternating Timeline', diagram: '<svg viewBox="0 0 64 48"><line x1="32" y1="4" x2="32" y2="44" stroke="#9ca3af" stroke-width="2"/><rect x="4" y="6" width="24" height="10" rx="2" fill="#d1d5db"/><rect x="36" y="20" width="24" height="10" rx="2" fill="#d1d5db"/><rect x="4" y="34" width="24" height="10" rx="2" fill="#d1d5db"/></svg>' },
@@ -835,6 +848,11 @@ const storyFieldConfig = computed(() =>
   STORY_FIELD_CONFIGS[storyFamily.value] || OUR_STORY_FIELD_CONFIG[preset.id] || STORY_FIELD_CONFIGS.coastal
 );
 
+const STORY_MAX_ITEMS_BUILDER = { parisian: 1 };
+const storyMaxItems = computed(() =>
+  isBuilder.value ? (STORY_MAX_ITEMS_BUILDER[storyFamily.value] || 0) : 0
+);
+
 // Unified hero props — each hero component takes only what it declares
 const heroProps = computed(() => ({
   brideName: config.brideName,
@@ -854,9 +872,9 @@ const heroProps = computed(() => ({
   dividerColor: palette.secondary,
   headingFont: fonts.heading,
   bodyFont: fonts.body,
-  gradientStart: palette.accent,
-  gradientMid: palette.secondary,
-  gradientEnd: palette.accent,
+  gradientStart: rootBg.value,
+  gradientMid: cardStyle.sectionBg || rootBg.value,
+  gradientEnd: rootBg.value,
   collagePhotos: config.galleryPhotos,
 }));
 

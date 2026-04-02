@@ -73,11 +73,16 @@ export function useWeddingInvitation(preset) {
 
   /* ---- Hero/section family (switchable in edit mode) ------------- */
   const heroFamily = ref(preset.family || 'coastal');
+  const detailsFamily = ref(preset.family || 'coastal');
   const scheduleFamily = ref(preset.family || 'coastal');
   const storyFamily = ref(preset.family || 'coastal');
 
   function onHeroFamilyChange(family) {
     heroFamily.value = family;
+    markDirty();
+  }
+  function onDetailsFamilyChange(family) {
+    detailsFamily.value = family;
     markDirty();
   }
   function onScheduleFamilyChange(family) {
@@ -207,37 +212,51 @@ export function useWeddingInvitation(preset) {
   }
 
   /* ---- Root style computed --------------------------------------- */
-  const rootStyle = computed(() => ({
-    '--root-bg':            rootBg.value,
-    '--font-heading':       fonts.heading,
-    '--font-body':          fonts.body,
-    '--theme-accent':       palette.accent,
-    '--theme-secondary':    palette.secondary,
-    '--theme-text':         palette.text,
-    '--theme-text-muted':   contrastMuted(rootBg.value),
-    '--section-text':       contrastText(cardStyle.sectionBg || rootBg.value),
-    '--section-text-muted': contrastMuted(cardStyle.sectionBg || rootBg.value),
-    '--card-text':          contrastText(contrastCardBg.value),
-    '--card-text-muted':    contrastMuted(contrastCardBg.value),
-    '--badge-bg':           badgeBg(rootBg.value),
-    '--badge-bg-alt':       badgeBg(cardStyle.sectionBg || rootBg.value),
-    '--badge-text':         contrastText(badgeBg(rootBg.value)),
-    '--badge-text-alt':     contrastText(badgeBg(cardStyle.sectionBg || rootBg.value)),
-    '--item-bg':            lighterBg(rootBg.value),
-    '--item-bg-alt':        lighterBg(cardStyle.sectionBg || rootBg.value),
-    '--border-color':       borderColor(rootBg.value),
-    '--btn-bg':             buttonStyle.bg,
-    '--btn-text':           buttonStyle.text,
-    '--btn-radius':         buttonStyle.radius,
-    '--section-bg':         cardStyle.sectionBg,
-    '--card-bg':            contrastCardBg.value,
-    '--card-shadow':        SHADOW_MAP[cardStyle.cardShadow],
-    '--card-radius':        cardStyle.cardRadius,
-    '--card-border-width':  cardStyle.cardBorder,
-    '--section-padding':    SPACING_MAP[spacingPreset.value].section,
-    '--content-gap':        SPACING_MAP[spacingPreset.value].gap,
-    '--card-padding':       SPACING_MAP[spacingPreset.value].cardPadding,
-  }));
+  /** Derive a muted version of the master text color (lower opacity feel) */
+  function mutedText(hex) {
+    if (!hex || !hex.startsWith('#') || hex.length < 7) return '#6b7280';
+    try {
+      const [h, s, l] = hexToHsl(hex);
+      // Push lightness toward middle: dark text → lighten, light text → darken slightly
+      if (l < 50) return hslToHex(h, Math.max(s - 15, 0), Math.min(l + 25, 70));
+      return hslToHex(h, Math.max(s - 10, 0), Math.max(l - 15, 40));
+    } catch { return '#6b7280'; }
+  }
+
+  const rootStyle = computed(() => {
+    const textMuted = mutedText(palette.text);
+    return {
+      '--root-bg':            rootBg.value,
+      '--font-heading':       fonts.heading,
+      '--font-body':          fonts.body,
+      '--theme-accent':       palette.accent,
+      '--theme-secondary':    palette.secondary,
+      '--theme-text':         palette.text,
+      '--theme-text-muted':   textMuted,
+      '--section-text':       palette.text,
+      '--section-text-muted': textMuted,
+      '--card-text':          palette.text,
+      '--card-text-muted':    textMuted,
+      '--badge-bg':           badgeBg(rootBg.value),
+      '--badge-bg-alt':       badgeBg(cardStyle.sectionBg || rootBg.value),
+      '--badge-text':         palette.text,
+      '--badge-text-alt':     palette.text,
+      '--item-bg':            lighterBg(rootBg.value),
+      '--item-bg-alt':        lighterBg(cardStyle.sectionBg || rootBg.value),
+      '--border-color':       borderColor(rootBg.value),
+      '--btn-bg':             buttonStyle.bg,
+      '--btn-text':           buttonStyle.text,
+      '--btn-radius':         buttonStyle.radius,
+      '--section-bg':         cardStyle.sectionBg,
+      '--card-bg':            contrastCardBg.value,
+      '--card-shadow':        SHADOW_MAP[cardStyle.cardShadow],
+      '--card-radius':        cardStyle.cardRadius,
+      '--card-border-width':  cardStyle.cardBorder,
+      '--section-padding':    SPACING_MAP[spacingPreset.value].section,
+      '--content-gap':        SPACING_MAP[spacingPreset.value].gap,
+      '--card-padding':       SPACING_MAP[spacingPreset.value].cardPadding,
+    };
+  });
 
   /* ---- Sidebar sections ------------------------------------------ */
   const SIDEBAR_SECTIONS = [
@@ -639,7 +658,8 @@ export function useWeddingInvitation(preset) {
       config.stories = data.ourStory.map((s, i) => {
         const desc = localized(s.descriptionI18n, s.description);
         const storyType = s.storyType || s.type || '';
-        const title = storyType ? t('storyTypes.' + storyType) : localized(s.titleI18n, s.title);
+        const hideTitle = s.showTitle === false;
+        const title = hideTitle ? '' : (storyType ? t('storyTypes.' + storyType) : localized(s.titleI18n, s.title));
         return {
           imageUrl:    ourStoryImages[i] || s.imageUrl || '',
           date:        s.date || '',
@@ -649,8 +669,13 @@ export function useWeddingInvitation(preset) {
         };
       });
       // Parisian uses paragraphs format
+      const isBuilderRoute = (route.params.design || route.query.design) === 'my-wedding';
       config.storyParagraphs = config.stories
-        .map(s => s.title && s.description ? `${s.title} — ${s.description}` : s.description || s.title || '')
+        .map(s => {
+          // Builder: description only (no title prefix)
+          if (isBuilderRoute) return s.description || '';
+          return s.title && s.description ? `${s.title} — ${s.description}` : s.description || s.title || '';
+        })
         .filter(Boolean);
     }
     // Story photos for Persian family (separate photo grid)
@@ -999,7 +1024,8 @@ export function useWeddingInvitation(preset) {
     config.stories = items.map((s, i) => {
       const desc = s.description || '';
       const sType = s.storyType || s.type || '';
-      const title = sType ? t('storyTypes.' + sType) : (s.title || '');
+      const hideTitle = s.showTitle === false;
+      const title = hideTitle ? '' : (sType ? t('storyTypes.' + sType) : (s.title || ''));
       return {
         imageUrl:    s.imageUrl || _defaultStoryImages[i] || '',
         date:        s.storyDate || s.date || '',
@@ -1029,6 +1055,7 @@ export function useWeddingInvitation(preset) {
     entryType.value = p.entryType || 'envelop';
     entryDesign.value = p.entryDesign || 'white-gold-seal';
     heroFamily.value = p.family || 'coastal';
+    detailsFamily.value = p.family || 'coastal';
     scheduleFamily.value = p.family || 'coastal';
     storyFamily.value = p.family || 'coastal';
     rootBg.value = p.rootBg || '#fff';
@@ -1092,8 +1119,8 @@ export function useWeddingInvitation(preset) {
     // State
     loading, config, palette, fonts, buttonStyle, cardStyle, spacingPreset, rsvpConfig,
     showEntry, entryActive, showAgenda, showOurStory, entryType, entryDesign, rootBg,
-    heroFamily, scheduleFamily, storyFamily,
-    onHeroFamilyChange, onScheduleFamilyChange, onStoryFamilyChange,
+    heroFamily, detailsFamily, scheduleFamily, storyFamily,
+    onHeroFamilyChange, onDetailsFamilyChange, onScheduleFamilyChange, onStoryFamilyChange,
 
     // Edit mode
     isEditMode, activeModal, activeRootSection, editingItem,
