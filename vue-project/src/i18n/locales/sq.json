@@ -1,4 +1,49 @@
 {
+  "seo": {
+    "default": {
+      "description": "Planifikoni eventin tuaj perfekt me Ivy Events - ftesa digjitale, menaxhimi i RSVP, lista e mysafireve dhe me shume."
+    },
+    "home": {
+      "title": "Ftesa Digjitale & Planifikim Eventesh",
+      "description": "Krijoni ftesa digjitale te bukura, menaxhoni mysafiret, ndiqni RSVP-te dhe planifikoni eventin tuaj perfekt me Ivy Events."
+    },
+    "features": {
+      "title": "Mundesite",
+      "description": "Zbuloni te gjitha mundesite qe ofron Ivy Events - ftesa digjitale, menaxhim RSVP, rreshtim ulses, buxhete dhe me shume."
+    },
+    "features-rsvp": {
+      "title": "Menaxhimi i RSVP",
+      "description": "Ndiqni RSVP-te per eventet tuaja me lehtesi. Mysafiret konfirmojne pjesemarrjen, menaxhojne plus-one dhe preferencat e ushqimit."
+    },
+    "features-invitations": {
+      "title": "Ftesa Digjitale",
+      "description": "Ftesa digjitale te bukura per dasma me dizajne unike, animacione dhe permbajtje te personalizuar."
+    },
+    "pricing": {
+      "title": "Cmimet",
+      "description": "Plane cmimesh te arsyeshme per ftesa digjitale dhe mjete planifikimi eventesh. Opsione falas dhe premium te disponueshme."
+    },
+    "about": {
+      "title": "Rreth Nesh",
+      "description": "Mesoni me shume per Ivy Events - misioni yne per ta bere planifikimin e eventeve te thjeshte dhe te bukur."
+    },
+    "contact": {
+      "title": "Na Kontaktoni",
+      "description": "Kontaktoni ekipin e Ivy Events. Jemi ketu per t'ju ndihmuar me planifikimin e eventit tuaj."
+    },
+    "faq": {
+      "title": "Pyetjet e Shpeshta",
+      "description": "Pyetjet e shpeshta rreth Ivy Events - ftesa, cmime, mundesi dhe mbeshtetje."
+    },
+    "login": {
+      "title": "Hyrja",
+      "description": "Hyni ne llogarine tuaj Ivy Events per te menaxhuar eventet dhe ftesat tuaja."
+    },
+    "signup": {
+      "title": "Krijo Llogari",
+      "description": "Krijoni llogarinë falas në Ivy Events dhe filloni planifikimin e eventit tuaj perfekt sot."
+    }
+  },
   "comingSoon": {
     "bgBrand": "IVY EVENTS",
     "title": "Së shpejti",

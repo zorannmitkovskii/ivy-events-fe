@@ -80,8 +80,8 @@ const cssVars = computed(() => ({
 }
 
 .event-row:not(:last-child) {
-  border-bottom: 1px solid var(--theme-text-muted, #e5e7eb);
-  border-bottom-color: color-mix(in srgb, var(--theme-text-muted, #e5e7eb) 25%, transparent);
+  border-bottom: 1px solid var(--border-color, #e5e7eb);
+  border-bottom-color: color-mix(in srgb, var(--border-color, #e5e7eb) 25%, transparent);
 }
 
 .time-cell,

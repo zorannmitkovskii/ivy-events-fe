@@ -7,6 +7,7 @@
   <CoreFeatures id="features" />
   <PackagesSection id="pricing" />
   <FinalCtaSection />
+  <HomepageFaq />
   <Footer />
   <router-view />
 </template>
@@ -25,6 +26,7 @@ import TemplatesGallery from "@/components/landingPage/TemplatesGallery.vue";
 import { setSelectedCategory } from '@/store/onboarding.store';
 import { categoryIdToEnum } from '@/helper/CategoryMapping.helper.js';
 import FinalCtaSection from "@/components/landingPage/FinalCtaSection.vue";
+import HomepageFaq from "@/components/landingPage/HomepageFaq.vue";
 
 const router = useRouter();
 const route = useRoute();

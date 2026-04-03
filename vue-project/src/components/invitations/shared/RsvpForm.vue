@@ -121,7 +121,7 @@
       <button
         type="submit"
         class="submit-btn"
-        :disabled="isSubmitting || !attendance || !guests[0]?.fullName?.trim()"
+        :disabled="isSubmitting || !attendance || !guests[0]?.fullName?.trim() || eventInactive"
       >
         <span v-if="isSubmitting" class="spinner"></span>
         {{ isSubmitting ? submittingLabel : submitLabel }}
@@ -168,6 +168,7 @@ const props = defineProps({
   phonePlaceholder: { type: String, default: '+389 7X XXX XXX' },
   dietaryLabel: { type: String, default: '' },
   dietaryOptions: { type: Array, default: null },
+  eventInactive: { type: Boolean, default: false },
 });
 
 const emit = defineEmits(['submit']);

@@ -7,6 +7,6 @@ export const INVITATION_REGISTRY = {
     { id: 'coastalBreeze', slug: 'coastal-breeze', name: 'Coastal Breeze', subtitle: 'Modern Seaside', thumbnailUrl: '/thumbnails/coastal-breeze.svg' },
     { id: 'elegantChateau', slug: 'elegant-chateau', name: 'Elegant Chateau', subtitle: 'French Chateau', thumbnailUrl: '/thumbnails/elegant-chateau.svg' },
     { id: 'modernCollage', slug: 'modern-collage', name: 'Modern Collage', subtitle: 'Grid Layout', thumbnailUrl: '/thumbnails/modern-collage.svg' },
-    { id: 'sunsetGlass', slug: 'sunset-glass', name: 'Sunset Glass', subtitle: 'Sunset Glass' },
+
   ],
 };

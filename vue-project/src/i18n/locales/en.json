@@ -1,4 +1,73 @@
 {
+  "seo": {
+    "default": {
+      "description": "Plan your perfect event with Ivy Events - digital invitations, RSVP tracking, guest management, and more."
+    },
+    "home": {
+      "title": "Digital Event Invitations & Planning",
+      "description": "Create beautiful digital invitations, manage guests, track RSVPs, and plan your perfect event with Ivy Events."
+    },
+    "features": {
+      "title": "Features",
+      "description": "Discover all the features Ivy Events offers - digital invitations, RSVP management, seating charts, budgets, and more."
+    },
+    "features-rsvp": {
+      "title": "RSVP Management",
+      "description": "Effortless RSVP tracking for your events. Let guests confirm attendance, manage plus-ones, and dietary preferences."
+    },
+    "features-invitations": {
+      "title": "Digital Invitations",
+      "description": "Beautiful digital wedding invitations with custom designs, animations, and personalized content."
+    },
+    "pricing": {
+      "title": "Pricing",
+      "description": "Affordable pricing plans for digital invitations and event planning tools. Free and premium options available."
+    },
+    "about": {
+      "title": "About Us",
+      "description": "Learn about Ivy Events - our mission to make event planning simple, beautiful, and stress-free."
+    },
+    "contact": {
+      "title": "Contact Us",
+      "description": "Get in touch with the Ivy Events team. We're here to help with your event planning needs."
+    },
+    "faq": {
+      "title": "FAQ",
+      "description": "Frequently asked questions about Ivy Events - invitations, pricing, features, and support."
+    },
+    "login": {
+      "title": "Sign In",
+      "description": "Sign in to your Ivy Events account to manage your events and invitations."
+    },
+    "signup": {
+      "title": "Create Account",
+      "description": "Create your free Ivy Events account and start planning your perfect event today."
+    }
+  },
+  "homepageFaqs": [
+    { "question": "What are digital invitations and how do they work?", "answer": "Digital invitations are beautifully designed online invitations you can create, personalize, and send to your guests via link, email, or messaging apps. With Ivy Events, you choose a template, customize the details, and share your invitation instantly — no printing or postage needed. Guests can view the invitation on any device and confirm their attendance directly." },
+    { "question": "Can I track RSVPs and manage my guest list online?", "answer": "Yes. Ivy Events includes built-in RSVP tracking and guest list management. When guests receive your digital invitation, they can confirm attendance with one click. You see all responses in real time on your dashboard — who is coming, who declined, plus-ones, and dietary preferences. No more spreadsheets or manual follow-ups." },
+    { "question": "What types of events does Ivy Events support?", "answer": "Ivy Events supports a wide range of event types including weddings, birthdays, graduations, baby showers, anniversaries, corporate events, conferences, and private dinners. Each event category comes with tailored invitation templates and planning tools designed for that specific type of celebration." },
+    { "question": "Is Ivy Events free to use?", "answer": "Yes, Ivy Events offers a free plan that includes up to 50 guests, RSVP tracking, and access to basic invitation templates. For larger events or premium features like advanced analytics, SMS invitations, and unlimited guests, affordable Pro and Premium plans are available. You can start free and upgrade anytime." },
+    { "question": "How do I send invitations to my guests?", "answer": "Once you design your digital invitation, Ivy Events generates a unique link you can share via WhatsApp, Viber, email, social media, or any messaging app. You can also send personalized invitation links to individual guests for precise RSVP tracking. Guests simply open the link, view the invitation, and confirm attendance — all from their phone or computer." }
+  ],
+  "faqPageFaqs": [
+    { "question": "What is a digital invitation and why should I use one instead of paper?", "answer": "A digital invitation is an online invitation you design, personalize, and send electronically to your guests. Unlike paper invitations, digital invitations are instant, eco-friendly, and cost-effective. With Ivy Events, your invitation includes interactive features like built-in RSVP, animated designs, and real-time guest tracking. You save time on printing and mailing, and your guests get a modern, convenient experience they can access from any device." },
+    { "question": "How do I create a digital wedding invitation on Ivy Events?", "answer": "Creating a digital wedding invitation is simple. Sign up for a free account, select the Wedding category, and browse our collection of wedding invitation templates. Choose a design you love, customize the text, colors, and details like venue, date, and time. Add your RSVP form, preview your invitation, and share it with your guests via a unique link. The entire process takes just minutes." },
+    { "question": "Can I create birthday invitations for both kids and adults?", "answer": "Absolutely. Ivy Events offers birthday invitation templates suitable for all ages — from colorful, playful designs for children's parties to elegant and modern templates for milestone birthdays and adult celebrations. Each template is fully customizable, so you can adjust colors, fonts, text, and images to match the birthday theme." },
+    { "question": "How does RSVP tracking work on Ivy Events?", "answer": "When you share your digital invitation, guests can confirm their attendance directly from the invitation page with one click. All responses are collected automatically and displayed on your event dashboard in real time. You can see who has confirmed, who has declined, the number of plus-ones, and any special notes like dietary requirements. You can also send reminders to guests who have not yet responded." },
+    { "question": "Can I use Ivy Events as a digital wedding planner?", "answer": "Yes. Ivy Events goes beyond invitations — it is a complete digital wedding planner. You can manage your guest list, track RSVPs, create a seating chart, plan your event agenda, set a budget, build your wedding story page, and coordinate with your team. Everything is organized in one dashboard, so you do not need multiple apps or spreadsheets to plan your wedding." },
+    { "question": "How do I share my digital invitation with guests?", "answer": "Ivy Events generates a unique link for your invitation that you can share through any channel — WhatsApp, Viber, email, Facebook, Instagram, SMS, or any other messaging app. You can share one general link for all guests or create personalized links for individual guests to enable precise RSVP tracking. There is no app download required for your guests." },
+    { "question": "What makes Ivy Events different from other invitation tools?", "answer": "Ivy Events is not just an invitation maker — it is an all-in-one event planning platform. While most tools only let you design and send invitations, Ivy Events combines beautiful invitation templates with powerful planning features: RSVP tracking, guest list management, seating charts, budget planning, event agenda, team collaboration, and a photo gallery." },
+    { "question": "Can I create graduation invitations and announcements?", "answer": "Yes. Ivy Events offers dedicated graduation invitation templates for high school graduations, university graduations, and diploma celebrations. You can customize the design with your school colors, add event details, include a personal message, and share the invitation with friends and family. RSVP tracking is included so you know exactly who is coming." },
+    { "question": "Is my guest list data private and secure?", "answer": "Absolutely. Ivy Events takes data privacy seriously. Your guest list, RSVP responses, and personal event details are stored securely and are never shared with third parties. Only you and any team members you explicitly grant access to can view your event data. We use industry-standard encryption to protect all information on the platform." },
+    { "question": "Can I edit my invitation after I have already sent it?", "answer": "Yes. One of the biggest advantages of digital invitations is flexibility. With Ivy Events, you can edit your invitation anytime — update the date, venue, text, or design even after you have shared the link with guests. Changes are reflected instantly, so your guests always see the latest version. No need to resend the link." },
+    { "question": "Does Ivy Events work as an event planning app on mobile?", "answer": "Yes. Ivy Events is fully responsive and works seamlessly on smartphones, tablets, and desktop computers. You can create invitations, manage your guest list, check RSVPs, and update your event details from any device with a browser. No app download is needed — everything runs in the browser." },
+    { "question": "How much does it cost to create a digital invitation?", "answer": "You can create a digital invitation for free with our Free plan, which includes up to 50 guests, basic templates, and RSVP tracking. For larger events or premium features, our Pro plan offers up to 300 guests, premium templates, and SMS invitations. Visit our pricing page for full details on each plan." },
+    { "question": "Can I create an event website or invitation page for my event?", "answer": "Yes. Every invitation you create on Ivy Events functions as a dedicated event page or mini website. It showcases your event details, design, and RSVP form all in one beautiful, shareable page. Guests visit the link and see everything they need — date, time, venue, map, your personal message, and a button to confirm attendance." },
+    { "question": "What event types can I plan with Ivy Events besides weddings?", "answer": "Beyond weddings, Ivy Events supports birthdays and parties, graduations, baby showers, anniversaries, corporate events, conferences, and private dinners. Each event type has dedicated invitation templates and relevant planning tools. We are continuously adding new event categories and designs." },
+    { "question": "How do I get started with Ivy Events?", "answer": "Getting started is quick and free. Visit ivyevents.mk, create your account, and select your event type. Browse the invitation templates, pick a design, and customize it with your event details. Add your RSVP form, preview the invitation, and share the unique link with your guests. The whole process takes just a few minutes from signup to sending your first invitation." }
+  ],
   "comingSoon": {
     "bgBrand": "IVY EVENTS",
     "title": "Coming Soon",
@@ -1331,7 +1400,8 @@
     "copyLink": "Copy",
     "copied": "Copied!",
     "downloadQr": "Download QR Code",
-    "noLink": "No link available yet."
+    "noLink": "No link available yet.",
+    "activateToShare": "Activate your event to share links with guests."
   },
   "tableLookup": {
     "title": "Find Your Table",

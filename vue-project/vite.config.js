@@ -15,6 +15,16 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-vue': ['vue', 'vue-router', 'vue-i18n'],
+          'vendor-http': ['axios'],
+        },
+      },
+    },
+  },
   test: {
     environment: 'jsdom',
     globals: true,
