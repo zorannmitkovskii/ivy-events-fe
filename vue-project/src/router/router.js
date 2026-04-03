@@ -100,6 +100,9 @@ const routes = [
         ]
       },
 
+      // ORGANIZER standalone (no sidebar)
+      { path: "organizer", name: "dashboard.organizer", component: () => import("@/pages/dashboard/OrganizerOverviewPage.vue"), meta: { requiresAuth: true } },
+
       // DASHBOARD (all pages share sidebar/topbar via DashboardLayout)
       {
         path: "dashboard",
@@ -125,7 +128,11 @@ const routes = [
           // default dashboard redirect (if someone opens /mk/dashboard)
           {
             path: "",
-            redirect: (to) => `/${to.params.lang}/dashboard/events/overview`
+            redirect: (to) => {
+              const lang = to.params.lang || 'mk';
+              if (hasRole('ORGANIZER')) return `/${lang}/organizer`;
+              return `/${lang}/dashboard/events/overview`;
+            }
           }
         ]
       },
@@ -200,6 +207,8 @@ router.beforeEach((to, from, next) => {
   if (to.meta.guestOnly && isAuthenticated()) {
     if (hasRole("ADMIN")) {
       next(`/${lang}/admin/events`);
+    } else if (hasRole("ORGANIZER")) {
+      next(`/${lang}/organizer`);
     } else {
       next(`/${lang}/dashboard/events/overview`);
     }

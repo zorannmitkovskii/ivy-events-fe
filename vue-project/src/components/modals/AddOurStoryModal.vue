@@ -11,6 +11,15 @@
         <div v-if="errors.type" class="err">{{ errors.type }}</div>
       </div>
 
+      <div class="field">
+        <label class="toggle-row" @click.prevent="draft.showTitle = !draft.showTitle">
+          <span class="toggle-switch" :class="{ on: draft.showTitle }">
+            <span class="toggle-knob" />
+          </span>
+          <span class="toggle-label">{{ t("ourStory.form.showTitle") }}</span>
+        </label>
+      </div>
+
       <div class="field" v-if="fieldConfig.date?.show">
         <label>{{ t("ourStory.form.date") }} {{ fieldConfig.date.required ? '*' : '' }}</label>
         <DateInput input-class="input" v-model="draft.storyDate" />
@@ -112,6 +121,7 @@ const draft = reactive({
   type: StoryType.HOW_WE_MET,
   description: "",
   storyDate: "",
+  showTitle: true,
 });
 
 const errors = reactive({ type: "", description: "", storyDate: "" });
@@ -162,11 +172,13 @@ watch(
       draft.type = props.item.type ?? StoryType.HOW_WE_MET;
       draft.description = props.item.description ?? "";
       draft.storyDate = props.item.storyDate ?? props.item.date ?? "";
+      draft.showTitle = props.item.showTitle !== false;
       imagePreviewUrl.value = props.item.imageUrl ?? "";
     } else {
       draft.type = availableTypes.value[0] ?? StoryType.HOW_WE_MET;
       draft.description = "";
       draft.storyDate = "";
+      draft.showTitle = true;
       imagePreviewUrl.value = "";
     }
   },
@@ -197,6 +209,7 @@ function submit() {
   const payload = {};
 
   if (cfg.type?.show) payload.type = draft.type;
+  payload.showTitle = draft.showTitle;
   if (cfg.description?.show) {
     const desc = draft.description.trim() || null;
     payload.description = desc;
@@ -344,5 +357,51 @@ function submit() {
 
 .image-action-btn--remove {
   color: var(--error, #dc2626);
+}
+
+/* ---- Show title toggle ---- */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  text-transform: none;
+  font-weight: 500;
+  margin: 0;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  background: var(--neutral-300, #d1d5db);
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.toggle-switch.on {
+  background: var(--brand-gold, #c8a24d);
+}
+
+.toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
+
+.toggle-switch.on .toggle-knob {
+  transform: translateX(18px);
+}
+
+.toggle-label {
+  font-size: 13px;
+  color: var(--dash-ink, #1a1a1a);
 }
 </style>

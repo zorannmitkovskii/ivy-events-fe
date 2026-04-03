@@ -607,7 +607,11 @@
   },
   "notifications": {
     "subtitle": "Dërgoni përditësime dhe RSVP mysafirëve tuaj",
-    "placeholder": "Shabllonet e njoftimeve së shpejti."
+    "placeholder": "Shabllonet e njoftimeve së shpejti.",
+    "title": "Njoftimet",
+    "markAllRead": "Shëno të gjitha si të lexuara",
+    "empty": "Nuk ka njoftime",
+    "justNow": "Tani"
   },
   "team": {
     "title": "Ekipi & Bashkë-organizatorët",
@@ -717,7 +721,8 @@
       "imageUrlPh": "https://example.com/photo.jpg",
       "clickToUpload": "Kliko për të ngarkuar foto",
       "changeImage": "Ndrysho",
-      "paragraph": "Paragrafi"
+      "paragraph": "Paragrafi",
+      "showTitle": "Shfaq titullin në ftesë"
     },
     "addDialog": {
       "title": "Shto Histori",

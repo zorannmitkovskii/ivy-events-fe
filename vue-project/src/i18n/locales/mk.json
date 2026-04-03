@@ -753,7 +753,11 @@
   },
   "notifications": {
     "subtitle": "Испратете ажурирања и RSVP до вашите гости",
-    "placeholder": "Шаблони за известувања наскоро."
+    "placeholder": "Шаблони за известувања наскоро.",
+    "title": "Известувања",
+    "markAllRead": "Означи ги сите како прочитани",
+    "empty": "Нема известувања",
+    "justNow": "Токму сега"
   },
   "team": {
     "title": "Тим и Ко-домаќини",
@@ -863,7 +867,8 @@
       "imageUrlPh": "https://example.com/photo.jpg",
       "clickToUpload": "Кликни за прикачување слика",
       "changeImage": "Промени",
-      "paragraph": "Параграф"
+      "paragraph": "Параграф",
+      "showTitle": "Прикажи наслов во поканата"
     },
     "addDialog": {
       "title": "Додади приказна",
@@ -959,6 +964,7 @@
     "addGuest": "Додади гостин",
     "addTask": "Додади задача",
     "upgrade": "Надградба",
+    "switchEvent": "Промени настан",
     "navigation": "Навигација"
   },
   "admin": {
@@ -1800,5 +1806,39 @@
     "weddingDate": "Датум на свадба",
     "venue": "Место / Локација",
     "storyImages": "Слики за приказна"
+  },
+  "organizerOverview": {
+    "title": "Преглед на организатор",
+    "subtitle": "Сите твои настани на едно место",
+    "loading": "Се вчитуваат настаните...",
+    "emptyTitle": "Нема настани",
+    "emptyDesc": "Креирај го првиот настан за да започнеш.",
+    "createFirst": "Креирај настан",
+    "createNew": "Нов настан",
+    "untitled": "Без наслов",
+    "totalEvents": "Вкупно настани",
+    "totalGuests": "Вкупно гости",
+    "upcoming": "Претстојни",
+    "rsvpRate": "RSVP стапка",
+    "colEvent": "Настан",
+    "colDate": "Датум",
+    "colStatus": "Статус",
+    "colGuests": "Гости",
+    "colRsvp": "RSVP",
+    "manage": "Управувај",
+    "upgrade": "Надградба",
+    "logout": "Одјави се",
+    "addUser": "Додади корисник",
+    "firstName": "Име",
+    "lastName": "Презиме",
+    "email": "Емаил",
+    "role": "Улога",
+    "assignEvent": "Додели на настан",
+    "selectEvent": "Избери настан...",
+    "cancel": "Откажи",
+    "create": "Креирај",
+    "errFirstName": "Името е задолжително",
+    "errLastName": "Презимето е задолжително",
+    "errEmail": "Емаилот е задолжителен"
   }
 }

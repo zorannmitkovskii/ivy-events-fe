@@ -168,7 +168,7 @@ function scrollToRsvp() {
 
 .hero-invite {
   font-family: var(--font-body, var(--he-body-font));
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.25em;
@@ -178,7 +178,7 @@ function scrollToRsvp() {
 
 .hero-names {
   font-family: var(--font-heading, var(--he-heading-font));
-  font-size: 44px;
+  font-size: 48px;
   font-weight: 400;
   color: var(--theme-text, #1f2937);
   margin: 0 0 12px;
@@ -187,7 +187,7 @@ function scrollToRsvp() {
 
 .hero-subtitle {
   font-family: var(--font-body, var(--he-body-font));
-  font-size: 15px;
+  font-size: 16px;
   color: var(--theme-text-muted, #6b7280);
   margin: 0 0 32px;
   line-height: 1.6;
@@ -234,7 +234,7 @@ function scrollToRsvp() {
 /* ── Venue / message ── */
 .hero-message {
   font-family: var(--font-body, var(--he-body-font));
-  font-size: 15px;
+  font-size: 16px;
   color: var(--theme-text-muted, #6b7280);
   margin: 0 0 32px;
 }

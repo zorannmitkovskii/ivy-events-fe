@@ -254,7 +254,7 @@ import { subscribeToDiscounts } from "@/services/backendApi";
 import { eventsService } from "@/services/events.service";
 import { PackageTypeEnum } from "@/enums/PackageType";
 
-const roleOptions = ["ADMIN", "USER"];
+const roleOptions = ["ADMIN", "ORGANIZER", "USER"];
 const packageTypeOptions = Object.values(PackageTypeEnum);
 
 const users = ref([]);
@@ -405,6 +405,7 @@ function displayRole(user) {
 function getRolePillClass(user) {
   const roles = Array.isArray(user.roles) ? user.roles : [user.role];
   if (roles.includes("ADMIN")) return "pill--purple";
+  if (roles.includes("ORGANIZER")) return "pill--teal";
   return "pill--blue";
 }
 
@@ -674,6 +675,7 @@ async function saveDiscount() {
 .pill { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
 .pill--blue { background: #eff6ff; color: #2563eb; }
 .pill--purple { background: #f3e8ff; color: #7c3aed; }
+.pill--teal { background: #f0fdfa; color: #0d9488; }
 .pill--gray { background: #f1f5f9; color: #475569; }
 .pill--gap { margin-right: 4px; margin-bottom: 2px; }
 

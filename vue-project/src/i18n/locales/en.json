@@ -703,7 +703,11 @@
   },
   "notifications": {
     "subtitle": "Send updates and RSVPs to your guests",
-    "placeholder": "Notification templates and composer coming soon."
+    "placeholder": "Notification templates and composer coming soon.",
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No notifications yet",
+    "justNow": "Just now"
   },
   "team": {
     "title": "Team & Co-hosts",
@@ -813,7 +817,8 @@
       "imageUrlPh": "https://example.com/photo.jpg",
       "clickToUpload": "Click to upload image",
       "changeImage": "Change",
-      "paragraph": "Paragraph"
+      "paragraph": "Paragraph",
+      "showTitle": "Show title in invitation"
     },
     "addDialog": {
       "title": "Add Story",
@@ -909,6 +914,7 @@
     "addGuest": "Add Guest",
     "addTask": "Add Task",
     "upgrade": "Upgrade",
+    "switchEvent": "Switch Event",
     "navigation": "Navigation"
   },
   "admin": {
@@ -1799,5 +1805,39 @@
     "weddingDate": "Wedding Date",
     "venue": "Venue / Location",
     "storyImages": "Story Images"
+  },
+  "organizerOverview": {
+    "title": "Organizer Overview",
+    "subtitle": "All your events at a glance",
+    "loading": "Loading events...",
+    "emptyTitle": "No events yet",
+    "emptyDesc": "Create your first event to get started.",
+    "createFirst": "Create Event",
+    "createNew": "New Event",
+    "untitled": "Untitled Event",
+    "totalEvents": "Total Events",
+    "totalGuests": "Total Guests",
+    "upcoming": "Upcoming",
+    "rsvpRate": "RSVP Rate",
+    "colEvent": "Event",
+    "colDate": "Date",
+    "colStatus": "Status",
+    "colGuests": "Guests",
+    "colRsvp": "RSVP",
+    "manage": "Manage",
+    "upgrade": "Upgrade",
+    "logout": "Logout",
+    "addUser": "Add User",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "role": "Role",
+    "assignEvent": "Assign to Event",
+    "selectEvent": "Select event...",
+    "cancel": "Cancel",
+    "create": "Create",
+    "errFirstName": "First name is required",
+    "errLastName": "Last name is required",
+    "errEmail": "Email is required"
   }
 }
