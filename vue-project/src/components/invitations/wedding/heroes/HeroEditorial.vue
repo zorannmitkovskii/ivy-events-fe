@@ -58,14 +58,14 @@ const props = defineProps({
 });
 
 const cssVars = computed(() => ({
-  '--he-heading-font': props.headingFont,
-  '--he-body-font': props.bodyFont,
-  '--he-accent': props.accentColor,
-  '--he-accent-hover': props.accentHover,
-  '--he-divider': props.dividerColor,
-  '--he-gradient-start': props.gradientStart,
-  '--he-gradient-mid': props.gradientMid,
-  '--he-gradient-end': props.gradientEnd,
+  '--hero-heading-font': props.headingFont,
+  '--hero-body-font': props.bodyFont,
+  '--hero-accent': props.accentColor,
+  '--hero-accent-hover': props.accentHover,
+  '--hero-divider': props.dividerColor,
+  '--hero-gradient-start': props.gradientStart,
+  '--hero-gradient-mid': props.gradientMid,
+  '--hero-gradient-end': props.gradientEnd,
 }));
 
 /* Parse weddingDate into day / month / year */
@@ -99,9 +99,9 @@ function scrollToRsvp() {
 .hero-editorial {
   background: linear-gradient(
     135deg,
-    var(--he-gradient-start),
-    var(--he-gradient-mid),
-    var(--he-gradient-end)
+    var(--hero-gradient-start),
+    var(--hero-gradient-mid),
+    var(--hero-gradient-end)
   );
 }
 
@@ -125,7 +125,7 @@ function scrollToRsvp() {
   position: relative;
   border-radius: 16px;
   overflow: hidden;
-  background: var(--theme-accent, var(--he-accent));
+  background: var(--theme-accent, var(--hero-accent));
   opacity: 1;
   height: 420px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
@@ -167,7 +167,7 @@ function scrollToRsvp() {
 }
 
 .hero-invite {
-  font-family: var(--font-body, var(--he-body-font));
+  font-family: var(--font-body, var(--hero-body-font));
   font-size: 13px;
   font-weight: 500;
   text-transform: uppercase;
@@ -177,7 +177,7 @@ function scrollToRsvp() {
 }
 
 .hero-names {
-  font-family: var(--font-heading, var(--he-heading-font));
+  font-family: var(--font-heading, var(--hero-heading-font));
   font-size: 48px;
   font-weight: 400;
   color: var(--theme-text, #1f2937);
@@ -186,7 +186,7 @@ function scrollToRsvp() {
 }
 
 .hero-subtitle {
-  font-family: var(--font-body, var(--he-body-font));
+  font-family: var(--font-body, var(--hero-body-font));
   font-size: 16px;
   color: var(--theme-text-muted, #6b7280);
   margin: 0 0 32px;
@@ -203,11 +203,11 @@ function scrollToRsvp() {
 }
 
 .date-day {
-  font-family: var(--font-heading, var(--he-heading-font));
+  font-family: var(--font-heading, var(--hero-heading-font));
   font-size: 72px;
   font-weight: 300;
   line-height: 1;
-  color: var(--theme-accent, var(--he-accent));
+  color: var(--theme-accent, var(--hero-accent));
 }
 
 .date-detail {
@@ -215,7 +215,7 @@ function scrollToRsvp() {
 }
 
 .date-month {
-  font-family: var(--font-body, var(--he-body-font));
+  font-family: var(--font-body, var(--hero-body-font));
   font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
@@ -225,7 +225,7 @@ function scrollToRsvp() {
 }
 
 .date-year {
-  font-family: var(--font-body, var(--he-body-font));
+  font-family: var(--font-body, var(--hero-body-font));
   font-size: 14px;
   color: var(--theme-text-muted, #6b7280);
   margin: 0;
@@ -233,7 +233,7 @@ function scrollToRsvp() {
 
 /* ── Venue / message ── */
 .hero-message {
-  font-family: var(--font-body, var(--he-body-font));
+  font-family: var(--font-body, var(--hero-body-font));
   font-size: 16px;
   color: var(--theme-text-muted, #6b7280);
   margin: 0 0 32px;
@@ -243,9 +243,9 @@ function scrollToRsvp() {
 .hero-cta {
   display: inline-block;
   padding: 14px 48px;
-  background: var(--theme-accent, var(--he-accent));
+  background: var(--theme-accent, var(--hero-accent));
   color: #fff;
-  font-family: var(--font-body, var(--he-body-font));
+  font-family: var(--font-body, var(--hero-body-font));
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.15em;
@@ -256,7 +256,7 @@ function scrollToRsvp() {
 }
 
 .hero-cta:hover {
-  background: var(--theme-accent-hover, var(--he-accent-hover));
+  background: var(--theme-accent-hover, var(--hero-accent-hover));
   transform: translateY(-1px);
 }
 
@@ -284,7 +284,7 @@ function scrollToRsvp() {
     display: block;
     width: 1px;
     align-self: stretch;
-    background: var(--theme-accent, var(--he-divider));
+    background: var(--theme-accent, var(--hero-divider));
     opacity: 0.35;
     margin: 32px 32px;
     flex-shrink: 0;

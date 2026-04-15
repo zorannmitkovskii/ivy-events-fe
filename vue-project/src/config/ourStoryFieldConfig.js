@@ -20,13 +20,6 @@ export const OUR_STORY_FIELD_CONFIG = {
     date:        { show: false },
     imageUrl:    { show: true,  required: true },
   },
-  'sunset-glass': {
-    title:       { show: true,  required: true },
-    type:        { show: true,  required: true },
-    description: { show: true,  required: false },
-    date:        { show: false },
-    imageUrl:    { show: true,  required: false },
-  },
   'modern-collage': {
     title:       { show: true,  required: true },
     type:        { show: false },

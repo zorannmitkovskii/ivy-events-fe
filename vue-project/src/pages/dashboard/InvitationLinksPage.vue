@@ -29,7 +29,13 @@
         </ButtonMain>
       </div>
 
-      <div class="links-grid">
+      <!-- Inactive banner -->
+      <div v-if="isInactive" class="inactive-banner">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        {{ t('invitationLinks.activateToShare') }}
+      </div>
+
+      <div v-else class="links-grid">
         <!-- Regular Invitation (hidden for Gallery) -->
         <LinkCard
           v-if="!isGallery"
@@ -88,6 +94,10 @@ const error = ref(null);
 const eventId = ref(onboardingStore.eventId);
 
 const isGallery = computed(() => onboardingStore.selectedCategory === EventCategoryEnum.GALLERY);
+const isInactive = computed(() => {
+  const s = event.value?.status || onboardingStore.eventStatus || '';
+  return s !== 'ACTIVE';
+});
 
 const closeFriendsUrl = computed(() => {
   if (event.value?.privateInvitationUrl) return event.value.privateInvitationUrl;
@@ -123,7 +133,7 @@ async function loadEvent() {
     if (eventId.value === "demo") {
       event.value = {
         id: "demo",
-        invitationUrl: `${window.location.origin}/${locale.value}/invitations/sunset-glass?event=demo`,
+        invitationUrl: `${window.location.origin}/${locale.value}/invitations/coastal-breeze?event=demo`,
         galleryUrl: `${window.location.origin}/${locale.value}/gallery?eventId=demo`,
         categoryType: "WEDDINGS",
       };
@@ -191,6 +201,20 @@ onMounted(loadEvent);
   margin-top: 6px;
   font-size: 13px;
   color: var(--dash-muted);
+}
+
+.inactive-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 24px;
+  background: var(--dash-cream-card);
+  border: 1.5px dashed var(--dash-cream-border);
+  border-radius: var(--dash-radius);
+  font-size: 14px;
+  color: var(--dash-muted);
+  text-align: center;
+  justify-content: center;
 }
 
 @media (max-width: 640px) {

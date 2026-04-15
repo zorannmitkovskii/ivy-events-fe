@@ -4,44 +4,46 @@ import { isAuthenticated, hasRole } from "@/services/auth.service";
 import { onboardingStore } from "@/store/onboarding.store";
 import { startLoading, stopLoading } from "@/store/loading.store";
 
-// Marketing / Auth / Onboarding
+// Marketing (keep eager for above-the-fold)
 import HomePage from "@/pages/marketing/HomePage.vue";
-import FeaturesPage from "@/pages/marketing/FeaturesPage.vue";
-import PricingPage from "@/pages/marketing/PricingPage.vue";
-import FeatureRSVPPage from "@/pages/marketing/feautres/FeatureRSVPPage.vue";
-import FeatureInvitationsPage from "@/pages/marketing/feautres/FeatureInvitationsPage.vue";
 
-import AuthLoginPage from "@/pages/auth/AuthLoginPage.vue";
-import AuthSignupPage from "@/pages/auth/AuthSignupPage.vue";
-import AuthForgotPasswordPage from "@/pages/auth/AuthForgotPasswordPage.vue";
-import AuthResetPasswordPage from "@/pages/auth/AuthResetPasswordPage.vue";
-import AuthVerifyEmailPage from "@/pages/auth/AuthVerifyEmailPage.vue";
+// Lazy-loaded pages
+const FeaturesPage = () => import("@/pages/marketing/FeaturesPage.vue");
+const PricingPage = () => import("@/pages/marketing/PricingPage.vue");
+const FeatureRSVPPage = () => import("@/pages/marketing/feautres/FeatureRSVPPage.vue");
+const FeatureInvitationsPage = () => import("@/pages/marketing/feautres/FeatureInvitationsPage.vue");
 
-import EventCategoryPage from "@/pages/onboarding/EventCategoryPage.vue";
-import EventInvitationsPage from "@/pages/onboarding/EventInvitationsPage.vue";
-import CheckoutPurchasePage from "@/pages/onboarding/CheckoutPurchasePage.vue";
-import EventLivePage from "@/pages/onboarding/EventLivePage.vue";
-import RsvpSuccessSubmitPage from "@/pages/onboarding/RsvpSuccessSubmitPage.vue";
+const AuthLoginPage = () => import("@/pages/auth/AuthLoginPage.vue");
+const AuthSignupPage = () => import("@/pages/auth/AuthSignupPage.vue");
+const AuthForgotPasswordPage = () => import("@/pages/auth/AuthForgotPasswordPage.vue");
+const AuthResetPasswordPage = () => import("@/pages/auth/AuthResetPasswordPage.vue");
+const AuthVerifyEmailPage = () => import("@/pages/auth/AuthVerifyEmailPage.vue");
+
+const EventCategoryPage = () => import("@/pages/onboarding/EventCategoryPage.vue");
+const EventInvitationsPage = () => import("@/pages/onboarding/EventInvitationsPage.vue");
+const CheckoutPurchasePage = () => import("@/pages/onboarding/CheckoutPurchasePage.vue");
+const EventLivePage = () => import("@/pages/onboarding/EventLivePage.vue");
+const RsvpSuccessSubmitPage = () => import("@/pages/onboarding/RsvpSuccessSubmitPage.vue");
 
 // Dashboard
-import DashboardLayout from "@/layouts/DashboardLayout.vue";
-import OverviewPage from "@/pages/dashboard/OverviewPage.vue";
-import GuestsPage from "@/pages/dashboard/GuestsPage.vue";
-import TablesSeatingPage from "@/pages/dashboard/TablesSeatingPage.vue";
-import AgendaPage from "@/pages/dashboard/AgendaPage.vue";
-import OurStoryPage from "@/pages/dashboard/OurStoryPage.vue";
-import GalleryPage from "@/pages/dashboard/GalleryPage.vue";
-import NotificationsPage from "@/pages/dashboard/NotificationsPage.vue";
-import TeamPage from "@/pages/dashboard/TeamPage.vue";
-import EventSettingsPage from "@/pages/dashboard/EventSettingsPage.vue";
-import TasksPage from "@/pages/dashboard/TasksPage.vue";
-import BudgetPage from "@/pages/userDashboard/BudgetPage.vue";
+const DashboardLayout = () => import("@/layouts/DashboardLayout.vue");
+const OverviewPage = () => import("@/pages/dashboard/OverviewPage.vue");
+const GuestsPage = () => import("@/pages/dashboard/GuestsPage.vue");
+const TablesSeatingPage = () => import("@/pages/dashboard/TablesSeatingPage.vue");
+const AgendaPage = () => import("@/pages/dashboard/AgendaPage.vue");
+const OurStoryPage = () => import("@/pages/dashboard/OurStoryPage.vue");
+const GalleryPage = () => import("@/pages/dashboard/GalleryPage.vue");
+const NotificationsPage = () => import("@/pages/dashboard/NotificationsPage.vue");
+const TeamPage = () => import("@/pages/dashboard/TeamPage.vue");
+const EventSettingsPage = () => import("@/pages/dashboard/EventSettingsPage.vue");
+const TasksPage = () => import("@/pages/dashboard/TasksPage.vue");
+const BudgetPage = () => import("@/pages/userDashboard/BudgetPage.vue");
 
 // Admin Dashboard
-import AdminDashboardLayout from "@/layouts/AdminDashboardLayout.vue";
-import AdminEventPage from "@/pages/adminDashboard/AdminEventPage.vue";
-import AdminPackagesPage from "@/pages/adminDashboard/AdminPackagesPage.vue";
-import AdminUsersPage from "@/pages/adminDashboard/AdminUsersPage.vue";
+const AdminDashboardLayout = () => import("@/layouts/AdminDashboardLayout.vue");
+const AdminEventPage = () => import("@/pages/adminDashboard/AdminEventPage.vue");
+const AdminPackagesPage = () => import("@/pages/adminDashboard/AdminPackagesPage.vue");
+const AdminUsersPage = () => import("@/pages/adminDashboard/AdminUsersPage.vue");
 
 const routes = [
   // Redirect root to /mk

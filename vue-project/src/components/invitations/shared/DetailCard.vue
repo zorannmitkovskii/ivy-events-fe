@@ -90,7 +90,7 @@ const iconStyle = computed(() => ({
 .card-footer {
   margin-top: 20px;
   padding-top: 20px;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid var(--border-color, #e5e5e5);
 }
 
 :slotted(p) {
@@ -103,13 +103,13 @@ const iconStyle = computed(() => ({
 
 :slotted(.bold) {
   font-weight: 700;
-  color: var(--theme-text-muted, #555);
+  color: var(--theme-text, #555);
 }
 
 :slotted(a) {
   font-size: 14px;
   font-weight: 700;
-  color: var(--theme-text-muted, #555);
+  color: var(--theme-text, #555);
   text-decoration: underline;
   text-underline-offset: 4px;
 }

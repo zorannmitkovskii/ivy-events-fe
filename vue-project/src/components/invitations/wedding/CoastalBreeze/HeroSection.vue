@@ -56,11 +56,11 @@ const props = defineProps({
 });
 
 const cssVars = computed(() => ({
-  '--h-heading-font': props.headingFont,
-  '--h-body-font': props.bodyFont,
-  '--h-accent': props.accentColor,
-  '--h-accent-hover': props.accentHover,
-  '--h-divider': props.dividerColor,
+  '--hero-heading-font': props.headingFont,
+  '--hero-body-font': props.bodyFont,
+  '--hero-accent': props.accentColor,
+  '--hero-accent-hover': props.accentHover,
+  '--hero-divider': props.dividerColor,
 }));
 
 function scrollToRsvp() {
@@ -112,7 +112,7 @@ function scrollToRsvp() {
 }
 
 .hero-label {
-  font-family: var(--h-body-font);
+  font-family: var(--hero-body-font);
   font-size: 13px;
   font-weight: 500;
   text-transform: uppercase;
@@ -122,7 +122,7 @@ function scrollToRsvp() {
 }
 
 .hero-names {
-  font-family: var(--h-heading-font);
+  font-family: var(--hero-heading-font);
   font-size: 52px;
   font-weight: 400;
   color: var(--theme-text, #1f2937);
@@ -133,7 +133,7 @@ function scrollToRsvp() {
 .hero-divider {
   width: 64px;
   height: 1px;
-  background: var(--h-divider);
+  background: var(--hero-divider);
   margin: 0 auto 32px;
 }
 
@@ -142,21 +142,21 @@ function scrollToRsvp() {
 }
 
 .detail-primary {
-  font-family: var(--h-body-font);
+  font-family: var(--hero-body-font);
   font-size: 18px;
   color: var(--theme-text, #4b5563);
   margin: 0 0 8px;
 }
 
 .detail-secondary {
-  font-family: var(--h-body-font);
+  font-family: var(--hero-body-font);
   font-size: 16px;
   color: var(--theme-text-muted, #6b7280);
   margin: 0 0 4px;
 }
 
 .detail-muted {
-  font-family: var(--h-body-font);
+  font-family: var(--hero-body-font);
   font-size: 14px;
   color: var(--theme-text-muted, #9ca3af);
   margin: 0;
@@ -167,7 +167,7 @@ function scrollToRsvp() {
   align-items: center;
   justify-content: center;
   gap: 5px;
-  font-family: var(--h-body-font);
+  font-family: var(--hero-body-font);
   font-size: 13px;
   font-weight: 600;
   color: #60a5fa;
@@ -187,9 +187,9 @@ function scrollToRsvp() {
 .hero-cta {
   display: block;
   padding: 16px 40px;
-  background: var(--h-accent);
+  background: var(--hero-accent);
   color: var(--btn-text, #374151);
-  font-family: var(--h-body-font);
+  font-family: var(--hero-body-font);
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -199,7 +199,7 @@ function scrollToRsvp() {
 }
 
 .hero-cta:hover {
-  background: var(--h-accent-hover);
+  background: var(--hero-accent-hover);
 }
 
 @container (min-width: 600px) {

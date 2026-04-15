@@ -15,7 +15,9 @@
 import { ref, onMounted } from "vue";
 import FaqItem from "@/components/cards/FaqItem.vue";
 import { faqService } from "@/services/faq.service";
-import { t } from '@/i18n';
+import { useI18n } from 'vue-i18n';
+
+const { tm } = useI18n();
 
 const props = defineProps({
   defaultOpenIndex: { type: Number, default: 0 }
@@ -23,17 +25,8 @@ const props = defineProps({
 
 const openIndex = ref(props.defaultOpenIndex);
 
-const i18nFallback = [
-  { question: t('home.faq.items.q1.question'), answer: t('home.faq.items.q1.answer') },
-  { question: t('home.faq.items.q2.question'), answer: t('home.faq.items.q2.answer') },
-  { question: t('home.faq.items.q3.question'), answer: t('home.faq.items.q3.answer') },
-  { question: t('home.faq.items.q4.question'), answer: t('home.faq.items.q4.answer') },
-  { question: t('home.faq.items.q5.question'), answer: t('home.faq.items.q5.answer') },
-  { question: t('home.faq.items.q6.question'), answer: t('home.faq.items.q6.answer') },
-  { question: t('home.faq.items.q7.question'), answer: t('home.faq.items.q7.answer') },
-];
-
-const faqItems = ref(i18nFallback);
+const i18nFallback = tm('faqPageFaqs') || [];
+const faqItems = ref(i18nFallback.length ? i18nFallback : []);
 
 onMounted(async () => {
   try {

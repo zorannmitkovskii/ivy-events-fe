@@ -98,7 +98,7 @@ const props = defineProps({
   subModal: { type: Boolean, default: false },
 });
 
-const emit = defineEmits(["close", "uploaded", "files-collected"]);
+const emit = defineEmits(["close", "uploaded", "files-collected", "upload-failed"]);
 
 const pendingFiles = ref([]);
 const uploading = ref(false);
@@ -162,7 +162,6 @@ async function uploadAll() {
   const files = pendingFiles.value.map((pf) => pf.file);
   const eventId = onboardingStore.eventId;
 
-  // No eventId yet — emit files for deferred upload via saveFullEvent
   if (!eventId) {
     emit("files-collected", files);
     pendingFiles.value = [];
@@ -171,21 +170,18 @@ async function uploadAll() {
     return;
   }
 
-  uploading.value = true;
+  pendingFiles.value = [];
+  revokeAll();
   errorMsg.value = "";
+  emit("close");
 
-  try {
-    await invitationImagesService.uploadOurStoryImages(eventId, files);
-
-    pendingFiles.value = [];
-    revokeAll();
-    emit("uploaded");
-    emit("close");
-  } catch (e) {
-    errorMsg.value = e?.message || "Upload failed";
-  } finally {
-    uploading.value = false;
-  }
+  invitationImagesService.uploadOurStoryImagesInBackground(eventId, files, {
+    onSuccess: () => emit("uploaded"),
+    onError: (err) => {
+      console.error("[OurStoryUploadModal] Background upload failed after retries", err);
+      emit("upload-failed", err?.message || "Upload failed after retries");
+    },
+  });
 }
 </script>
 

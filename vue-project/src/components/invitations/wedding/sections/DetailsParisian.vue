@@ -167,7 +167,7 @@ defineProps({
 .card-time {
   font-family: var(--font-body, inherit);
   font-size: 18px;
-  color: var(--theme-text-muted, #4b5563);
+  color: var(--theme-text-muted, #6b7280);
   margin: 0 0 16px;
 }
 

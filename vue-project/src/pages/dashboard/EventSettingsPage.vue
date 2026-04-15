@@ -169,7 +169,7 @@ async function loadEvent() {
         lang: "mk",
         showAgenda: true,
         showOurStory: true,
-        invitationUrl: `${window.location.origin}/${locale.value}/invitations/sunset-glass?event=demo`,
+        invitationUrl: `${window.location.origin}/${locale.value}/invitations/coastal-breeze?event=demo`,
         galleryUrl: `${window.location.origin}/${locale.value}/gallery?eventId=demo`
       };
       event.value = demo;

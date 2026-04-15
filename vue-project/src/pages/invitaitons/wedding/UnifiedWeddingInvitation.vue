@@ -159,6 +159,7 @@
             :body-font="fonts.body"
             :border-radius="rsvpConfig.borderRadius"
             :max-guests="rsvpConfig.maxGuests"
+            :event-inactive="eventNotActive"
             @submit="onRsvpSubmit"
           />
         </div>
@@ -406,7 +407,6 @@
         @close="toggleSection('rsvp')"
         @change="onRsvpChange"
       />
-      <SectionLayoutPicker v-if="subTab === 'layout'" :layouts="SECTION_LAYOUTS.rsvp || []" :current="sectionLayouts.rsvp" @select="setLayout('rsvp', $event); markDirty()" />
       <SectionAdvanced v-if="subTab === 'advanced'" section-key="rsvp" :visible="isSectionVisible('rsvp')" :anchor-id="sectionAdvancedState.rsvp?.anchorId || ''" :animation="sectionAdvancedState.rsvp?.animation || 'none'" :overrides="sectionOverrides.rsvp || null" @update="onAdvancedUpdate('rsvp', $event)" />
     </template>
 
@@ -538,6 +538,12 @@ const {
   handleOurStorySave, handleOurStoryUpdate, handleOurStoryDelete,
   OUR_STORY_FIELD_CONFIG,
 } = inv;
+
+// Event not active → disable RSVP submit
+const eventNotActive = computed(() => {
+  const s = backendData.value?.event?.status;
+  return s && s !== 'ACTIVE';
+});
 
 // Reset all state when design changes (e.g. navigating from coastal → persian)
 watch(preset, (newPreset) => {

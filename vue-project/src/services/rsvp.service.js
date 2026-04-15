@@ -2,7 +2,7 @@ import publicApi from '@/services/backendApi';
 
 export const rsvpService = {
   async submitRsvp(eventId, formData) {
-    // Build guest entries from either shared RsvpForm format or SunsetGlass format
+    // Build guest entries from RsvpForm format
     const guestEntries = formData.guests
       ? formData.guests
           .filter(g => g.fullName && g.fullName.trim())

@@ -65,7 +65,7 @@ export function useWeddingInvitation(preset) {
   /* ---- Template refs & UI state ---------------------------------- */
   const rootRef = ref(null);
   const entryRef = ref(null);
-  const showEntry = ref(false); // TODO: revert to true when done testing
+  const showEntry = ref(true);
   const showAgenda = ref(true);
   const showOurStory = ref(true);
   const entryType = ref(preset.entryType || 'envelop');

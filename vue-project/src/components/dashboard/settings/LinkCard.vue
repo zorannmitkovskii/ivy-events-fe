@@ -5,7 +5,7 @@
       <p class="link-card-desc">{{ description }}</p>
     </div>
 
-    <div v-if="url" class="link-card-body">
+    <div v-if="url && !disabled" class="link-card-body">
       <div class="url-box">
         <span class="url-text">{{ url }}</span>
         <button class="copy-btn" type="button" @click="copyToClipboard">
@@ -20,6 +20,10 @@
           {{ t('invitationLinks.downloadQr') }}
         </button>
       </div>
+    </div>
+
+    <div v-else-if="url && disabled" class="link-card-inactive">
+      {{ t('invitationLinks.activateToShare') }}
     </div>
 
     <div v-else class="link-card-empty">
@@ -39,6 +43,7 @@ const props = defineProps({
   description: { type: String, default: "" },
   url: { type: String, default: "" },
   qrFileName: { type: String, default: "qr-code.png" },
+  disabled: { type: Boolean, default: false },
 });
 
 const qrCanvas = ref(null);
@@ -181,10 +186,19 @@ watch(() => props.url, renderQr);
   background: var(--dash-sage-ghost);
 }
 
-.link-card-empty {
+.link-card-empty,
+.link-card-inactive {
   font-size: 13px;
   color: var(--dash-muted);
   padding: 12px 0;
+}
+
+.link-card-inactive {
+  padding: 16px;
+  background: var(--dash-cream);
+  border: 1px dashed var(--dash-cream-border);
+  border-radius: 10px;
+  text-align: center;
 }
 
 @media (max-width: 640px) {
