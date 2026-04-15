@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Home -->
+  <url>
+    <loc>https://ivyevents.mk/mk</loc>
+    <xhtml:link rel="alternate" hreflang="mk" href="https://ivyevents.mk/mk"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ivyevents.mk/en"/>
+    <xhtml:link rel="alternate" hreflang="sq" href="https://ivyevents.mk/sq"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ivyevents.mk/mk"/>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Features -->
+  <url>
+    <loc>https://ivyevents.mk/mk/features</loc>
+    <xhtml:link rel="alternate" hreflang="mk" href="https://ivyevents.mk/mk/features"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ivyevents.mk/en/features"/>
+    <xhtml:link rel="alternate" hreflang="sq" href="https://ivyevents.mk/sq/features"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Features - RSVP -->
+  <url>
+    <loc>https://ivyevents.mk/mk/features/rsvp</loc>
+    <xhtml:link rel="alternate" hreflang="mk" href="https://ivyevents.mk/mk/features/rsvp"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ivyevents.mk/en/features/rsvp"/>
+    <xhtml:link rel="alternate" hreflang="sq" href="https://ivyevents.mk/sq/features/rsvp"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Features - Invitations -->
+  <url>
+    <loc>https://ivyevents.mk/mk/features/invitations</loc>
+    <xhtml:link rel="alternate" hreflang="mk" href="https://ivyevents.mk/mk/features/invitations"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ivyevents.mk/en/features/invitations"/>
+    <xhtml:link rel="alternate" hreflang="sq" href="https://ivyevents.mk/sq/features/invitations"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Pricing -->
+  <url>
+    <loc>https://ivyevents.mk/mk/pricing</loc>
+    <xhtml:link rel="alternate" hreflang="mk" href="https://ivyevents.mk/mk/pricing"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ivyevents.mk/en/pricing"/>
+    <xhtml:link rel="alternate" hreflang="sq" href="https://ivyevents.mk/sq/pricing"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Packages -->
+  <url>
+    <loc>https://ivyevents.mk/mk/packages</loc>
+    <xhtml:link rel="alternate" hreflang="mk" href="https://ivyevents.mk/mk/packages"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ivyevents.mk/en/packages"/>
+    <xhtml:link rel="alternate" hreflang="sq" href="https://ivyevents.mk/sq/packages"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- About -->
+  <url>
+    <loc>https://ivyevents.mk/mk/about</loc>
+    <xhtml:link rel="alternate" hreflang="mk" href="https://ivyevents.mk/mk/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ivyevents.mk/en/about"/>
+    <xhtml:link rel="alternate" hreflang="sq" href="https://ivyevents.mk/sq/about"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Contact -->
+  <url>
+    <loc>https://ivyevents.mk/mk/contact</loc>
+    <xhtml:link rel="alternate" hreflang="mk" href="https://ivyevents.mk/mk/contact"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ivyevents.mk/en/contact"/>
+    <xhtml:link rel="alternate" hreflang="sq" href="https://ivyevents.mk/sq/contact"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- FAQ -->
+  <url>
+    <loc>https://ivyevents.mk/mk/faq</loc>
+    <xhtml:link rel="alternate" hreflang="mk" href="https://ivyevents.mk/mk/faq"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ivyevents.mk/en/faq"/>
+    <xhtml:link rel="alternate" hreflang="sq" href="https://ivyevents.mk/sq/faq"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Terms -->
+  <url>
+    <loc>https://ivyevents.mk/mk/terms</loc>
+    <xhtml:link rel="alternate" hreflang="mk" href="https://ivyevents.mk/mk/terms"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ivyevents.mk/en/terms"/>
+    <xhtml:link rel="alternate" hreflang="sq" href="https://ivyevents.mk/sq/terms"/>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- Event Invitations Browser -->
+  <url>
+    <loc>https://ivyevents.mk/mk/event-invitations</loc>
+    <xhtml:link rel="alternate" hreflang="mk" href="https://ivyevents.mk/mk/event-invitations"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ivyevents.mk/en/event-invitations"/>
+    <xhtml:link rel="alternate" hreflang="sq" href="https://ivyevents.mk/sq/event-invitations"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Invitation Templates (public previews) -->
+  <url>
+    <loc>https://ivyevents.mk/mk/invitations/coastal-breeze</loc>
+    <xhtml:link rel="alternate" hreflang="mk" href="https://ivyevents.mk/mk/invitations/coastal-breeze"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ivyevents.mk/en/invitations/coastal-breeze"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ivyevents.mk/mk/invitations/parisian-wedding</loc>
+    <xhtml:link rel="alternate" hreflang="mk" href="https://ivyevents.mk/mk/invitations/parisian-wedding"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ivyevents.mk/en/invitations/parisian-wedding"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ivyevents.mk/mk/invitations/persian-wedding</loc>
+    <xhtml:link rel="alternate" hreflang="mk" href="https://ivyevents.mk/mk/invitations/persian-wedding"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ivyevents.mk/en/invitations/persian-wedding"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ivyevents.mk/mk/invitations/elegant-chateau</loc>
+    <xhtml:link rel="alternate" hreflang="mk" href="https://ivyevents.mk/mk/invitations/elegant-chateau"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ivyevents.mk/en/invitations/elegant-chateau"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ivyevents.mk/mk/invitations/modern-collage</loc>
+    <xhtml:link rel="alternate" hreflang="mk" href="https://ivyevents.mk/mk/invitations/modern-collage"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ivyevents.mk/en/invitations/modern-collage"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ivyevents.mk/mk/invitations/editorial</loc>
+    <xhtml:link rel="alternate" hreflang="mk" href="https://ivyevents.mk/mk/invitations/editorial"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ivyevents.mk/en/invitations/editorial"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+</urlset>

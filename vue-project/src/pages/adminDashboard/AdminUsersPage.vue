@@ -482,8 +482,8 @@ async function save() {
     lastName: form.value.lastName.trim(),
     email: form.value.email.trim(),
     roles: form.value.roles,
-    packages: form.value.packageTypes.length ? form.value.packageTypes : null,
-    eventIds: form.value.eventIds.length ? form.value.eventIds : null,
+    packages: editingId.value ? form.value.packageTypes : (form.value.packageTypes.length ? form.value.packageTypes : null),
+    eventIds: editingId.value ? form.value.eventIds : (form.value.eventIds.length ? form.value.eventIds : null),
   };
 
   saving.value = true;

@@ -56,7 +56,7 @@ const props = defineProps({
   liveEdit: { type: Boolean, default: false },
 });
 
-const emit = defineEmits(["close", "updated", "change"]);
+const emit = defineEmits(["close", "updated", "change", "upload-failed"]);
 
 const imagePreview = ref("");
 const selectedFile = ref(null);
@@ -98,22 +98,23 @@ function onFileSelected(e) {
 async function submit() {
   const eventId = onboardingStore.eventId;
   if (!eventId) return;
-  saving.value = true;
-  try {
-    if (selectedFile.value) {
-      uploading.value = true;
-      await invitationImagesService.uploadHeroImage(eventId, selectedFile.value);
-      uploading.value = false;
-    }
 
+  const fileToUpload = selectedFile.value;
+  selectedFile.value = null;
+  emit("close");
+
+  if (!fileToUpload) {
     emit("updated");
-    emit("close");
-  } catch (e) {
-    console.error("Failed to save hero:", e);
-  } finally {
-    saving.value = false;
-    uploading.value = false;
+    return;
   }
+
+  invitationImagesService.uploadHeroImageInBackground(eventId, fileToUpload, {
+    onSuccess: () => emit("updated"),
+    onError: (err) => {
+      console.error("[EditHeroModal] Hero upload failed after retries", err);
+      emit("upload-failed", err?.message || "Hero image upload failed");
+    },
+  });
 }
 </script>
 

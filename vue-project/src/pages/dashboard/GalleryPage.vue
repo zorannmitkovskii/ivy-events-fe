@@ -22,7 +22,8 @@
           :disabled="downloading"
           @click="downloadAll"
         >
-          <i class="bi bi-download"></i>
+          <span v-if="downloading === 'all'" class="dl-spinner"></span>
+          <i v-else class="bi bi-download"></i>
           {{ downloading === 'all' ? t("gallery.downloading") : t("gallery.downloadAll") }}
         </ButtonMain>
 
@@ -41,7 +42,8 @@
             :disabled="selectedIds.size === 0 || downloading === 'selected'"
             @click="downloadSelected"
           >
-            <i class="bi bi-download"></i>
+            <span v-if="downloading === 'selected'" class="dl-spinner dl-spinner--light"></span>
+            <i v-else class="bi bi-download"></i>
             {{ downloading === 'selected' ? t("gallery.downloading") : t("gallery.downloadSelected") }}
             <span v-if="selectedIds.size > 0" class="sel-badge">{{ selectedIds.size }}</span>
           </ButtonMain>
@@ -389,6 +391,27 @@ onBeforeUnmount(() => {
   color: var(--dash-muted);
   font-size: 13px;
   padding: 48px 24px;
+}
+
+.dl-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  border-top-color: var(--dash-sage, #334338);
+  border-radius: 50%;
+  animation: dl-spin 0.7s linear infinite;
+  margin-right: 4px;
+  vertical-align: -2px;
+}
+
+.dl-spinner--light {
+  border-color: rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+}
+
+@keyframes dl-spin {
+  to { transform: rotate(360deg); }
 }
 
 /* Toolbar badge */
