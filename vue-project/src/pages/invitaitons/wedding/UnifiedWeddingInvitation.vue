@@ -871,6 +871,7 @@ const heroProps = computed(() => ({
   venue: config.venue,
   location: config.location,
   mapUrl: config.heroMapUrl,
+  mapLabel: t('invitation.viewMap'),
   photoUrl: config.heroPhotoUrl,
   labelText: config.heroLabel,
   subtitle: config.heroLabel,
