@@ -96,7 +96,7 @@ const eventId = ref(onboardingStore.eventId);
 const isGallery = computed(() => onboardingStore.selectedCategory === EventCategoryEnum.GALLERY);
 const isInactive = computed(() => {
   const s = event.value?.status || onboardingStore.eventStatus || '';
-  return s !== 'ACTIVE';
+  return s !== 'ACTIVATED';
 });
 
 const closeFriendsUrl = computed(() => {

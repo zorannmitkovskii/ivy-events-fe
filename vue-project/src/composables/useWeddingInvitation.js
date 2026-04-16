@@ -718,6 +718,7 @@ export function useWeddingInvitation(preset) {
       if (theme.cardStyle)      Object.assign(cardStyle, theme.cardStyle);
       if (theme.spacingPreset)  spacingPreset.value = theme.spacingPreset;
       if (theme.heroFamily)     heroFamily.value = theme.heroFamily;
+      if (theme.detailsFamily)  detailsFamily.value = theme.detailsFamily;
       if (theme.scheduleFamily) scheduleFamily.value = theme.scheduleFamily;
       if (theme.storyFamily)    storyFamily.value = theme.storyFamily;
     }
@@ -801,6 +802,7 @@ export function useWeddingInvitation(preset) {
         spacingPreset: spacingPreset.value,
         rsvpConfig:    { ...rsvpConfig },
         heroFamily:    heroFamily.value,
+        detailsFamily: detailsFamily.value,
         scheduleFamily: scheduleFamily.value,
         storyFamily:   storyFamily.value,
       });
@@ -852,6 +854,7 @@ export function useWeddingInvitation(preset) {
       if (theme.cardStyle)     Object.assign(cardStyle, theme.cardStyle);
       if (theme.spacingPreset) spacingPreset.value = theme.spacingPreset;
       if (theme.heroFamily) heroFamily.value = theme.heroFamily;
+      if (theme.detailsFamily) detailsFamily.value = theme.detailsFamily;
       if (theme.scheduleFamily) scheduleFamily.value = theme.scheduleFamily;
       if (theme.storyFamily) storyFamily.value = theme.storyFamily;
     }
@@ -891,6 +894,7 @@ export function useWeddingInvitation(preset) {
       invitationName:    route.params.design || preset.id,
       lang:              locale.value,
       heroFamily:        heroFamily.value,
+      detailsFamily:     detailsFamily.value,
       scheduleFamily:    scheduleFamily.value,
       storyFamily:       storyFamily.value,
     };

@@ -25,6 +25,7 @@ export function buildEventFullPayload({
   invitationName,
   lang,
   heroFamily,
+  detailsFamily,
   scheduleFamily,
   storyFamily,
 }) {
@@ -50,7 +51,6 @@ export function buildEventFullPayload({
   return {
     name: `${config.brideName || ""} & ${config.groomName || ""}`,
     categoryType: "WEDDING",
-    status: "DRAFT",
     date: (config.weddingDateTime || "").split("T")[0] || "",
     lang: lang || "en",
     username: getUsername(),
@@ -103,6 +103,7 @@ export function buildEventFullPayload({
       descriptionI18n: item.descriptionI18n || null,
       storyDate: item.storyDate || item.date || null,
       displayOrder: i + 1,
+      showTitle: item.showTitle !== false,
     })),
 
     rsvpConfig: {
@@ -142,6 +143,7 @@ export function buildEventFullPayload({
       },
       spacingPreset: spacingPreset || "balanced",
       heroFamily: heroFamily || "",
+      detailsFamily: detailsFamily || "",
       scheduleFamily: scheduleFamily || "",
       storyFamily: storyFamily || "",
     },
