@@ -1334,7 +1334,13 @@
     "downloading": "Downloading...",
     "selectMode": "Select",
     "cancelSelect": "Cancel",
-    "selected": "{count} selected"
+    "selected": "{count} selected",
+    "delete": "Delete",
+    "deleteSelected": "Delete Selected",
+    "deleting": "Deleting...",
+    "confirmDelete": "Are you sure you want to delete this image?",
+    "confirmDeleteMany": "Are you sure you want to delete these {count} images?",
+    "deleteError": "Delete failed"
   },
   "settings": {
     "title": "Event Settings",

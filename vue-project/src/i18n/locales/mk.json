@@ -1335,7 +1335,13 @@
     "downloading": "Се презема...",
     "selectMode": "Избери",
     "cancelSelect": "Откажи",
-    "selected": "{count} избрани"
+    "selected": "{count} избрани",
+    "delete": "Избриши",
+    "deleteSelected": "Избриши избрани",
+    "deleting": "Се брише...",
+    "confirmDelete": "Сигурно ли сакаш да ја избришеш оваа слика?",
+    "confirmDeleteMany": "Сигурно ли сакаш да ги избришеш овие {count} слики?",
+    "deleteError": "Бришењето не успеа"
   },
   "settings": {
     "title": "Подесувања на настан",
