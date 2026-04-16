@@ -4,22 +4,18 @@
     <p v-if="subtitle" class="rsvp-subtitle">{{ subtitle }}</p>
 
     <form class="form" @submit.prevent="onSubmit">
-      <!-- Guest names -->
+      <!-- Guest entries -->
       <div class="guests-block">
-        <label class="field-label">{{ nameLabel }}</label>
         <div
           v-for="(guest, idx) in guests"
           :key="idx"
-          class="guest-entry"
+          class="guest-card"
         >
-          <div class="guest-row">
-            <input
-              v-model="guest.fullName"
-              type="text"
-              class="field-input"
-              :placeholder="namePlaceholder"
-              required
-            />
+          <div class="guest-card-header">
+            <span class="guest-card-title">
+              <span class="guest-number">{{ idx + 1 }}</span>
+              {{ guestCardLabel(idx) }}
+            </span>
             <button
               v-if="guests.length > 1"
               type="button"
@@ -27,29 +23,53 @@
               :aria-label="'Remove guest ' + (idx + 1)"
               @click="removeGuest(idx)"
             >
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
                 <path d="M4.5 4.5L13.5 13.5M13.5 4.5L4.5 13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
               </svg>
             </button>
           </div>
-          <label class="child-toggle">
-            <input type="checkbox" v-model="guest.isChild" />
-            <span>{{ childLabel }}</span>
-          </label>
-          <div class="guest-extra">
-            <select v-model="guest.dietary" class="field-input field-select field-select--sm">
-              <option v-for="opt in resolvedDietaryOptions" :key="opt.value" :value="opt.value" :disabled="!opt.value">
-                {{ opt.label }}
-              </option>
-            </select>
-            <input
-              v-model="guest.allergies"
-              type="text"
-              class="field-input field-input--sm"
-              :placeholder="t('invitation.allergiesPlaceholder')"
-            />
+
+          <div class="guest-card-body">
+            <div class="field-row">
+              <label class="field-sublabel">{{ nameLabel }}</label>
+              <input
+                v-model="guest.fullName"
+                type="text"
+                class="field-input"
+                :placeholder="namePlaceholder"
+                required
+              />
+            </div>
+
+            <label class="toggle-row">
+              <input type="checkbox" class="toggle-input" v-model="guest.isChild" />
+              <span class="toggle-switch" :class="{ 'toggle-switch--on': guest.isChild }">
+                <span class="toggle-thumb"></span>
+              </span>
+              <span class="toggle-label">{{ childLabel }}</span>
+            </label>
+
+            <div class="field-row">
+              <label class="field-sublabel">{{ t('invitation.dietaryPreference') }}</label>
+              <select v-model="guest.dietary" class="field-input field-select">
+                <option v-for="opt in resolvedDietaryOptions" :key="opt.value" :value="opt.value" :disabled="!opt.value">
+                  {{ opt.label }}
+                </option>
+              </select>
+            </div>
+
+            <div class="field-row">
+              <label class="field-sublabel">{{ t('invitation.allergiesLabel') }}</label>
+              <input
+                v-model="guest.allergies"
+                type="text"
+                class="field-input"
+                :placeholder="t('invitation.allergiesPlaceholder')"
+              />
+            </div>
           </div>
         </div>
+
         <button
           v-if="guests.length < maxGuests"
           type="button"
@@ -142,6 +162,7 @@ const props = defineProps({
   nameLabel: { type: String, default: 'Full Name' },
   namePlaceholder: { type: String, default: 'Enter full name' },
   addGuestLabel: { type: String, default: 'Add another guest' },
+  guestLabel: { type: String, default: '' },
   childLabel: { type: String, default: 'Child' },
   attendanceLabel: { type: String, default: 'Will you be attending?' },
   acceptLabel: { type: String, default: 'Joyfully Accept' },
@@ -215,6 +236,11 @@ function addGuest() {
   if (guests.value.length < props.maxGuests) {
     guests.value.push({ fullName: '', isChild: false, dietary: '', allergies: '' });
   }
+}
+
+function guestCardLabel(idx) {
+  const base = props.guestLabel || t('invitation.guestName');
+  return `${base} ${idx + 1}`;
 }
 
 function removeGuest(idx) {
@@ -318,75 +344,150 @@ async function onSubmit() {
   min-height: 80px;
 }
 
-/* Guest rows */
+/* Guest cards */
 .guests-block {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 14px;
 }
 
-.guest-entry {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.guest-card {
+  border: 1px solid var(--border-color, #e5e5e5);
+  border-radius: var(--rsvp-radius);
+  background: var(--item-bg, #fafafa);
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.guest-row {
+.guest-card:focus-within {
+  border-color: var(--rsvp-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--rsvp-accent) 18%, transparent);
+}
+
+.guest-card-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--rsvp-accent) 10%, transparent);
+  border-bottom: 1px solid var(--border-color, #e5e5e5);
 }
 
-.guest-row .field-input {
-  flex: 1;
-}
-
-.child-toggle {
+.guest-card-title {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  font-family: var(--rsvp-heading-font);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--theme-text, #333);
+  letter-spacing: 0.02em;
+}
+
+.guest-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--rsvp-accent);
+  color: var(--theme-text, #333);
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--rsvp-heading-font);
+}
+
+.guest-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+}
+
+.field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-sublabel {
+  font-family: var(--rsvp-body-font);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--theme-text-muted, #777);
+  letter-spacing: 0.02em;
+}
+
+/* Toggle switch for "child" checkbox */
+.toggle-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   cursor: pointer;
   font-family: var(--rsvp-body-font);
   font-size: 13px;
-  color: var(--theme-text-muted, #666);
-  padding-left: 2px;
+  color: var(--theme-text, #444);
+  padding: 4px 2px;
+  user-select: none;
 }
 
-.child-toggle input[type="checkbox"] {
-  width: 15px;
-  height: 15px;
-  accent-color: var(--rsvp-accent);
-  cursor: pointer;
+.toggle-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
 }
 
-.guest-extra {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 2px;
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 34px;
+  height: 20px;
+  background: #d6d6d6;
+  border-radius: 999px;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
 }
 
-.field-select--sm,
-.field-input--sm {
-  font-size: 13px;
-  padding: 8px 10px;
+.toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
 }
 
-.field-select--sm {
-  padding-right: 32px;
-  background-size: 14px;
-  background-position: right 8px center;
+.toggle-switch--on {
+  background: var(--rsvp-accent);
+}
+
+.toggle-switch--on .toggle-thumb {
+  transform: translateX(14px);
+}
+
+.toggle-input:focus-visible + .toggle-switch {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--rsvp-accent) 35%, transparent);
+}
+
+.toggle-label {
+  font-weight: 500;
 }
 
 .remove-guest-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   border: none;
-  background: var(--item-bg, #f5f5f5);
+  background: transparent;
   color: var(--theme-text-muted, #999);
   cursor: pointer;
   flex-shrink: 0;
