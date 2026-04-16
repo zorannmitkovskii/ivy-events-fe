@@ -15,11 +15,11 @@
 
         <div class="hero-details">
           <p class="detail-primary">{{ weddingDate }}</p>
-          <p class="detail-secondary">{{ venue }}</p>
-          <p class="detail-muted">{{ location }}</p>
-          <a v-if="mapUrl" :href="mapUrl" target="_blank" rel="noopener" class="map-link">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            View on Map
+          <p v-if="venue" class="detail-secondary">{{ venue }}</p>
+          <p v-if="location" class="detail-muted">{{ location }}</p>
+          <a v-if="mapUrl" :href="mapUrl" target="_blank" rel="noopener" class="map-link" :aria-label="mapLabel">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>{{ mapLabel }}</span>
           </a>
         </div>
 
@@ -47,6 +47,7 @@ const props = defineProps({
   photoUrl: { type: String, default: '' },
   labelText: { type: String, default: "You're Invited" },
   ctaLabel: { type: String, default: 'RSVP' },
+  mapLabel: { type: String, default: 'View on Map' },
   accentColor: { type: String, default: '#dbeafe' },
   accentHover: { type: String, default: '#bfdbfe' },
   dividerColor: { type: String, default: '#fda4af' },
@@ -162,21 +163,45 @@ function scrollToRsvp() {
 }
 
 .map-link {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 6px;
+  margin: 12px auto 0;
+  padding: 8px 16px;
   font-family: var(--hero-body-font);
   font-size: 13px;
   font-weight: 600;
-  color: #60a5fa;
+  letter-spacing: 0.02em;
+  color: var(--theme-text, #333);
+  background: color-mix(in srgb, var(--hero-accent, #dbeafe) 40%, transparent);
+  border: 1px solid color-mix(in srgb, var(--hero-accent, #dbeafe) 70%, transparent);
+  border-radius: 999px;
   text-decoration: none;
-  margin-top: 8px;
-  transition: color 0.2s;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.map-link svg {
+  flex-shrink: 0;
 }
 
 .map-link:hover {
-  color: #3b82f6;
+  background: var(--hero-accent, #dbeafe);
+  border-color: var(--hero-accent-hover, #bfdbfe);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.map-link:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.map-link:focus-visible {
+  outline: 2px solid var(--hero-accent-hover, #bfdbfe);
+  outline-offset: 2px;
 }
 
 .hero-cta-wrap {

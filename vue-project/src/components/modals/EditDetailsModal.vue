@@ -171,6 +171,9 @@ function emitUpdate(item) {
     type: item.type,
     eventDate: item.eventDate || null,
     time: item.time || '00:00',
+    description: item.description ?? null,
+    visibility: item.visibility ?? null,
+    icon: item.icon ?? null,
     location: item.location || null,
   };
   emit('update', payload);
