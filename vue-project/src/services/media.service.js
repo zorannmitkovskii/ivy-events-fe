@@ -74,6 +74,16 @@ export const mediaService = {
     return res.data;
   },
 
+  async deleteById(id) {
+    const res = await backendApi.delete(`/public/media/${encodeURIComponent(id)}`);
+    return res.data;
+  },
+
+  async deleteSelected(fileIds) {
+    const res = await backendApi.post("/public/media/delete/selected", fileIds);
+    return res.data;
+  },
+
   async downloadAll(eventId) {
     const res = await backendApi.get("/public/media/download/all", {
       params: { eventId },

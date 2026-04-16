@@ -48,6 +48,17 @@
             <span v-if="selectedIds.size > 0" class="sel-badge">{{ selectedIds.size }}</span>
           </ButtonMain>
 
+          <ButtonMain
+            variant="outline"
+            class="btn-danger-outline"
+            :disabled="selectedIds.size === 0 || deleting"
+            @click="deleteSelected"
+          >
+            <span v-if="deleting === 'selected'" class="dl-spinner"></span>
+            <i v-else class="bi bi-trash"></i>
+            {{ deleting === 'selected' ? t("gallery.deleting") : t("gallery.deleteSelected") }}
+          </ButtonMain>
+
           <ButtonMain variant="outline" @click="cancelSelection">
             {{ t("gallery.cancelSelect") }}
           </ButtonMain>
@@ -123,6 +134,17 @@
         >
           <i class="bi bi-download"></i> {{ t("gallery.download") }}
         </a>
+        <button
+          v-if="previewImage.id"
+          type="button"
+          class="delete-link"
+          :disabled="deleting === 'one'"
+          @click="deleteCurrent"
+        >
+          <span v-if="deleting === 'one'" class="dl-spinner"></span>
+          <i v-else class="bi bi-trash"></i>
+          {{ deleting === 'one' ? t("gallery.deleting") : t("gallery.delete") }}
+        </button>
         <ButtonMain variant="outline" @click="previewOpen = false">
           {{ t("common.cancel") }}
         </ButtonMain>
@@ -178,6 +200,7 @@ const sentinelRef = ref(null);
 const selectMode = ref(false);
 const selectedIds = reactive(new Set());
 const downloading = ref(null); // null | 'all' | 'selected'
+const deleting = ref(null); // null | 'one' | 'selected'
 
 let observer = null;
 
@@ -307,6 +330,41 @@ async function downloadSelected() {
     error.value = e?.message || "Download failed";
   } finally {
     downloading.value = null;
+  }
+}
+
+async function deleteCurrent() {
+  const img = previewImage.value;
+  if (!img?.id || deleting.value) return;
+  if (!window.confirm(t("gallery.confirmDelete"))) return;
+  deleting.value = "one";
+  try {
+    await mediaService.deleteById(img.id);
+    images.value = images.value.filter(i => i.id !== img.id);
+    selectedIds.delete(img.id);
+    previewOpen.value = false;
+  } catch (e) {
+    error.value = e?.response?.data?.message || e?.message || t("gallery.deleteError");
+  } finally {
+    deleting.value = null;
+  }
+}
+
+async function deleteSelected() {
+  if (deleting.value || selectedIds.size === 0) return;
+  const count = selectedIds.size;
+  if (!window.confirm(t("gallery.confirmDeleteMany", { count }))) return;
+  deleting.value = "selected";
+  try {
+    const ids = Array.from(selectedIds);
+    await mediaService.deleteSelected(ids);
+    const idSet = new Set(ids);
+    images.value = images.value.filter(i => !idSet.has(i.id));
+    cancelSelection();
+  } catch (e) {
+    error.value = e?.response?.data?.message || e?.message || t("gallery.deleteError");
+  } finally {
+    deleting.value = null;
   }
 }
 
@@ -560,6 +618,42 @@ onBeforeUnmount(() => {
 .download-link:hover {
   border-color: var(--dash-sage-light);
   background: var(--dash-sage-ghost);
+}
+
+.delete-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1.5px solid #fecaca;
+  background: #fff;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #dc2626;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.delete-link:hover:not(:disabled) {
+  border-color: #f87171;
+  background: #fef2f2;
+}
+
+.delete-link:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+:deep(.btn-danger-outline) {
+  border-color: #fecaca !important;
+  color: #dc2626 !important;
+}
+:deep(.btn-danger-outline:hover:not(:disabled)) {
+  background: #fef2f2 !important;
+  border-color: #f87171 !important;
 }
 
 /* Responsive */

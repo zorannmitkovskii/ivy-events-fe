@@ -1210,7 +1210,13 @@
     "downloading": "Duke shkarkuar...",
     "selectMode": "Zgjidh",
     "cancelSelect": "Anulo",
-    "selected": "{count} të zgjedhura"
+    "selected": "{count} të zgjedhura",
+    "delete": "Fshij",
+    "deleteSelected": "Fshij të zgjedhurat",
+    "deleting": "Duke fshirë...",
+    "confirmDelete": "Jeni i sigurt që doni të fshini këtë imazh?",
+    "confirmDeleteMany": "Jeni i sigurt që doni të fshini këto {count} imazhe?",
+    "deleteError": "Fshirja dështoi"
   },
   "settings": {
     "title": "Cilësimet e Ngjarjes",
@@ -1545,7 +1551,7 @@
     "howWeMet": "Si u njohëm",
     "firstDate": "Takimi i parë",
     "theProposal": "Propozimi",
-    "child": "Fëmijë",
+    "child": "Fëmijë (3-12 vjeç)",
     "howToContact": "Si duhet t'ju kontaktojmë?",
     "email": "Email",
     "sms": "SMS",

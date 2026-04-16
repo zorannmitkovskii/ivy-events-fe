@@ -15,7 +15,6 @@
 
         <div class="hero-details">
           <p class="detail-primary">{{ weddingDate }}</p>
-          <p class="detail-secondary">{{ time }}</p>
           <p class="detail-secondary">{{ venue }}</p>
           <p class="detail-muted">{{ location }}</p>
           <a v-if="mapUrl" :href="mapUrl" target="_blank" rel="noopener" class="map-link">
