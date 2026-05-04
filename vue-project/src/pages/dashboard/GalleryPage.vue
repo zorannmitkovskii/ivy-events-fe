@@ -126,17 +126,15 @@
       </div>
 
       <template #footer>
-        <button
+        <a
           v-if="previewImage.id"
-          type="button"
+          :href="mediaService.downloadOneUrl(previewImage.id)"
           class="download-link"
-          :disabled="downloading === 'one'"
-          @click="downloadCurrent"
+          rel="noopener"
         >
-          <span v-if="downloading === 'one'" class="dl-spinner"></span>
-          <i v-else class="bi bi-download"></i>
-          {{ downloading === 'one' ? t("gallery.downloading") : t("gallery.download") }}
-        </button>
+          <i class="bi bi-download"></i>
+          {{ t("gallery.download") }}
+        </a>
         <button
           v-if="previewImage.id"
           type="button"
@@ -314,19 +312,6 @@ async function downloadAll() {
   try {
     const blob = await mediaService.downloadAll(getEventId());
     triggerDownload(blob, "gallery.zip");
-  } catch (e) {
-    error.value = e?.message || "Download failed";
-  } finally {
-    downloading.value = null;
-  }
-}
-
-async function downloadCurrent() {
-  if (downloading.value || !previewImage.value?.id) return;
-  downloading.value = "one";
-  try {
-    const { blob, filename } = await mediaService.downloadOne(previewImage.value.id);
-    triggerDownload(blob, filename || previewImage.value.name || "image");
   } catch (e) {
     error.value = e?.message || "Download failed";
   } finally {
