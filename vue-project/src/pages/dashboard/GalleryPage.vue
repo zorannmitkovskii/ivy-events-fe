@@ -127,7 +127,7 @@
 
       <template #footer>
         <button
-          v-if="previewImage.url"
+          v-if="previewImage.id"
           type="button"
           class="download-link"
           :disabled="downloading === 'one'"
@@ -322,28 +322,15 @@ async function downloadAll() {
 }
 
 async function downloadCurrent() {
-  if (downloading.value || !previewImage.value?.url) return;
+  if (downloading.value || !previewImage.value?.id) return;
   downloading.value = "one";
   try {
-    const res = await fetch(previewImage.value.url, { mode: "cors", credentials: "omit" });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const blob = await res.blob();
-    const filename = previewImage.value.name || filenameFromUrl(previewImage.value.url) || "image";
-    triggerDownload(blob, filename);
+    const { blob, filename } = await mediaService.downloadOne(previewImage.value.id);
+    triggerDownload(blob, filename || previewImage.value.name || "image");
   } catch (e) {
     error.value = e?.message || "Download failed";
   } finally {
     downloading.value = null;
-  }
-}
-
-function filenameFromUrl(url) {
-  try {
-    const path = new URL(url).pathname;
-    const last = path.split("/").pop();
-    return last ? decodeURIComponent(last.split("?")[0]) : null;
-  } catch {
-    return null;
   }
 }
 
