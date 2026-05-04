@@ -84,6 +84,16 @@ export const mediaService = {
     return res.data;
   },
 
+  async downloadOne(fileId) {
+    const res = await backendApi.get(`/public/media/download/${encodeURIComponent(fileId)}`, {
+      responseType: "blob"
+    });
+    const cd = res.headers?.["content-disposition"] || "";
+    const match = /filename="?([^";]+)"?/i.exec(cd);
+    const filename = match ? match[1] : null;
+    return { blob: res.data, filename };
+  },
+
   async downloadAll(eventId) {
     const res = await backendApi.get("/public/media/download/all", {
       params: { eventId },
