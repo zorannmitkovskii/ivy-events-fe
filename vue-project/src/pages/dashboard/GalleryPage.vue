@@ -126,14 +126,17 @@
       </div>
 
       <template #footer>
-        <a
+        <button
           v-if="previewImage.url"
-          :href="previewImage.url"
-          download
+          type="button"
           class="download-link"
+          :disabled="downloading === 'one'"
+          @click="downloadCurrent"
         >
-          <i class="bi bi-download"></i> {{ t("gallery.download") }}
-        </a>
+          <span v-if="downloading === 'one'" class="dl-spinner"></span>
+          <i v-else class="bi bi-download"></i>
+          {{ downloading === 'one' ? t("gallery.downloading") : t("gallery.download") }}
+        </button>
         <button
           v-if="previewImage.id"
           type="button"
@@ -199,7 +202,7 @@ const sentinelRef = ref(null);
 // Selection state
 const selectMode = ref(false);
 const selectedIds = reactive(new Set());
-const downloading = ref(null); // null | 'all' | 'selected'
+const downloading = ref(null); // null | 'all' | 'selected' | 'one'
 const deleting = ref(null); // null | 'one' | 'selected'
 
 let observer = null;
@@ -315,6 +318,32 @@ async function downloadAll() {
     error.value = e?.message || "Download failed";
   } finally {
     downloading.value = null;
+  }
+}
+
+async function downloadCurrent() {
+  if (downloading.value || !previewImage.value?.url) return;
+  downloading.value = "one";
+  try {
+    const res = await fetch(previewImage.value.url, { mode: "cors", credentials: "omit" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const blob = await res.blob();
+    const filename = previewImage.value.name || filenameFromUrl(previewImage.value.url) || "image";
+    triggerDownload(blob, filename);
+  } catch (e) {
+    error.value = e?.message || "Download failed";
+  } finally {
+    downloading.value = null;
+  }
+}
+
+function filenameFromUrl(url) {
+  try {
+    const path = new URL(url).pathname;
+    const last = path.split("/").pop();
+    return last ? decodeURIComponent(last.split("?")[0]) : null;
+  } catch {
+    return null;
   }
 }
 
