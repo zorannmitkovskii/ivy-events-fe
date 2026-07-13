@@ -7,20 +7,29 @@
         <p class="s-desc">{{ $t('eventCategories.section.subtitle') }}</p>
       </div>
 
+      <!-- Live categories only. Disabled ones move to the strip below to
+           avoid signalling "product is unfinished" on the landing page. -->
       <div class="cats-grid">
         <div
-          v-for="cat in categories"
+          v-for="cat in liveCategories"
           :key="cat.id"
           class="cat"
-          :class="{ active: cat.id === selectedId, disabled: cat.disabled }"
-          @click="!cat.disabled && onSelect(cat.id)"
+          :class="{ active: cat.id === selectedId }"
+          @click="onSelect(cat.id)"
         >
-          <span v-if="cat.disabled" class="soon">{{ $t('eventCategories.comingSoon') }}</span>
           <div class="cat-ico" :style="{ background: cat.icoBg }">{{ cat.icon }}</div>
           <div class="cat-n">{{ $t(cat.titleKey) }}</div>
           <div class="cat-d">{{ $t(cat.descriptionKey) }}</div>
         </div>
       </div>
+
+      <p v-if="soonCategories.length" class="soon-strip">
+        {{ $t('eventCategories.comingSoonPrefix') }}
+        <span
+          v-for="(cat, i) in soonCategories"
+          :key="cat.id"
+        >{{ $t(cat.titleKey) }}<span v-if="i < soonCategories.length - 1">, </span></span>.
+      </p>
     </div>
   </section>
 </template>
@@ -53,6 +62,9 @@ const categories = [
   { id: "baby", titleKey: "eventCategories.items.babyShowers.title", descriptionKey: "eventCategories.items.babyShowers.description", icon: "🍼", icoBg: "rgba(237,110,105,.12)", disabled: true },
   { id: "conferences", titleKey: "eventCategories.items.conferences.title", descriptionKey: "eventCategories.items.conferences.description", icon: "🎤", icoBg: "rgba(93,106,87,.12)", disabled: true },
 ];
+
+const liveCategories = computed(() => categories.filter(c => !c.disabled));
+const soonCategories = computed(() => categories.filter(c => c.disabled));
 </script>
 
 <style scoped>
@@ -76,7 +88,7 @@ const categories = [
 }
 
 h2 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-display);
   font-size: clamp(36px, 4vw, 54px);
   font-weight: 400;
   line-height: 1.15;
@@ -84,7 +96,7 @@ h2 {
   color: var(--brand-main);
 }
 
-h2 em { font-style: italic; color: var(--brand-gold); }
+h2 em { font-style: italic; color: var(--brand-dark); }
 
 .s-desc {
   font-size: 17px;
@@ -128,23 +140,13 @@ h2 em { font-style: italic; color: var(--brand-gold); }
 .cat.active .cat-d { color: #fff; }
 .cat.active .cat-d { color: rgba(255, 255, 255, 0.65); }
 
-.cat.disabled {
-  opacity: 0.6;
-  cursor: default;
-}
-
-.soon {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: var(--secondary-gold);
-  color: var(--brand-main);
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 100px;
+.soon-strip {
+  margin: 28px auto 0;
+  max-width: 720px;
+  text-align: center;
+  color: var(--neutral-700);
+  font-size: 14px;
+  letter-spacing: 0.01em;
 }
 
 .cat-ico {

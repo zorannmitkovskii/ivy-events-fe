@@ -157,7 +157,7 @@ watch(draft, () => { emitChange(); }, { deep: true });
 }
 
 .input:focus {
-  border-color: var(--brand-gold, #c8a24d);
+  border-color: var(--brand-main);
 }
 
 .location-readonly {
@@ -194,6 +194,6 @@ watch(draft, () => { emitChange(); }, { deep: true });
 }
 
 .edit-location-btn:hover {
-  color: var(--brand-gold, #c8a24d);
+  color: var(--brand-main);
 }
 </style>

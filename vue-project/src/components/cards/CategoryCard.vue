@@ -53,7 +53,7 @@ defineProps({
 
 .category-card:hover {
   transform: translateY(-2px);
-  border-color: var(--secondary-gold);
+  border-color: var(--brand-main);
   box-shadow:
     0 22px 50px rgba(0, 0, 0, 0),
     0 0 0 1px rgba(201, 162, 77, 0.15);
@@ -61,7 +61,7 @@ defineProps({
 
 /* ✅ Selected state */
 .category-card.is-selected {
-  border-color: var(--brand-gold);
+  border-color: var(--brand-main);
   box-shadow:
     0 22px 50px rgba(0, 0, 0, 0),
     0 0 0 2px rgba(200, 162, 77, 0.25),

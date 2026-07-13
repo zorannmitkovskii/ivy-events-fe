@@ -101,7 +101,7 @@ function onOpenEdit(id) {
 }
 
 h2 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-display);
   font-size: clamp(36px, 4vw, 54px);
   font-weight: 400;
   line-height: 1.15;
@@ -109,7 +109,7 @@ h2 {
   color: var(--brand-main);
 }
 
-h2 em { font-style: italic; color: var(--brand-gold); }
+h2 em { font-style: italic; color: var(--brand-dark); }
 
 /* Loading */
 .loading-state {
@@ -122,7 +122,7 @@ h2 em { font-style: italic; color: var(--brand-gold); }
   width: 32px;
   height: 32px;
   border: 3px solid rgba(0, 0, 0, 0.1);
-  border-top-color: var(--brand-gold, #c4956a);
+  border-top-color: var(--brand-main);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }

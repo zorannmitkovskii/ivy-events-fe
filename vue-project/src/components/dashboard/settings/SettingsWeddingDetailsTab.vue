@@ -482,8 +482,8 @@ async function onDelete(item) {
 }
 
 .hero-upload-area:hover {
-  border-color: var(--brand-gold, #c8a24d);
-  color: var(--brand-gold, #c8a24d);
+  border-color: var(--brand-main);
+  color: var(--brand-main);
 }
 
 .hero-upload-text {

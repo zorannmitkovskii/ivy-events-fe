@@ -127,7 +127,7 @@ defineProps({
   cursor: pointer;
   text-decoration: none;
 
-  background: var(--secondary-gold);
+  background: var(--brand-main);
   color: var(--bg-white);
   font-weight: 700;
   font-size: 14px;

@@ -61,7 +61,7 @@ const steps = [
 }
 
 h2 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-display);
   font-size: clamp(36px, 4vw, 54px);
   font-weight: 400;
   line-height: 1.15;
@@ -71,7 +71,7 @@ h2 {
 
 h2 em {
   font-style: italic;
-  color: var(--brand-gold);
+  color: var(--brand-dark);
 }
 
 .s-desc {
@@ -133,7 +133,7 @@ h2 em {
   right: -9px;
   width: 24px;
   height: 24px;
-  background: var(--brand-gold);
+  background: var(--brand-main);
   color: #fff;
   border-radius: 50%;
   font-size: 11px;

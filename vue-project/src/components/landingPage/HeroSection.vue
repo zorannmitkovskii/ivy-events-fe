@@ -162,7 +162,7 @@ const stats = [
 
 /* Heading */
 .hero-h1 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-display);
   font-size: clamp(42px, 5.4vw, 72px);
   font-weight: 400;
   line-height: 1.07;
@@ -174,7 +174,7 @@ const stats = [
 
 .hero-h1 em {
   font-style: italic;
-  color: var(--brand-gold);
+  color: var(--brand-dark);
 }
 
 .hero-sub {
@@ -242,7 +242,7 @@ const stats = [
 }
 
 .hero-num-val {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-display);
   font-size: 34px;
   font-weight: 400;
   color: var(--brand-main);
@@ -295,8 +295,8 @@ const stats = [
 
 .invite-leaf { font-size: 28px; margin-bottom: 9px; }
 .invite-label { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--neutral-700); margin-bottom: 7px; }
-.invite-names { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-style: italic; color: var(--brand-main); line-height: 1.2; margin-bottom: 12px; }
-.invite-rule { width: 32px; height: 1px; background: var(--brand-gold); margin: 0 auto 12px; }
+.invite-names { font-family: var(--font-display); font-size: 28px; font-style: italic; color: var(--brand-main); line-height: 1.2; margin-bottom: 12px; }
+.invite-rule { width: 32px; height: 1px; background: var(--brand-light); margin: 0 auto 12px; }
 .invite-date { font-size: 13px; color: var(--neutral-700); margin-bottom: 4px; }
 .invite-loc { font-size: 13px; color: var(--neutral-700); margin-bottom: 17px; }
 .invite-btn { display: inline-block; padding: 8px 20px; background: var(--brand-main); border-radius: 8px; font-size: 10.5px; font-weight: 500; color: #fff; letter-spacing: 0.07em; }

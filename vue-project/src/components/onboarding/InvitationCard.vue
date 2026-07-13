@@ -5,10 +5,16 @@
     @click="$emit('select')"
   >
     <div class="thumbnail-wrap">
-      <div
-        v-if="thumbnailUrl"
+      <img
+        v-if="resolvedThumb"
         class="thumbnail"
-        :style="{ backgroundImage: `url(${thumbnailUrl})` }"
+        :src="resolvedThumb"
+        :alt="name"
+        width="400"
+        height="533"
+        loading="lazy"
+        decoding="async"
+        @error="onThumbError"
       />
       <div v-else class="thumbnail thumbnail--placeholder" />
 
@@ -38,8 +44,9 @@
 </template>
 
 <script setup>
+import { ref, watch } from 'vue';
 
-defineProps({
+const props = defineProps({
   name: { type: String, required: true },
   subtitle: { type: String, default: '' },
   thumbnailUrl: { type: String, default: '' },
@@ -48,6 +55,21 @@ defineProps({
 });
 
 defineEmits(['select', 'preview']);
+
+// Fallback chain: props.thumbnailUrl -> /thumbnails/default.svg -> placeholder div.
+// Ref because we mutate it on <img> load error.
+const FALLBACK_THUMB = '/thumbnails/default.svg';
+const resolvedThumb = ref(props.thumbnailUrl || '');
+watch(() => props.thumbnailUrl, v => { resolvedThumb.value = v || ''; });
+
+function onThumbError() {
+  if (resolvedThumb.value !== FALLBACK_THUMB) {
+    resolvedThumb.value = FALLBACK_THUMB;
+    return;
+  }
+  // Even the fallback failed — hide the img so the placeholder div takes over.
+  resolvedThumb.value = '';
+}
 </script>
 
 <style scoped>
@@ -65,8 +87,8 @@ defineEmits(['select', 'preview']);
 }
 
 .invitation-card--selected {
-  border-color: var(--brand-gold, #c4956a);
-  box-shadow: 0 0 0 1px var(--brand-gold, #c4956a);
+  border-color: var(--brand-main);
+  box-shadow: 0 0 0 1px var(--brand-main);
 }
 
 .thumbnail-wrap {
@@ -79,8 +101,8 @@ defineEmits(['select', 'preview']);
 .thumbnail {
   width: 100%;
   height: 100%;
-  background-size: cover;
-  background-position: center;
+  object-fit: cover;
+  display: block;
 }
 
 .thumbnail--placeholder {
@@ -101,7 +123,7 @@ defineEmits(['select', 'preview']);
   border-radius: 100px;
   font-size: 11px;
   font-weight: 600;
-  background: var(--brand-gold, #c4956a);
+  background: var(--brand-main);
   color: #fff;
   z-index: 2;
 }

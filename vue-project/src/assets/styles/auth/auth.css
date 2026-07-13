@@ -17,7 +17,7 @@
   transition: color 0.2s ease;
 }
 .auth-link:hover {
-  color: var(--brand-gold);
+  color: var(--brand-main);
 }
 
 /* ===== Error ===== */

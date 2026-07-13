@@ -11,15 +11,18 @@
     </div>
 
     <nav class="nav">
-      <SidebarNavItem
-        v-for="it in navItems"
-        :key="it.key"
-        :to="link(it.path)"
-        :label="t(it.labelKey)"
-        :icon="it.icon"
-        :badge="it.badge ? t(it.badge) : null"
-        :active="isActive(it.path)"
-      />
+      <template v-for="section in navSections" :key="section.key">
+        <div v-if="section.label" class="nav-section-label">{{ t(section.label) }}</div>
+        <SidebarNavItem
+          v-for="it in section.items"
+          :key="it.key"
+          :to="link(it.path)"
+          :label="t(it.labelKey)"
+          :icon="it.icon"
+          :count="resolveCount(it.countKey)"
+          :active="isActive(it.path)"
+        />
+      </template>
     </nav>
 
     <div v-if="hasMultipleEvents && isOrganizer" class="sidebar-switch">
@@ -63,8 +66,15 @@ import { getFullName, logout, getPackages, hasRole } from "@/services/auth.servi
 import { onboardingStore, clearOnboarding } from "@/store/onboarding.store";
 import { EventCategoryEnum } from "@/enums/EventCategory.js";
 import { eventsService } from "@/services/events.service";
+import { useSidebarCounts } from "@/composables/useSidebarCounts";
 
 defineEmits(["close", "navigate"]);
+
+const counts = useSidebarCounts();
+function resolveCount(key) {
+  if (!key) return null;
+  return counts[key]?.value ?? null;
+}
 
 const { t, locale } = useI18n();
 const route = useRoute();
@@ -89,13 +99,13 @@ const hasInvPro = computed(() => userPackages.value.includes("INV_PRO"));
 const showUpgrade = computed(() => !hasInvPremium.value);
 
 const allNavItems = [
-  { key: "overview", path: "overview", labelKey: "sidebar.overview", icon: Icons.grid },
-  { key: "guests", path: "guests", labelKey: "sidebar.guests", icon: Icons.users },
-  { key: "tasks", path: "tasks", labelKey: "sidebar.tasks", icon: Icons.check },
-  { key: "budget", path: "budget", labelKey: "sidebar.budget", icon: Icons.card },
-  { key: "tables", path: "tables", labelKey: "sidebar.seating", icon: Icons.grid2 },
-  { key: "gallery", path: "gallery", labelKey: "sidebar.gallery", icon: Icons.image },
-  { key: "links", path: "invitation-links", labelKey: "sidebar.invitationLinks", icon: Icons.mail }
+  { key: "overview", path: "overview", labelKey: "sidebar.overview", icon: Icons.grid, section: "event" },
+  { key: "guests", path: "guests", labelKey: "sidebar.guests", icon: Icons.users, section: "event", countKey: "guests" },
+  { key: "tasks", path: "tasks", labelKey: "sidebar.tasks", icon: Icons.check, section: "event", countKey: "tasks" },
+  { key: "budget", path: "budget", labelKey: "sidebar.budget", icon: Icons.card, section: "event" },
+  { key: "tables", path: "tables", labelKey: "sidebar.seating", icon: Icons.grid2, section: "event", countKey: "tablesTotal" },
+  { key: "gallery", path: "gallery", labelKey: "sidebar.gallery", icon: Icons.image, section: "invitation" },
+  { key: "links", path: "invitation-links", labelKey: "sidebar.invitationLinks", icon: Icons.mail, section: "invitation" }
 ];
 
 const GALLERY_NAV_KEYS = ['gallery', 'links'];
@@ -110,6 +120,17 @@ const navItems = computed(() => {
     if (GALLERY_NAV_KEYS.includes(it.key) && it.key !== 'gallery') return false;
     return true;
   });
+});
+
+// Group into "Event" / "Invitation" sections so the sidebar reads as a
+// structured menu, not a flat list.
+const navSections = computed(() => {
+  const eventItems = navItems.value.filter(it => it.section === 'event');
+  const invitationItems = navItems.value.filter(it => it.section === 'invitation');
+  const sections = [];
+  if (eventItems.length) sections.push({ key: 'event', label: 'sidebar.sectionEvent', items: eventItems });
+  if (invitationItems.length) sections.push({ key: 'invitation', label: 'sidebar.sectionInvitation', items: invitationItems });
+  return sections;
 });
 
 const userName = computed(() => getFullName() || "User");
@@ -235,7 +256,7 @@ function signOut() { logout(); clearOnboarding(); router.push(`/${lang.value}/au
 }
 
 .ei-names {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 16px;
   color: rgba(255, 255, 255, 0.92);
   font-style: italic;
@@ -266,19 +287,22 @@ function signOut() { logout(); clearOnboarding(); router.push(`/${lang.value}/au
 .nav {
   display: flex;
   flex-direction: column;
-  padding: 12px 0;
+  padding: 8px 0;
   flex: 1;
   min-height: 0;
 }
 
-.nav-label {
-  font-size: 8.5px;
-  letter-spacing: 0.18em;
+.nav-section-label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.22);
-  padding: 0 24px;
-  margin-bottom: 4px;
+  color: rgba(255, 255, 255, 0.42);
+  padding: 16px 24px 6px;
   font-weight: 600;
+}
+
+.nav-section-label:first-child {
+  padding-top: 8px;
 }
 
 /* Switch event */

@@ -304,7 +304,8 @@
         "description": "Share event photos with guests"
       }
     },
-    "comingSoon": "Coming Soon"
+    "comingSoon": "Coming Soon",
+    "comingSoonPrefix": "Coming soon:"
   },
   "weddingsPage": {
     "templates": {
@@ -578,6 +579,7 @@
       "titleAccent": "every occasion",
       "subtitle": "Professionally designed, fully customizable invitations",
       "cta": "View all templates",
+      "empty": "New templates coming soon.",
       "items": {
         "elegantWedding": {
           "title": "Classic Wedding",
@@ -720,11 +722,27 @@
       "subtitle": "Join thousands of satisfied users — get started for free",
       "primaryCta": "Start Planning",
       "secondaryCta": "View Templates"
+    },
+    "socialProof": {
+      "stats": {
+        "invitationsSent": "1,247",
+        "invitationsSentLabel": "Invitations sent",
+        "activeEvents": "68",
+        "activeEventsLabel": "Active events",
+        "languages": "3",
+        "languagesLabel": "Languages · MK · EN · AL"
+      },
+      "quote": "Guests were RSVPing in real time while we were finalising the seating chart — everything lived in one place, no spreadsheets, no group-chat back-and-forth.",
+      "attribution": {
+        "name": "Tijana & Martin",
+        "meta": "Wedding · Skopje · 70 guests"
+      }
     }
   },
   "guests": {
     "title": "Guests",
     "subtitle": "Manage your event guests and table assignments",
+    "noEmail": "no email",
     "addGuest": "Add Guest",
     "importGuests": "Import Guests",
     "sendReminder": "Send Reminder",
@@ -984,7 +1002,9 @@
     "addTask": "Add Task",
     "upgrade": "Upgrade",
     "switchEvent": "Switch Event",
-    "navigation": "Navigation"
+    "navigation": "Navigation",
+    "sectionEvent": "Event",
+    "sectionInvitation": "Invitation"
   },
   "admin": {
     "sidebar": {

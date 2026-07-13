@@ -51,7 +51,7 @@ const lang = computed(() => route.params.lang || 'mk');
   transition: color 0.2s ease;
 }
 .card-footer-link strong {
-  color: var(--brand-gold);
+  color: var(--brand-main);
   font-weight: 600;
 }
 .card-footer-link:hover {

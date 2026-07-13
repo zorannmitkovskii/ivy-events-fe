@@ -188,7 +188,7 @@ defineProps({
 
 .footer__link {
   margin-left: 6px;
-  color: var(--brand-gold);
+  color: var(--brand-main);
   font-weight: 700;
   text-decoration: none;
 }

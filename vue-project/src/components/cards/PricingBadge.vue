@@ -13,7 +13,8 @@
   left: 50%;
   transform: translateX(-50%);
 
-  background: var(--brand-gold);
+  /* "Most Popular" is a premium signal → gold retained. */
+  background: var(--premium-gold);
   color: var(--bg-white);
   font-weight: 700;
   font-size: 12px;

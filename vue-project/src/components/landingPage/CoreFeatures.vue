@@ -69,7 +69,7 @@ const features = [
 const rsvpGuests = [
   { name: t('home.features.rsvpGuest1'), time: t('home.features.rsvpTime1'), dotColor: "#BFD2A4", status: "yes", label: t('home.features.rsvpYes') },
   { name: t('home.features.rsvpGuest2'), time: t('home.features.rsvpTime2'), dotColor: "#ED6E69", status: "no", label: t('home.features.rsvpNo') },
-  { name: t('home.features.rsvpGuest3'), time: t('home.features.rsvpTime3'), dotColor: "#C8A24D", status: "may", label: t('home.features.rsvpMaybe') },
+  { name: t('home.features.rsvpGuest3'), time: t('home.features.rsvpTime3'), dotColor: "#7A8773", status: "may", label: t('home.features.rsvpMaybe') },
   { name: t('home.features.rsvpGuest4'), time: t('home.features.rsvpTime4'), dotColor: "#BFD2A4", status: "yes", label: t('home.features.rsvpYes2') },
 ];
 </script>
@@ -91,7 +91,7 @@ const rsvpGuests = [
 
 /* Left */
 .feat-left h2 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-display);
   font-size: clamp(32px, 4vw, 50px);
   font-weight: 400;
   line-height: 1.15;
@@ -100,7 +100,7 @@ const rsvpGuests = [
   color: var(--brand-main);
 }
 
-.feat-left h2 em { font-style: italic; color: var(--brand-gold); }
+.feat-left h2 em { font-style: italic; color: var(--brand-dark); }
 
 .eyebrow {
   display: inline-block;
@@ -196,7 +196,7 @@ const rsvpGuests = [
 }
 
 .feat-right h3 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-display);
   font-size: 28px;
   font-weight: 400;
   font-style: italic;
@@ -238,7 +238,7 @@ const rsvpGuests = [
 
 .rsvp-badge.yes { background: rgba(191, 210, 164, 0.2); color: var(--brand-light); }
 .rsvp-badge.no { background: rgba(237, 110, 105, 0.15); color: #ED6E69; }
-.rsvp-badge.may { background: rgba(200, 162, 77, 0.15); color: var(--secondary-gold); }
+.rsvp-badge.may { background: rgba(255, 255, 255, 0.12); color: rgba(255, 255, 255, 0.75); }
 
 .feat-right-bar { margin-top: 22px; }
 

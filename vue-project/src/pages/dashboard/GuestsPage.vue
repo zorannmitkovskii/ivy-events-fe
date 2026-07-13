@@ -25,25 +25,25 @@
       <div class="summary-row" v-if="items.length > 0">
         <div class="summary-card">
           <div class="sc-accent accent-sage"></div>
-          <div class="sc-icon ic-sage">&#128101;</div>
+          <div class="sc-icon ic-sage" v-html="Icons.users" />
           <div class="sc-value">{{ totals?.total || 0 }}</div>
           <div class="sc-label">{{ t("guests.totalGuests") }}</div>
         </div>
         <div class="summary-card">
           <div class="sc-accent accent-green"></div>
-          <div class="sc-icon ic-green">&#10003;</div>
+          <div class="sc-icon ic-green" v-html="Icons.check" />
           <div class="sc-value">{{ totals?.confirmed || 0 }}</div>
           <div class="sc-label">{{ t("guests.confirmed") }}</div>
         </div>
         <div class="summary-card">
           <div class="sc-accent accent-gold"></div>
-          <div class="sc-icon ic-gold">&#9679;</div>
+          <div class="sc-icon ic-gold" v-html="ICON_CLOCK" />
           <div class="sc-value">{{ totals?.pending || 0 }}</div>
           <div class="sc-label">{{ t("guests.pending") }}</div>
         </div>
         <div class="summary-card">
           <div class="sc-accent accent-blush"></div>
-          <div class="sc-icon ic-blush">&#10007;</div>
+          <div class="sc-icon ic-blush" v-html="ICON_X" />
           <div class="sc-value">{{ totals?.declined || 0 }}</div>
           <div class="sc-label">{{ t("guests.declined") }}</div>
         </div>
@@ -62,12 +62,14 @@
         @apply="applyFilters"
       />
 
-      <div v-if="items.length === 0" class="d-card d-card-pad empty-state">
-        <div class="empty-title">{{ t("guests.emptyTitle") }}</div>
-        <div class="empty-sub">{{ t("guests.emptyMessage") }}</div>
-        <div style="margin-top:12px;">
-          <ButtonMain variant="main" @click="openCreateModal">{{ t("guests.addGuest") }}</ButtonMain>
-        </div>
+      <div v-if="items.length === 0" class="d-card d-card-pad">
+        <EmptyState
+          :title="t('guests.emptyTitle')"
+          :description="t('guests.emptyMessage')"
+          :cta-label="t('guests.addGuest')"
+          :glyph-svg="Icons.users"
+          @cta="openCreateModal"
+        />
       </div>
 
       <GuestsTable
@@ -103,6 +105,13 @@ import GuestsToolbar from "@/components/dashboard/guests/GuestsToolbar.vue";
 import GuestsTable from "@/components/dashboard/guests/GuestsTable.vue";
 import AddGuestModal from "@/components/dashboard/tables/AddGuestModal.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
+import EmptyState from "@/components/generic/EmptyState.vue";
+import { Icons } from "@/utils/icons.js";
+
+// Two small SVGs used by summary cards — kept inline so we don't grow icons.js
+// with tiny one-off symbols.
+const ICON_CLOCK = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`;
+const ICON_X = `<svg viewBox="0 0 24 24"><path d="M6 6l12 12M6 18L18 6"/></svg>`;
 
 const { t } = useI18n();
 const route = useRoute();
@@ -282,17 +291,27 @@ async function onRemove(guestId) {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px;
   margin-bottom: 10px;
+  color: var(--dash-sage);
 }
 
-.ic-sage { background: rgba(90, 122, 82, 0.1); }
+.sc-icon :deep(svg) {
+  width: 17px;
+  height: 17px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ic-sage { background: rgba(90, 122, 82, 0.1); color: var(--dash-sage); }
 .ic-green { background: rgba(90, 122, 82, 0.12); color: var(--dash-sage); }
-.ic-gold { background: rgba(184, 149, 78, 0.1); }
-.ic-blush { background: rgba(196, 150, 142, 0.12); }
+.ic-gold { background: rgba(184, 149, 78, 0.1); color: #8a6a30; }
+.ic-blush { background: rgba(196, 150, 142, 0.12); color: var(--dash-blush); }
 
 .sc-value {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 36px;
   font-weight: 400;
   line-height: 1;

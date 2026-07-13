@@ -105,7 +105,7 @@ defineProps({
 
 /* Focus ring */
 .field__control:focus-within {
-  border-color: var(--brand-gold);
+  border-color: var(--brand-main);
   box-shadow: 0 0 0 3px rgba(200, 162, 77, 0.15);
 }
 input:focus {

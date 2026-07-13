@@ -18,9 +18,14 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-vue': ['vue', 'vue-router', 'vue-i18n'],
-          'vendor-http': ['axios'],
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('keycloak-js')) return 'vendor-keycloak';
+            if (/[\\/](vue|vue-router|vue-i18n|@vue)[\\/]/.test(id)) return 'vendor-vue';
+            if (id.includes('/axios/')) return 'vendor-http';
+            if (id.includes('/bootstrap/') || id.includes('@popperjs')) return 'vendor-bootstrap';
+            if (id.includes('/chart.js/')) return 'vendor-charts';
+          }
         },
       },
     },

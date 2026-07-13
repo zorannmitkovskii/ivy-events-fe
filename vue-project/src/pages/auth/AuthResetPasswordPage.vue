@@ -153,5 +153,5 @@ async function onReset() {
   text-decoration: none;
   transition: color 0.2s ease;
 }
-.card-footer-link:hover { color: var(--brand-gold); }
+.card-footer-link:hover { color: var(--brand-main); }
 </style>

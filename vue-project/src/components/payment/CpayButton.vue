@@ -91,7 +91,7 @@ async function payWithCpay() {
 }
 
 .cpay-btn:hover:not(:disabled) {
-  border-color: var(--brand-gold, #C8A24D);
+  border-color: var(--premium-gold, #C8A24D);
   background: rgba(200, 162, 77, 0.06);
 }
 
@@ -102,9 +102,9 @@ async function payWithCpay() {
 
 /* Gold variant */
 .cpay-btn.gold {
-  background: var(--brand-gold, #C8A24D);
+  background: var(--premium-gold, #C8A24D);
   color: #fff;
-  border-color: var(--brand-gold, #C8A24D);
+  border-color: var(--premium-gold, #C8A24D);
 }
 
 .cpay-btn.gold:hover:not(:disabled) {
@@ -117,7 +117,7 @@ async function payWithCpay() {
   width: 100%;
   justify-content: center;
   padding: 10px 12px;
-  background: var(--brand-gold, #C8A24D);
+  background: var(--premium-gold, #C8A24D);
   color: #1b1b1b;
   border: none;
   border-radius: var(--radius-md, 8px);

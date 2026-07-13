@@ -1,4 +1,5 @@
 <template>
+  <JsonLd :schema="landingSchemas" id="landing-jsonld" />
   <Header />
   <HeroSection />
   <HowItWorks />
@@ -6,6 +7,7 @@
   <TemplatesGallery id="templates" />
   <CoreFeatures id="features" />
   <PackagesSection id="pricing" />
+  <SocialProof />
   <FinalCtaSection />
   <HomepageFaq />
   <Footer />
@@ -27,6 +29,19 @@ import { setSelectedCategory } from '@/store/onboarding.store';
 import { categoryIdToEnum } from '@/helper/CategoryMapping.helper.js';
 import FinalCtaSection from "@/components/landingPage/FinalCtaSection.vue";
 import HomepageFaq from "@/components/landingPage/HomepageFaq.vue";
+import SocialProof from "@/components/landingPage/SocialProof.vue";
+import JsonLd from "@/components/seo/JsonLd.vue";
+import { organizationSchema, webSiteSchema, DEFAULT_BASE_URL } from "@/utils/jsonLdSchemas";
+
+const landingSchemas = computed(() => [
+  organizationSchema({
+    logo: `${DEFAULT_BASE_URL}/logo.svg`,
+    description: 'Digital event invitations, RSVP management, and event planning platform.',
+  }),
+  webSiteSchema({
+    searchUrlTemplate: `${DEFAULT_BASE_URL}/${lang.value}/event-invitations?q={search_term_string}`,
+  }),
+]);
 
 const router = useRouter();
 const route = useRoute();

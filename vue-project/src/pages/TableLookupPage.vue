@@ -127,7 +127,7 @@ onMounted(async () => {
 }
 
 .lookup-icon {
-  color: #c8a24d;
+  color: var(--brand-main);
   margin-bottom: 16px;
 }
 
@@ -172,8 +172,8 @@ onMounted(async () => {
 }
 
 .search-input:focus {
-  border-color: #c8a24d;
-  box-shadow: 0 0 0 3px rgba(200, 162, 77, 0.15);
+  border-color: var(--brand-main);
+  box-shadow: 0 0 0 3px rgba(47, 62, 54, 0.12);
   background: #fff;
 }
 
@@ -222,7 +222,7 @@ onMounted(async () => {
   width: 20px;
   height: 20px;
   border: 2.5px solid #e5e7eb;
-  border-top-color: #c8a24d;
+  border-top-color: var(--brand-main);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }
@@ -270,7 +270,7 @@ onMounted(async () => {
 .table-badge {
   display: inline-block;
   padding: 6px 16px;
-  background: linear-gradient(135deg, #c8a24d, #b8922d);
+  background: var(--brand-main);
   color: #fff;
   font-size: 13px;
   font-weight: 700;

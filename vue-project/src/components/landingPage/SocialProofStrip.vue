@@ -57,7 +57,7 @@
 .stars {
   display: flex;
   gap: 2px;
-  color: var(--brand-gold);
+  color: var(--brand-main);
 }
 .badge-icon { flex-shrink: 0; }
 .badge-icon--sage { color: var(--secondary-sage); }

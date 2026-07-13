@@ -149,15 +149,15 @@ function onClick(e) {
   transform: translateY(-2px);
 }
 
-/* Solid gold */
+/* Solid gold — reserved for premium/upgrade CTAs only. */
 .btn--gold {
-  background: var(--brand-gold);
+  background: var(--premium-gold);
   color: var(--bg-white);
-  border: 1px solid var(--brand-gold);
+  border: 1px solid var(--premium-gold);
 }
 
 .btn--gold:hover {
-  background: var(--secondary-gold);
+  background: var(--premium-gold-soft);
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(200, 162, 77, 0.3);
 }

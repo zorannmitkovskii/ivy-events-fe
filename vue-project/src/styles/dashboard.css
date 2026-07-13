@@ -124,7 +124,7 @@
 .fill {
   height: 100%;
   border-radius: 999px;
-  background: var(--brand-gold);
+  background: var(--brand-main);
 }
 
 /* Task rows */
@@ -172,7 +172,7 @@
   display: grid; place-items: center;
 }
 .btn-gold {
-  background: var(--brand-gold);
+  background: var(--brand-main);
   border: 1px solid rgba(0,0,0,0.10);
   color: #1b1b1b;
   border-radius: 12px;

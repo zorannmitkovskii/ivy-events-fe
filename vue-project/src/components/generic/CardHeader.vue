@@ -35,6 +35,6 @@
 }
 
 .lock {
-  color: var(--brand-gold);
+  color: var(--brand-main);
 }
 </style>

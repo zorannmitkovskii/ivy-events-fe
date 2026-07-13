@@ -102,7 +102,7 @@ body {
 
 .coming-soon-wrapper .email-input:focus {
   outline: none;
-  border-color: var(--brand-gold);
+  border-color: var(--brand-main);
   box-shadow: 0 0 0 3px rgba(200, 162, 77, 0.25);
 }
 
@@ -117,7 +117,7 @@ body {
   font-weight: 600;
   cursor: pointer;
   color: var(--bg-white);
-  background: linear-gradient(135deg, var(--brand-gold), var(--secondary-gold));
+  background: linear-gradient(135deg, var(--brand-main), var(--brand-main));
   transition: transform 0.15s ease, filter 0.25s ease;
 }
 
@@ -180,7 +180,7 @@ body {
 }
 
 .coming-soon-wrapper .social a:hover {
-  color: var(--brand-gold);
+  color: var(--brand-main);
   transform: translateY(-1px);
 }
 

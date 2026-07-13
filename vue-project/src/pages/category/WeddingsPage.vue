@@ -1,4 +1,5 @@
 <template xmlns="http://www.w3.org/1999/html">
+  <JsonLd :schema="schema" id="category-weddings" />
   <Header/>
   <DetailsLayout>
     <div class="space-y-16">
@@ -45,6 +46,12 @@ import WeddingFeedback from "@/components/wedding/WeddingFeedback.vue"
 import Header from "@/components/header/Header.vue";
 import DetailsLayout from "@/components/DetailsLayout.vue";
 import HeroVideoSection from "@/components/wedding/HeroVideoSection.vue";
+import JsonLd from "@/components/seo/JsonLd.vue";
+import { categoryServiceSchema } from "@/utils/jsonLdSchemas";
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+const route = useRoute();
+const schema = computed(() => categoryServiceSchema('weddings', { lang: route.params.lang || 'mk' }));
 </script>
 
 <style scoped>

@@ -200,7 +200,7 @@ function onTimeChange(item, hour, minute) {
 }
 
 .input:focus {
-  border-color: var(--brand-gold);
+  border-color: var(--brand-main);
 }
 
 .time-selects {

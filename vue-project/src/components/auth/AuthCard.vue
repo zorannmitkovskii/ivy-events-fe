@@ -16,7 +16,7 @@
   background: var(--bg-white);
   border-radius: 14px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
-  border-top: 4px solid var(--brand-gold);
+  border-top: 4px solid var(--brand-main);
   overflow: hidden;
 }
 .auth-card__body {

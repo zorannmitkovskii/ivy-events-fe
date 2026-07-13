@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none">
+  <rect width="400" height="600" fill="#f4f0e8"/>
+  <rect x="40" y="60" width="320" height="480" rx="10" fill="#fff" stroke="#e0d6c4" stroke-width="1"/>
+
+  <!-- Ornament -->
+  <line x1="140" y1="180" x2="260" y2="180" stroke="#c8a97e" stroke-width="1"/>
+  <circle cx="200" cy="180" r="3" fill="#c8a97e"/>
+
+  <text x="200" y="240" text-anchor="middle" fill="#5a7a52"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="24" font-style="italic">Wedding Invitation</text>
+
+  <text x="200" y="300" text-anchor="middle" fill="#8b8377"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="14" letter-spacing="3">TEMPLATE PREVIEW</text>
+
+  <line x1="140" y1="360" x2="260" y2="360" stroke="#c8a97e" stroke-width="1"/>
+  <circle cx="200" cy="360" r="3" fill="#c8a97e"/>
+
+  <!-- Ivy logo hint -->
+  <text x="200" y="500" text-anchor="middle" fill="#5a7a52"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="12" letter-spacing="4" opacity="0.6">IVY EVENTS</text>
+</svg>

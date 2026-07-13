@@ -74,7 +74,7 @@ const testimonials = [
 }
 
 h2 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-display);
   font-size: clamp(36px, 4vw, 54px);
   font-weight: 400;
   line-height: 1.15;
@@ -82,7 +82,7 @@ h2 {
   color: var(--brand-main);
 }
 
-h2 em { font-style: italic; color: var(--brand-gold); }
+h2 em { font-style: italic; color: var(--brand-dark); }
 
 /* Grid */
 .testi-grid {
@@ -105,14 +105,14 @@ h2 em { font-style: italic; color: var(--brand-gold); }
 }
 
 .testi-stars {
-  color: var(--brand-gold);
+  color: var(--brand-main);
   font-size: 13px;
   margin-bottom: 14px;
   letter-spacing: 2px;
 }
 
 .testi-text {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-display);
   font-size: 20px;
   font-style: italic;
   line-height: 1.6;

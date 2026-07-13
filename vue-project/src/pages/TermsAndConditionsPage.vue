@@ -127,12 +127,12 @@ onUnmounted(() => {
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--brand-gold, #c4956a);
+  color: var(--brand-main);
   margin-bottom: 16px;
 }
 
 .hero-title {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-display);
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 400;
   color: #fff;
@@ -176,7 +176,7 @@ onUnmounted(() => {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--brand-gold, #c4956a);
+  color: var(--brand-main);
   margin-bottom: 12px;
 }
 
@@ -207,7 +207,7 @@ onUnmounted(() => {
 .toc-num {
   font-size: 11px;
   font-weight: 700;
-  color: var(--brand-gold, #c4956a);
+  color: var(--brand-main);
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
   width: 20px;
@@ -248,7 +248,7 @@ onUnmounted(() => {
 .section-num {
   font-size: 12px;
   font-weight: 700;
-  color: var(--brand-gold, #c4956a);
+  color: var(--brand-main);
   font-variant-numeric: tabular-nums;
 }
 
@@ -265,7 +265,7 @@ onUnmounted(() => {
 }
 
 .section-title {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-display);
   font-size: 1.375rem;
   font-weight: 500;
   color: var(--brand-main, #334338);

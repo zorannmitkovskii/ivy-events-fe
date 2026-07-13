@@ -80,8 +80,8 @@ const statusText = computed(() => {
 }
 
 .card.selected {
-  border-color: #c8a24d;
-  box-shadow: 0 10px 22px rgba(200, 162, 77, 0.12);
+  border-color: var(--brand-main);
+  box-shadow: 0 10px 22px rgba(47, 62, 54, 0.12);
 }
 
 .top {

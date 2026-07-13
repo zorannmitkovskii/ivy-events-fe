@@ -52,7 +52,7 @@ defineProps({
   width: 44px;
   height: 44px;
   border-radius: 999px;
-  background: var(--brand-gold);
+  background: var(--brand-main);
   color: var(--bg-white);
   display: inline-flex;
   align-items: center;

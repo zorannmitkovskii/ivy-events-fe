@@ -252,7 +252,7 @@ async function upload() {
 
 .dropzone:hover,
 .dropzone.active {
-  border-color: var(--brand-gold, #C8A24D);
+  border-color: var(--brand-main);
   background: rgba(200, 162, 77, 0.04);
 }
 
@@ -333,7 +333,7 @@ async function upload() {
   padding: 14px;
   border: 0;
   border-radius: 12px;
-  background: var(--brand-gold, #C8A24D);
+  background: var(--brand-main);
   color: #fff;
   font-size: 15px;
   font-weight: 700;

@@ -271,7 +271,9 @@
         "title": "Përvjetore",
         "description": "Nderoni vitet e dashurisë"
       }
-    }
+    },
+    "comingSoon": "Së shpejti",
+    "comingSoonPrefix": "Së shpejti:"
   },
   "weddingsPage": {
     "templates": {
@@ -502,6 +504,7 @@
       "title": "Shabllone Mahnitëse për Çdo Rast",
       "subtitle": "Të dizajnuara profesionalisht, plotësisht të personalizueshme",
       "cta": "Shiko Shabllonet",
+      "empty": "Së shpejti — shabllone të reja po vijnë.",
       "items": {
         "elegantWedding": {
           "title": "Dasmë Elegante",
@@ -600,11 +603,27 @@
       "subtitle": "Bashkohuni me mijëra çifte dhe organizatorë që i besojnë IvyEvents. Filloni planifikimin e festimit tuaj të paharrueshëm sot – është falas për të filluar!",
       "primaryCta": "Fillo Planifikimin e Ngjarjes",
       "secondaryCta": "Shiko Shabllonet"
+    },
+    "socialProof": {
+      "stats": {
+        "invitationsSent": "1,247",
+        "invitationsSentLabel": "Ftesa të dërguara",
+        "activeEvents": "68",
+        "activeEventsLabel": "Ngjarje aktive",
+        "languages": "3",
+        "languagesLabel": "Gjuhë · MK · EN · AL"
+      },
+      "quote": "Mysafirët konfirmonin në kohë reale ndërsa ne finalizonim tavolinat — gjithçka në një vend, pa tabela, pa mesazhe në chat-e grupore.",
+      "attribution": {
+        "name": "Tijana & Martin",
+        "meta": "Dasmë · Shkup · 70 mysafirë"
+      }
     }
   },
   "guests": {
     "title": "Mysafirët",
     "subtitle": "Menaxhoni mysafirët e ngjarjes dhe caktimet e tavolinave",
+    "noEmail": "pa email",
     "addGuest": "Shto Mysafir",
     "importGuests": "Importo Mysafirë",
     "sendReminder": "Dërgo Kujtesë",
@@ -861,7 +880,9 @@
     "signOut": "Dil",
     "addGuest": "Shto Mysafir",
     "addTask": "Shto Detyrë",
-    "navigation": "Navigimi"
+    "navigation": "Navigimi",
+    "sectionEvent": "Ngjarja",
+    "sectionInvitation": "Ftesa"
   },
   "admin": {
     "sidebar": {

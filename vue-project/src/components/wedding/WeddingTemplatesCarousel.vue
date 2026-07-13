@@ -35,7 +35,14 @@
           @keyup.enter="selectTemplate(t)"
         >
           <div class="wt-thumb">
-            <img :src="t.image" :alt="t.title" />
+            <img
+              :src="t.image"
+              :alt="t.title"
+              width="800"
+              height="1000"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
 
           <div class="wt-card-body">

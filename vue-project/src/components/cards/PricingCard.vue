@@ -110,7 +110,8 @@ defineProps({
 
 /* Featured (middle) */
 .card--featured {
-  border: 2px solid var(--brand-gold);
+  /* Premium tier — gold intentionally retained. */
+  border: 2px solid var(--premium-gold);
   box-shadow: var(--shadow-lg);
   transform: translateY(-6px);
   overflow: visible;

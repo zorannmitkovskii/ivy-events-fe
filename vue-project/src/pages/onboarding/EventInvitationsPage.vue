@@ -411,7 +411,7 @@ async function onContinue() {
   width: 32px;
   height: 32px;
   border: 3px solid rgba(0, 0, 0, 0.1);
-  border-top-color: var(--brand-gold, #c4956a);
+  border-top-color: var(--brand-main);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }

@@ -53,7 +53,7 @@ const lang = computed(() => route.params.lang || "mk");
 }
 
 h2 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-display);
   font-size: clamp(36px, 4vw, 54px);
   font-weight: 400;
   line-height: 1.15;
@@ -63,7 +63,7 @@ h2 {
 
 h2 em {
   font-style: italic;
-  color: var(--secondary-gold);
+  color: var(--brand-light);
 }
 
 .s-desc {
@@ -95,7 +95,7 @@ h2 em {
 }
 
 .btn-w:hover {
-  background: var(--secondary-gold);
+  background: var(--brand-light);
 }
 
 .btn-wo {

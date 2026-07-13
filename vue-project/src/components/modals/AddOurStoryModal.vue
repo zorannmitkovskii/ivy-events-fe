@@ -254,7 +254,7 @@ function submit() {
 }
 
 .input:focus {
-  border-color: var(--brand-gold);
+  border-color: var(--brand-main);
 }
 
 .textarea {
@@ -306,8 +306,8 @@ function submit() {
 }
 
 .image-upload-area:hover {
-  border-color: var(--brand-gold, #c8a24d);
-  color: var(--brand-gold, #c8a24d);
+  border-color: var(--brand-main);
+  color: var(--brand-main);
 }
 
 .upload-text {
@@ -381,7 +381,7 @@ function submit() {
 }
 
 .toggle-switch.on {
-  background: var(--brand-gold, #c8a24d);
+  background: var(--brand-main);
 }
 
 .toggle-knob {

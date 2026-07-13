@@ -8,14 +8,14 @@
       <StatCard
         :title="t('overview.totalGuests')"
         :value="overview.totalGuests"
-        icon="&#128101;"
+        :icon="Icons.users"
         accent="sage"
         :meta="overview.guestsMeta"
       />
       <StatCard
         :title="t('overview.budgetRemaining')"
         :value="budgetDisplay"
-        icon="&euro;"
+        :icon="ICON_EURO"
         accent="gold"
         :badge="budgetBadge"
         badge-type="warn"
@@ -23,7 +23,7 @@
       <StatCard
         :title="t('overview.tablesSeated')"
         :value="tablesDisplay"
-        icon="&#9638;"
+        :icon="Icons.grid2"
         accent="blush"
         :badge="tablesBadge"
         badge-type="up"
@@ -31,7 +31,7 @@
       <StatCard
         :title="t('overview.activeTasks')"
         :value="overview.tasks?.length || 0"
-        icon="&#10003;"
+        :icon="Icons.check"
         accent="sky"
         :subtext="tasksSub"
       />
@@ -73,6 +73,11 @@ import { useOverview } from "@/composables/useOverview";
 
 import OverviewHeader from "@/components/dashboard/overview/OverviewHeader.vue";
 import StatCard from "@/components/dashboard/overview/StatCard.vue";
+import { Icons } from "@/utils/icons.js";
+
+// Euro glyph is a currency-specific icon — one-off, inlined instead of
+// growing the shared Icons dictionary.
+const ICON_EURO = `<svg viewBox="0 0 24 24"><path d="M4 10h12M4 14h11"/><path d="M20 7a7.5 7.5 0 0 0-11.5 1.5A9 9 0 0 0 8 12a9 9 0 0 0 .5 3.5A7.5 7.5 0 0 0 20 17"/></svg>`;
 import BudgetStatusCard from "@/components/dashboard/overview/BudgetStatusCard.vue";
 import RsvpSummaryCard from "@/components/dashboard/overview/RsvpSummaryCard.vue";
 import UpcomingTasksCard from "@/components/dashboard/overview/UpcomingTasksCard.vue";

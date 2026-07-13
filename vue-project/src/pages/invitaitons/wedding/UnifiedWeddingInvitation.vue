@@ -1,4 +1,5 @@
 <template>
+  <JsonLd :schema="invitationEventSchema" id="invitation-event" />
   <InvitationEditLayout
     :edit-mode="isEditMode"
     :sections="orderedSections"
@@ -499,6 +500,8 @@ import SectionAdvanced from '@/components/invitations/shared/SectionAdvanced.vue
 import EditInfoPanel from '@/components/invitations/shared/EditInfoPanel.vue';
 import SectionEditButton from '@/components/invitations/shared/SectionEditButton.vue';
 import { invitationImagesService } from '@/services/invitationImages.service.js';
+import JsonLd from '@/components/seo/JsonLd.vue';
+import { eventSchema, DEFAULT_BASE_URL } from '@/utils/jsonLdSchemas';
 
 const route = useRoute();
 const designId = computed(() => route.params.design || route.query.design || 'coastal-breeze');
@@ -546,6 +549,32 @@ const {
 const eventNotActive = computed(() => {
   const s = backendData.value?.event?.status;
   return s && s !== 'ACTIVE';
+});
+
+// JSON-LD Event schema — emitted ONLY when the invitation is explicitly
+// marked public by the backend and the route is not the private/draft variant.
+// The eventSchema builder itself requires isPublic === true, so a partial
+// truthy value (string, 1, object) still results in a dropped schema.
+const invitationEventSchema = computed(() => {
+  if (isPrivate.value) return null;
+  const ev = backendData.value?.event;
+  if (!ev || ev.publiclyListed !== true) return null;
+
+  const venue = config.venue || config.ceremonyVenue || config.location;
+  const startDate = config.weddingDateTime || null;
+  const displayName = (config.brideName && config.groomName)
+    ? `${config.brideName} & ${config.groomName}`
+    : (ev.name || null);
+
+  return eventSchema({
+    isPublic: true,
+    name: displayName,
+    startDate,
+    location: venue ? { name: venue } : null,
+    image: config.heroPhotoUrl || undefined,
+    url: `${DEFAULT_BASE_URL}${route.path}`,
+    eventStatus: 'https://schema.org/EventScheduled',
+  });
 });
 
 // Reset all state when design changes (e.g. navigating from coastal → persian)
@@ -948,7 +977,7 @@ const STORY_FAMILY_OPTIONS = [
 .story-image-change-btn { display: block; width: 100%; padding: 8px; border: none; background: #f9fafb; font-size: 12px; font-weight: 600; color: var(--brand-main, #1f2937); cursor: pointer; font-family: inherit; }
 .story-image-change-btn:hover { background: #f3f4f6; }
 .story-image-drop { border: 2px dashed #d1d5db; border-radius: 10px; padding: 24px 16px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; color: #9ca3af; transition: border-color 0.2s, color 0.2s; font-size: 13px; font-weight: 600; }
-.story-image-drop:hover { border-color: var(--brand-gold, #c8a24d); color: var(--brand-gold, #c8a24d); }
+.story-image-drop:hover { border-color: var(--brand-main); color: var(--brand-main); }
 
 /* Story images button (Persian gallery) */
 .story-images-btn-wrap { padding: 0 0 8px; border-bottom: 1px solid #e5e7eb; margin-bottom: 4px; }
@@ -968,10 +997,10 @@ const STORY_FAMILY_OPTIONS = [
 .story-img-thumb:hover .story-img-remove { opacity: 1; }
 .story-img-remove:hover { background: rgba(220,38,38,0.85); }
 .story-img-progress { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 13px; color: #6b7280; }
-.story-img-spinner { width: 16px; height: 16px; border: 2px solid #e5e7eb; border-top-color: var(--brand-gold, #c8a24d); border-radius: 50%; animation: spin 0.6s linear infinite; }
+.story-img-spinner { width: 16px; height: 16px; border: 2px solid #e5e7eb; border-top-color: var(--brand-main); border-radius: 50%; animation: spin 0.6s linear infinite; }
 .story-images-empty { font-size: 13px; color: #9ca3af; text-align: center; padding: 16px 0; }
 .story-img-thumb--empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: #f9fafb; border: 2px dashed #d1d5db; cursor: pointer; transition: border-color 0.15s, color 0.15s; color: #9ca3af; }
-.story-img-thumb--empty:hover { border-color: var(--brand-gold, #c8a24d); color: var(--brand-gold, #c8a24d); }
+.story-img-thumb--empty:hover { border-color: var(--brand-main); color: var(--brand-main); }
 .placeholder-label { font-size: 10px; font-weight: 600; text-align: center; }
 .story-img-badge { position: absolute; bottom: 4px; right: 4px; width: 18px; height: 18px; border-radius: 50%; background: #059669; color: #fff; display: flex; align-items: center; justify-content: center; }
 .story-img-thumb { cursor: pointer; }

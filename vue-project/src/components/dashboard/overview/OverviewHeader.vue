@@ -28,11 +28,6 @@
           <span class="hc-num">{{ pad(countdown.mins) }}</span>
           <span class="hc-lbl">{{ t("overview.minutes") }}</span>
         </div>
-        <div class="hc-sep">:</div>
-        <div class="hc-unit">
-          <span class="hc-num">{{ pad(countdown.secs) }}</span>
-          <span class="hc-lbl">{{ t("overview.seconds") }}</span>
-        </div>
       </div>
       <div class="hero-progress-wrap">
         <div class="hp-label">
@@ -58,8 +53,14 @@ const props = defineProps({
   progress: { type: Number, default: 0 }
 });
 
-const countdown = reactive({ days: 0, hours: 0, mins: 0, secs: 0 });
+// Countdown only needs day/hour/minute precision — sub-minute ticks were
+// wasting CPU on every dashboard mount for no user benefit.
+const countdown = reactive({ days: 0, hours: 0, mins: 0 });
 let timer = null;
+
+const REDUCED_MOTION =
+  typeof window !== 'undefined' &&
+  window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 const eventType = computed(() => {
   const cat = props.event.category;
@@ -85,17 +86,20 @@ function calc() {
   if (!raw) return;
   const diff = new Date(raw) - new Date();
   if (diff <= 0) {
-    countdown.days = 0; countdown.hours = 0; countdown.mins = 0; countdown.secs = 0;
+    countdown.days = 0; countdown.hours = 0; countdown.mins = 0;
     return;
   }
   countdown.days = Math.floor(diff / 86400000);
   countdown.hours = Math.floor((diff % 86400000) / 3600000);
   countdown.mins = Math.floor((diff % 3600000) / 60000);
-  countdown.secs = Math.floor((diff % 60000) / 1000);
 }
 
 function pad(n) { return String(n).padStart(2, "0"); }
 
-onMounted(() => { calc(); timer = setInterval(calc, 1000); });
+onMounted(() => {
+  calc();
+  // Tick once per minute (60_000 ms). Reduced-motion users don't even get that.
+  if (!REDUCED_MOTION) timer = setInterval(calc, 60_000);
+});
 onUnmounted(() => { if (timer) clearInterval(timer); });
 </script>

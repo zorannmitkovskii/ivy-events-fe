@@ -210,7 +210,7 @@ function submit() {
   transition: border-color 0.2s ease;
 }
 .input:focus, .select:focus {
-  border-color: var(--brand-gold);
+  border-color: var(--brand-main);
 }
 
 .textarea {
@@ -245,7 +245,7 @@ function submit() {
 .checkbox-label input[type="checkbox"] {
   width: 16px;
   height: 16px;
-  accent-color: var(--brand-gold);
+  accent-color: var(--brand-main);
   cursor: pointer;
 }
 

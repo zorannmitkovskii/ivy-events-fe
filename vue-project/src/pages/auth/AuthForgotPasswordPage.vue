@@ -229,7 +229,7 @@ async function onConfirmReset() {
   text-decoration: none;
   transition: color 0.2s ease;
 }
-.card-footer-link:hover { color: var(--brand-gold); }
+.card-footer-link:hover { color: var(--brand-main); }
 .error {
   color: var(--error, #e53935);
   font-size: 13px;
@@ -244,7 +244,7 @@ async function onConfirmReset() {
   text-align: center;
 }
 .success-icon {
-  color: var(--brand-gold, #c9a96e);
+  color: var(--brand-main);
 }
 .success-text {
   font-size: 14px;
@@ -280,7 +280,7 @@ async function onConfirmReset() {
   transition: border-color 0.2s;
 }
 .code-input:focus {
-  border-color: var(--brand-gold, #c9a96e);
+  border-color: var(--brand-main);
   box-shadow: 0 0 0 3px rgba(200, 162, 77, 0.15);
 }
 .code-input::placeholder {
@@ -301,6 +301,6 @@ async function onConfirmReset() {
   font-family: inherit;
   transition: color 0.15s;
 }
-.resend-btn:hover { color: var(--brand-gold); }
+.resend-btn:hover { color: var(--brand-main); }
 .resend-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>

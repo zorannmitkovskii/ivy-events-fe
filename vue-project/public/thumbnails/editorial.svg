@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none">
+  <!-- Cream editorial background -->
+  <rect width="400" height="600" fill="#f6f1ea"/>
+
+  <!-- Split panel (photo-block) -->
+  <rect x="0" y="0" width="400" height="240" fill="#3d5a4f"/>
+  <rect x="30" y="40" width="90" height="140" fill="#c8a97e" opacity="0.75"/>
+  <rect x="140" y="90" width="230" height="8" fill="#f6f1ea"/>
+  <rect x="140" y="112" width="180" height="6" fill="#f6f1ea" opacity="0.7"/>
+  <rect x="140" y="126" width="200" height="6" fill="#f6f1ea" opacity="0.6"/>
+
+  <!-- Divider -->
+  <line x1="60" y1="290" x2="340" y2="290" stroke="#3d5a4f" stroke-width="1"/>
+
+  <!-- Editorial masthead (serif style) -->
+  <text x="200" y="340" text-anchor="middle" fill="#3d5a4f"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="42" font-weight="400" font-style="italic">Editorial</text>
+
+  <text x="200" y="380" text-anchor="middle" fill="#7a7268"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="12" letter-spacing="4">VOLUME · ONE</text>
+
+  <!-- Body column mocks -->
+  <rect x="60" y="420" width="130" height="4" fill="#3d5a4f" opacity="0.35"/>
+  <rect x="60" y="432" width="130" height="4" fill="#3d5a4f" opacity="0.35"/>
+  <rect x="60" y="444" width="115" height="4" fill="#3d5a4f" opacity="0.35"/>
+  <rect x="60" y="456" width="130" height="4" fill="#3d5a4f" opacity="0.35"/>
+  <rect x="60" y="468" width="90" height="4" fill="#3d5a4f" opacity="0.35"/>
+
+  <rect x="210" y="420" width="130" height="4" fill="#3d5a4f" opacity="0.35"/>
+  <rect x="210" y="432" width="130" height="4" fill="#3d5a4f" opacity="0.35"/>
+  <rect x="210" y="444" width="115" height="4" fill="#3d5a4f" opacity="0.35"/>
+  <rect x="210" y="456" width="130" height="4" fill="#3d5a4f" opacity="0.35"/>
+  <rect x="210" y="468" width="100" height="4" fill="#3d5a4f" opacity="0.35"/>
+
+  <!-- Footer ornament -->
+  <line x1="180" y1="530" x2="220" y2="530" stroke="#c8a97e" stroke-width="1"/>
+  <circle cx="200" cy="530" r="3" fill="#c8a97e"/>
+</svg>

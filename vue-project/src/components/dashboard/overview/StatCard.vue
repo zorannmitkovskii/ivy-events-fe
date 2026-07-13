@@ -1,7 +1,10 @@
 <template>
   <div class="stat-card">
     <div class="stat-card-accent" :class="accentClass"></div>
-    <div class="stat-icon-wrap" :class="iconClass">{{ icon }}</div>
+    <div class="stat-icon-wrap" :class="iconClass">
+      <span v-if="isSvgIcon" v-html="icon" class="stat-icon-svg" />
+      <span v-else>{{ icon }}</span>
+    </div>
     <div class="stat-value">{{ formattedValue }}</div>
     <div class="stat-label">{{ title }}</div>
     <div class="stat-sub">
@@ -31,6 +34,9 @@ const props = defineProps({
 const accentClass = computed(() => `accent-${props.accent}`);
 const iconClass = computed(() => `ic-${props.accent}`);
 const badgeClass = computed(() => `badge-${props.badgeType}`);
+
+// Detect if the icon prop is an SVG string (starts with <svg) vs an emoji/char.
+const isSvgIcon = computed(() => typeof props.icon === 'string' && /<svg\b/i.test(props.icon));
 
 const formattedValue = computed(() => {
   const v = props.value;

@@ -28,7 +28,7 @@ import { loadingStore } from "@/store/loading.store";
   left: 0;
   right: 0;
   height: 3px;
-  background: var(--brand-gold, #c8a24d);
+  background: var(--brand-main);
   animation: loader-progress 1.8s ease-in-out infinite;
   transform-origin: left;
   border-radius: 0 2px 2px 0;
@@ -48,7 +48,7 @@ import { loadingStore } from "@/store/loading.store";
   width: 36px;
   height: 36px;
   border: 3px solid var(--neutral-200, #e5e7eb);
-  border-top-color: var(--brand-gold, #c8a24d);
+  border-top-color: var(--brand-main);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }

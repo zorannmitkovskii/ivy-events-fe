@@ -211,7 +211,7 @@ function submit() {
 }
 
 .input:focus {
-  border-color: var(--brand-gold);
+  border-color: var(--brand-main);
 }
 
 .two {

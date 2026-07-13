@@ -3,14 +3,21 @@
   --brand-main: #2F3E36;   /* Forest Green */
   --brand-light: #BFD2A4;  /* Sage Green */
   --brand-dark: #5D6A57;   /* Moss Green (deepest available in palette) */
-  --brand-gold: #C8A24D; /* Gold */
+
+  /* Gold is now QUARANTINED: use only for Premium / Upgrade CTAs.
+     Everything else must use --brand-main or a neutral. --brand-gold and
+     --secondary-gold stay defined (short migration window) but should not
+     appear in new code — use --premium-gold instead. */
+  --premium-gold: #C8A24D;
+  --premium-gold-soft: #E1C699;
+  --brand-gold: #C8A24D;    /* @deprecated — use --premium-gold */
 
   --soft-light: #E7E7E7;     /* Light Grey */
 
   --secondary-sage: #BFD2A4; /* Sage Green */
   --secondary-salmon: #ED6E69; /* Salmon Pink */
   --secondary-moss: #5D6A57; /* Moss Green */
-  --secondary-gold: #E1C699; /* Gold */
+  --secondary-gold: #E1C699; /* @deprecated — use --premium-gold-soft */
 
   --neutral-900: #334338;    /* Forest Green (as "near-black") */
   --neutral-700: #5D6A57;    /* Moss Green */
@@ -38,7 +45,12 @@
 
   --container-max: 1200px;
   --header-height: 58px;
-  --font-family: 'Cormorant Garamond', serif;
+
+  /* Typography — Fraunces (display) + Instrument Sans (UI).
+     --font-family is @deprecated; use --font-display / --font-ui. */
+  --font-display: 'Fraunces', 'Cormorant Garamond', Georgia, serif;
+  --font-ui: 'Instrument Sans', 'Outfit', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-family: var(--font-display);
 
   /* Dashboard palette */
   --dash-sage:        #5a7a52;

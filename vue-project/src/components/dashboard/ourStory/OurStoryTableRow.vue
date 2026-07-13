@@ -44,7 +44,7 @@ defineEmits(["edit", "delete"]);
   font-size: 12px;
   font-weight: 600;
   background: rgba(200, 162, 77, 0.12);
-  color: var(--brand-gold, #c8a24d);
+  color: var(--brand-main);
   white-space: nowrap;
 }
 

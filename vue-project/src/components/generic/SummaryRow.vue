@@ -33,7 +33,7 @@ defineProps({
 }
 
 .value.savings {
-  color: var(--brand-gold);
+  color: var(--brand-main);
 }
 
 .value.total {

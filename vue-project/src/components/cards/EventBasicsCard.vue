@@ -161,7 +161,7 @@ function onContinue() {
 }
 
 .dot {
-  color: var(--brand-gold);
+  color: var(--brand-main);
   line-height: 1;
   margin-top: 2px;
 }

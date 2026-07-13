@@ -14,7 +14,8 @@
     "lint:eslint": "eslint . --fix --cache",
     "lint": "run-s lint:*",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "seo:check": "node scripts/seo-check.mjs"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",

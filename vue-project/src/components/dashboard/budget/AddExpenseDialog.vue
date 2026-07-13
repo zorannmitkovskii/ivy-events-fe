@@ -159,7 +159,7 @@ function submit() {
   transition: border-color 0.2s ease;
 }
 .input:focus, .select:focus {
-  border-color: var(--brand-gold);
+  border-color: var(--brand-main);
 }
 
 .two {

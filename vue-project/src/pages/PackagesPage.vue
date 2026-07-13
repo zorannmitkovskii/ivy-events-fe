@@ -198,9 +198,9 @@ onMounted(fetchPackages);
 }
 
 .switch-btn.active {
-  background: var(--brand-gold, #c8a24d);
+  background: var(--brand-main);
   color: #fff;
-  box-shadow: 0 2px 8px rgba(200, 162, 77, 0.3);
+  box-shadow: 0 2px 8px rgba(47, 62, 54, 0.25);
 }
 
 .switch-btn:hover:not(.active) {
@@ -235,14 +235,15 @@ onMounted(fetchPackages);
 }
 
 .package-card.featured {
-  border-color: var(--brand-gold, #c8a24d);
+  /* Premium tier — gold retained. */
+  border-color: var(--premium-gold, #c8a24d);
   box-shadow: 0 4px 20px rgba(200, 162, 77, 0.15);
 }
 
 .badge-popular {
   position: absolute;
   top: -12px;
-  background: var(--brand-gold, #c8a24d);
+  background: var(--premium-gold, #c8a24d);
   color: #fff;
   font-size: 11px;
   font-weight: 700;
@@ -316,7 +317,7 @@ onMounted(fetchPackages);
   width: 32px;
   height: 32px;
   border: 3px solid var(--neutral-200, #e5e7eb);
-  border-top-color: var(--brand-gold, #c8a24d);
+  border-top-color: var(--brand-main);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }

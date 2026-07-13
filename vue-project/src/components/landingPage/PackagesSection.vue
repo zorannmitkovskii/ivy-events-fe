@@ -156,11 +156,14 @@ onMounted(fetchPackages);
 }
 
 .packages-title {
-  font-family: var(--font-family), serif;
-  font-size: 48px;
+  font-family: var(--font-display);
+  font-size: clamp(30px, 4.4vw, 48px);
+  line-height: 1.15;
   font-weight: 500;
   margin: 0 0 10px;
   color: var(--neutral-900);
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .packages-subtitle {
@@ -192,10 +195,10 @@ onMounted(fetchPackages);
 }
 
 .switch-btn.active {
-  background: var(--brand-gold, #c8a24d);
+  background: var(--brand-main);
   color: #fff;
-  border-color: var(--brand-gold);
-  box-shadow: 0 2px 8px rgba(200, 162, 77, 0.3);
+  border-color: var(--brand-main);
+  box-shadow: 0 2px 8px rgba(47, 62, 54, 0.25);
 }
 
 .switch-btn:hover:not(.active) {
@@ -230,14 +233,14 @@ onMounted(fetchPackages);
 }
 
 .package-card.featured {
-  border-color: var(--brand-gold, #c8a24d);
+  border-color: var(--premium-gold, #c8a24d);
   box-shadow: 0 4px 20px rgba(200, 162, 77, 0.15);
 }
 
 .badge-popular {
   position: absolute;
   top: -12px;
-  background: var(--brand-gold, #c8a24d);
+  background: var(--premium-gold, #c8a24d);
   color: #fff;
   font-size: 11px;
   font-weight: 700;
@@ -309,7 +312,7 @@ onMounted(fetchPackages);
   width: 32px;
   height: 32px;
   border: 3px solid var(--neutral-200, #e5e7eb);
-  border-top-color: var(--brand-gold, #c8a24d);
+  border-top-color: var(--brand-main);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }

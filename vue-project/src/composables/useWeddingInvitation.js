@@ -206,7 +206,7 @@ export function useWeddingInvitation(preset) {
 
   function accentTint() {
     try {
-      const [h, s] = hexToHsl(palette.accent || '#c8a24d');
+      const [h, s] = hexToHsl(palette.accent || '#2F3E36');
       return hslToHex(h, Math.min(s * 0.4, 30), 92);
     } catch { return '#f6f1e3'; }
   }

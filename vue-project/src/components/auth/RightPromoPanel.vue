@@ -148,7 +148,7 @@ const bgStyle = computed(() =>
   display: grid;
   place-items: center;
   background: rgba(255,255,255,0.22);
-  color: var(--brand-gold);
+  color: var(--brand-main);
   font-weight: 900;
 }
 

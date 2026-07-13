@@ -220,7 +220,7 @@ function onChangeEmail() {
   width: 36px;
   height: 36px;
   border: 3px solid var(--neutral-200);
-  border-top-color: var(--brand-gold);
+  border-top-color: var(--brand-main);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }

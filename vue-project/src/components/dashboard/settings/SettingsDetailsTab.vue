@@ -168,7 +168,7 @@ defineEmits(["save", "archive", "go-invitations", "go-packages"]);
 }
 .detail-input:focus {
   outline: none;
-  border-color: var(--brand-gold, #C8A24D);
+  border-color: var(--brand-main);
   box-shadow: 0 0 0 2px rgba(200, 162, 77, 0.15);
 }
 .detail-input[readonly] { opacity: 0.6; cursor: default; }
@@ -219,7 +219,7 @@ defineEmits(["save", "archive", "go-invitations", "go-packages"]);
   border-radius: 50%;
   transition: transform 0.2s ease;
 }
-.toggle-switch input:checked + .toggle-slider { background: var(--brand-gold, #C8A24D); }
+.toggle-switch input:checked + .toggle-slider { background: var(--brand-main); }
 .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
 
 .danger-card { border-left: 4px solid var(--error); }

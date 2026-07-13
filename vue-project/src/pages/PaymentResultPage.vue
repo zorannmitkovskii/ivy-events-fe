@@ -149,13 +149,13 @@ onBeforeUnmount(() => {
 .result-icon.success { color: #2e7d32; }
 .result-icon.failed { color: #c62828; }
 .result-icon.expired { color: #e65100; }
-.result-icon.pending { color: var(--brand-gold, #C8A24D); }
+.result-icon.pending { color: var(--brand-main); }
 
 .result-spinner {
   width: 48px;
   height: 48px;
   border: 4px solid var(--neutral-300, #ddd);
-  border-top-color: var(--brand-gold, #C8A24D);
+  border-top-color: var(--brand-main);
   border-radius: 50%;
   animation: rspin 0.8s linear infinite;
   margin: 0 auto;
@@ -211,7 +211,7 @@ onBeforeUnmount(() => {
 }
 
 .result-btn.primary {
-  background: var(--brand-gold, #C8A24D);
+  background: var(--brand-main);
   color: #fff;
 }
 

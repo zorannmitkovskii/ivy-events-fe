@@ -457,7 +457,7 @@ function onGoogle() {
 .accent-line {
   width: 34px;
   height: 3px;
-  background: var(--brand-gold);
+  background: var(--brand-main);
   border-radius: 99px;
   margin: 10px 0 18px;
 }

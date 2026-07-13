@@ -199,12 +199,12 @@ function reset() {
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--brand-gold, #c4956a);
+  color: var(--brand-main);
   margin-bottom: 16px;
 }
 
 .hero-title {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-display);
   font-size: clamp(1.75rem, 4vw, 2.75rem);
   font-weight: 400;
   color: #fff;
@@ -292,7 +292,7 @@ function reset() {
 }
 
 .form-heading {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 500;
   color: var(--brand-main, #334338);
@@ -323,7 +323,7 @@ function reset() {
   color: #475569;
 }
 
-.req { color: var(--brand-gold, #c4956a); }
+.req { color: var(--brand-main); }
 
 .input {
   padding: 12px 16px;
@@ -422,7 +422,7 @@ function reset() {
 }
 
 .success-title {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 500;
   color: var(--brand-main, #334338);

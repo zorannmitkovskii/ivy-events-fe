@@ -147,7 +147,7 @@ async function submit() {
 }
 
 .input:focus {
-  border-color: var(--brand-gold);
+  border-color: var(--brand-main);
 }
 
 .hidden-file {
@@ -169,8 +169,8 @@ async function submit() {
 }
 
 .image-upload-area:hover {
-  border-color: var(--brand-gold, #c8a24d);
-  color: var(--brand-gold, #c8a24d);
+  border-color: var(--brand-main);
+  color: var(--brand-main);
 }
 
 .upload-text {
@@ -224,7 +224,7 @@ async function submit() {
   width: 20px;
   height: 20px;
   border: 2px solid rgba(0, 0, 0, 0.1);
-  border-top-color: var(--brand-gold, #c4956a);
+  border-top-color: var(--brand-main);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
