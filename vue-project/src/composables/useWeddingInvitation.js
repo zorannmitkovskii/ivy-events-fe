@@ -5,7 +5,7 @@ import { rsvpService } from '@/services/rsvp.service';
 import { mediaService } from '@/services/media.service';
 import { useInvitationData } from '@/composables/useInvitationData';
 import { useScrollReveal } from '@/composables/useScrollReveal';
-import { buildLocationAddress, buildMapUrl, formatTimeRange } from '@/utils/invitation';
+import { buildMapUrl } from '@/utils/invitation';
 import { getFutureWeddingDate, formatWeddingDateFull, toLocalISO } from '@/utils/date.js';
 import { useInvitationEditMode } from '@/composables/useInvitationEditMode';
 import { useToast } from '@/composables/useToast';
@@ -157,24 +157,6 @@ export function useWeddingInvitation(preset) {
     } catch { return cardStyle.cardBg || '#ffffff'; }
   });
 
-  /** Contrast text color: light text on dark bg, dark text on light bg */
-  function contrastText(hex) {
-    if (!hex || !hex.startsWith('#') || hex.length < 7) return '#1f2937';
-    try {
-      const [, , l] = hexToHsl(hex);
-      return l < 45 ? '#F7F2E8' : '#1f2937';
-    } catch { return '#1f2937'; }
-  }
-
-  /** Muted/secondary text: slightly transparent version of the contrast text */
-  function contrastMuted(hex) {
-    if (!hex || !hex.startsWith('#') || hex.length < 7) return '#6b7280';
-    try {
-      const [, , l] = hexToHsl(hex);
-      return l < 45 ? '#c8c3b8' : '#6b7280';
-    } catch { return '#6b7280'; }
-  }
-
   /** Badge/pill background: accent-tinted for light themes, lighter for dark */
   function badgeBg(hex) {
     if (!hex || !hex.startsWith('#') || hex.length < 7) return accentTint();
@@ -303,7 +285,7 @@ export function useWeddingInvitation(preset) {
   const {
     sectionOrder, sectionVisibility, sectionLayouts, sectionOverrides,
     orderedSections, isSectionVisible, toggleVisibility,
-    reorder, setLayout, setOverride, clearOverride, getSectionStatus,
+    setLayout, setOverride, clearOverride, getSectionStatus,
     getState: getSectionState, loadState: loadSectionState,
   } = useSectionState(SIDEBAR_SECTIONS);
 
@@ -1160,7 +1142,7 @@ export function useWeddingInvitation(preset) {
     // Utilities
     t, formatDate, formatTime,
     extractFontName, loadGoogleFont,
-    setLayout, markDirty,
+    setLayout,
     refreshAllData, resetToPreset,
     saveThemeToDraft, loadThemeFromDraft,
 
