@@ -186,7 +186,27 @@ async function checkSitemap() {
 async function checkHtmlPage(url, route, lang) {
   const where = url;
   try {
-    const res = await fetchWith(url);
+    let res = await fetchWith(url);
+
+    // Local dev servers (vite preview, sirv) don't do directory-index fallback
+    // for extensionless paths — retry with a trailing slash so prerendered
+    // {path}/index.html files get served. In production nginx handles this via
+    // `try_files $uri $uri/ /index.html`, so this is a local-testing quirk.
+    if (res.status === 200 && !url.endsWith('/')) {
+      const html = await res.text();
+      const looksLikeShell = /<title>Ivy Events<\/title>/i.test(html) &&
+                             !/<link\s+rel=["']canonical["']/i.test(html);
+      if (looksLikeShell) {
+        const retryUrl = url + '/';
+        const retry = await fetchWith(retryUrl);
+        if (retry.status === 200) {
+          return await runAssertions(where, await retry.text(), lang, route);
+        }
+      } else {
+        return await runAssertions(where, html, lang, route);
+      }
+    }
+
     if (res.status === 404 && route.optional) {
       warn(where, 'route not registered (optional) — skipping content checks');
       return;
@@ -194,6 +214,14 @@ async function checkHtmlPage(url, route, lang) {
     if (res.status !== 200) return fail(where, `expected 200, got ${res.status}`);
 
     const html = await res.text();
+    return await runAssertions(where, html, lang, route);
+  } catch (e) {
+    fail(where, `fetch error: ${e.message}`);
+  }
+}
+
+async function runAssertions(where, html, lang, route) {
+  try {
     const head = extractHead(html);
 
     // <title>
@@ -240,20 +268,21 @@ async function checkHtmlPage(url, route, lang) {
       }
     } else {
       let anyParsed = false;
-      let foundType = null;
+      const foundTypes = [];
       for (const block of jsonldBlocks) {
         try {
           const parsed = JSON.parse(block);
           anyParsed = true;
           const type = extractJsonLdType(parsed);
-          if (type) foundType = type;
+          if (type) foundTypes.push(type);
         } catch (e) {
           fail(where, `JSON-LD is not valid JSON: ${e.message}`);
         }
       }
-      if (anyParsed) pass(`${where} → JSON-LD present (${foundType || 'graph'})`);
-      if (route.requireJsonLdType && foundType && !foundType.includes(route.requireJsonLdType)) {
-        warn(where, `JSON-LD @type is "${foundType}", expected to include "${route.requireJsonLdType}"`);
+      const allTypes = foundTypes.join('+');
+      if (anyParsed) pass(`${where} → JSON-LD present (${allTypes || 'graph'})`);
+      if (route.requireJsonLdType && !allTypes.includes(route.requireJsonLdType)) {
+        warn(where, `JSON-LD @type is "${allTypes}", expected to include "${route.requireJsonLdType}"`);
       }
     }
   } catch (e) {

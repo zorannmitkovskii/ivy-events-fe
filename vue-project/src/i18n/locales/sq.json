@@ -42,6 +42,62 @@
     "signup": {
       "title": "Krijo Llogari",
       "description": "Krijoni llogarinë falas në Ivy Events dhe filloni planifikimin e eventit tuaj perfekt sot."
+    },
+    "terms": {
+      "title": "Kushtet e Shërbimit",
+      "description": "Kushtet e shërbimit të Ivy Events për platformën e ftesave digjitale dhe planifikimit të eventeve."
+    },
+    "event-invitations": {
+      "title": "Ftesa Digjitale për Evente",
+      "description": "Shfletoni ftesa digjitale të bukura për dasma, ditëlindje, baby shower dhe evente korporative — plotësisht të personalizueshme me ndjekje RSVP në kohë reale."
+    },
+    "category-weddings": {
+      "title": "Ftesa Dasme",
+      "description": "Ftesa elegante digjitale për dasma me ndjekje RSVP, plane tavolinash dhe planer i plotë dasme — të gjitha në një vend."
+    },
+    "category-kids-birthdays": {
+      "title": "Ftesa Ditëlindjeje për Fëmijë",
+      "description": "Ftesa digjitale të gëzueshme për ditëlindje fëmijësh me ndjekje të lehtë RSVP për prindërit."
+    },
+    "category-adult-birthdays": {
+      "title": "Ftesa Ditëlindjeje",
+      "description": "Ftesa digjitale të sofistikuara për ditëlindje dhe përvjetorë me menaxhim RSVP të integruar."
+    },
+    "category-business": {
+      "title": "Ftesa Eventesh Korporative",
+      "description": "Ftesa profesionale digjitale, ndjekje RSVP dhe menaxhim mysafirësh për konferenca dhe evente biznesi."
+    },
+    "category-baby": {
+      "title": "Ftesa Baby Shower",
+      "description": "Ftesa digjitale të bukura për baby shower me ndjekje RSVP dhe dizajne të personalizuara."
+    },
+    "category-holiday": {
+      "title": "Ftesa Festash",
+      "description": "Ftesa digjitale festive për ahengje festash me ndjekje RSVP dhe shabllone tematike."
+    },
+    "template-coastal-breeze": {
+      "title": "Coastal Breeze — Shabllon Ftese Dasme",
+      "description": "Dizajn i freskët bregdetar me erën e verës — shablloni Coastal Breeze për ftesa dasme."
+    },
+    "template-parisian-wedding": {
+      "title": "Parisian Wedding — Shabllon Ftese Dasme",
+      "description": "Stil parizian elegant me tipografi të butë — shablloni Parisian Wedding."
+    },
+    "template-persian-wedding": {
+      "title": "Persian Wedding — Shabllon Ftese Dasme",
+      "description": "Dizajn i pasur persian me panele qelqi — shablloni Persian Wedding."
+    },
+    "template-elegant-chateau": {
+      "title": "Elegant Chateau — Shabllon Ftese Dasme",
+      "description": "Dizajn madhështor kështjelle — shablloni Elegant Chateau."
+    },
+    "template-modern-collage": {
+      "title": "Modern Collage — Shabllon Ftese Dasme",
+      "description": "Dizajn modern me kolazh fotografish — shablloni Modern Collage."
+    },
+    "template-editorial": {
+      "title": "Editorial — Shabllon Ftese Dasme",
+      "description": "Stil editorial me split tipografik — shablloni Editorial."
     }
   },
   "comingSoon": {

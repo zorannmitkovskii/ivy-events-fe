@@ -42,6 +42,62 @@
     "signup": {
       "title": "Create Account",
       "description": "Create your free Ivy Events account and start planning your perfect event today."
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "description": "Ivy Events terms of service for the digital invitations and event planning platform."
+    },
+    "event-invitations": {
+      "title": "Digital Event Invitations",
+      "description": "Browse beautiful digital invitations for weddings, birthdays, baby showers, and corporate events — fully customizable with live RSVP tracking."
+    },
+    "category-weddings": {
+      "title": "Wedding Invitations",
+      "description": "Elegant digital wedding invitations with RSVP tracking, seating charts, and a complete wedding planner — all in one place."
+    },
+    "category-kids-birthdays": {
+      "title": "Kids Birthday Invitations",
+      "description": "Playful digital birthday invitations with effortless RSVP tracking for parents."
+    },
+    "category-adult-birthdays": {
+      "title": "Birthday Invitations",
+      "description": "Sophisticated digital invitations for milestone and adult birthdays with built-in RSVP management."
+    },
+    "category-business": {
+      "title": "Corporate Event Invitations",
+      "description": "Professional digital invitations, RSVP tracking, and guest management for conferences and business events."
+    },
+    "category-baby": {
+      "title": "Baby Shower Invitations",
+      "description": "Beautiful digital baby shower invitations with RSVP tracking and personalized designs."
+    },
+    "category-holiday": {
+      "title": "Holiday Party Invitations",
+      "description": "Festive digital holiday party invitations with RSVP tracking and themed templates."
+    },
+    "template-coastal-breeze": {
+      "title": "Coastal Breeze — Wedding Invitation Template",
+      "description": "Fresh coastal design with the scent of summer — the Coastal Breeze wedding invitation template, fully customizable."
+    },
+    "template-parisian-wedding": {
+      "title": "Parisian Wedding — Wedding Invitation Template",
+      "description": "Elegant Parisian style with soft typography — the Parisian Wedding invitation template."
+    },
+    "template-persian-wedding": {
+      "title": "Persian Wedding — Wedding Invitation Template",
+      "description": "Opulent Persian design with glass panels — the Persian Wedding invitation template."
+    },
+    "template-elegant-chateau": {
+      "title": "Elegant Chateau — Wedding Invitation Template",
+      "description": "Grand chateau design — the Elegant Chateau wedding invitation template."
+    },
+    "template-modern-collage": {
+      "title": "Modern Collage — Wedding Invitation Template",
+      "description": "Modern photo-collage design — the Modern Collage wedding invitation template."
+    },
+    "template-editorial": {
+      "title": "Editorial — Wedding Invitation Template",
+      "description": "Editorial style with a typographic split — the Editorial wedding invitation template."
     }
   },
   "homepageFaqs": [

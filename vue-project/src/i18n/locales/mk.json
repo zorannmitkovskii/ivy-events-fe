@@ -42,6 +42,62 @@
     "signup": {
       "title": "Регистрација",
       "description": "Креирајте бесплатен Ivy Events профил и започнете со планирање на вашиот совршен настан."
+    },
+    "terms": {
+      "title": "Услови на користење",
+      "description": "Услови на користење на Ivy Events платформата за дигитални покани и планирање настани."
+    },
+    "event-invitations": {
+      "title": "Дигитални покани за настани",
+      "description": "Разгледајте прекрасни дигитални покани за свадби, родендени, крштевки и корпоративни настани — целосно прилагодливи, со RSVP во живо."
+    },
+    "category-weddings": {
+      "title": "Свадбени покани",
+      "description": "Елегантни дигитални свадбени покани со RSVP следење, распоред на маси и планер за свадба — сè на едно место, на македонски."
+    },
+    "category-kids-birthdays": {
+      "title": "Покани за детски родендени",
+      "description": "Разиграни дигитални покани за детски родендени со лесно RSVP следење за родителите."
+    },
+    "category-adult-birthdays": {
+      "title": "Покани за родендени",
+      "description": "Софистицирани дигитални покани за родендени и юбилеи со RSVP управување."
+    },
+    "category-business": {
+      "title": "Покани за корпоративни настани",
+      "description": "Професионални дигитални покани, RSVP следење и управување со гости за конференции и корпоративни настани."
+    },
+    "category-baby": {
+      "title": "Покани за baby shower",
+      "description": "Прекрасни дигитални покани за baby shower со RSVP следење и персонализиран дизајн."
+    },
+    "category-holiday": {
+      "title": "Празнични покани",
+      "description": "Свечени дигитални покани за празнични забави со RSVP следење и тематски шаблони."
+    },
+    "template-coastal-breeze": {
+      "title": "Coastal Breeze — шаблон за свадбена покана",
+      "description": "Свеж морски дизајн со мирисот на летото — Coastal Breeze свадбена покана со целосна прилагодливост."
+    },
+    "template-parisian-wedding": {
+      "title": "Parisian Wedding — шаблон за свадбена покана",
+      "description": "Елегантен париски стил со мека типографија — Parisian Wedding свадбена покана."
+    },
+    "template-persian-wedding": {
+      "title": "Persian Wedding — шаблон за свадбена покана",
+      "description": "Раскошен персиски дизајн со стаклени панели — Persian Wedding свадбена покана."
+    },
+    "template-elegant-chateau": {
+      "title": "Elegant Chateau — шаблон за свадбена покана",
+      "description": "Величествен дизајн за замок — Elegant Chateau свадбена покана."
+    },
+    "template-modern-collage": {
+      "title": "Modern Collage — шаблон за свадбена покана",
+      "description": "Модерен фото-колаж дизајн — Modern Collage свадбена покана."
+    },
+    "template-editorial": {
+      "title": "Editorial — шаблон за свадбена покана",
+      "description": "Editorial стил со типографски split — Editorial свадбена покана."
     }
   },
   "homepageFaqs": [
