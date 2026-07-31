@@ -33,6 +33,15 @@ Object.defineProperty(globalThis, 'sessionStorage', { value: mockSessionStorage,
 vi.stubGlobal('crypto', { randomUUID: () => `mock-${Date.now()}-${Math.random().toString(36).slice(2)}` });
 
 // ─── Mock services ───
+// Auth calls go to zm-iam-service through iamApi; the rest of /public/*
+// (invitation page, table lookup, discounts) stays on ivy-events-be.
+vi.mock('@/services/iamApi', () => ({
+  default: {
+    post: vi.fn(),
+    get: vi.fn(),
+  },
+}));
+
 vi.mock('@/services/backendApi', () => ({
   default: { post: vi.fn(), get: vi.fn() },
 }));
@@ -94,6 +103,7 @@ import { invitationTemplateService } from '@/services/invitationTemplate.service
 import { categoryIdToEnum, enumToCategoryId } from '@/helper/CategoryMapping.helper';
 import { EventCategoryEnum } from '@/enums/EventCategory';
 import apiPublic from '@/services/backendApi';
+import iamApi from '@/services/iamApi';
 
 // ─── Helpers ───
 function fakeJwt(claims = {}) {
@@ -377,7 +387,7 @@ describe('Auth Service — Token Handling', () => {
   });
 
   it('loginWithCredentials accepts snake_case tokens', async () => {
-    apiPublic.post.mockResolvedValue({
+    iamApi.post.mockResolvedValue({
       data: { access_token: 'tok-a', refresh_token: 'tok-r', id_token: 'tok-id' },
     });
     const { loginWithCredentials } = await import('@/services/auth.service');
@@ -389,7 +399,7 @@ describe('Auth Service — Token Handling', () => {
   });
 
   it('loginWithCredentials accepts camelCase tokens', async () => {
-    apiPublic.post.mockResolvedValue({
+    iamApi.post.mockResolvedValue({
       data: { accessToken: 'tok-a2', refreshToken: 'tok-r2', idToken: 'tok-id2' },
     });
     const { loginWithCredentials } = await import('@/services/auth.service');
@@ -401,7 +411,7 @@ describe('Auth Service — Token Handling', () => {
   });
 
   it('loginWithCredentials does not set missing tokens', async () => {
-    apiPublic.post.mockResolvedValue({ data: { access_token: 'only-access' } });
+    iamApi.post.mockResolvedValue({ data: { access_token: 'only-access' } });
     const { loginWithCredentials } = await import('@/services/auth.service');
     await loginWithCredentials('user@test.com', 'pass');
 
@@ -410,7 +420,7 @@ describe('Auth Service — Token Handling', () => {
   });
 
   it('register normalizes response', async () => {
-    apiPublic.post.mockResolvedValue({ data: { username: 'new-user' } });
+    iamApi.post.mockResolvedValue({ data: { username: 'new-user' } });
     const { register } = await import('@/services/auth.service');
     const result = await register({ email: 'a@b.com', password: 'x' });
     expect(result.username).toBe('new-user');
@@ -1405,7 +1415,7 @@ describe('resolveTemplate', () => {
 describe('Full Signup-First Flow (end-to-end)', () => {
   it('Signup → Verify → Category → Invitation → Create Event → Dashboard', async () => {
     // ── 1. Signup ──
-    apiPublic.post.mockImplementation((url) => {
+    iamApi.post.mockImplementation((url) => {
       if (url === '/public/users/register') return Promise.resolve({ data: { username: 'marko.s' } });
       if (url === '/public/auth/verify-email') return Promise.resolve({ data: { success: true } });
       if (url === '/public/users/login') return Promise.resolve({ data: { access_token: fakeJwt(), refresh_token: 'r-tok' } });

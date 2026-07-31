@@ -130,7 +130,8 @@ async function loadEvent() {
   error.value = null;
 
   try {
-    if (eventId.value === "demo") {
+    // See EventSettingsPage: no event, not the literal id "demo".
+    if (!eventId.value) {
       event.value = {
         id: "demo",
         invitationUrl: `${window.location.origin}/${locale.value}/invitations/coastal-breeze?event=demo`,

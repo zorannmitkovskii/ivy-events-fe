@@ -12,6 +12,16 @@ export function useTasks() {
   const error = ref(null);
 
   async function load() {
+    // No event chosen yet — show the sample list instead of asking the API for
+    // "the tasks of no event". That request used to go out with an empty
+    // eventId and come back with every event's tasks; it is refused now, and
+    // the demo fallback only triggered on the literal id "demo" anyway, so a
+    // real user with no event saw an error where a sample was intended.
+    if (!eventId.value) {
+      tasks.value = getDemoTasks();
+      return;
+    }
+
     loading.value = true;
     error.value = null;
     try {
@@ -19,9 +29,6 @@ export function useTasks() {
       tasks.value = Array.isArray(list) ? list : [];
     } catch (e) {
       error.value = getErrorMessage(e);
-      if (eventId.value === "demo") {
-        tasks.value = getDemoTasks();
-      }
     } finally {
       loading.value = false;
     }

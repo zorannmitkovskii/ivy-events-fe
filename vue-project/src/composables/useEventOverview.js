@@ -13,8 +13,10 @@ export function useEventOverview() {
   const loading = ref(false);
   const error = ref(null);
 
+  // "no event" rather than the literal id "demo": that placeholder is gone,
+  // and having no event is the actual condition the sample data is for.
   const isDemo = computed(() => {
-    return String(route.query.demo || "") === "1" || eventId.value === "demo";
+    return String(route.query.demo || "") === "1" || !eventId.value;
   });
 
   const run = async () => {

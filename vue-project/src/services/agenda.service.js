@@ -24,10 +24,6 @@ export const agendaApi = {
   },
 
   // Convenience aliases used by useAgenda composable
-  getDemoAgenda() {
-    return api.get("/agendas", { params: { eventId: "demo" } });
-  },
-
   getAgenda(eventId) {
     return api.get("/agendas", { params: { eventId } });
   },

@@ -3,6 +3,8 @@ import { setLocale } from "@/i18n";
 import { isAuthenticated, hasRole } from "@/services/auth.service";
 import { onboardingStore } from "@/store/onboarding.store";
 import { startLoading, stopLoading } from "@/store/loading.store";
+import { useVendorProfile } from "@/composables/useVendorProfile";
+import { capabilityForRoute, firstTabFor } from "@/router/vendorTabs";
 
 // Marketing (keep eager for above-the-fold)
 import HomePage from "@/pages/marketing/HomePage.vue";
@@ -39,11 +41,33 @@ const EventSettingsPage = () => import("@/pages/dashboard/EventSettingsPage.vue"
 const TasksPage = () => import("@/pages/dashboard/TasksPage.vue");
 const BudgetPage = () => import("@/pages/userDashboard/BudgetPage.vue");
 
+// Vendor Dashboard (restaurants and other suppliers with their own account)
+const VendorDashboardLayout = () => import("@/layouts/VendorDashboardLayout.vue");
+const VendorPackagesPage = () => import("@/pages/vendorDashboard/VendorPackagesPage.vue");
+const VendorFloorPlansPage = () => import("@/pages/vendorDashboard/VendorFloorPlansPage.vue");
+const VendorCalendarPage = () => import("@/pages/vendorDashboard/VendorCalendarPage.vue");
+const VendorPortfolioPage = () => import("@/pages/vendorDashboard/VendorPortfolioPage.vue");
+
 // Admin Dashboard
 const AdminDashboardLayout = () => import("@/layouts/AdminDashboardLayout.vue");
 const AdminEventPage = () => import("@/pages/adminDashboard/AdminEventPage.vue");
 const AdminPackagesPage = () => import("@/pages/adminDashboard/AdminPackagesPage.vue");
 const AdminUsersPage = () => import("@/pages/adminDashboard/AdminUsersPage.vue");
+
+/**
+ * Where a signed-in person belongs, by role.
+ *
+ * <p>One function rather than a condition repeated at each redirect: the order
+ * matters — someone who is both an admin and a vendor lands on the admin — and
+ * a second copy of it would eventually disagree with this one.
+ */
+function homeForCurrentUser(langParam) {
+  const lang = langParam || "mk";
+  if (hasRole("ADMIN")) return `/${lang}/admin/events`;
+  if (hasRole("VENDOR")) return `/${lang}/vendor/calendar`;
+  if (hasRole("ORGANIZER")) return `/${lang}/organizer`;
+  return `/${lang}/dashboard/events/overview`;
+}
 
 const routes = [
   // Redirect root to /mk
@@ -68,6 +92,18 @@ const routes = [
 
       // ONBOARDING
       { path: "event-category", name: "EventCategoryPage", component: EventCategoryPage, meta: { requiresAuth: true } },
+
+      // Accepting a collaborator invitation (IVY-103). Deliberately NOT under
+      // the "auth" block: that one is guestOnly, and claiming a code needs a
+      // signed-in user — the code grants access to an event, it is not a way
+      // to sign in. Someone arriving from an invite link without an account
+      // registers first, then lands back here.
+      {
+        path: "invite",
+        name: "AcceptInvite",
+        component: () => import("@/pages/auth/AcceptInvitePage.vue"),
+        meta: { requiresAuth: true },
+      },
       { path: "event-invitations", name: "EventInvitationsPage", component: EventInvitationsPage },
       { path: "invitation-builder", name: "InvitationBuilderPage", redirect: to => ({ path: `/${to.params.lang}/invitations/my-wedding`, query: { edit: 'true' } }) },
       { path: "checkout", name: "checkout", component: CheckoutPurchasePage, meta: { requiresAuth: true } },
@@ -115,6 +151,7 @@ const routes = [
           { path: "events/guests", name: "dashboard.guests", component: GuestsPage },
           { path: "events/tasks", name: "dashboard.tasks", component: TasksPage },
           { path: "events/tables", name: "dashboard.tables", component: TablesSeatingPage },
+          { path: "events/catering", name: "dashboard.catering", component: () => import("@/pages/dashboard/CateringPage.vue") },
           { path: "events/agenda", name: "dashboard.agenda", component: AgendaPage },
           { path: "events/budget", name: "dashboard.budget", component: BudgetPage },
           { path: "events/our-story", name: "dashboard.our-story", component: OurStoryPage },
@@ -128,14 +165,23 @@ const routes = [
           { path: "events/packages", name: "dashboard.packages", component: () => import("@/pages/dashboard/DashboardPackagesPage.vue") },
 
           // default dashboard redirect (if someone opens /mk/dashboard)
-          {
-            path: "",
-            redirect: (to) => {
-              const lang = to.params.lang || 'mk';
-              if (hasRole('ORGANIZER')) return `/${lang}/organizer`;
-              return `/${lang}/dashboard/events/overview`;
-            }
-          }
+          { path: "", redirect: (to) => homeForCurrentUser(to.params.lang) }
+        ]
+      },
+
+      // VENDOR DASHBOARD
+      {
+        path: "vendor",
+        component: VendorDashboardLayout,
+        meta: { requiresAuth: true, requiresVendor: true },
+        children: [
+          { path: "packages", name: "vendor.packages", component: VendorPackagesPage },
+          { path: "floor-plans", name: "vendor.floorPlans", component: VendorFloorPlansPage },
+          { path: "portfolio", name: "vendor.portfolio", component: VendorPortfolioPage },
+          { path: "calendar", name: "vendor.calendar", component: VendorCalendarPage },
+          // The calendar: the one section every kind of vendor has, so it is
+          // the only safe landing spot before the profile has loaded.
+          { path: "", redirect: (to) => `/${to.params.lang || 'mk'}/vendor/calendar` }
         ]
       },
 
@@ -185,7 +231,7 @@ const router = createRouter({
   },
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   startLoading();
   const lang = to.params.lang || "mk";
   setLocale(lang);
@@ -201,19 +247,34 @@ router.beforeEach((to, from, next) => {
 
   // Admin-only routes
   if (to.meta.requiresAdmin && !hasRole("ADMIN")) {
-    next(`/${lang}/dashboard/events/overview`);
+    next(homeForCurrentUser(lang));
     return;
+  }
+
+  // Vendor-only routes. Sent to their own home rather than to the couple's
+  // dashboard, which would be an empty screen for a restaurant.
+  if (to.meta.requiresVendor && !hasRole("VENDOR")) {
+    next(homeForCurrentUser(lang));
+    return;
+  }
+
+  // A photographer typing /vendor/floor-plans by hand. The tab is already
+  // hidden for them, but a hidden tab is a suggestion — this is the rule.
+  // Only checked once the profile is known; a vendor with no row behind their
+  // account falls through and the layout explains why the screens are empty.
+  if (to.meta.requiresVendor) {
+    const { load, can } = useVendorProfile();
+    const profile = await load();
+    const needed = capabilityForRoute(to.name);
+    if (profile && needed && !can(needed)) {
+      next({ name: firstTabFor(profile.capabilities), params: { lang } });
+      return;
+    }
   }
 
   // Guest-only routes (if logged in, send to appropriate dashboard)
   if (to.meta.guestOnly && isAuthenticated()) {
-    if (hasRole("ADMIN")) {
-      next(`/${lang}/admin/events`);
-    } else if (hasRole("ORGANIZER")) {
-      next(`/${lang}/organizer`);
-    } else {
-      next(`/${lang}/dashboard/events/overview`);
-    }
+    next(homeForCurrentUser(lang));
     return;
   }
 

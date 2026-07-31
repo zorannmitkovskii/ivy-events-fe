@@ -165,6 +165,13 @@ export function useOverview() {
   }
 
   onMounted(() => {
+    // Nothing to ask for until an event is chosen. These calls used to go out
+    // with an empty eventId and fail; every loader catches its own error and
+    // keeps the demo figures, so seven failed requests looked exactly like a
+    // populated dashboard. The backend now refuses an unscoped request
+    // outright, which makes firing them both useless and noisy.
+    if (!eventId.value) return;
+
     loadEvent();
     loadTasksData();
     loadStatusCounts();

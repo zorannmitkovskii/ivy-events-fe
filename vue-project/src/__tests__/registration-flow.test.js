@@ -31,6 +31,15 @@ Object.defineProperty(globalThis, 'sessionStorage', { value: mockSessionStorage,
 vi.stubGlobal('crypto', { randomUUID: () => `mock-${Date.now()}-${Math.random().toString(36).slice(2)}` });
 
 // ─── Mock services (must come before store/composable imports) ───
+// Auth calls go to zm-iam-service through iamApi; the rest of /public/*
+// (invitation page, table lookup, discounts) stays on ivy-events-be.
+vi.mock('@/services/iamApi', () => ({
+  default: {
+    post: vi.fn(),
+    get: vi.fn(),
+  },
+}));
+
 vi.mock('@/services/backendApi', () => ({
   default: {
     post: vi.fn(),
@@ -104,6 +113,7 @@ import { invitationTemplateService } from '@/services/invitationTemplate.service
 import { categoryIdToEnum } from '@/helper/CategoryMapping.helper';
 import { EventCategoryEnum } from '@/enums/EventCategory';
 import apiPublic from '@/services/backendApi';
+import iamApi from '@/services/iamApi';
 
 // ─── Helpers ───
 function fakeJwt(claims = {}) {
@@ -257,7 +267,7 @@ describe('Step 4: Signup', () => {
 
     const { register } = await import('@/services/auth.service');
     await register(payload);
-    expect(apiPublic.post).toHaveBeenCalledWith('/public/users/register', payload);
+    expect(iamApi.post).toHaveBeenCalledWith('/public/users/register', payload);
   });
 
   it('stores email and temp credentials after registration', () => {
@@ -291,11 +301,11 @@ describe('Step 4: Signup', () => {
 // ═══════════════════════════════════════════════════
 describe('Step 5: Email Verification', () => {
   it('verifyEmail API call sends code and email', async () => {
-    apiPublic.post.mockResolvedValue({ data: { success: true } });
+    iamApi.post.mockResolvedValue({ data: { success: true } });
 
     const { verifyEmail } = await import('@/services/auth.service');
     await verifyEmail('123456', 'test@example.com');
-    expect(apiPublic.post).toHaveBeenCalledWith('/public/auth/verify-email', {
+    expect(iamApi.post).toHaveBeenCalledWith('/public/auth/verify-email', {
       code: '123456',
       email: 'test@example.com',
     });
@@ -310,7 +320,7 @@ describe('Step 5: Email Verification', () => {
   });
 
   it('auto-login stores tokens in localStorage', async () => {
-    apiPublic.post.mockResolvedValue({
+    iamApi.post.mockResolvedValue({
       data: {
         access_token: fakeJwt(),
         refresh_token: 'refresh-123',
@@ -431,7 +441,7 @@ describe('Full Registration Flow (end-to-end sequence)', () => {
     expect(hasDraft()).toBe(true);
 
     // ── Step 4: User registers ──
-    apiPublic.post.mockImplementation((url) => {
+    iamApi.post.mockImplementation((url) => {
       if (url === '/public/users/register') {
         return Promise.resolve({ data: { username: 'ana.m' } });
       }
@@ -548,7 +558,7 @@ describe('Edge Cases', () => {
     setInvitationName('elegant-chateau');
     setDraftFullPayload({ invitationName: 'elegant-chateau' });
 
-    apiPublic.post.mockRejectedValue(new Error('Email already exists'));
+    iamApi.post.mockRejectedValue(new Error('Email already exists'));
 
     const { register } = await import('@/services/auth.service');
     await expect(register({
@@ -568,7 +578,7 @@ describe('Edge Cases', () => {
   it('handles verification failure without losing draft', async () => {
     setDraftFullPayload({ invitationName: 'test' });
 
-    apiPublic.post.mockRejectedValue(new Error('Invalid code'));
+    iamApi.post.mockRejectedValue(new Error('Invalid code'));
 
     const { verifyEmail } = await import('@/services/auth.service');
     await expect(verifyEmail('wrong', 'user@test.com')).rejects.toThrow('Invalid code');

@@ -661,7 +661,8 @@
   "team": {
     "title": "Ekipi & Bashkë-organizatorët",
     "subtitle": "Menaxhoni anëtarët e ekipit dhe lejet",
-    "placeholder": "Menaxhimi i ekipit së shpejti."
+    "placeholder": "Menaxhimi i ekipit së shpejti.",
+    "noEvent": "Zgjidhni një ngjarje para se të ftoni bashkëpunëtorë."
   },
   "agenda": {
     "title": "Axhenda",
@@ -827,7 +828,7 @@
       "useThisLocation": "Përdor këtë vendndodhje",
       "searchPlaces": "Kërko vende",
       "locateMe": "Gjej pozicionin tim",
-      "locating": "Duke gjetur\u2026"
+      "locating": "Duke gjetur…"
     },
     "showOnMap": "Shiko në hartë",
     "errors": {
@@ -861,7 +862,8 @@
     "signOut": "Dil",
     "addGuest": "Shto Mysafir",
     "addTask": "Shto Detyrë",
-    "navigation": "Navigimi"
+    "navigation": "Navigimi",
+    "catering": "Menuja"
   },
   "admin": {
     "sidebar": {
@@ -1078,7 +1080,10 @@
     "locateMe": "Gjej pozicionin tim",
     "locating": "Duke gjetur...",
     "selected": "Zgjedhur:",
-    "loadingAddress": "Duke ngarkuar adresën..."
+    "loadingAddress": "Duke ngarkuar adresën...",
+    "loading": "Duke punuar…",
+    "copy": "Kopjo",
+    "copied": "U kopjua"
   },
   "tables": {
     "title": "Tavolinat dhe Vendosja",
@@ -1731,5 +1736,130 @@
     "weddingDate": "Data e dasmës",
     "venue": "Vendi / Lokacioni",
     "storyImages": "Fotot e historisë"
+  },
+  "vendorPortal": {
+    "logout": "Dil",
+    "packages": "Paketat",
+    "floorPlans": "Rregullimi i tavolinave",
+    "calendar": "Kalendari",
+    "notLinked": "Llogaria juaj ende nuk është e lidhur me një restorant. Na kontaktoni për ta aktivizuar.",
+    "packagesSubtitle": "Ofertë fikse për person që çifti e zgjedh për ngjarjen e vet.",
+    "newPackage": "Paketë e re",
+    "packageName": "Emri i paketës",
+    "description": "Përshkrimi",
+    "pricePerPerson": "Çmimi për person",
+    "minGuests": "Minimumi i mysafirëve",
+    "items": "Artikujt",
+    "itemName": "Emri i artikullit",
+    "addItem": "Shto artikull",
+    "person": "person",
+    "floorPlansSubtitle": "Salla juaj ashtu siç është — të njëjtat tavolina për çdo ngjarje.",
+    "newFloorPlan": "Rregullim i ri",
+    "floorPlanName": "Emri i rregullimit",
+    "seatsTotal": "Gjithsej ulëse",
+    "tableLabel": "Etiketa",
+    "addTable": "Shto tavolinë",
+    "addTenTables": "Shto 10 tavolina",
+    "tables": "tavolina",
+    "seats": "ulëse",
+    "calendarSubtitle": "Cilat data janë të zëna dhe sa mysafirë priten.",
+    "bookingTitle": "Titulli",
+    "hold": "Rezervo",
+    "noBookings": "Nuk ka rezervime në këtë periudhë.",
+    "untitled": "Pa titull",
+    "showGuests": "Shfaq mysafirët",
+    "cooking": "Gatuhet",
+    "noPackageChosen": "Çifti ende nuk ka zgjedhur paketë.",
+    "attending": "vijnë",
+    "pending": "pa përgjigje",
+    "declined": "refuzuan",
+    "children": "fëmijë",
+    "confirm": "Konfirmo",
+    "cancelBooking": "Anulo",
+    "edit": "Redakto",
+    "remove": "Fshij",
+    "save": "Ruaj",
+    "cancel": "Anulo",
+    "course": {
+      "WELCOME": "Mirëseardhje",
+      "APPETIZER": "Meze",
+      "SOUP": "Supë",
+      "MAIN": "Kryesore",
+      "SIDE": "Garniturë",
+      "DESSERT": "Ëmbëlsirë",
+      "DRINK": "Pije",
+      "OTHER": "Tjetër"
+    },
+    "shape": {
+      "ROUND": "Rrethore",
+      "RECTANGLE": "Drejtkëndore",
+      "SQUARE": "Katrore"
+    },
+    "status": {
+      "HELD": "Rezervuar",
+      "CONFIRMED": "Konfirmuar",
+      "CANCELLED": "Anuluar"
+    },
+    "previousMonth": "Muaji i kaluar",
+    "nextMonth": "Muaji tjetër",
+    "today": "Sot",
+    "close": "Mbyll",
+    "dayFree": "Kjo ditë është e lirë.",
+    "holdThisDate": "Rezervo këtë datë",
+    "portfolio": "Portofoli",
+    "portfolioSubtitle": "Foto nga ngjarjet e kaluara, dhe lidhje me incizime ose showreel.",
+    "portfolioEmpty": "Ende nuk keni shtuar asgjë.",
+    "addPhotos": "Shto foto",
+    "uploading": "Duke ngarkuar…",
+    "addLink": "Shto lidhje",
+    "mediaTitle": "Titulli",
+    "mediaUrl": "Lidhja (YouTube, SoundCloud…)",
+    "delete": "Fshij",
+    "mediaKind": {
+      "IMAGE": "Foto",
+      "VIDEO": "Video",
+      "AUDIO": "Muzikë"
+    }
+  },
+  "catering": {
+    "title": "Menuja e restorantit",
+    "subtitle": "Zgjidhni cili paketë shërbehet në dasmën tuaj. Mysafirët e shohin zgjedhjen, nuk e bëjnë atë.",
+    "loading": "Duke u ngarkuar…",
+    "noVenue": "Ende nuk keni rezervuar restorant. Sapo të rezervoni, paketat e tij shfaqen këtu.",
+    "noPackages": "Ky restorant ende nuk ka publikuar paketa.",
+    "perPerson": "për person",
+    "minGuests": "min. {count} mysafirë",
+    "choose": "Zgjidh",
+    "chosen": "E zgjedhur",
+    "course": {
+      "WELCOME": "Mirëseardhje",
+      "APPETIZER": "Paragjellë",
+      "SOUP": "Supë",
+      "MAIN": "Pjata kryesore",
+      "SIDE": "Garniturë",
+      "DESSERT": "Ëmbëlsirë",
+      "DRINK": "Pije",
+      "OTHER": "Tjetër"
+    }
+  },
+  "collaborators": {
+    "title": "Bashkëpunëtorët",
+    "subtitle": "Dërgoni një kod ftese. Vlen një herë dhe skadon.",
+    "role": "Roli",
+    "create": "Krijo kod",
+    "shareHint": "Dërgoja këtë kod bashkëpunëtorit.",
+    "claimed": "i përdorur",
+    "pending": "në pritje",
+    "empty": "Ende nuk ka ftesa për këtë ngjarje.",
+    "roles": {
+      "member": "Anëtar — shikon",
+      "admin": "Administrator — redakton"
+    },
+    "accept": {
+      "title": "Prano ftesën",
+      "subtitle": "Vendosni kodin që ju dërgoi organizatori.",
+      "code": "Kodi i ftesës",
+      "submit": "Prano"
+    }
   }
 }

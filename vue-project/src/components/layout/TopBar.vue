@@ -132,6 +132,7 @@ const title = computed(() => {
     "dashboard.tasks": t("sidebar.tasks"),
     "dashboard.budget": t("sidebar.budget"),
     "dashboard.tables": t("sidebar.seating"),
+    "dashboard.catering": t("sidebar.catering"),
     "dashboard.agenda": t("sidebar.agenda"),
     "dashboard.gallery": t("sidebar.gallery"),
     "dashboard.our-story": t("sidebar.ourStory"),

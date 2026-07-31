@@ -159,7 +159,10 @@ async function loadEvent() {
   error.value = null;
 
   try {
-    if (eventId.value === "demo") {
+    // Having no event is the condition this sample is for. Comparing to the
+    // literal "demo" never matched a real store value, so the page fell
+    // through and asked the API for the event with an empty id.
+    if (!eventId.value) {
       const demo = {
         id: "demo",
         name: "The Annual Gala",

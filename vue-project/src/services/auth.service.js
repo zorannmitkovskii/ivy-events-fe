@@ -1,4 +1,5 @@
 import apiPublic from "./backendApi";
+import iamApi from "./iamApi";
 import { scheduleProactiveRefresh } from "./api";
 import { getRuntimeEnv, detectDefaultEnvFromLocation, computeKeycloakBaseUrl } from '@/services/env';
 
@@ -105,20 +106,20 @@ function silentKeycloakLogout() {
 // payload: { email, password, firstName, lastName, ... }
 export async function register(payload) {
   // BE expects CreateUserRequest at /public/users/register
-  const res = await apiPublic.post("/public/users/register", payload);
+  const res = await iamApi.post("/public/users/register", payload);
   return res?.data || res; // backendApi returns AxiosResponse; normalize
 }
 
 // Verify email with code
 export async function verifyEmail(code, email) {
   const body = { code, email };
-  const res = await apiPublic.post("/public/auth/verify-email", body);
+  const res = await iamApi.post("/public/auth/verify-email", body);
   return res?.data || res;
 }
 
 // Login via BE – BE calls Keycloak token endpoint on our behalf
 export async function loginWithCredentials(email, password) {
-  const res = await apiPublic.post("/public/users/login", { username: email, password });
+  const res = await iamApi.post("/public/users/login", { username: email, password });
   const data = res?.data || res;
 
   // Handle both snake_case (Keycloak) and camelCase (Spring) response fields
@@ -135,7 +136,7 @@ export async function loginWithCredentials(email, password) {
 }
 
 export async function changePassword(email, currentPassword, newPassword) {
-  const res = await apiPublic.post("/public/users/change-password", {
+  const res = await iamApi.post("/public/users/change-password", {
     email, currentPassword, newPassword
   });
   return res?.data || res;
@@ -187,13 +188,13 @@ export async function refreshAccessToken() {
 
 // Request password reset code
 export async function requestPasswordReset(email) {
-  const res = await apiPublic.post("/public/auth/password-reset/request", { email });
+  const res = await iamApi.post("/public/auth/password-reset/request", { email });
   return res?.data || res;
 }
 
 // Confirm password reset with code + new password
 export async function confirmPasswordReset(email, code, newPassword) {
-  const res = await apiPublic.post("/public/auth/password-reset/confirm", { email, code, newPassword });
+  const res = await iamApi.post("/public/auth/password-reset/confirm", { email, code, newPassword });
   return res?.data || res;
 }
 
