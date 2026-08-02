@@ -38,3 +38,9 @@ __screenshots__/
 
 # Ignore test runtime env file (managed on server, not in Git)
 .env.test
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

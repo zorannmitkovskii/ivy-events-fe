@@ -47,10 +47,10 @@ const donutCanvas = ref(null);
 const legendItems = computed(() => {
   const total = props.rsvp?.total || 1;
   return [
-    { label: t("overview.coming"), value: props.rsvp?.comming || 0, color: "#5a7a52", pct: Math.round(((props.rsvp?.comming || 0) / total) * 100) },
-    { label: t("overview.maybe"), value: props.rsvp?.maybe || 0, color: "#b8954e", pct: Math.round(((props.rsvp?.maybe || 0) / total) * 100) },
-    { label: t("overview.declined"), value: props.rsvp?.decline || 0, color: "#c4968e", pct: Math.round(((props.rsvp?.decline || 0) / total) * 100) },
-    { label: t("overview.waiting"), value: props.rsvp?.waiting || 0, color: "#e6dfd4", pct: Math.round(((props.rsvp?.waiting || 0) / total) * 100) },
+    { label: t("overview.coming"), value: props.rsvp?.confirmed || 0, color: "#5a7a52", pct: Math.round(((props.rsvp?.confirmed || 0) / total) * 100) },
+    { label: t("overview.awaitingReply"), value: props.rsvp?.awaitingReply || 0, color: "#b8954e", pct: Math.round(((props.rsvp?.awaitingReply || 0) / total) * 100) },
+    { label: t("overview.declined"), value: props.rsvp?.declined || 0, color: "#c4968e", pct: Math.round(((props.rsvp?.declined || 0) / total) * 100) },
+    { label: t("overview.notInvited"), value: props.rsvp?.notInvited || 0, color: "#e6dfd4", pct: Math.round(((props.rsvp?.notInvited || 0) / total) * 100) },
   ];
 });
 
@@ -64,10 +64,10 @@ function drawDonut() {
   const innerR = 46;
   const total = props.rsvp?.total || 1;
   const data = [
-    { val: props.rsvp?.comming || 0, color: "#5a7a52" },
-    { val: props.rsvp?.maybe || 0, color: "#b8954e" },
-    { val: props.rsvp?.decline || 0, color: "#c4968e" },
-    { val: props.rsvp?.waiting || 0, color: "#e6dfd4" },
+    { val: props.rsvp?.confirmed || 0, color: "#5a7a52" },
+    { val: props.rsvp?.awaitingReply || 0, color: "#b8954e" },
+    { val: props.rsvp?.declined || 0, color: "#c4968e" },
+    { val: props.rsvp?.notInvited || 0, color: "#e6dfd4" },
   ];
 
   ctx.clearRect(0, 0, size, size);

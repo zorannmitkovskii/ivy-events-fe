@@ -22,11 +22,38 @@
       />
     </nav>
 
-    <div v-if="hasMultipleEvents && isOrganizer" class="sidebar-switch">
-      <button class="switch-btn" @click="goToMyEvents">
+    <div v-if="hasMultipleEvents" class="sidebar-switch">
+      <button class="switch-btn" :aria-expanded="switcherOpen" @click="switcherOpen = !switcherOpen">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
         {{ t('sidebar.switchEvent') }}
       </button>
+
+      <div v-if="switcherOpen" class="switch-menu">
+        <template v-if="pinnedEvents.length">
+          <p class="switch-group">{{ t('sidebar.pinnedGroup') }}</p>
+          <button
+            v-for="ev in pinnedEvents"
+            :key="ev.id"
+            class="switch-item"
+            :class="{ 'switch-item--current': ev.id === onboardingStore.eventId }"
+            @click="switchTo(ev)"
+          >{{ ev.name || t('organizerOverview.untitled') }}</button>
+        </template>
+
+        <template v-if="recentEvents.length">
+          <p v-if="pinnedEvents.length" class="switch-group">{{ t('sidebar.otherGroup') }}</p>
+          <button
+            v-for="ev in recentEvents"
+            :key="ev.id"
+            class="switch-item"
+            :class="{ 'switch-item--current': ev.id === onboardingStore.eventId }"
+            @click="switchTo(ev)"
+          >{{ ev.name || t('organizerOverview.untitled') }}</button>
+        </template>
+
+        <!-- The menu shows a short head of the list; this is the way to the rest. -->
+        <button class="switch-all" @click="goToMyEvents">{{ t('sidebar.allEvents') }}</button>
+      </div>
     </div>
 
     <div v-if="!isGallery" class="sidebar-ctas">
@@ -59,10 +86,12 @@ import SidebarBrand from "@/components/sidebar/SidebarBrand.vue";
 import SidebarNavItem from "@/components/sidebar/SidebarNavItem.vue";
 import SidebarAccount from "@/components/sidebar/SidebarAccount.vue";
 import { Icons } from "@/utils/icons.js";
-import { getFullName, logout, getPackages, hasRole } from "@/services/auth.service";
+import { getFullName, logout, getPackages } from "@/services/auth.service";
 import { onboardingStore, clearOnboarding } from "@/store/onboarding.store";
 import { EventCategoryEnum } from "@/enums/EventCategory.js";
 import { eventsService } from "@/services/events.service";
+import { selectEvent } from "@/services/eventSelection.service";
+import useWorkspaceEvents from "@/composables/useWorkspaceEvents";
 
 defineEmits(["close", "navigate"]);
 
@@ -120,8 +149,19 @@ const avatarUrl = computed(() => "");
 // Event info
 const eventName = ref("");
 const eventDate = ref("");
-const hasMultipleEvents = ref(false);
-const isOrganizer = hasRole('ORGANIZER');
+
+// The switcher: same list the workspace page shows, so pinned events lead here
+// too. Capped at a short head — the full list is one click away rather than an
+// unbounded menu inside a sidebar.
+const MAX_UNPINNED_IN_SWITCHER = 6;
+
+const { rows, pinnedEvents, load: loadWorkspace } = useWorkspaceEvents();
+const switcherOpen = ref(false);
+const hasMultipleEvents = computed(() => rows.value.length > 1);
+const recentEvents = computed(() =>
+  rows.value.filter(r => !r.pinned).slice(0, MAX_UNPINNED_IN_SWITCHER).map(r => r.event)
+);
+
 const eventStatusLabel = computed(() => {
   const s = onboardingStore.eventStatus;
   if (!s || s === "ACTIVE") return "";
@@ -129,15 +169,13 @@ const eventStatusLabel = computed(() => {
 });
 
 onMounted(async () => {
+  await loadWorkspace();
+
   try {
     const id = onboardingStore.eventId;
     if (!id || id === "demo") return;
 
-    const [ev, allEvents] = await Promise.all([
-      eventsService.getById(id),
-      eventsService.getAll().catch(() => []),
-    ]);
-
+    const ev = await eventsService.getById(id);
     eventName.value = ev.name || ev.title || "";
     if (ev.date || ev.eventDate) {
       const d = new Date(ev.date || ev.eventDate);
@@ -145,15 +183,25 @@ onMounted(async () => {
         day: "numeric", month: "short", year: "numeric"
       });
     }
-
-    const list = Array.isArray(allEvents) ? allEvents : (allEvents?.data || allEvents?.content || []);
-    hasMultipleEvents.value = list.length > 1;
   } catch {
     // keep empty
   }
 });
 
-function goToMyEvents() { router.push({ name: 'dashboard.organizer', params: { lang: lang.value } }); }
+/**
+ * Switching stays on the current section — someone looking at the guest list of
+ * one event wants the guest list of the other, not to be sent back to an
+ * overview. The layout is keyed by the event, so the page under us reloads.
+ */
+function switchTo(event) {
+  switcherOpen.value = false;
+  selectEvent(event);
+}
+
+function goToMyEvents() {
+  switcherOpen.value = false;
+  router.push({ name: 'dashboard.organizer', params: { lang: lang.value } });
+}
 function goToSettings() { router.push(`/${lang.value}/dashboard/events/settings`); }
 function goToInvitationLinks() { router.push(`/${lang.value}/dashboard/events/invitation-links`); }
 function goToPackages() { router.push({ name: "dashboard.packages", params: { lang: lang.value } }); }
@@ -310,6 +358,61 @@ function signOut() { logout(); clearOnboarding(); router.push(`/${lang.value}/au
   border-color: rgba(255, 255, 255, 0.3);
   color: rgba(255, 255, 255, 0.8);
   background: rgba(255, 255, 255, 0.04);
+}
+
+.switch-menu {
+  margin-top: 6px;
+  padding: 6px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.switch-group {
+  margin: 6px 8px 2px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.switch-item,
+.switch-all {
+  width: 100%;
+  padding: 7px 8px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Outfit', sans-serif;
+  font-size: 12.5px;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.switch-item:hover,
+.switch-all:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.switch-item--current {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.switch-all {
+  margin-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0 0 6px 6px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
 }
 
 /* Sidebar CTAs */

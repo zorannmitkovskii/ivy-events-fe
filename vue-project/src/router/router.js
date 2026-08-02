@@ -5,6 +5,7 @@ import { onboardingStore } from "@/store/onboarding.store";
 import { startLoading, stopLoading } from "@/store/loading.store";
 import { useVendorProfile } from "@/composables/useVendorProfile";
 import { capabilityForRoute, firstTabFor } from "@/router/vendorTabs";
+import { homeForCurrentUser } from "@/router/landing";
 
 // Marketing (keep eager for above-the-fold)
 import HomePage from "@/pages/marketing/HomePage.vue";
@@ -53,21 +54,6 @@ const AdminDashboardLayout = () => import("@/layouts/AdminDashboardLayout.vue");
 const AdminEventPage = () => import("@/pages/adminDashboard/AdminEventPage.vue");
 const AdminPackagesPage = () => import("@/pages/adminDashboard/AdminPackagesPage.vue");
 const AdminUsersPage = () => import("@/pages/adminDashboard/AdminUsersPage.vue");
-
-/**
- * Where a signed-in person belongs, by role.
- *
- * <p>One function rather than a condition repeated at each redirect: the order
- * matters — someone who is both an admin and a vendor lands on the admin — and
- * a second copy of it would eventually disagree with this one.
- */
-function homeForCurrentUser(langParam) {
-  const lang = langParam || "mk";
-  if (hasRole("ADMIN")) return `/${lang}/admin/events`;
-  if (hasRole("VENDOR")) return `/${lang}/vendor/calendar`;
-  if (hasRole("ORGANIZER")) return `/${lang}/organizer`;
-  return `/${lang}/dashboard/events/overview`;
-}
 
 const routes = [
   // Redirect root to /mk

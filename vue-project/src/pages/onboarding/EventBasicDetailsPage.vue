@@ -199,6 +199,9 @@ async function createEventAndNavigate() {
       username: getUsername(),
       date: date.value || null,
       lang: lang.value,
+      // Only birthdays carry one; everywhere else the backend derives it from
+      // the category, so sending nothing is the right thing to send.
+      typeCode: onboardingStore.selectedTypeCode || null,
     };
 
     const res = await eventsService.create(payload);

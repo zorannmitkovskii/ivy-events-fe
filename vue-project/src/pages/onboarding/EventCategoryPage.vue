@@ -28,8 +28,25 @@
       />
     </div>
 
+    <!-- A birthday is either an adult's or a child's. They share a category
+         and share almost nothing else: one has a budget, the other collects
+         allergies and a guardian's phone number. -->
+    <div v-if="needsTypeChoice" class="type-choice">
+      <p class="type-choice-title">{{ $t('onboarding.category.birthdayWho') }}</p>
+      <div class="type-options">
+        <button
+          v-for="option in birthdayTypes"
+          :key="option.code"
+          class="type-option"
+          :class="{ 'type-option--on': selectedTypeCode === option.code }"
+          :aria-pressed="selectedTypeCode === option.code"
+          @click="chooseType(option.code)"
+        >{{ $t(option.labelKey) }}</button>
+      </div>
+    </div>
+
     <!-- Sticky footer with action button -->
-    <div v-if="selectedEnum && loggedIn" class="sticky-footer">
+    <div v-if="selectedEnum && loggedIn && !awaitingTypeChoice" class="sticky-footer">
       <div class="footer-inner">
         <button
           class="action-btn"
@@ -51,7 +68,7 @@ import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import OnboardingFooterLinks from '@/components/onboarding/OnboardingFooterLinks.vue';
-import { setSelectedCategory, setEventId, onboardingStore } from '@/store/onboarding.store';
+import { setSelectedCategory, setSelectedTypeCode, setEventId, onboardingStore } from '@/store/onboarding.store';
 import { eventsService } from '@/services/events.service';
 import { isAuthenticated, getUsername } from '@/services/auth.service';
 import EventCategories from "@/components/landingPage/EventCategories.vue";
@@ -78,6 +95,29 @@ const selectedEnum = computed(() =>
 
 const isGallery = computed(() => selectedEnum.value === EventCategoryEnum.GALLERY);
 
+/**
+ * Categories that do not say enough on their own (IVY-204).
+ *
+ * <p>Only birthdays today. Everything else maps to exactly one type, so asking
+ * would be a question with one answer.
+ */
+const birthdayTypes = [
+  { code: 'BIRTHDAY_ADULT', labelKey: 'onboarding.category.birthdayAdult' },
+  { code: 'BIRTHDAY_CHILD', labelKey: 'onboarding.category.birthdayChild' },
+];
+
+const selectedTypeCode = computed(() => onboardingStore.selectedTypeCode);
+
+const needsTypeChoice = computed(() => selectedEnum.value === EventCategoryEnum.BIRTHDAY);
+
+/** Blocks the footer until the follow-up is answered — continuing without it
+ *  would silently pick one, and the wrong one asks the wrong questions later. */
+const awaitingTypeChoice = computed(() => needsTypeChoice.value && !selectedTypeCode.value);
+
+function chooseType(code) {
+  setSelectedTypeCode(code);
+}
+
 const actionLabel = computed(() => {
   if (creatingEvent.value) return '...';
   return isGallery.value
@@ -87,10 +127,15 @@ const actionLabel = computed(() => {
 
 // Sync selection to store
 watch(selectedCategoryId, (newId) => {
-  if (newId) {
-    const enumValue = categoryIdToEnum(newId);
-    if (enumValue) setSelectedCategory(enumValue);
-  }
+  if (!newId) return;
+  const enumValue = categoryIdToEnum(newId);
+  if (!enumValue) return;
+
+  setSelectedCategory(enumValue);
+  // A type chosen for the previous category does not carry over — picking
+  // "child birthday" and then switching to a wedding must not leave the
+  // wedding claiming to be a child's party.
+  if (enumValue !== EventCategoryEnum.BIRTHDAY) setSelectedTypeCode("");
 });
 
 async function onAction() {
@@ -196,6 +241,51 @@ function onBack() {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* ===== Birthday type choice ===== */
+.type-choice {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 20px;
+  text-align: center;
+}
+
+.type-choice-title {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--neutral-700, #374151);
+}
+
+.type-options {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.type-option {
+  padding: 9px 20px;
+  border-radius: 22px;
+  border: 1.5px solid rgba(16, 24, 40, 0.12);
+  background: #fff;
+  color: var(--neutral-700, #374151);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.type-option:hover {
+  border-color: var(--accent, #5a7a52);
+}
+
+.type-option--on {
+  background: var(--accent, #5a7a52);
+  border-color: var(--accent, #5a7a52);
+  color: #fff;
 }
 
 /* ===== Scrollable content ===== */

@@ -5,6 +5,27 @@ export const eventsService = {
     return api.get("/events");
   },
 
+  /**
+   * The workspace list: the caller's events, filtered, pinned first.
+   * Every filter is optional; omitted ones are left off the query entirely.
+   */
+  workspace({ status, categoryType, from, to } = {}) {
+    const params = {};
+    if (status) params.status = status;
+    if (categoryType) params.categoryType = categoryType;
+    if (from) params.from = from;
+    if (to) params.to = to;
+    return api.get("/events/workspace", { params });
+  },
+
+  pin(eventId) {
+    return api.put(`/events/${encodeURIComponent(eventId)}/pin`);
+  },
+
+  unpin(eventId) {
+    return api.del(`/events/${encodeURIComponent(eventId)}/pin`);
+  },
+
   getById(eventId) {
     return api.get(`/events/${encodeURIComponent(eventId)}`);
   },

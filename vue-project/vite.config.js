@@ -28,5 +28,9 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
+    // e2e/ belongs to Playwright. Vitest picks up any *.spec.js it can see, and
+    // a Playwright spec run under Vitest fails on the imports rather than on
+    // anything real.
+    exclude: ['node_modules/**', 'dist/**', 'e2e/**'],
   },
 })

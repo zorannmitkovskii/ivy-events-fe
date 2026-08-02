@@ -445,7 +445,10 @@
       "subtitle": "Изберете го типот на настанот што го планирате. Може да го промените подоцна.",
       "continue": "Продолжи",
       "next": "Следно",
-      "create": "Креирај"
+      "create": "Креирај",
+      "birthdayWho": "Чиј е роденденот?",
+      "birthdayAdult": "На возрасен",
+      "birthdayChild": "На дете"
     },
     "eventBasics": {
       "title": "Основни детали",
@@ -830,7 +833,9 @@
     "seated": "распоредени",
     "unseated": "Нераспоредени",
     "tables": "Маси",
-    "tableNum": "Маса {n}"
+    "tableNum": "Маса {n}",
+    "awaitingReply": "Чека одговор",
+    "notInvited": "Не е поканет"
   },
   "guests": {
     "title": "Гости",
@@ -1096,7 +1101,10 @@
     "upgrade": "Надградба",
     "switchEvent": "Промени настан",
     "navigation": "Навигација",
-    "catering": "Мени"
+    "catering": "Мени",
+    "pinnedGroup": "Закачени",
+    "otherGroup": "Останати",
+    "allEvents": "Сите настани"
   },
   "admin": {
     "sidebar": {
@@ -1977,7 +1985,24 @@
     "create": "Креирај",
     "errFirstName": "Името е задолжително",
     "errLastName": "Презимето е задолжително",
-    "errEmail": "Емаилот е задолжителен"
+    "errEmail": "Емаилот е задолжителен",
+    "filtersTitle": "Филтри",
+    "allStatuses": "Сите статуси",
+    "allTypes": "Сите типови",
+    "dateFrom": "Од",
+    "dateTo": "До",
+    "resetFilters": "Исчисти филтри",
+    "noMatch": "Ниту еден настан не одговара на филтрите.",
+    "pin": "Закачи",
+    "unpin": "Откачи",
+    "pinnedBadge": "Закачен",
+    "loadFailed": "Настаните не се вчитаа.",
+    "statuses": {
+      "DRAFT": "Нацрт",
+      "PENDING": "На чекање",
+      "ACTIVATED": "Активен",
+      "ACHIVED": "Архивиран"
+    }
   },
   "vendorPortal": {
     "logout": "Одјави се",

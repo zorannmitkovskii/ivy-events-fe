@@ -116,14 +116,13 @@
 import { ref, onMounted } from "vue";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import { contactService } from "@/services/contact.service";
-import { getEventId } from "@/services/auth.service";
 import { onboardingStore } from "@/store/onboarding.store";
 
 const messages = ref([]);
 const loading = ref(true);
 
 function currentEventId() {
-  return getEventId() || onboardingStore.eventId || "";
+  return onboardingStore.eventId || "";
 }
 
 async function fetchMessages() {

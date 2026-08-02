@@ -26,19 +26,9 @@ export function getUsername() {
   return parseToken()?.preferred_username || null;
 }
 
-export function getEventId() {
-  const ids = getEventIds();
-  return ids.length > 0 ? ids[0] : null;
-}
-
-export function getEventIds() {
-  const claims = parseToken();
-  if (!claims) return [];
-  const ids = claims.eventIds;
-  if (Array.isArray(ids)) return ids;
-  if (typeof ids === 'string') return [ids];
-  return [];
-}
+// The eventIds claim was removed in IVY-101 — access is a row in event_access,
+// not something the token carries. Which events a person can open now comes
+// from the backend; see eventSelection.service.js.
 
 export function getPackages() {
   const claims = parseToken();

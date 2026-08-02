@@ -35,7 +35,6 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { collaboratorsService } from '@/services/collaborators.service';
-import { refreshAccessToken } from '@/services/auth.service';
 import { setEventId } from '@/store/onboarding.store';
 import { getErrorMessage } from '@/services/apiError';
 
@@ -60,12 +59,10 @@ async function submit() {
   try {
     const { eventId } = await collaboratorsService.claim(code.value);
 
-    // The claim added the event to eventIds in Keycloak, but the token in hand
-    // was minted before that and does not carry it — every request would come
-    // back 403 until it expired. Refreshing here is what makes the event
-    // actually reachable on the next screen.
-    await refreshAccessToken();
-
+    // No token refresh: since IVY-101 the claim writes a row in event_access
+    // and the backend reads it per request, so the grant is live on the next
+    // call. Refreshing here used to be what made the event reachable, back when
+    // access was a claim minted into the token.
     setEventId(eventId);
     router.push(`/${route.params.lang || 'mk'}/dashboard/events/overview`);
   } catch (e) {

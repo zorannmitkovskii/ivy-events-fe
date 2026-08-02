@@ -9,7 +9,12 @@
     <div class="main">
       <TopBar @toggle-menu="drawerOpen = !drawerOpen" :show-hamburger="true" />
       <main class="content">
-        <router-view />
+        <!--
+          Keyed by the event so switching remounts the page under it. The routes
+          carry no eventId — every page reads it from the store on mount — so
+          without this the guest list of the event you just left stays on screen.
+        -->
+        <router-view :key="onboardingStore.eventId" />
       </main>
     </div>
   </div>
@@ -20,8 +25,9 @@ import { ref, computed, watch, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import SidebarNav from "@/components/layout/SidebarNav.vue";
 import TopBar from "@/components/layout/TopBar.vue";
-import { onboardingStore, setEventId } from "@/store/onboarding.store";
-import { isAuthenticated, getEventId } from "@/services/auth.service";
+import { onboardingStore } from "@/store/onboarding.store";
+import { isAuthenticated } from "@/services/auth.service";
+import { resolveCurrentEvent } from "@/services/eventSelection.service";
 import { EventCategoryEnum } from "@/enums/EventCategory.js";
 
 const drawerOpen = ref(false);
@@ -43,11 +49,17 @@ function redirectGalleryIfNeeded() {
   }
 }
 
-onMounted(() => {
-  // Fallback: if eventId is empty but user is logged in, read from JWT
+onMounted(async () => {
+  // Landing here with nothing selected — a bookmark, a reload after the pick
+  // was cleared. Ask which events exist rather than reading the token: since
+  // IVY-101 the token no longer carries them. Several to choose from means the
+  // choice is the person's, so they go to the workspace.
   if (!onboardingStore.eventId && isAuthenticated()) {
-    const id = getEventId();
-    if (id) setEventId(id);
+    const { eventId, eventCount } = await resolveCurrentEvent();
+    if (!eventId && eventCount > 1) {
+      router.replace(`/${route.params.lang || "mk"}/organizer`);
+      return;
+    }
   }
   redirectGalleryIfNeeded();
 });

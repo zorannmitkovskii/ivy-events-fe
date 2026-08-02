@@ -79,16 +79,16 @@ export function useOverview() {
   async function loadStatusCounts() {
     try {
       const counts = await guestsService.getStatusCounts(eventId.value);
-      const comming = counts.comming || 0;
-      const maybe = counts.maybe || 0;
-      const decline = counts.decline || 0;
-      const waiting = counts.waiting || 0;
+      const confirmed = counts.confirmed || 0;
+      const awaitingReply = counts.awaitingReply || 0;
+      const declined = counts.declined || 0;
+      const notInvited = counts.notInvited || 0;
       overview.value.rsvp = {
-        total: comming + maybe + decline + waiting,
-        comming,
-        maybe,
-        decline,
-        waiting
+        total: confirmed + awaitingReply + declined + notInvited,
+        confirmed,
+        awaitingReply,
+        declined,
+        notInvited
       };
     } catch {
       // keep demo data as fallback

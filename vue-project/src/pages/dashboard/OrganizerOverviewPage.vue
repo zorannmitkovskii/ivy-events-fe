@@ -24,7 +24,7 @@
           <p class="page-subtitle">{{ t('organizerOverview.subtitle') }}</p>
         </div>
         <div class="header-btns">
-          <button class="btn-secondary" @click="openUserDialog">
+          <button v-if="canManageUsers" class="btn-secondary" @click="openUserDialog">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
             {{ t('organizerOverview.addUser') }}
           </button>
@@ -34,6 +34,35 @@
           </button>
         </div>
       </header>
+
+      <!-- Filters -->
+      <section class="filters" :aria-label="t('organizerOverview.filtersTitle')">
+        <select v-model="filters.status" class="filter-input" @change="reload">
+          <option value="">{{ t('organizerOverview.allStatuses') }}</option>
+          <option v-for="s in statusOptions" :key="s" :value="s">{{ statusLabel(s) }}</option>
+        </select>
+
+        <select v-model="filters.categoryType" class="filter-input" @change="reload">
+          <option value="">{{ t('organizerOverview.allTypes') }}</option>
+          <option v-for="c in categoryOptions" :key="c" :value="c">{{ formatCategory(c) }}</option>
+        </select>
+
+        <label class="filter-date">
+          <span>{{ t('organizerOverview.dateFrom') }}</span>
+          <input v-model="filters.from" type="date" class="filter-input" @change="reload" />
+        </label>
+
+        <label class="filter-date">
+          <span>{{ t('organizerOverview.dateTo') }}</span>
+          <input v-model="filters.to" type="date" class="filter-input" @change="reload" />
+        </label>
+
+        <button v-if="hasActiveFilters" class="filter-clear" @click="clearFilters">
+          {{ t('organizerOverview.resetFilters') }}
+        </button>
+      </section>
+
+      <p v-if="error" class="load-error">{{ t('organizerOverview.loadFailed') }}</p>
 
       <!-- Loading -->
       <div v-if="loading" class="loading-state">
@@ -47,7 +76,7 @@
           <div class="summary-card"><span class="summary-value">{{ events.length }}</span><span class="summary-label">{{ t('organizerOverview.totalEvents') }}</span></div>
           <div class="summary-card"><span class="summary-value">{{ totalGuests }}</span><span class="summary-label">{{ t('organizerOverview.totalGuests') }}</span></div>
           <div class="summary-card"><span class="summary-value">{{ upcomingCount }}</span><span class="summary-label">{{ t('organizerOverview.upcoming') }}</span></div>
-          <div class="summary-card"><span class="summary-value">{{ avgRsvpRate }}%</span><span class="summary-label">{{ t('organizerOverview.rsvpRate') }}</span></div>
+          <div class="summary-card"><span class="summary-value">{{ avgRsvpRate === null ? '—' : avgRsvpRate + '%' }}</span><span class="summary-label">{{ t('organizerOverview.rsvpRate') }}</span></div>
         </div>
 
         <!-- Events table -->
@@ -55,6 +84,7 @@
           <table class="events-table">
             <thead>
               <tr>
+                <th class="col-pin"><span class="sr-only">{{ t('organizerOverview.pinnedBadge') }}</span></th>
                 <th>{{ t('organizerOverview.colEvent') }}</th>
                 <th>{{ t('organizerOverview.colDate') }}</th>
                 <th>{{ t('organizerOverview.colStatus') }}</th>
@@ -65,21 +95,32 @@
             </thead>
             <tbody>
               <tr v-for="ev in enrichedEvents" :key="ev.id" class="event-row" @click="onManage(ev)">
+                <td class="cell-pin">
+                  <button
+                    class="pin-btn"
+                    :class="{ 'pin-btn--on': ev.pinned }"
+                    :aria-pressed="ev.pinned"
+                    :title="ev.pinned ? t('organizerOverview.unpin') : t('organizerOverview.pin')"
+                    @click.stop="togglePin(ev.id)"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" :fill="ev.pinned ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
+                  </button>
+                </td>
                 <td class="cell-event">
                   <span class="ev-name">{{ ev.name || t('organizerOverview.untitled') }}</span>
                   <span class="ev-category">{{ formatCategory(ev.categoryType) }}</span>
                 </td>
                 <td class="cell-date">{{ formatDate(ev.date || ev.eventDate) }}</td>
-                <td><span class="status-pill" :class="'pill--' + (ev.status || 'draft').toLowerCase()">{{ (ev.status || 'DRAFT').toLowerCase() }}</span></td>
-                <td class="cell-guests"><span class="guests-num">{{ ev.metrics?.totalGuests ?? '—' }}</span></td>
+                <td><span class="status-pill" :class="'pill--' + (ev.status || 'draft').toLowerCase()">{{ statusLabel(ev.status) }}</span></td>
+                <td class="cell-guests"><span class="guests-num">{{ ev.metrics?.guestCount ?? '—' }}</span></td>
                 <td class="cell-rsvp">
-                  <div v-if="ev.metrics?.rsvp" class="rsvp-bar-wrap">
+                  <div v-if="ev.metrics && invitedCount(ev)" class="rsvp-bar-wrap">
                     <div class="rsvp-bar">
-                      <div class="rsvp-seg rsvp-accepted" :style="{ width: rsvpPercent(ev, 'comming') + '%' }"></div>
-                      <div class="rsvp-seg rsvp-maybe" :style="{ width: rsvpPercent(ev, 'maybe') + '%' }"></div>
-                      <div class="rsvp-seg rsvp-declined" :style="{ width: rsvpPercent(ev, 'decline') + '%' }"></div>
+                      <div class="rsvp-seg rsvp-accepted" :style="{ width: rsvpPercent(ev, 'confirmedCount') + '%' }"></div>
+                      <div class="rsvp-seg rsvp-maybe" :style="{ width: rsvpPercent(ev, 'awaitingCount') + '%' }"></div>
+                      <div class="rsvp-seg rsvp-declined" :style="{ width: rsvpPercent(ev, 'declinedCount') + '%' }"></div>
                     </div>
-                    <span class="rsvp-nums">{{ ev.metrics.rsvp.comming }}/{{ ev.metrics.rsvp.total }}</span>
+                    <span class="rsvp-nums">{{ ev.metrics.confirmedCount }}/{{ invitedCount(ev) }}</span>
                   </div>
                   <span v-else class="rsvp-empty">—</span>
                 </td>
@@ -94,6 +135,13 @@
           </table>
         </div>
       </template>
+
+      <!-- Nothing matched the filters — different from having no events at all,
+           and the way out is to clear the filters, not to create an event. -->
+      <div v-else-if="hasActiveFilters" class="empty-state">
+        <p>{{ t('organizerOverview.noMatch') }}</p>
+        <button class="btn-secondary" @click="clearFilters">{{ t('organizerOverview.resetFilters') }}</button>
+      </div>
 
       <!-- Empty -->
       <div v-else class="empty-state">
@@ -152,93 +200,105 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { eventsService } from '@/services/events.service';
-import { guestsService } from '@/services/guests.service';
+import { analyticsService } from '@/services/analytics.service';
 import { createAdminUser } from '@/services/userService';
-import { hasRole, logout, getFullName } from '@/services/auth.service';
-import { onboardingStore, setEventId, setSelectedCategory, setEventStatus, setInvitationName, clearOnboarding } from '@/store/onboarding.store';
+import { hasRole, logout } from '@/services/auth.service';
+import { selectEvent } from '@/services/eventSelection.service';
+import { clearOnboarding } from '@/store/onboarding.store';
+import useWorkspaceEvents from '@/composables/useWorkspaceEvents';
 
 const { t, locale } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const lang = computed(() => route.params.lang || 'mk');
 
-const loading = ref(true);
-const events = ref([]);
-const metricsMap = ref({});
+// No role gate: the workspace endpoint already returns only what the caller may
+// open. A collaborator with two events needs this list as much as an organizer
+// does, and someone with none gets the empty state rather than a redirect loop.
+const { rows, events, filters, loading, error, load, resetFilters, togglePin } = useWorkspaceEvents();
 
-onMounted(async () => {
-  if (!hasRole('ORGANIZER')) {
-    router.replace({ name: 'dashboard.overview', params: { lang: lang.value } });
-    return;
-  }
+// Kept exactly as wide as it was before the page stopped being organizer-only,
+// so nobody who could see this button loses it. It is not a claim that both
+// roles can use it — the endpoint behind it is ADMIN-only.
+const canManageUsers = hasRole('ADMIN') || hasRole('ORGANIZER');
 
-  try {
-    const res = await eventsService.getAll();
-    events.value = Array.isArray(res) ? res : (res?.data || res?.content || []);
-    await loadMetrics();
-  } catch (e) {
-    console.error('Failed to load events:', e);
-  } finally {
-    loading.value = false;
-  }
-});
+const analytics = ref(null);
 
-async function loadMetrics() {
-  const fetches = events.value.map(async (ev) => {
-    const id = ev.id || ev.eventId;
-    if (!id) return;
-    try {
-      const [counts, status] = await Promise.all([
-        guestsService.getCount(id).catch(() => null),
-        guestsService.getStatusCounts(id).catch(() => null),
-      ]);
-      metricsMap.value[id] = {
-        totalGuests: Number(counts?.total || 0),
-        rsvp: status ? {
-          total: (status.comming || 0) + (status.maybe || 0) + (status.decline || 0) + (status.waiting || 0),
-          comming: status.comming || 0,
-          maybe: status.maybe || 0,
-          decline: status.decline || 0,
-          waiting: status.waiting || 0,
-        } : null,
-      };
-    } catch { /* skip */ }
-  });
-  await Promise.all(fetches);
+const statusOptions =['DRAFT', 'PENDING', 'ACTIVATED', 'ACHIVED'];
+const categoryOptions = ['WEDDING', 'BIRTHDAY', 'ENGAGEMENT', 'CORPORATE', 'BABY_SHOWER', 'GALLERY', 'OTHER'];
+
+const hasActiveFilters = computed(() => Object.values(filters).some(Boolean));
+
+function statusLabel(status) {
+  const key = `organizerOverview.statuses.${status || 'DRAFT'}`;
+  const label = t(key);
+  return label === key ? String(status || '').toLowerCase() : label;
 }
 
+onMounted(reload);
+
+async function reload() {
+  await load();
+  await loadMetrics();
+}
+
+async function clearFilters() {
+  resetFilters();
+  await reload();
+}
+
+/**
+ * One request for every number on this screen.
+ *
+ * <p>This used to fire two calls per event — eighty for a forty-event agency,
+ * to fill four cards. The backend now groups it (IVY-105), which also means the
+ * response rate is computed once, from a stated denominator, instead of being
+ * re-derived here.
+ */
+async function loadMetrics() {
+  try {
+    const response = await analyticsService.workspace(filters);
+    analytics.value = response?.data ?? response ?? null;
+  } catch {
+    analytics.value = null;
+  }
+}
+
+/** Per-event metrics, keyed so the table can look its row up. */
+const metricsByEvent = computed(() => {
+  const map = {};
+  (analytics.value?.events || []).forEach(m => { map[m.eventId] = m; });
+  return map;
+});
+
 const enrichedEvents = computed(() =>
-  events.value.map(ev => ({ ...ev, metrics: metricsMap.value[ev.id || ev.eventId] || null }))
+  rows.value.map(({ event, pinned }) => ({
+    ...event,
+    pinned,
+    metrics: metricsByEvent.value[event.id || event.eventId] || null
+  }))
 );
 
-const totalGuests = computed(() =>
-  Object.values(metricsMap.value).reduce((sum, m) => sum + (m.totalGuests || 0), 0)
-);
+const totalGuests = computed(() => analytics.value?.totals?.guestCount ?? 0);
+const upcomingCount = computed(() => analytics.value?.totals?.upcomingCount ?? 0);
 
-const upcomingCount = computed(() => {
-  const now = new Date(); now.setHours(0, 0, 0, 0);
-  return events.value.filter(ev => { const d = ev.date || ev.eventDate; return d && new Date(d) >= now; }).length;
-});
+/** Null means nobody has been invited yet, which is not the same as zero. */
+const avgRsvpRate = computed(() => analytics.value?.totals?.responseRate ?? null);
 
-const avgRsvpRate = computed(() => {
-  const m = Object.values(metricsMap.value).filter(x => x.rsvp && x.rsvp.total > 0);
-  if (!m.length) return 0;
-  const accepted = m.reduce((s, x) => s + x.rsvp.comming, 0);
-  const total = m.reduce((s, x) => s + x.rsvp.total, 0);
-  return total ? Math.round((accepted / total) * 100) : 0;
-});
+/** Everyone who was actually invited — the denominator the backend documents. */
+function invitedCount(ev) {
+  const m = ev.metrics;
+  if (!m) return 0;
+  return (m.confirmedCount || 0) + (m.declinedCount || 0) + (m.awaitingCount || 0);
+}
 
 function rsvpPercent(ev, key) {
-  const r = ev.metrics?.rsvp;
-  return (r && r.total) ? Math.round((r[key] / r.total) * 100) : 0;
+  const asked = invitedCount(ev);
+  return asked ? Math.round(((ev.metrics[key] || 0) / asked) * 100) : 0;
 }
 
 function onManage(ev) {
-  setEventId(ev.id || ev.eventId);
-  if (ev.categoryType) setSelectedCategory(ev.categoryType);
-  if (ev.status) setEventStatus(ev.status);
-  if (ev.invitation?.name || ev.invitationName) setInvitationName(ev.invitation?.name || ev.invitationName);
+  selectEvent(ev);
   router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
 }
 
@@ -431,6 +491,66 @@ function formatDate(iso) {
 .loading-state { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 80px 0; color: #6b7280; font-size: 14px; }
 .spinner { width: 32px; height: 32px; border: 3px solid #e5e7eb; border-top-color: #5a7a52; border-radius: 50%; animation: spin 0.7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- Filters ---- */
+.filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; margin-bottom: 24px; }
+.filter-input {
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13px;
+  color: #1a1a1a;
+}
+.filter-input:focus { outline: 2px solid #5a7a52; outline-offset: -1px; }
+.filter-date { display: flex; flex-direction: column; gap: 4px; }
+.filter-date span { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #6b7280; }
+.filter-clear {
+  height: 38px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #6b7280;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.filter-clear:hover { color: #1a1a1a; }
+.load-error { color: #b91c1c; font-size: 13px; margin: 0 0 16px; }
+
+/* ---- Pin ---- */
+.col-pin { width: 44px; }
+.cell-pin { padding-left: 16px; }
+.pin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #c4c4c4;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+.pin-btn:hover { background: #f3f4f6; color: #6b7280; }
+.pin-btn--on { color: #b8954e; }
+.pin-btn--on:hover { color: #9a7a3e; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 /* ---- Summary ---- */
 .summary-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }

@@ -444,7 +444,10 @@
       "subtitle": "Select the type of event you're planning. You can change this later.",
       "continue": "Continue",
       "next": "Next",
-      "create": "Create"
+      "create": "Create",
+      "birthdayWho": "Whose birthday is it?",
+      "birthdayAdult": "An adult's",
+      "birthdayChild": "A child's"
     },
     "eventBasics": {
       "title": "Event Basics",
@@ -1046,7 +1049,10 @@
     "upgrade": "Upgrade",
     "switchEvent": "Switch Event",
     "navigation": "Navigation",
-    "catering": "Menu"
+    "catering": "Menu",
+    "pinnedGroup": "Pinned",
+    "otherGroup": "Other",
+    "allEvents": "All events"
   },
   "admin": {
     "sidebar": {
@@ -1247,7 +1253,9 @@
     "seated": "seated",
     "unseated": "Unseated",
     "tables": "Tables",
-    "tableNum": "Table {n}"
+    "tableNum": "Table {n}",
+    "awaitingReply": "Awaiting reply",
+    "notInvited": "Not invited"
   },
   "common": {
     "edit": "Edit",
@@ -1975,7 +1983,24 @@
     "create": "Create",
     "errFirstName": "First name is required",
     "errLastName": "Last name is required",
-    "errEmail": "Email is required"
+    "errEmail": "Email is required",
+    "filtersTitle": "Filters",
+    "allStatuses": "All statuses",
+    "allTypes": "All types",
+    "dateFrom": "From",
+    "dateTo": "To",
+    "resetFilters": "Clear filters",
+    "noMatch": "No event matches these filters.",
+    "pin": "Pin",
+    "unpin": "Unpin",
+    "pinnedBadge": "Pinned",
+    "loadFailed": "Could not load events.",
+    "statuses": {
+      "DRAFT": "Draft",
+      "PENDING": "Pending",
+      "ACTIVATED": "Active",
+      "ACHIVED": "Archived"
+    }
   },
   "vendorPortal": {
     "logout": "Sign out",

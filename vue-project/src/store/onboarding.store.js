@@ -6,6 +6,10 @@ const defaultState = () => ({
   email: '',
   isEmailVerified: false,
   selectedCategory: '',
+  // The finer event type (IVY-201). Only asked where the category is
+  // ambiguous — a birthday is either an adult's or a child's, and they are
+  // two different products.
+  selectedTypeCode: '',
   eventDetails: {
     brideName: '',
     groomName: '',
@@ -28,6 +32,7 @@ export function initOnboarding() {
       onboardingStore.email = saved.email || '';
       onboardingStore.isEmailVerified = !!saved.isEmailVerified;
       onboardingStore.selectedCategory = saved.selectedCategory || '';
+      onboardingStore.selectedTypeCode = saved.selectedTypeCode || '';
       onboardingStore.invitationName = saved.invitationName || '';
       onboardingStore.eventId = saved.eventId || '';
       onboardingStore.eventDetails = saved.eventDetails || defaultState().eventDetails;
@@ -43,6 +48,7 @@ function persist() {
     email: onboardingStore.email,
     isEmailVerified: onboardingStore.isEmailVerified,
     selectedCategory: onboardingStore.selectedCategory,
+    selectedTypeCode: onboardingStore.selectedTypeCode,
     invitationName: onboardingStore.invitationName,
     eventId: onboardingStore.eventId,
     eventDetails: onboardingStore.eventDetails,
@@ -87,6 +93,11 @@ export function setEmailVerified(flag) {
 
 export function setSelectedCategory(enumValue) {
   onboardingStore.selectedCategory = enumValue || '';
+  persist();
+}
+
+export function setSelectedTypeCode(code) {
+  onboardingStore.selectedTypeCode = code || '';
   persist();
 }
 

@@ -55,8 +55,9 @@ import AuthCardTitle from "@/components/auth/AuthCardTitle.vue";
 import AuthCard from "@/components/auth/AuthCard.vue";
 import AuthBrand from "@/components/auth/AuthBrand.vue";
 import AuthInput from "@/components/auth/AuthInput.vue";
-import { onboardingStore, setEmailVerified, setEventId, getTempPassword, getTempUsername, clearTempCredentials } from "@/store/onboarding.store";
-import { verifyEmail, exchangeOAuthCode, assignRole, refreshAccessToken, getEventId, hasRole, loginWithCredentials, isAuthenticated } from "@/services/auth.service";
+import { onboardingStore, setEmailVerified, getTempPassword, clearTempCredentials } from "@/store/onboarding.store";
+import { verifyEmail, exchangeOAuthCode, assignRole, refreshAccessToken, loginWithCredentials, isAuthenticated } from "@/services/auth.service";
+import { landingAfterAuth } from "@/router/landing";
 import { syncDraftToBackend } from "@/composables/useDraftSync";
 
 const router = useRouter();
@@ -95,7 +96,6 @@ onMounted(async () => {
     }
 
     setEmailVerified(true);
-    setEventId(getEventId());
     const createdEvent = await syncDraftToBackend();
 
     // Login → dashboard, Signup → event creation flow
@@ -106,11 +106,7 @@ onMounted(async () => {
       // Event was auto-created from draft — go straight to dashboard
       await router.replace({ name: "dashboard.overview", params: { lang: lang.value } });
     } else if (intent === "login") {
-      if (hasRole("ADMIN")) {
-        await router.replace({ name: "admin.events", params: { lang: lang.value } });
-      } else {
-        await router.replace({ name: "dashboard.overview", params: { lang: lang.value } });
-      }
+      await router.replace(await landingAfterAuth(lang.value));
     } else {
       await router.replace({ name: "EventCategoryPage", params: { lang: lang.value } });
     }

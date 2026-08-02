@@ -64,8 +64,8 @@ import AuthDivider from '@/components/auth/AuthDivider.vue';
 import AuthInput from '@/components/auth/AuthInput.vue';
 import GoogleButton from '@/components/auth/GoogleButton.vue';
 import ButtonMain from '@/components/generic/ButtonMain.vue';
-import { loginWithCredentials, getEventId, hasRole } from '@/services/auth.service';
-import { setEventId } from '@/store/onboarding.store';
+import { loginWithCredentials } from '@/services/auth.service';
+import { landingAfterAuth } from '@/router/landing';
 import { syncDraftToBackend } from '@/composables/useDraftSync';
 import { getRuntimeEnv, detectDefaultEnvFromLocation, computeKeycloakBaseUrl } from '@/services/env';
 import { ApiError } from '@/services/apiError';
@@ -98,9 +98,6 @@ async function onSubmit() {
   try {
     const loginData = await loginWithCredentials(email.value.trim(), password.value);
 
-    // Always set eventId from JWT right after token is stored
-    setEventId(getEventId());
-
     if (loginData.mustChangePassword) {
       sessionStorage.setItem('temp_email', email.value.trim());
       sessionStorage.setItem('temp_password', password.value);
@@ -110,14 +107,7 @@ async function onSubmit() {
 
     await syncDraftToBackend();
 
-    const redirect = route.query.redirect;
-    if (hasRole('ADMIN')) {
-      await router.push(`/${lang.value}/admin/events`);
-    } else if (redirect) {
-      await router.push(redirect);
-    } else {
-      await router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
-    }
+    await router.push(await landingAfterAuth(lang.value, route.query.redirect));
   } catch (e) {
     if (e instanceof ApiError) {
       formError.value = e.detail || e.message;

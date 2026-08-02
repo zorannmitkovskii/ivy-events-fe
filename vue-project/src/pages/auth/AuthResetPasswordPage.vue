@@ -75,8 +75,8 @@ import AuthHeader from "@/components/auth/AuthHeader.vue";
 import AuthCardTitle from "@/components/auth/AuthCardTitle.vue";
 import AuthInput from "@/components/auth/AuthInput.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
-import { changePassword, loginWithCredentials, getEventId, hasRole } from "@/services/auth.service";
-import { setEventId } from "@/store/onboarding.store";
+import { changePassword, loginWithCredentials } from "@/services/auth.service";
+import { landingAfterAuth } from "@/router/landing";
 
 const route = useRoute();
 const router = useRouter();
@@ -123,13 +123,8 @@ async function onReset() {
 
     // Log in with new password
     await loginWithCredentials(tempEmail, password.value);
-    setEventId(getEventId());
 
-    if (hasRole('ADMIN')) {
-      await router.push(`/${lang.value}/admin/events`);
-    } else {
-      await router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
-    }
+    await router.push(await landingAfterAuth(lang.value));
   } catch (e) {
     formError.value = e?.message || "Failed to change password";
   } finally {
