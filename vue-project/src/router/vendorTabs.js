@@ -13,7 +13,14 @@ export const VENDOR_TABS = [
   { name: "vendor.packages", label: "vendorPortal.packages", capability: "PACKAGES" },
   { name: "vendor.floorPlans", label: "vendorPortal.floorPlans", capability: "FLOOR_PLANS" },
   { name: "vendor.portfolio", label: "vendorPortal.portfolio", capability: "GALLERY" },
-  { name: "vendor.calendar", label: "vendorPortal.calendar", capability: "CALENDAR" }
+  { name: "vendor.calendar", label: "vendorPortal.calendar", capability: "CALENDAR" },
+
+  // No capability: every vendor has an application, and any approved vendor may
+  // have a microsite, whatever trade they are in. Placed after the
+  // capability-gated ones so firstTabFor still lands somebody on their work
+  // rather than on a form.
+  { name: "vendor.application", label: "vendorPortal.application", capability: null },
+  { name: "vendor.microsite", label: "vendorPortal.microsite", capability: null }
 ];
 
 /** Where a vendor lands when they open the portal: their first available tab. */

@@ -107,6 +107,14 @@ const routes = [
       // PUBLIC TABLE LOOKUP (guests find their table)
       { path: "table-lookup", name: "TableLookup", component: () => import("@/pages/TableLookupPage.vue") },
 
+      // PUBLIC VENDOR MARKETPLACE (IVY-703)
+      // The canonical shape is /vendors/{category}/{slug}. Category is in the
+      // path so the URL says what the vendor does and the directory's own
+      // facets are crawlable.
+      { path: "vendors", name: "VendorDirectory", component: () => import("@/pages/VendorDirectoryPage.vue") },
+      { path: "vendors/:category", name: "VendorCategory", component: () => import("@/pages/VendorDirectoryPage.vue") },
+      { path: "vendors/:category/:slug", name: "VendorProfile", component: () => import("@/pages/VendorProfilePage.vue") },
+
       // GUEST CONTRIBUTIONS AND THE LIVE WALL (IVY-605)
       // The wall runs on a screen at the venue; contribute is the guest form.
       { path: "wall", name: "LiveWall", component: () => import("@/pages/LiveWallPage.vue") },
@@ -178,6 +186,8 @@ const routes = [
           { path: "packages", name: "vendor.packages", component: VendorPackagesPage },
           { path: "floor-plans", name: "vendor.floorPlans", component: VendorFloorPlansPage },
           { path: "portfolio", name: "vendor.portfolio", component: VendorPortfolioPage },
+          { path: "application", name: "vendor.application", component: () => import("@/pages/vendorDashboard/VendorApplicationPage.vue") },
+          { path: "microsite", name: "vendor.microsite", component: () => import("@/pages/vendorDashboard/VendorMicrositePage.vue") },
           { path: "calendar", name: "vendor.calendar", component: VendorCalendarPage },
           // The calendar: the one section every kind of vendor has, so it is
           // the only safe landing spot before the profile has loaded.
@@ -195,6 +205,7 @@ const routes = [
           { path: "packages", name: "admin.packages", component: AdminPackagesPage },
           { path: "users", name: "admin.users", component: AdminUsersPage },
           { path: "reviews", name: "admin.reviews", component: () => import("@/pages/adminDashboard/AdminReviewsPage.vue") },
+          { path: "vendor-queue", name: "admin.vendorQueue", component: () => import("@/pages/adminDashboard/AdminVendorQueuePage.vue") },
           { path: "contacts", name: "admin.contacts", component: () => import("@/pages/adminDashboard/AdminContactsPage.vue") },
           { path: "faq", name: "admin.faq", component: () => import("@/pages/adminDashboard/AdminFaqPage.vue") },
           { path: "invitation-templates", name: "admin.invitationTemplates", component: () => import("@/pages/adminDashboard/AdminInvitationTemplatesPage.vue") },

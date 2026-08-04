@@ -1836,7 +1836,9 @@
       "IMAGE": "Foto",
       "VIDEO": "Video",
       "AUDIO": "Muzikë"
-    }
+    },
+    "application": "Aplikimi",
+    "microsite": "Mikro-faqja"
   },
   "catering": {
     "title": "Menuja e restorantit",
@@ -2185,5 +2187,99 @@
     "sendNow": "Dërgo tani ({n})",
     "alreadySent": "Dërguar te {n} mysafirë. Paketa nuk mund të ndryshohet më.",
     "cancelled": "Paketa është anuluar. Ruaj përsëri për ta rikthyer."
+  },
+  "directory": {
+    "title": "Furnitorët",
+    "subtitle": "Gjej fotograf, restorant, bend ose dekorator.",
+    "searchPlaceholder": "Kërko sipas emrit…",
+    "category": "Kategoria",
+    "allCategories": "Të gjitha kategoritë",
+    "city": "Qyteti",
+    "allCities": "Të gjitha qytetet",
+    "search": "Kërko",
+    "loading": "Duke u ngarkuar…",
+    "noResults": "Asgjë nuk përputhet me këtë kërkim.",
+    "pages": "Faqet",
+    "previous": "E mëparshme",
+    "next": "Tjetra",
+    "pageOf": "Faqja {n} nga {total}"
+  },
+  "vendorProfile": {
+    "notFound": "Ky profil nuk është i disponueshëm.",
+    "details": "Detajet",
+    "website": "Faqja e internetit",
+    "reviews": "Vlerësimet",
+    "noReviews": "Ende nuk ka vlerësime.",
+    "anonymous": "Pa emër",
+    "fromReviews": "nga {n} vlerësime",
+    "stars": "{n} nga 5",
+    "verifiedByAdmin": "verifikuar manualisht",
+    "report": "Raporto"
+  },
+  "vendorApp": {
+    "title": "Profili im",
+    "subtitle": "Plotësoje dhe dërgoje për miratim.",
+    "businessName": "Emri i biznesit",
+    "whatYouDo": "Çfarë bën",
+    "choose": "Zgjidh…",
+    "start": "Fillo aplikimin",
+    "required": "e detyrueshme",
+    "save": "Ruaj",
+    "submit": "Dërgo për miratim",
+    "complete": "{n}% e plotësuar",
+    "address": "Adresa publike",
+    "changeAddress": "Adresë e re",
+    "oldAddressKeepsWorking": "Adresa e vjetër vazhdon të funksionojë dhe ridrejton te e reja.",
+    "saveAddress": "Ruaj adresën",
+    "status": {
+      "DRAFT": "Draft — ende i padërguar.",
+      "SUBMITTED": "I dërguar. Në pritje të shqyrtimit.",
+      "CHANGES_REQUESTED": "Janë kërkuar ndryshime.",
+      "APPROVED": "I miratuar. Profili është publik.",
+      "REJECTED": "I refuzuar.",
+      "SUSPENDED": "I hequr përkohësisht."
+    }
+  },
+  "vendorQueue": {
+    "title": "Aplikimet e furnitorëve",
+    "subtitle": "Më të vjetrat të parat.",
+    "empty": "Asgjë në pritje.",
+    "approve": "Mirato",
+    "note": "Shënim",
+    "requestChanges": "Kërko ndryshime",
+    "reject": "Refuzo"
+  },
+  "microsite": {
+    "title": "Mikro-faqja",
+    "subtitle": "Pamja jote mbi të njëjtin profil të miratuar.",
+    "theme": "Pamja",
+    "themes": {
+      "CLASSIC": "Klasike",
+      "GALLERY": "Galeri",
+      "STAGE": "Skenë",
+      "EDITORIAL": "Tekstuale"
+    },
+    "themeHint": "Pamjet janë kontrolluar për kontrast dhe përdorim me tastierë.",
+    "visibility": "Dukshmëria",
+    "live": "E publikuar.",
+    "notLive": "Jo e publikuar.",
+    "publish": "Publiko",
+    "unpublish": "Hiq",
+    "preview": "Shiko",
+    "domain": "Domen i vetin",
+    "yourDomain": "Domeni yt",
+    "claim": "Kërko",
+    "recordType": "Lloji",
+    "recordName": "Emri",
+    "recordValue": "Vlera",
+    "checkNow": "Kontrollo tani",
+    "release": "Lësho domenin",
+    "domainStatus": {
+      "NONE": "Asnjë domen i kërkuar.",
+      "PENDING_VERIFICATION": "Në pritje të regjistrimit TXT në DNS.",
+      "VERIFIED": "I verifikuar. Në pritje të certifikatës.",
+      "ACTIVE": "Aktiv përmes HTTPS.",
+      "FAILED": "Dështoi."
+    }
   }
 }

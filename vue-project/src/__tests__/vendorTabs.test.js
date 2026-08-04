@@ -45,4 +45,18 @@ describe("vendor tabs", () => {
   it("does not claim a capability for a route outside the portal", () => {
     expect(capabilityForRoute("dashboard.overview")).toBeNull();
   });
+
+  it("leaves the application and microsite tabs open to every vendor", () => {
+    // Both are ungated on purpose: every vendor has an application, and any
+    // approved vendor may have a microsite whatever trade they are in. Null
+    // here is what makes the route guard skip the check.
+    expect(capabilityForRoute("vendor.application")).toBeNull();
+    expect(capabilityForRoute("vendor.microsite")).toBeNull();
+  });
+
+  it("still lands a vendor on their work rather than on a form", () => {
+    // The ungated tabs sit last, so firstTabFor never picks one over a tab the
+    // vendor actually came here to use.
+    expect(firstTabFor(["CALENDAR", "GALLERY"])).toBe("vendor.portfolio");
+  });
 });

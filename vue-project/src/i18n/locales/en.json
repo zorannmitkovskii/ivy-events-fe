@@ -2090,7 +2090,9 @@
       "IMAGE": "Photo",
       "VIDEO": "Video",
       "AUDIO": "Music"
-    }
+    },
+    "application": "Application",
+    "microsite": "Microsite"
   },
   "catering": {
     "title": "The venue’s menu",
@@ -2304,5 +2306,99 @@
     "sendNow": "Send now ({n})",
     "alreadySent": "Sent to {n} guests. The package can no longer be changed.",
     "cancelled": "The package is cancelled. Save again to restore it."
+  },
+  "directory": {
+    "title": "Suppliers",
+    "subtitle": "Find a photographer, venue, band or decorator.",
+    "searchPlaceholder": "Search by name…",
+    "category": "Category",
+    "allCategories": "All categories",
+    "city": "City",
+    "allCities": "All cities",
+    "search": "Search",
+    "loading": "Loading…",
+    "noResults": "Nothing matches that search.",
+    "pages": "Pages",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {n} of {total}"
+  },
+  "vendorProfile": {
+    "notFound": "This profile is not available.",
+    "details": "Details",
+    "website": "Website",
+    "reviews": "Reviews",
+    "noReviews": "No reviews yet.",
+    "anonymous": "No name",
+    "fromReviews": "from {n} reviews",
+    "stars": "{n} out of 5",
+    "verifiedByAdmin": "verified by hand",
+    "report": "Report"
+  },
+  "vendorApp": {
+    "title": "My profile",
+    "subtitle": "Fill it in and submit for approval.",
+    "businessName": "Business name",
+    "whatYouDo": "What you do",
+    "choose": "Choose…",
+    "start": "Start an application",
+    "required": "required",
+    "save": "Save",
+    "submit": "Submit for approval",
+    "complete": "{n}% complete",
+    "address": "Public address",
+    "changeAddress": "New address",
+    "oldAddressKeepsWorking": "The old address keeps working and redirects to the new one.",
+    "saveAddress": "Save address",
+    "status": {
+      "DRAFT": "Draft — not submitted yet.",
+      "SUBMITTED": "Submitted. Waiting for review.",
+      "CHANGES_REQUESTED": "Changes requested.",
+      "APPROVED": "Approved. Your profile is public.",
+      "REJECTED": "Rejected.",
+      "SUSPENDED": "Temporarily taken down."
+    }
+  },
+  "vendorQueue": {
+    "title": "Vendor applications",
+    "subtitle": "Oldest first.",
+    "empty": "Nothing waiting.",
+    "approve": "Approve",
+    "note": "Note",
+    "requestChanges": "Request changes",
+    "reject": "Reject"
+  },
+  "microsite": {
+    "title": "Microsite",
+    "subtitle": "Your own look over the same approved profile.",
+    "theme": "Theme",
+    "themes": {
+      "CLASSIC": "Classic",
+      "GALLERY": "Gallery",
+      "STAGE": "Stage",
+      "EDITORIAL": "Editorial"
+    },
+    "themeHint": "Themes are checked for contrast and keyboard use.",
+    "visibility": "Visibility",
+    "live": "Published.",
+    "notLive": "Not published.",
+    "publish": "Publish",
+    "unpublish": "Unpublish",
+    "preview": "Preview",
+    "domain": "Custom domain",
+    "yourDomain": "Your domain",
+    "claim": "Claim",
+    "recordType": "Type",
+    "recordName": "Name",
+    "recordValue": "Value",
+    "checkNow": "Check now",
+    "release": "Release the domain",
+    "domainStatus": {
+      "NONE": "No domain claimed.",
+      "PENDING_VERIFICATION": "Waiting for the TXT record in DNS.",
+      "VERIFIED": "Verified. Waiting for a certificate.",
+      "ACTIVE": "Live over HTTPS.",
+      "FAILED": "Failed."
+    }
   }
 }

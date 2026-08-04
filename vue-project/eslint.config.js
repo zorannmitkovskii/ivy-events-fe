@@ -20,6 +20,18 @@ export default defineConfig([
     },
   },
 
+  {
+    // Build-time scripts run in Node, not a browser — `process` and friends are
+    // real there. Scoped to scripts/ so app code still cannot reach for them.
+    name: 'app/build-scripts',
+    files: ['scripts/**/*.{js,mjs}'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+
   js.configs.recommended,
   ...pluginVue.configs['flat/essential'],
   ...pluginOxlint.configs['flat/recommended'],
