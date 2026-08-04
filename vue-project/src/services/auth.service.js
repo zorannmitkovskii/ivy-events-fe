@@ -64,6 +64,21 @@ export function logout() {
   localStorage.removeItem("id_token");
   localStorage.removeItem("onboarding_state_v1");
   sessionStorage.clear();
+
+  // The check-in device holds a guest list and unsent arrivals in IndexedDB
+  // (IVY-602). A venue tablet handed to the next shift must not still be
+  // carrying the last event's names. Fire-and-forget: signing out cannot be
+  // made to wait on a database that will not open, and a failure here must not
+  // leave somebody signed in.
+  clearCheckInDevice();
+}
+
+function clearCheckInDevice() {
+  import("@/services/checkinQueue")
+    .then(({ checkinQueue }) => checkinQueue.clearAll())
+    // Nothing to clear, or no IndexedDB in this browser. Either way, signing
+    // out has already happened and there is nothing to report.
+    .catch(() => null);
 }
 
 /**

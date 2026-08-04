@@ -124,6 +124,10 @@ const allNavItems = [
   { key: "budget", path: "budget", labelKey: "sidebar.budget", icon: Icons.card },
   { key: "tables", path: "tables", labelKey: "sidebar.seating", icon: Icons.grid2 },
   { key: "catering", path: "catering", labelKey: "sidebar.catering", icon: Icons.package },
+  { key: "check-in", path: "check-in", labelKey: "sidebar.checkIn", icon: Icons.check },
+  { key: "announcements", path: "announcements", labelKey: "sidebar.announcements", icon: Icons.mail },
+  { key: "contributions", path: "contributions", labelKey: "sidebar.contributions", icon: Icons.image },
+  { key: "post-event", path: "post-event", labelKey: "sidebar.postEvent", icon: Icons.mail },
   { key: "gallery", path: "gallery", labelKey: "sidebar.gallery", icon: Icons.image },
   { key: "links", path: "invitation-links", labelKey: "sidebar.invitationLinks", icon: Icons.mail }
 ];

@@ -107,6 +107,16 @@ const routes = [
       // PUBLIC TABLE LOOKUP (guests find their table)
       { path: "table-lookup", name: "TableLookup", component: () => import("@/pages/TableLookupPage.vue") },
 
+      // GUEST CONTRIBUTIONS AND THE LIVE WALL (IVY-605)
+      // The wall runs on a screen at the venue; contribute is the guest form.
+      { path: "wall", name: "LiveWall", component: () => import("@/pages/LiveWallPage.vue") },
+      { path: "contribute", name: "Contribute", component: () => import("@/pages/ContributePage.vue") },
+
+      // GUEST DAY-OF HUB (IVY-603) — opened with an invitation token, ?t=...
+      // The token stays in the query only long enough to be read; the page
+      // sends it in a POST body, never in a URL the server logs.
+      { path: "hub", name: "GuestHub", component: () => import("@/pages/GuestHubPage.vue") },
+
       // INVITATION TEMPLATES (unified)
       { path: "invitations/:design", name: "weddingInvitation", component: () => import("@/pages/invitaitons/wedding/UnifiedWeddingInvitation.vue") },
       { path: "invitations/:design/private", name: "weddingInvitationPrivate", component: () => import("@/pages/invitaitons/wedding/UnifiedWeddingInvitation.vue") },
@@ -138,6 +148,10 @@ const routes = [
           { path: "events/tasks", name: "dashboard.tasks", component: TasksPage },
           { path: "events/tables", name: "dashboard.tables", component: TablesSeatingPage },
           { path: "events/catering", name: "dashboard.catering", component: () => import("@/pages/dashboard/CateringPage.vue") },
+          { path: "events/check-in", name: "dashboard.check-in", component: () => import("@/pages/dashboard/CheckInPage.vue") },
+          { path: "events/announcements", name: "dashboard.announcements", component: () => import("@/pages/dashboard/AnnouncementsPage.vue") },
+          { path: "events/contributions", name: "dashboard.contributions", component: () => import("@/pages/dashboard/ContributionsPage.vue") },
+          { path: "events/post-event", name: "dashboard.post-event", component: () => import("@/pages/dashboard/PostEventPage.vue") },
           { path: "events/agenda", name: "dashboard.agenda", component: AgendaPage },
           { path: "events/budget", name: "dashboard.budget", component: BudgetPage },
           { path: "events/our-story", name: "dashboard.our-story", component: OurStoryPage },

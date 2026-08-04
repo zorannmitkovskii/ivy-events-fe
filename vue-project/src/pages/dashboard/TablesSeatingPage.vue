@@ -6,7 +6,24 @@
       <p class="dash-page-subtitle">{{ t("tables.subtitle") }}</p>
     </div>
 
-    <TablesLayout>
+    <div class="view-switch" role="tablist" :aria-label="t('tables.title')">
+      <button
+        role="tab"
+        :aria-selected="view === 'list'"
+        :class="{ on: view === 'list' }"
+        @click="view = 'list'"
+      >{{ t("tables.listView") }}</button>
+      <button
+        role="tab"
+        :aria-selected="view === 'plan'"
+        :class="{ on: view === 'plan' }"
+        @click="view = 'plan'"
+      >{{ t("tables.planView") }}</button>
+    </div>
+
+    <SeatingEditor v-if="view === 'plan' && eventId" :event-id="eventId" />
+
+    <TablesLayout v-else>
       <template #actions>
         <ButtonMain variant="main" @click="tableModalOpen = true">
           {{ t("tables.addTable") }}
@@ -47,6 +64,7 @@
     </TablesLayout>
 
     <AddTableModal
+      v-if="view === 'list'"
       :open="tableModalOpen"
       :nextNumber="nextTableNumber"
       @close="tableModalOpen = false"
@@ -54,6 +72,7 @@
     />
 
     <AddGuestModal
+      v-if="view === 'list'"
       :open="guestModalOpen"
       :guest="editingGuest"
       @close="closeGuestModal"
@@ -75,8 +94,15 @@ import TableListCard from "@/components/dashboard/tables/TableListCard.vue";
 import GuestAssignmentCard from "@/components/dashboard/tables/GuestAssignmentCard.vue";
 import AddGuestModal from "@/components/dashboard/tables/AddGuestModal.vue";
 import AddTableModal from "@/components/dashboard/tables/AddTableModal.vue";
+import SeatingEditor from "@/components/dashboard/tables/SeatingEditor.vue";
 
 const { t } = useI18n();
+
+/** The list view is what people use today and works; the plan is the new way
+ *  to do the same thing. A tab rather than a replacement. */
+const view = ref("list");
+const eventId = computed(() => onboardingStore.eventId || "");
+
 const guestModalOpen = ref(false);
 const tableModalOpen = ref(false);
 const editingGuest = ref(null);
@@ -163,3 +189,13 @@ async function sendNotification() {
   }
 }
 </script>
+
+<style scoped>
+.view-switch { display: flex; gap: 6px; margin-bottom: 16px; }
+.view-switch button {
+  padding: 7px 16px; border: 1px solid #e5e7eb; border-radius: 20px;
+  background: #fff; color: #6b7280; font-family: inherit; font-size: 13px;
+  font-weight: 600; cursor: pointer;
+}
+.view-switch button.on { background: #5a7a52; border-color: #5a7a52; color: #fff; }
+</style>
