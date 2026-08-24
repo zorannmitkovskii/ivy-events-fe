@@ -1,9 +1,6 @@
 <template>
   <div class="dash-page">
-    <div class="dash-page-header">
-      <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
-      <h1 class="dash-page-title">{{ t('tables.tasks.title') }}</h1>
-    </div>
+    <PageHeader :title="t('tables.tasks.title')" />
 
     <DashboardToolbar>
       <template #actions>
@@ -35,6 +32,7 @@
 </template>
 
 <script setup>
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { ref, watch, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';

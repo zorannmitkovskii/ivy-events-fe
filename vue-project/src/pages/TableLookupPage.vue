@@ -109,7 +109,7 @@ onMounted(async () => {
   justify-content: center;
   padding: 48px 16px;
   background: linear-gradient(135deg, #f8f6f1 0%, #ede9e0 100%);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-ui);
 }
 
 .lookup-card {
@@ -127,7 +127,7 @@ onMounted(async () => {
 }
 
 .lookup-icon {
-  color: #c8a24d;
+  color: var(--brand-gold);
   margin-bottom: 16px;
 }
 
@@ -140,7 +140,7 @@ onMounted(async () => {
 
 .lookup-subtitle {
   font-size: 15px;
-  color: #6b7280;
+  color: var(--ink-3);
   margin: 0;
 }
 
@@ -155,14 +155,14 @@ onMounted(async () => {
   left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  color: #9ca3af;
+  color: var(--ink-4);
   pointer-events: none;
 }
 
 .search-input {
   width: 100%;
   padding: 14px 44px 14px 44px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--line);
   border-radius: 12px;
   font-size: 16px;
   color: #1a1a1a;
@@ -172,13 +172,13 @@ onMounted(async () => {
 }
 
 .search-input:focus {
-  border-color: #c8a24d;
+  border-color: var(--brand-gold);
   box-shadow: 0 0 0 3px rgba(200, 162, 77, 0.15);
   background: #fff;
 }
 
 .search-input::placeholder {
-  color: #9ca3af;
+  color: var(--ink-4);
 }
 
 .clear-btn {
@@ -188,7 +188,7 @@ onMounted(async () => {
   transform: translateY(-50%);
   border: none;
   background: none;
-  color: #9ca3af;
+  color: var(--ink-4);
   cursor: pointer;
   padding: 4px;
   border-radius: 50%;
@@ -199,8 +199,8 @@ onMounted(async () => {
 }
 
 .clear-btn:hover {
-  color: #374151;
-  background: #f3f4f6;
+  color: var(--ink-2);
+  background: var(--sunken);
 }
 
 /* States */
@@ -211,7 +211,7 @@ onMounted(async () => {
   gap: 10px;
   padding: 24px 0;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--ink-3);
 }
 
 .state-msg--error {
@@ -221,8 +221,8 @@ onMounted(async () => {
 .spinner {
   width: 20px;
   height: 20px;
-  border: 2.5px solid #e5e7eb;
-  border-top-color: #c8a24d;
+  border: 2.5px solid var(--line);
+  border-top-color: var(--brand-gold);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }
@@ -242,7 +242,7 @@ onMounted(async () => {
   text-align: center;
   padding: 24px 0;
   font-size: 14px;
-  color: #9ca3af;
+  color: var(--ink-4);
 }
 
 .result-card {
@@ -270,7 +270,7 @@ onMounted(async () => {
 .table-badge {
   display: inline-block;
   padding: 6px 16px;
-  background: linear-gradient(135deg, #c8a24d, #b8922d);
+  background: linear-gradient(135deg, var(--brand-gold), #b8922d);
   color: #fff;
   font-size: 13px;
   font-weight: 700;

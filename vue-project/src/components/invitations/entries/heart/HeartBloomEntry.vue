@@ -109,7 +109,7 @@ defineExpose({ enterSite });
   transform: scale(0.9);
 }
 .bloom-names {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 36px;
   color: #1a1a1a;
   margin: 0 0 8px;
@@ -127,7 +127,7 @@ defineExpose({ enterSite });
   animation: float-hint 6s ease-in-out infinite;
 }
 .bloom-tap-text {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 18px;
   font-style: italic;
   color: #666;

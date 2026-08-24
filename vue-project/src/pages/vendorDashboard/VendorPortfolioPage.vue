@@ -1,11 +1,6 @@
 <template>
   <section>
-    <header class="page-head">
-      <div>
-        <h1>{{ t('vendorPortal.portfolio') }}</h1>
-        <p class="subtitle">{{ t('vendorPortal.portfolioSubtitle') }}</p>
-      </div>
-    </header>
+    <PageHeader :title="t('vendorPortal.portfolio')" :subtitle="t('vendorPortal.portfolioSubtitle')" />
 
     <p v-if="error" class="error">{{ error }}</p>
 
@@ -51,6 +46,7 @@
 </template>
 
 <script setup>
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { computed, onMounted, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useVendorProfile } from "@/composables/useVendorProfile";
@@ -134,9 +130,6 @@ function message(e) {
 </script>
 
 <style scoped>
-.page-head {
-  margin-bottom: 1.25rem;
-}
 
 h1 {
   font-size: 1.2rem;

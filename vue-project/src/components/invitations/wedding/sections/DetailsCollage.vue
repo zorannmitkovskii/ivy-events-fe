@@ -92,7 +92,7 @@ defineProps({
   font-family: var(--font-heading, inherit);
   font-size: 36px;
   font-weight: 400;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   margin: 0 0 16px;
 }
 
@@ -171,7 +171,7 @@ defineProps({
   font-family: var(--font-heading, inherit);
   font-size: 24px;
   font-weight: 400;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   margin: 0 0 8px;
 }
 
@@ -209,6 +209,6 @@ defineProps({
 }
 
 .detail-map-link--stone:hover {
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
 }
 </style>

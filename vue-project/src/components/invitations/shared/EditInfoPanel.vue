@@ -136,7 +136,7 @@ watch(draft, () => { emitChange(); }, { deep: true });
 .field label {
   font-size: 12px;
   font-weight: 700;
-  color: var(--neutral-500, #6b7280);
+  color: var(--neutral-500, var(--ink-3));
   display: block;
   margin-bottom: 6px;
   letter-spacing: 0.03em;
@@ -145,26 +145,26 @@ watch(draft, () => { emitChange(); }, { deep: true });
 
 .input {
   width: 100%;
-  border: 2px solid var(--neutral-300, #d1d5db);
+  border: 2px solid var(--neutral-300, var(--line-2));
   background: var(--bg-main, #fff);
   border-radius: 10px;
   padding: 10px 12px;
   font-size: 14px;
-  color: var(--brand-main, #1f2937);
+  color: var(--brand-main, var(--ink));
   outline: none;
   transition: border-color 0.2s ease;
   font-family: inherit;
 }
 
 .input:focus {
-  border-color: var(--brand-gold, #c8a24d);
+  border-color: var(--brand-gold, var(--brand-gold));
 }
 
 .location-readonly {
   display: flex;
   align-items: center;
   gap: 8px;
-  border: 2px solid var(--neutral-300, #d1d5db);
+  border: 2px solid var(--neutral-300, var(--line-2));
   border-radius: 10px;
   padding: 10px 12px;
   background: var(--bg-main, #fff);
@@ -173,7 +173,7 @@ watch(draft, () => { emitChange(); }, { deep: true });
 .location-text {
   flex: 1;
   font-size: 14px;
-  color: var(--brand-main, #1f2937);
+  color: var(--brand-main, var(--ink));
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -184,7 +184,7 @@ watch(draft, () => { emitChange(); }, { deep: true });
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--neutral-400, #9ca3af);
+  color: var(--neutral-400, var(--ink-4));
   padding: 2px;
   border-radius: 4px;
   display: flex;
@@ -194,6 +194,6 @@ watch(draft, () => { emitChange(); }, { deep: true });
 }
 
 .edit-location-btn:hover {
-  color: var(--brand-gold, #c8a24d);
+  color: var(--brand-gold, var(--brand-gold));
 }
 </style>

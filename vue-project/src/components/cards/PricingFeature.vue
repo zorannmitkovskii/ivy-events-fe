@@ -1,7 +1,7 @@
 <template>
-  <li class="feature" :class="{ 'feature--disabled': !included }">
+  <li class="feature" :class="{ 'feature--disabled': !isIncluded }">
     <span class="feature__icon" aria-hidden="true">
-      {{ included ? "✓" : "✕" }}
+      {{ isIncluded ? "✓" : "✕" }}
     </span>
     <span class="feature__text">
       <slot />
@@ -10,46 +10,57 @@
 </template>
 
 <script setup>
-defineProps({
-  included: { type: Boolean, default: true }
+import { computed } from "vue";
+
+const props = defineProps({
+  /**
+   * Only an explicit `false` crosses a line out.
+   *
+   * <p>A prop default covers `undefined` and not `null`, and the API's
+   * `included` is nullable — so a feature whose flag was never set arrived as
+   * null, read as falsy, and was struck through as though the plan did not
+   * include it. The column's own default is TRUE, so null meant the opposite of
+   * what the page showed. Crossing something out is a claim; it should take
+   * somebody actually saying so.
+   */
+  included: { type: [Boolean, Object], default: true }
 });
+
+const isIncluded = computed(() => props.included !== false);
 </script>
 
 <style scoped>
+/*
+  The redesign lists features flush left with a bare tick — no pill behind it,
+  nothing centred. Centring is what made the old list read as a poster rather
+  than something to scan down; the design's price cards are read line by line.
+*/
 .feature {
   display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin: 0 0 12px;
-  font-size: 14px;
-  color: var(--brand-main);
+  align-items: flex-start;
+  gap: 9px;
+  margin: 0;
+  padding: 9px 0;
+  border-bottom: 1px solid #edf0ed;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  line-height: 1.7;
+  color: var(--ink);
 }
 
 .feature__icon {
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 12px;
-  font-weight: 800;
-
-  background: rgba(191, 210, 164, 0.65); /* sage */
-  color: var(--brand-main);
-}
-
-.feature--disabled {
-  color: rgba(255, 255, 255, 0.0);
+  flex: none;
+  color: #78966d;
+  font-weight: 700;
 }
 
 .feature--disabled .feature__text {
-  color: rgba(51, 67, 56, 0.55);
+  color: var(--ink-4);
+  text-decoration: line-through;
+  text-decoration-color: var(--line-2);
 }
 
 .feature--disabled .feature__icon {
-  background: rgba(51, 67, 56, 0.10);
-  color: rgba(51, 67, 56, 0.55);
+  color: var(--ink-4);
 }
 </style>

@@ -77,7 +77,7 @@ function onChange(e) {
   border-radius: 9px;
   padding: 7px 12px;
   font-size: 12.5px;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   color: var(--dash-ink);
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;

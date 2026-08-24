@@ -45,7 +45,7 @@ const cssVars = computed(() => ({
   font-family: var(--font-heading, var(--st-heading-font));
   font-size: 40px;
   font-weight: 400;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   margin: 0 0 16px;
 }
 
@@ -80,8 +80,8 @@ const cssVars = computed(() => ({
 }
 
 .event-row:not(:last-child) {
-  border-bottom: 1px solid var(--border-color, #e5e7eb);
-  border-bottom-color: color-mix(in srgb, var(--border-color, #e5e7eb) 25%, transparent);
+  border-bottom: 1px solid var(--border-color, var(--line));
+  border-bottom-color: color-mix(in srgb, var(--border-color, var(--line)) 25%, transparent);
 }
 
 .time-cell,
@@ -94,7 +94,7 @@ const cssVars = computed(() => ({
   font-family: var(--font-heading, var(--st-heading-font));
   font-size: 15px;
   font-weight: 500;
-  color: var(--theme-text-muted, #6b7280);
+  color: var(--theme-text-muted, var(--ink-3));
   white-space: nowrap;
   width: 1%;
   letter-spacing: 0.05em;
@@ -104,7 +104,7 @@ const cssVars = computed(() => ({
   font-family: var(--font-body, var(--st-body-font));
   font-size: 16px;
   font-weight: 500;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
 }
 
 @container (min-width: 768px) {

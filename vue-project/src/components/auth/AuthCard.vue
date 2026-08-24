@@ -1,40 +1,29 @@
 <template>
-  <section class="auth-card">
-    <div class="auth-card__body">
-      <slot />
-    </div>
-    <div v-if="$slots.footer" class="auth-card__footer">
-      <slot name="footer" />
-    </div>
-  </section>
+  <!--
+    Not a card any more. The redesign puts the auth form straight onto the
+    paper of the right-hand column — no white panel, no gold top rule, no
+    shadow — so this component is now only the grouping the pages already
+    expect plus the footer line under the form.
+  -->
+  <div class="auth-body">
+    <slot />
+  </div>
+  <p v-if="$slots.footer" class="authalt">
+    <slot name="footer" />
+  </p>
 </template>
 
 <script setup></script>
 
 <style scoped>
-.auth-card {
-  background: var(--bg-white);
-  border-radius: 14px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
-  border-top: 4px solid var(--brand-gold);
-  overflow: hidden;
-}
-.auth-card__body {
-  padding: 36px 36px 28px;
-}
-.auth-card__footer {
-  background: rgba(247, 245, 240, 0.5);
-  padding: 16px 36px;
-  border-top: 1px solid rgba(231, 231, 231, 0.5);
-  text-align: center;
+.auth-body {
+  display: contents;
 }
 
-@media (max-width: 480px) {
-  .auth-card__body {
-    padding: 28px 20px 22px;
-  }
-  .auth-card__footer {
-    padding: 14px 20px;
-  }
+.authalt {
+  margin-top: 26px;
+  text-align: center;
+  font: 13px/1.7 var(--font-display);
+  color: var(--ink-3);
 }
 </style>

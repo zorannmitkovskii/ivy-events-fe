@@ -53,7 +53,7 @@ const cssVars = computed(() => ({
   font-family: var(--sg-heading-font);
   font-size: 40px;
   font-weight: 400;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   margin: 0 0 16px;
 }
 
@@ -86,14 +86,14 @@ const cssVars = computed(() => ({
 }
 
 .card-image--empty {
-  background: #f3f4f6;
+  background: var(--sunken);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .card-image-placeholder {
-  color: #d1d5db;
+  color: var(--line-2);
 }
 
 .card-image img {
@@ -111,7 +111,7 @@ const cssVars = computed(() => ({
 .card-date {
   font-family: var(--sg-body-font);
   font-size: 13px;
-  color: var(--theme-text-muted, #6b7280);
+  color: var(--theme-text-muted, var(--ink-3));
   margin: 0 0 8px;
 }
 
@@ -119,14 +119,14 @@ const cssVars = computed(() => ({
   font-family: var(--sg-heading-font);
   font-size: 22px;
   font-weight: 500;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   margin: 0 0 8px;
 }
 
 .card-description {
   font-family: var(--sg-body-font);
   font-size: 14px;
-  color: var(--theme-text-muted, #4b5563);
+  color: var(--theme-text-muted, var(--ink-2));
   margin: 0;
   line-height: 1.6;
 }

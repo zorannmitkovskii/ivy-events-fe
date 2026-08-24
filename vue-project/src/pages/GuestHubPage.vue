@@ -254,13 +254,13 @@ const cachedWhen = computed(() => {
 
 .agenda { list-style: none; margin: 0; padding: 0; }
 .agenda li { display: grid; grid-template-columns: 64px 1fr; gap: 4px 10px; padding: 8px 0; border-bottom: 1px solid #f0eee8; }
-.agenda .time { font-variant-numeric: tabular-nums; color: #5a7a52; font-weight: 600; }
+.agenda .time { font-variant-numeric: tabular-nums; color: var(--brand); font-weight: 600; }
 .agenda .where { grid-column: 2; font-size: 13px; color: #8a8a8a; }
 
 .place { padding: 10px 0; }
 .place-name { margin: 0; font-weight: 600; }
 .place-address, .place-notes { margin: 4px 0 0; font-size: 14px; color: #4a4a4a; }
-.map-link { display: inline-block; margin-top: 8px; font-size: 14px; color: #5a7a52; }
+.map-link { display: inline-block; margin-top: 8px; font-size: 14px; color: var(--brand); }
 
 .contacts { list-style: none; margin: 0; padding: 0; }
 .contacts li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0eee8; }

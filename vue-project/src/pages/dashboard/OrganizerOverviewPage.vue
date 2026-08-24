@@ -3,7 +3,7 @@
     <!-- Top bar -->
     <header class="org-topbar">
       <div class="topbar-brand">
-        <img src="/logoInv.svg" alt="Ivy Events" class="topbar-logo" />
+        <span class="ivy-logo ivy-logo--inverse topbar-logo" role="img" aria-label="Ivy Events"></span>
       </div>
       <div class="topbar-actions">
         <button class="tb-btn tb-upgrade">
@@ -18,25 +18,30 @@
     </header>
 
     <main class="org-content">
-      <header class="page-header">
-        <div>
-          <h1 class="page-title">{{ t('organizerOverview.title') }}</h1>
-          <p class="page-subtitle">{{ t('organizerOverview.subtitle') }}</p>
-        </div>
-        <div class="header-btns">
+      <PageHeader :title="t('organizerOverview.title')" :subtitle="t('organizerOverview.subtitle')">
+        <template #actions>
+          <div class="header-btns">
           <button v-if="canManageUsers" class="btn-secondary" @click="openUserDialog">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-            {{ t('organizerOverview.addUser') }}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          {{ t('organizerOverview.addUser') }}
           </button>
           <button class="btn-primary" @click="onCreateEvent">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            {{ t('organizerOverview.createNew') }}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          {{ t('organizerOverview.createNew') }}
           </button>
-        </div>
-      </header>
+          </div>
+        </template>
+      </PageHeader>
 
       <!-- Filters -->
       <section class="filters" :aria-label="t('organizerOverview.filtersTitle')">
+        <input
+          v-model="search"
+          type="search"
+          class="filter-input filter-search"
+          :placeholder="t('organizerOverview.searchPlaceholder')"
+          :aria-label="t('organizerOverview.searchPlaceholder')"
+        />
         <select v-model="filters.status" class="filter-input" @change="reload">
           <option value="">{{ t('organizerOverview.allStatuses') }}</option>
           <option v-for="s in statusOptions" :key="s" :value="s">{{ statusLabel(s) }}</option>
@@ -79,61 +84,63 @@
           <div class="summary-card"><span class="summary-value">{{ avgRsvpRate === null ? '—' : avgRsvpRate + '%' }}</span><span class="summary-label">{{ t('organizerOverview.rsvpRate') }}</span></div>
         </div>
 
-        <!-- Events table -->
-        <div class="table-wrap">
-          <table class="events-table">
-            <thead>
-              <tr>
-                <th class="col-pin"><span class="sr-only">{{ t('organizerOverview.pinnedBadge') }}</span></th>
-                <th>{{ t('organizerOverview.colEvent') }}</th>
-                <th>{{ t('organizerOverview.colDate') }}</th>
-                <th>{{ t('organizerOverview.colStatus') }}</th>
-                <th>{{ t('organizerOverview.colGuests') }}</th>
-                <th>{{ t('organizerOverview.colRsvp') }}</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="ev in enrichedEvents" :key="ev.id" class="event-row" @click="onManage(ev)">
-                <td class="cell-pin">
-                  <button
-                    class="pin-btn"
-                    :class="{ 'pin-btn--on': ev.pinned }"
-                    :aria-pressed="ev.pinned"
-                    :title="ev.pinned ? t('organizerOverview.unpin') : t('organizerOverview.pin')"
-                    @click.stop="togglePin(ev.id)"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" :fill="ev.pinned ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
-                  </button>
-                </td>
-                <td class="cell-event">
-                  <span class="ev-name">{{ ev.name || t('organizerOverview.untitled') }}</span>
-                  <span class="ev-category">{{ formatCategory(ev.categoryType) }}</span>
-                </td>
-                <td class="cell-date">{{ formatDate(ev.date || ev.eventDate) }}</td>
-                <td><span class="status-pill" :class="'pill--' + (ev.status || 'draft').toLowerCase()">{{ statusLabel(ev.status) }}</span></td>
-                <td class="cell-guests"><span class="guests-num">{{ ev.metrics?.guestCount ?? '—' }}</span></td>
-                <td class="cell-rsvp">
-                  <div v-if="ev.metrics && invitedCount(ev)" class="rsvp-bar-wrap">
-                    <div class="rsvp-bar">
-                      <div class="rsvp-seg rsvp-accepted" :style="{ width: rsvpPercent(ev, 'confirmedCount') + '%' }"></div>
-                      <div class="rsvp-seg rsvp-maybe" :style="{ width: rsvpPercent(ev, 'awaitingCount') + '%' }"></div>
-                      <div class="rsvp-seg rsvp-declined" :style="{ width: rsvpPercent(ev, 'declinedCount') + '%' }"></div>
-                    </div>
-                    <span class="rsvp-nums">{{ ev.metrics.confirmedCount }}/{{ invitedCount(ev) }}</span>
-                  </div>
-                  <span v-else class="rsvp-empty">—</span>
-                </td>
-                <td class="cell-action">
-                  <button class="btn-manage" @click.stop="onManage(ev)">
-                    {{ t('organizerOverview.manage') }}
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <!--
+          Grouped rather than one flat list. An agency's question is never "show
+          me everything" — it is "what needs me today", and a date-sorted table
+          answers that only by making somebody read it. The sections are the
+          answer; the filters below are for when they want the table back.
+        -->
+        <section v-if="needsAttention.length" class="ev-group ev-group--urgent">
+          <h2 class="ev-group-title">
+            {{ t('organizerOverview.needsAttention') }}
+            <span class="ev-group-count">{{ needsAttention.length }}</span>
+          </h2>
+          <div class="ev-grid">
+            <EventCard
+              v-for="ev in needsAttention" :key="ev.id" :event="ev" urgent
+              @open="onManage(ev)" @pin="togglePin(ev.id)"
+            />
+          </div>
+        </section>
+
+        <section v-if="pinnedGroup.length" class="ev-group">
+          <h2 class="ev-group-title">{{ t('organizerOverview.pinnedSection') }}</h2>
+          <div class="ev-grid">
+            <EventCard
+              v-for="ev in pinnedGroup" :key="ev.id" :event="ev"
+              @open="onManage(ev)" @pin="togglePin(ev.id)"
+            />
+          </div>
+        </section>
+
+        <section v-if="upcomingGroup.length" class="ev-group">
+          <h2 class="ev-group-title">{{ t('organizerOverview.upcomingSection') }}</h2>
+          <div class="ev-grid">
+            <EventCard
+              v-for="ev in upcomingGroup" :key="ev.id" :event="ev"
+              @open="onManage(ev)" @pin="togglePin(ev.id)"
+            />
+          </div>
+        </section>
+
+        <p v-if=!visibleCount class=empty-state>
+          {{ t('organizerOverview.noneMatch') }}
+          <button class="filter-clear" @click="clearSearchAndFilters">
+            {{ t('organizerOverview.clearFilters') }}
+          </button>
+        </p>
+
+        <!-- Compact: a finished event is worth finding, not worth the space of
+             one that still needs work. -->
+        <section v-if="completedGroup.length" class="ev-group">
+          <h2 class="ev-group-title">{{ t('organizerOverview.completedSection') }}</h2>
+          <div class="ev-grid ev-grid--compact">
+            <EventCard
+              v-for="ev in completedGroup" :key="ev.id" :event="ev" compact
+              @open="onManage(ev)" @pin="togglePin(ev.id)"
+            />
+          </div>
+        </section>
       </template>
 
       <!-- Nothing matched the filters — different from having no events at all,
@@ -197,9 +204,11 @@
 </template>
 
 <script setup>
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import EventCard from "@/components/dashboard/organizer/EventCard.vue";
 import { analyticsService } from '@/services/analytics.service';
 import { createAdminUser } from '@/services/userService';
 import { hasRole, logout } from '@/services/auth.service';
@@ -227,7 +236,15 @@ const analytics = ref(null);
 const statusOptions =['DRAFT', 'PENDING', 'ACTIVATED', 'ACHIVED'];
 const categoryOptions = ['WEDDING', 'BIRTHDAY', 'ENGAGEMENT', 'CORPORATE', 'BABY_SHOWER', 'GALLERY', 'OTHER'];
 
-const hasActiveFilters = computed(() => Object.values(filters).some(Boolean));
+const hasActiveFilters = computed(() =>
+  Object.values(filters).some(Boolean) || search.value.trim().length > 0);
+
+/** The one button clears both. Two ways to hide events and one way to stop is
+ *  how somebody ends up staring at an empty page. */
+function clearSearchAndFilters() {
+  search.value = '';
+  clearFilters();
+}
 
 function statusLabel(status) {
   const key = `organizerOverview.statuses.${status || 'DRAFT'}`;
@@ -296,6 +313,74 @@ function rsvpPercent(ev, key) {
   const asked = invitedCount(ev);
   return asked ? Math.round(((ev.metrics[key] || 0) / asked) * 100) : 0;
 }
+
+/** Typed locally. The workspace call already returned this person's events; a
+ *  round trip per keystroke to re-filter a list that is already in memory buys
+ *  nothing and makes the field feel slow. */
+const search = ref("");
+
+const searched = computed(() => {
+  const term = search.value.trim().toLowerCase();
+  if (!term) return enrichedEvents.value;
+  return enrichedEvents.value.filter((ev) =>
+    [ev.name, ev.location?.name, ev.location?.city]
+      .filter(Boolean)
+      .some((field) => String(field).toLowerCase().includes(term)));
+});
+
+/** Whole days from midnight, so "this week" does not shift with the clock. */
+function daysUntilEvent(ev) {
+  const raw = ev.date || ev.eventDate;
+  if (!raw) return null;
+  const day = new Date(raw);
+  day.setHours(0, 0, 0, 0);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return Math.round((day - today) / 86400000);
+}
+
+const isDone = (ev) => {
+  const days = daysUntilEvent(ev);
+  return String(ev.status || "").toUpperCase() === "COMPLETED" || (days !== null && days < 0);
+};
+
+/**
+ * The only section that earns its place at the top: something is overdue, or
+ * the event is close enough that a missing answer is now a problem.
+ *
+ * <p>Deliberately narrow. A "needs attention" list that includes everything is
+ * a list nobody reads twice.
+ */
+const needsAttention = computed(() => searched.value.filter((ev) => {
+  if (isDone(ev)) return false;
+  const days = daysUntilEvent(ev);
+  const overdue = ev.metrics?.overdueTaskCount || 0;
+  const invited = invitedCount(ev);
+  const awaiting = ev.metrics?.awaitingCount || 0;
+  const soonAndUnanswered = days !== null && days <= 14 && invited > 0 && awaiting > 0;
+  return overdue > 0 || soonAndUnanswered;
+}));
+
+const attentionIds = computed(() => new Set(needsAttention.value.map((ev) => ev.id)));
+
+// Each event appears in exactly one section. Repeating a card lower down makes
+// the page look longer than the work actually is.
+const pinnedGroup = computed(() =>
+  searched.value.filter((ev) => ev.pinned && !attentionIds.value.has(ev.id) && !isDone(ev)));
+
+const upcomingGroup = computed(() =>
+  searched.value
+    .filter((ev) => !ev.pinned && !attentionIds.value.has(ev.id) && !isDone(ev))
+    .sort((a, b) => (daysUntilEvent(a) ?? 1e9) - (daysUntilEvent(b) ?? 1e9)));
+
+const completedGroup = computed(() =>
+  searched.value
+    .filter((ev) => isDone(ev) && !attentionIds.value.has(ev.id))
+    .sort((a, b) => (daysUntilEvent(b) ?? -1e9) - (daysUntilEvent(a) ?? -1e9)));
+
+const visibleCount = computed(() =>
+  needsAttention.value.length + pinnedGroup.value.length
+  + upcomingGroup.value.length + completedGroup.value.length);
 
 function onManage(ev) {
   selectEvent(ev);
@@ -385,13 +470,15 @@ function formatDate(iso) {
   padding: 0 32px;
   height: 56px;
   background: #fff;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--line);
   position: sticky;
   top: 0;
   z-index: 50;
 }
 
-.topbar-logo { height: 28px; }
+.topbar-logo {
+  --logo-h: 28px;
+}
 
 .topbar-actions { display: flex; gap: 8px; align-items: center; }
 
@@ -417,11 +504,11 @@ function formatDate(iso) {
 
 .tb-logout {
   background: transparent;
-  color: #6b7280;
-  border: 1.5px solid #e5e7eb;
+  color: var(--ink-3);
+  border: 1.5px solid var(--line);
 }
 
-.tb-logout:hover { border-color: #d1d5db; color: #1a1a1a; }
+.tb-logout:hover { border-color: var(--line-2); color: #1a1a1a; }
 
 /* ---- Content ---- */
 .org-content {
@@ -430,23 +517,7 @@ function formatDate(iso) {
   padding: 32px 24px 64px;
 }
 
-.page-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 28px;
-}
-
-.page-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 26px;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin: 0;
-}
-
-.page-subtitle { font-size: 14px; color: #6b7280; margin: 4px 0 0; }
+.page-subtitle { font-size: 14px; color: var(--ink-3); margin: 4px 0 0; }
 
 .header-btns { display: flex; gap: 10px; }
 
@@ -455,7 +526,7 @@ function formatDate(iso) {
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
-  background: #5a7a52;
+  background: var(--brand);
   color: #fff;
   border: none;
   border-radius: 10px;
@@ -476,7 +547,7 @@ function formatDate(iso) {
   padding: 10px 20px;
   background: #fff;
   color: #1a1a1a;
-  border: 1.5px solid #e5e7eb;
+  border: 1.5px solid var(--line);
   border-radius: 10px;
   font-size: 14px;
   font-weight: 500;
@@ -485,11 +556,11 @@ function formatDate(iso) {
   transition: all 0.15s;
 }
 
-.btn-secondary:hover { border-color: #5a7a52; color: #5a7a52; }
+.btn-secondary:hover { border-color: var(--brand); color: var(--brand); }
 
 /* ---- Loading ---- */
-.loading-state { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 80px 0; color: #6b7280; font-size: 14px; }
-.spinner { width: 32px; height: 32px; border: 3px solid #e5e7eb; border-top-color: #5a7a52; border-radius: 50%; animation: spin 0.7s linear infinite; }
+.loading-state { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 80px 0; color: var(--ink-3); font-size: 14px; }
+.spinner { width: 32px; height: 32px; border: 3px solid var(--line); border-top-color: var(--brand); border-radius: 50%; animation: spin 0.7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ---- Filters ---- */
@@ -497,48 +568,28 @@ function formatDate(iso) {
 .filter-input {
   height: 38px;
   padding: 0 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--line);
   border-radius: 8px;
   background: #fff;
   font-size: 13px;
   color: #1a1a1a;
 }
-.filter-input:focus { outline: 2px solid #5a7a52; outline-offset: -1px; }
+.filter-input:focus { outline: 2px solid var(--brand); outline-offset: -1px; }
 .filter-date { display: flex; flex-direction: column; gap: 4px; }
-.filter-date span { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #6b7280; }
+.filter-date span { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); }
 .filter-clear {
   height: 38px;
   padding: 0 14px;
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: #6b7280;
+  color: var(--ink-3);
   font-size: 13px;
   cursor: pointer;
   text-decoration: underline;
 }
 .filter-clear:hover { color: #1a1a1a; }
 .load-error { color: #b91c1c; font-size: 13px; margin: 0 0 16px; }
-
-/* ---- Pin ---- */
-.col-pin { width: 44px; }
-.cell-pin { padding-left: 16px; }
-.pin-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  color: #c4c4c4;
-  cursor: pointer;
-  transition: color 0.15s, background 0.15s;
-}
-.pin-btn:hover { background: #f3f4f6; color: #6b7280; }
-.pin-btn--on { color: #b8954e; }
-.pin-btn--on:hover { color: #9a7a3e; }
 
 .sr-only {
   position: absolute;
@@ -554,44 +605,12 @@ function formatDate(iso) {
 
 /* ---- Summary ---- */
 .summary-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
-.summary-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 4px; }
-.summary-value { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #1a1a1a; }
-.summary-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #6b7280; }
-
-/* ---- Table ---- */
-.table-wrap { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; overflow: hidden; }
-.events-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-.events-table thead { background: #fafafa; }
-.events-table th { text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6b7280; border-bottom: 1px solid #e5e7eb; }
-.event-row { cursor: pointer; transition: background 0.12s; }
-.event-row:hover { background: rgba(90, 122, 82, 0.03); }
-.event-row td { padding: 16px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
-.event-row:last-child td { border-bottom: none; }
-.cell-event { min-width: 180px; }
-.ev-name { display: block; font-weight: 600; color: #1a1a1a; margin-bottom: 2px; }
-.ev-category { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.04em; }
-.cell-date { white-space: nowrap; color: #6b7280; }
-.status-pill { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
-.pill--active { background: rgba(90, 122, 82, 0.12); color: #5a7a52; }
-.pill--draft { background: rgba(184, 149, 78, 0.12); color: #b8954e; }
-.pill--cancelled { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
-.cell-guests { text-align: center; }
-.guests-num { font-weight: 600; color: #1a1a1a; }
-.cell-rsvp { min-width: 140px; }
-.rsvp-bar-wrap { display: flex; align-items: center; gap: 8px; }
-.rsvp-bar { flex: 1; height: 6px; border-radius: 3px; background: #f3f4f6; display: flex; overflow: hidden; }
-.rsvp-seg { height: 100%; transition: width 0.3s; }
-.rsvp-accepted { background: #5a7a52; }
-.rsvp-maybe { background: #b8954e; }
-.rsvp-declined { background: #ef4444; }
-.rsvp-nums { font-size: 12px; color: #6b7280; white-space: nowrap; }
-.rsvp-empty { color: #d1d5db; }
-.cell-action { text-align: right; }
-.btn-manage { display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; border: 1.5px solid #e5e7eb; border-radius: 8px; background: #fff; font-size: 13px; font-weight: 500; color: #1a1a1a; cursor: pointer; transition: all 0.15s; }
-.btn-manage:hover { border-color: #5a7a52; color: #5a7a52; }
+.summary-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 4px; }
+.summary-value { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: #1a1a1a; }
+.summary-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); }
 
 /* ---- Empty ---- */
-.empty-state { text-align: center; padding: 80px 24px; color: #6b7280; }
+.empty-state { text-align: center; padding: 80px 24px; color: var(--ink-3); }
 .empty-state svg { opacity: 0.3; margin-bottom: 16px; }
 .empty-state h3 { font-size: 18px; color: #1a1a1a; margin: 0 0 8px; }
 .empty-state p { font-size: 14px; margin: 0 0 24px; }
@@ -601,36 +620,90 @@ function formatDate(iso) {
 .dialog { background: #fff; border-radius: 16px; width: 100%; max-width: 440px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15); }
 .dialog-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px 0; }
 .dialog-header h3 { font-size: 18px; font-weight: 600; margin: 0; color: #1a1a1a; }
-.dialog-close { background: none; border: none; font-size: 24px; color: #9ca3af; cursor: pointer; padding: 0; line-height: 1; }
+.dialog-close { background: none; border: none; font-size: 24px; color: var(--ink-4); cursor: pointer; padding: 0; line-height: 1; }
 .dialog-close:hover { color: #1a1a1a; }
 .dialog-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 6px; }
-.dialog-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 16px 24px; border-top: 1px solid #f3f4f6; }
+.dialog-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 16px 24px; border-top: 1px solid var(--sunken); }
 
-.field-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: #6b7280; margin-top: 8px; }
-.field-input { width: 100%; border: 1.5px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; font-size: 14px; color: #1a1a1a; outline: none; transition: border-color 0.15s; background: #fff; }
-.field-input:focus { border-color: #5a7a52; }
+.field-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-3); margin-top: 8px; }
+.field-input { width: 100%; border: 1.5px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 14px; color: #1a1a1a; outline: none; transition: border-color 0.15s; background: #fff; }
+.field-input:focus { border-color: var(--brand); }
 
 .role-options { display: flex; gap: 8px; margin-top: 4px; }
-.role-chip { display: inline-flex; align-items: center; padding: 6px 16px; border: 1.5px solid #e5e7eb; border-radius: 20px; font-size: 13px; font-weight: 500; color: #6b7280; cursor: pointer; transition: all 0.15s; }
-.role-chip--active { border-color: #5a7a52; color: #5a7a52; background: rgba(90, 122, 82, 0.06); }
-.role-chip:hover { border-color: #d1d5db; }
+.role-chip { display: inline-flex; align-items: center; padding: 6px 16px; border: 1.5px solid var(--line); border-radius: 20px; font-size: 13px; font-weight: 500; color: var(--ink-3); cursor: pointer; transition: all 0.15s; }
+.role-chip--active { border-color: var(--brand); color: var(--brand); background: rgba(90, 122, 82, 0.06); }
+.role-chip:hover { border-color: var(--line-2); }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
 
-.btn-cancel { padding: 8px 18px; border: 1.5px solid #e5e7eb; border-radius: 8px; background: #fff; font-size: 14px; color: #6b7280; cursor: pointer; }
-.btn-cancel:hover { border-color: #d1d5db; }
+.btn-cancel { padding: 8px 18px; border: 1.5px solid var(--line); border-radius: 8px; background: #fff; font-size: 14px; color: var(--ink-3); cursor: pointer; }
+.btn-cancel:hover { border-color: var(--line-2); }
 
 .form-error { background: #fef2f2; color: #dc2626; padding: 8px 12px; border-radius: 8px; font-size: 13px; margin-bottom: 4px; }
 
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
   .summary-row { grid-template-columns: repeat(2, 1fr); }
-  .page-header { flex-direction: column; }
-  .header-btns { width: 100%; }
+    .header-btns { width: 100%; }
   .header-btns .btn-primary,
   .header-btns .btn-secondary { flex: 1; justify-content: center; }
-  .table-wrap { overflow-x: auto; }
-  .events-table { min-width: 640px; }
   .org-topbar { padding: 0 16px; }
   .org-content { padding: 24px 16px 48px; }
 }
+/* ── Event card sections ──────────────────────────────────────────────
+   The page container is max-width 960px with 24px of padding, so the widest
+   the content ever gets is 912px. Three columns with a 16px gap put each card
+   at (912 - 32) / 3 ≈ 293px — wide enough for a date and a venue on one line,
+   which is what decides the lower bound. Four would drop that to ~213px and
+   start wrapping "14 September 2026".
+
+   Breakpoints are on the viewport but derived from that container: content is
+   viewport minus 48px until the 960px cap, so 960 is where three columns fit
+   and 620 is where two stop fitting. Stated as numbers rather than auto-fill
+   because "three at most" is a decision, and auto-fill would silently become
+   four the day somebody widens the container. */
+.ev-group { margin-bottom: 2rem; }
+
+.ev-group-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.75rem;
+}
+
+.ev-group-count {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: #f0e2cf;
+  color: #8a5300;
+}
+
+.ev-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 620px) {
+  .ev-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 960px) {
+  .ev-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* Finished events carry no stats and no hero, so they stay legible narrower
+   and one more fits per row. */
+@media (min-width: 620px) {
+  .ev-grid--compact { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (min-width: 960px) {
+  .ev-grid--compact { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
 </style>

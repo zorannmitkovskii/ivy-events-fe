@@ -1,12 +1,6 @@
 <template>
   <div class="dash-page">
-    <div class="dash-page-header">
-      <div>
-        <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
-        <h1 class="dash-page-title">{{ t("invitationLinks.title") }}</h1>
-        <p class="dash-page-subtitle">{{ t("invitationLinks.subtitle") }}</p>
-      </div>
-    </div>
+    <PageHeader :title="t('invitationLinks.title')" :subtitle="t('invitationLinks.subtitle')" />
 
     <div v-if="loading" class="s-card s-card-pad">
       {{ t("settings.loading") }}
@@ -76,6 +70,7 @@
 </template>
 
 <script setup>
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { eventsService } from "@/services/events.service";
@@ -192,7 +187,7 @@ onMounted(loadEvent);
 }
 
 .empty-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: 18px;
   color: var(--dash-charcoal);

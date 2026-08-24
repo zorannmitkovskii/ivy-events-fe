@@ -1,32 +1,75 @@
-/* Design tokens */
+/* Design tokens
+   ---------------------------------------------------------------------------
+   IVY-1401. The palette is taken from the logo, not from taste.
+
+   `public/logo.svg` is a single fill: #2F3E36. `public/logoInv.svg` is the same
+   mark in #F7F5F0. The brand was already exactly two colours — and neither was
+   being used for the primary action, which went to sage #5a7a52 — a colour that
+   appears nowhere in the logo.
+
+   So #2F3E36 is now the main colour: primary buttons, focus, sidebar, ink,
+   chart fills. Everything else is the same hue (148°) at a different lightness,
+   plus gold for money and four status tones.
+
+   Every legacy token name below is kept and re-pointed at the new ramp, so
+   components that already use variables pick this up without being edited.
+   --------------------------------------------------------------------------- */
 :root {
-  --brand-main: #2F3E36;   /* Forest Green */
-  --brand-light: #BFD2A4;  /* Sage Green */
-  --brand-dark: #5D6A57;   /* Moss Green (deepest available in palette) */
-  --brand-gold: #C8A24D; /* Gold */
+  /* ---- the brand: the logo colour and its ramp ---------------------------- */
+  --brand:        #2F3E36;  /* the exact colour of logo.svg */
+  --brand-strong: #22302A;  /* pressed / hover */
+  --brand-mid:    #56705F;  /* charts, bars, second line */
+  --brand-soft:   #9DB0A4;  /* quiet fills, axes */
+  --brand-pale:   #E7EDE9;  /* fill behind the brand */
 
-  --soft-light: #E7E7E7;     /* Light Grey */
+  /* ---- ink: same hue, full to muted --------------------------------------
+     Measured on the cream #F7F5F0: ink 10.2:1, ink-2 5.6:1, ink-3 4.6:1 — all
+     three pass WCAG AA for text. ink-4 is decoration only (axes, disabled). */
+  --ink:   #2F3E36;
+  --ink-2: #55655C;
+  --ink-3: #63736A;
+  --ink-4: #8D9A93;
 
-  --secondary-sage: #BFD2A4; /* Sage Green */
-  --secondary-salmon: #ED6E69; /* Salmon Pink */
-  --secondary-moss: #5D6A57; /* Moss Green */
-  --secondary-gold: #E1C699; /* Gold */
+  --line:   #E0E3DD;
+  --line-2: #C8CFC8;
+  --surface: #FFFFFF;
+  --sunken:  #F1EFE9;
 
-  --neutral-900: #334338;    /* Forest Green (as "near-black") */
-  --neutral-700: #5D6A57;    /* Moss Green */
-  --neutral-500: #7A8773;    /* Optional mid (derived from palette feel) */
-  --neutral-300: #E7E7E7;    /* Light Grey */
-  --neutral-100: #FFFFFF;    /* Base White */
+  /* ---- legacy names, re-pointed ------------------------------------------ */
+  --brand-main: var(--brand);
+  --brand-light: var(--brand-soft);
+  --brand-dark: var(--brand-strong);
+  --brand-gold: #B8954E;     /* was #C8A24D, which fails contrast at text sizes */
 
-  --bg-main: #F7F5F0;        /* Light Grey */
-  --bg-white: #FFFFFF;        /* White */
-  --bg-gray: #E5E7EB;        /*  Grey */
-  --bg-dark-gray: #9CA3AF;        /* Dark Grey */
-  --bg-darker-gray: #6B7280;        /* Dark Grey */
+  --soft-light: var(--line);
 
-  --success: #BFD2A4;        /* Sage Green */
-  --warning: #5D6A57;        /* Moss Green (calm warning) */
-  --error: #ED6E69;
+  --secondary-sage: var(--brand-soft);
+  --secondary-salmon: #A31E2C;
+  --secondary-moss: var(--brand-mid);
+  --secondary-gold: #E1C699;
+
+  --neutral-900: var(--ink);
+  --neutral-700: var(--ink-2);
+  --neutral-500: var(--ink-3);
+  --neutral-300: var(--line);
+  --neutral-100: var(--surface);
+
+  --bg-main: #F7F5F0;        /* the cream of logoInv.svg */
+  --bg-white: var(--surface);
+  --bg-gray: var(--line);          /* was Tailwind gray-200 */
+  --bg-dark-gray: var(--ink-4);    /* was Tailwind gray-400 */
+  --bg-darker-gray: var(--ink-3);  /* was Tailwind gray-500 — failed AA at 4.14:1 */
+
+  /* ---- status: four tones, none of them the brand -------------------------
+     Success moved off the brand green so "done" never reads as "brand". */
+  --success: #2E7D4F;
+  --success-pale: #E4F1E9;
+  --warning: #8A5A06;        /* was moss green, which read as neither */
+  --warning-pale: #FBF0DC;
+  --error: #A31E2C;          /* was salmon #ED6E69, too light on white */
+  --error-pale: #FBEAEC;
+  --info: #2C5670;
+  --info-pale: #E5EFF5;
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -38,29 +81,46 @@
 
   --container-max: 1200px;
   --header-height: 58px;
-  --font-family: 'Cormorant Garamond', serif;
+  --font-family: var(--font-display);
 
-  /* Dashboard palette */
-  --dash-sage:        #5a7a52;
-  --dash-sage-dark:   #3d5637;
-  --dash-sage-mid:    #7a9a70;
-  --dash-sage-light:  #b2c9aa;
-  --dash-sage-pale:   #dcebd6;
-  --dash-sage-ghost:  #f1f6ee;
-  --dash-cream:       #faf6ef;
-  --dash-cream-card:  #ffffff;
-  --dash-cream-border:#e6dfd4;
-  --dash-gold:        #b8954e;
-  --dash-gold-light:  #d4b070;
-  --dash-gold-pale:   #f5ead4;
-  --dash-blush:       #c4968e;
-  --dash-blush-pale:  #f5e8e6;
-  --dash-sky:         #7a9db8;
-  --dash-sky-pale:    #e6eff6;
-  --dash-charcoal:    #1e2420;
-  --dash-ink:         #2e3530;
-  --dash-muted:       #7a7870;
-  --dash-light:       #b0ada6;
+  /*
+    Small interface text (IVY-1204).
+
+    Cormorant Garamond is a high-contrast display serif: beautiful at a
+    headline, and at 13–15px its hairlines land under a pixel, so labels,
+    filter captions, table rows and timestamps read as faded however dark the
+    colour is. Measured, they were never a contrast failure — 7.3:1 to 19.7:1
+    against a 4.5:1 requirement — which is why darkening them was not the fix.
+
+    StatCard had already reached this conclusion for its figures and left the
+    serif for a sans; this token finishes that thought. The serif keeps titles,
+    headings and anything set large.
+  */
+  --font-ui: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Dashboard palette — the same brand ramp under its old names.
+     `--dash-sage` was #5a7a52 and was the dashboard's primary; it is now the
+     logo colour, so the dashboard and the marketing site finally agree. */
+  --dash-sage:        var(--brand);
+  --dash-sage-dark:   var(--brand-strong);
+  --dash-sage-mid:    var(--brand-mid);
+  --dash-sage-light:  var(--brand-soft);
+  --dash-sage-pale:   var(--brand-pale);
+  --dash-sage-ghost:  #F3F7F4;
+  --dash-cream:       var(--bg-main);
+  --dash-cream-card:  var(--surface);
+  --dash-cream-border:var(--line);
+  --dash-gold:        var(--brand-gold);
+  --dash-gold-light:  #D4B070;
+  --dash-gold-pale:   #F6EFDF;
+  --dash-blush:       var(--error);
+  --dash-blush-pale:  var(--error-pale);
+  --dash-sky:         var(--info);
+  --dash-sky-pale:    var(--info-pale);
+  --dash-charcoal:    var(--brand-strong);
+  --dash-ink:         var(--ink);
+  --dash-muted:       var(--ink-3);
+  --dash-light:       var(--ink-4);
   --dash-radius:      14px;
   --dash-shadow-sm:   0 1px 12px rgba(30,36,32,0.06);
   --dash-shadow-md:   0 4px 24px rgba(30,36,32,0.1);

@@ -1,27 +1,24 @@
 <template>
   <div class="dash-page">
-    <div class="dash-page-header">
-      <div>
-        <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
-        <h1 class="dash-page-title">{{ t("settings.title") }}</h1>
-        <p class="dash-page-subtitle">{{ t("settings.subtitle") }}</p>
-      </div>
-      <div v-if="event && !loading && !isGallery && activeTab === 'details'" class="header-actions">
+    <PageHeader :title="t('settings.title')" :subtitle="t('settings.subtitle')">
+      <template #actions>
+        <div v-if="event && !loading && !isGallery && activeTab === 'details'" class="header-actions">
         <ButtonMain
-          variant="gold"
-          @click="goToPackages"
+        variant="gold"
+        @click="goToPackages"
         >
-          {{ t('cpay.upgrade') }}
+        {{ t('cpay.upgrade') }}
         </ButtonMain>
         <ButtonMain
-          variant="main"
-          :disabled="saving"
-          @click="saveEvent"
+        variant="main"
+        :disabled="saving"
+        @click="saveEvent"
         >
-          {{ saving ? t("settings.saving") : t("settings.save") }}
+        {{ saving ? t("settings.saving") : t("settings.save") }}
         </ButtonMain>
-      </div>
-    </div>
+        </div>
+      </template>
+    </PageHeader>
 
     <!-- Save feedback -->
     <div v-if="saveSuccess" class="save-toast success-toast">
@@ -81,6 +78,7 @@
 </template>
 
 <script setup>
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { ref, onMounted, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
@@ -249,7 +247,7 @@ function goToPackages() {
 }
 
 function goToInvitations() {
-  router.push({ name: "EventInvitationsPage", params: { lang: locale.value }, query: { from: 'dashboard' } });
+  router.push({ name: "dashboard.invitations", params: { lang: locale.value }, query: { from: 'dashboard' } });
 }
 
 function archiveEvent() {
@@ -260,12 +258,6 @@ onMounted(loadEvent);
 </script>
 
 <style scoped>
-.dash-page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-}
 
 .header-actions {
   display: flex;
@@ -293,7 +285,7 @@ onMounted(loadEvent);
   border-radius: 10px;
   font-size: 12.5px;
   font-weight: 600;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   color: var(--dash-muted);
   cursor: pointer;
   white-space: nowrap;
@@ -345,7 +337,7 @@ onMounted(loadEvent);
 }
 
 .empty-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: 18px;
   color: var(--dash-charcoal);
@@ -358,11 +350,7 @@ onMounted(loadEvent);
 }
 
 @media (max-width: 640px) {
-  .dash-page-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
+  
   .s-card {
     padding: 18px 16px;
   }

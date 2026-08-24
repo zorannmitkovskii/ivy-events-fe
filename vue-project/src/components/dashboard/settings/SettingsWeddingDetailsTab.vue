@@ -72,10 +72,10 @@
             <span>{{ EventDetailTypeIcon[item.type] }}</span>
           </div>
           <div class="detail-actions">
-            <button class="action-btn" @click="openEdit(item)" title="Edit">
+            <button class="action-btn" @click="openEdit(item)" :title="$t('common.edit')">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             </button>
-            <button class="action-btn action-btn--delete" @click="onDelete(item)" title="Delete">
+            <button class="action-btn action-btn--delete" @click="onDelete(item)" :title="$t('common.delete')">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
             </button>
           </div>
@@ -399,7 +399,7 @@ async function onDelete(item) {
 /* ---- Hero Image ---- */
 .hero-image-card {
   background: #fff;
-  border: 1px solid var(--neutral-200, #e5e7eb);
+  border: 1px solid var(--neutral-200, var(--line));
   border-radius: 14px;
   padding: 20px;
   margin-bottom: 20px;
@@ -468,7 +468,7 @@ async function onDelete(item) {
 }
 
 .hero-upload-area {
-  border: 2px dashed var(--neutral-300, #d1d5db);
+  border: 2px dashed var(--neutral-300, var(--line-2));
   border-radius: 10px;
   padding: 40px 20px;
   display: flex;
@@ -477,13 +477,13 @@ async function onDelete(item) {
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  color: var(--neutral-400, #9ca3af);
+  color: var(--neutral-400, var(--ink-4));
   transition: border-color 0.2s, color 0.2s;
 }
 
 .hero-upload-area:hover {
-  border-color: var(--brand-gold, #c8a24d);
-  color: var(--brand-gold, #c8a24d);
+  border-color: var(--brand-gold, var(--brand-gold));
+  color: var(--brand-gold, var(--brand-gold));
 }
 
 .hero-upload-text {
@@ -507,7 +507,7 @@ async function onDelete(item) {
 
 .detail-card {
   background: #fff;
-  border: 1px solid var(--neutral-200, #e5e7eb);
+  border: 1px solid var(--neutral-200, var(--line));
   border-radius: 14px;
   padding: 20px;
   transition: box-shadow 0.2s;
@@ -526,7 +526,7 @@ async function onDelete(item) {
 .detail-icon {
   width: 36px; height: 36px;
   border-radius: 10px;
-  background: var(--neutral-100, #f3f4f6);
+  background: var(--neutral-100, var(--sunken));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -579,7 +579,7 @@ async function onDelete(item) {
 }
 .detail-location-name {
   font-size: 12px;
-  color: var(--neutral-600, #4b5563);
+  color: var(--neutral-600, var(--ink-2));
 }
 .detail-map-btn {
   font-size: 11px;
@@ -599,10 +599,10 @@ async function onDelete(item) {
 /* ---- Modal Form ---- */
 .modal-form { display: flex; flex-direction: column; gap: 16px; }
 .form-group { display: flex; flex-direction: column; gap: 4px; }
-.form-label { font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+.form-label { font-size: 12px; font-weight: 600; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.05em; }
 .form-input {
   padding: 9px 14px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--line);
   border-radius: 10px;
   font-size: 14px;
   background: #fff;
@@ -629,11 +629,11 @@ async function onDelete(item) {
 }
 
 .btn-cancel {
-  padding: 9px 20px; border: 1px solid #e2e8f0; border-radius: 8px;
-  background: #fff; color: #475569; font-size: 14px; font-weight: 500;
+  padding: 9px 20px; border: 1px solid var(--line); border-radius: 8px;
+  background: #fff; color: var(--ink-2); font-size: 14px; font-weight: 500;
   cursor: pointer; transition: all 0.15s;
 }
-.btn-cancel:hover { background: #f8fafc; }
+.btn-cancel:hover { background: var(--sunken); }
 
 .btn-save {
   padding: 9px 20px; border: none; border-radius: 8px;

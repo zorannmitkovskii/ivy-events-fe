@@ -1,8 +1,8 @@
 <template>
-  <BaseModal :open="open" title="Edit Entry" @close="emit('close')">
+  <BaseModal :open="open" :title="$t('editEntry.title')" @close="emit('close')">
     <div class="entry-modal">
       <!-- Type selector -->
-      <label class="field-label">Type</label>
+      <label class="field-label">{{ $t('editEntry.type') }}</label>
       <select v-model="selectedType" class="field-select">
         <option v-for="(info, key) in ENTRY_TYPES" :key="key" :value="key">
           {{ info.label }}
@@ -10,7 +10,7 @@
       </select>
 
       <!-- Design selector -->
-      <label class="field-label">Design</label>
+      <label class="field-label">{{ $t('editEntry.design') }}</label>
       <template v-for="(group, gi) in designGroups" :key="gi">
         <p v-if="group.label" class="group-label">{{ group.label }}</p>
         <div class="design-grid">
@@ -163,29 +163,29 @@ function onSave() {
 .field-label {
   font-size: 13px;
   font-weight: 600;
-  color: #374151;
+  color: var(--ink-2);
 }
 
 .field-select {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--line-2);
   border-radius: 8px;
   font-size: 14px;
-  color: #1f2937;
+  color: var(--ink);
   background: #fff;
   outline: none;
   transition: border-color 0.2s;
 }
 
 .field-select:focus {
-  border-color: var(--brand-main, #6b7280);
+  border-color: var(--brand-main, var(--ink-3));
 }
 
 .group-label {
   font-size: 12px;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--ink-3);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 8px 0 4px;
@@ -199,24 +199,24 @@ function onSave() {
 
 .design-card {
   padding: 14px 12px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--line);
   border-radius: 10px;
   background: #fff;
   font-size: 14px;
   font-weight: 500;
-  color: #374151;
+  color: var(--ink-2);
   cursor: pointer;
   text-align: center;
   transition: border-color 0.2s, background 0.2s;
 }
 
 .design-card:hover {
-  border-color: #9ca3af;
+  border-color: var(--ink-4);
 }
 
 .design-card--active {
-  border-color: var(--brand-main, #374151);
-  background: #f9fafb;
+  border-color: var(--brand-main, var(--ink-2));
+  background: var(--sunken);
   font-weight: 600;
 }
 </style>

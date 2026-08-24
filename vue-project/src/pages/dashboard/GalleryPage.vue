@@ -1,17 +1,13 @@
 <template>
   <div class="dash-page">
-    <div class="dash-page-header">
-      <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
-      <h1 class="dash-page-title">{{ t("gallery.title") }}</h1>
-      <p class="dash-page-subtitle">{{ t("gallery.subtitle") }}</p>
-    </div>
+    <PageHeader :title="t('gallery.title')" :subtitle="t('gallery.subtitle')" />
 
     <!-- No gallery package -->
     <div v-if="!hasGalleryAccess" class="no-access-card">
       <i class="bi bi-lock"></i>
-      <h3>Gallery not available</h3>
-      <p>You need a Gallery package to use this feature. Upgrade your plan to enable photo uploads and sharing.</p>
-      <ButtonMain variant="main" @click="goToPackages">View Packages</ButtonMain>
+      <h3>{{ t('gallery.lockedTitle') }}</h3>
+      <p>{{ t('gallery.lockedBody') }}</p>
+      <ButtonMain variant="main" @click="goToPackages">{{ t('gallery.lockedAction') }}</ButtonMain>
     </div>
 
     <DashboardToolbar v-else-if="images.length > 0">
@@ -155,6 +151,7 @@
 </template>
 
 <script setup>
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { ref, reactive, computed, onMounted, onBeforeUnmount } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
@@ -396,25 +393,25 @@ onBeforeUnmount(() => {
   text-align: center;
   padding: 48px 24px;
   background: var(--dash-cream-card, #fff);
-  border: 1px solid var(--dash-cream-border, #e2e8f0);
+  border: 1px solid var(--dash-cream-border, var(--line));
   border-radius: 16px;
   margin-top: 16px;
 }
 .no-access-card i {
   font-size: 40px;
-  color: #94a3b8;
+  color: var(--ink-4);
   margin-bottom: 12px;
   display: block;
 }
 .no-access-card h3 {
   font-size: 18px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--ink);
   margin: 0 0 8px;
 }
 .no-access-card p {
   font-size: 14px;
-  color: #64748b;
+  color: var(--ink-3);
   margin: 0 0 20px;
   max-width: 400px;
   margin-left: auto;
@@ -433,7 +430,7 @@ onBeforeUnmount(() => {
 }
 
 .empty-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: 18px;
   color: var(--dash-charcoal);

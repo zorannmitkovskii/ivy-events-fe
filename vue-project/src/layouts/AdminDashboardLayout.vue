@@ -33,8 +33,8 @@ watch(() => route.path, () => {
 .dashboard-layout {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 260px 1fr;
-  background: var(--bg-main);
+  grid-template-columns: var(--dash-sidebar-w) 1fr;
+  background: var(--d-ground);
 }
 
 .dash-sidebar {
@@ -46,12 +46,24 @@ watch(() => route.path, () => {
 
 .main {
   display: grid;
-  grid-template-rows: var(--header-height) 1fr;
+  /* The bar sizes itself; --header-height is the public site's and is 18px
+     taller than the dashboard bar, which left a gap under it. */
+  grid-template-rows: auto 1fr;
+  /*
+    A grid item defaults to min-width:auto, so anything intrinsically wide
+    inside — the top bar, a table — stretches the column past the viewport and
+    the whole page scrolls sideways. Found at 360px while testing the nav grid
+    (IVY-1103): the grid itself fit, the shell around it did not.
+  */
+  min-width: 0;
 }
 
 .content {
-  padding: 24px;
+  max-width: 1500px;
   width: 100%;
+  min-width: 0;
+  margin: 0 auto;
+  padding: 36px clamp(24px, 3vw, 48px) 70px;
 }
 
 .backdrop {
@@ -68,10 +80,10 @@ watch(() => route.path, () => {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 100%;
+    width: var(--dash-sidebar-w);
     z-index: 1000;
     transform: translateX(-100%);
-    background: var(--brand-main);
+    background: var(--d-side);
     display: flex;
     flex-direction: column;
   }
@@ -85,8 +97,12 @@ watch(() => route.path, () => {
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(7, 18, 13, 0.71);
     z-index: 999;
+  }
+
+  .content {
+    padding: 26px 16px 50px;
   }
 }
 </style>

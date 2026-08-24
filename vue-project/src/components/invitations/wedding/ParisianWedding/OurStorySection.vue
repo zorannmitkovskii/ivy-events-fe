@@ -88,7 +88,7 @@ const cssVars = computed(() => ({
   font-family: var(--os-heading-font);
   font-size: 40px;
   font-weight: 400;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   margin: 0 0 32px;
 }
 
@@ -96,7 +96,7 @@ const cssVars = computed(() => ({
   font-family: var(--os-body-font);
   font-size: 20px;
   line-height: 1.7;
-  color: var(--theme-text-muted, #4b5563);
+  color: var(--theme-text-muted, var(--ink-2));
   margin: 0 0 24px;
 }
 

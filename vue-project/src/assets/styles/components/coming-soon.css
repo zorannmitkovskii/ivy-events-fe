@@ -41,7 +41,7 @@ body {
 
 /* Title -> Playfair style like design 2 */
 .coming-soon-wrapper .title {
-  /*font-family: 'Playfair Display', serif;*/
+  /*font-family: var(--font-display);*/
   font-size: 56px;
   font-weight: 600;
   letter-spacing: 0.5px;

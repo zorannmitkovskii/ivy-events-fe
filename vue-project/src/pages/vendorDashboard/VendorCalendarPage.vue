@@ -1,11 +1,6 @@
 <template>
   <section>
-    <header class="page-head">
-      <div>
-        <h1>{{ t('vendorPortal.calendar') }}</h1>
-        <p class="subtitle">{{ t('vendorPortal.calendarSubtitle') }}</p>
-      </div>
-    </header>
+    <PageHeader :title="t('vendorPortal.calendar')" :subtitle="t('vendorPortal.calendarSubtitle')" />
 
     <p v-if="error" class="error">{{ error }}</p>
 
@@ -22,7 +17,45 @@
         <button class="btn-secondary" @click="clearSelection">{{ t('vendorPortal.close') }}</button>
       </header>
 
-      <p v-if="!selectedBookings.length" class="free">{{ t('vendorPortal.dayFree') }}</p>
+      <!-- Blocks before bookings: "you are away this week" is the thing that
+           changes whether the rest of the panel matters. -->
+      <ul v-if="selectedBlocks.length" class="blocks">
+        <li v-for="block in selectedBlocks" :key="block.id" class="block">
+          <span class="block-status" :class="block.status.toLowerCase()">
+            {{ t(`vendorPortal.availability.${block.status}`) }}
+          </span>
+          <span class="block-reason">{{ block.reason || t('vendorPortal.availability.noReason') }}</span>
+          <button
+            v-if="block.status === 'HOLD'"
+            class="btn-secondary"
+            @click="confirmHold(block)"
+          >
+            {{ t('vendorPortal.availability.confirm') }}
+          </button>
+          <button class="link-btn" @click="releaseBlock(block)">
+            {{ t('vendorPortal.availability.release') }}
+          </button>
+        </li>
+      </ul>
+
+      <form class="block-form" @submit.prevent="blockDay">
+        <select v-model="blockDraft.status" :aria-label="t('vendorPortal.availability.status')">
+          <option value="UNAVAILABLE">{{ t('vendorPortal.availability.UNAVAILABLE') }}</option>
+          <option value="HOLD">{{ t('vendorPortal.availability.HOLD') }}</option>
+          <option value="AVAILABLE">{{ t('vendorPortal.availability.AVAILABLE') }}</option>
+        </select>
+        <input
+          v-model="blockDraft.reason"
+          type="text"
+          :placeholder="t('vendorPortal.availability.reasonPlaceholder')"
+          :aria-label="t('vendorPortal.availability.reasonPlaceholder')"
+        />
+        <button class="btn-secondary" type="submit">
+          {{ t('vendorPortal.availability.blockDay') }}
+        </button>
+      </form>
+
+      <p v-if="!selectedBookings.length && !selectedBlocks.length" class="free">{{ t('vendorPortal.dayFree') }}</p>
 
       <ul v-else class="bookings">
         <li v-for="booking in selectedBookings" :key="booking.id" class="booking">
@@ -100,14 +133,21 @@
 </template>
 
 <script setup>
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { computed, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import MonthCalendar from "@/components/vendor/MonthCalendar.vue";
-import { vendorPortalService } from "@/services/vendorPortal.service";
+import { vendorPortalService, vendorAvailabilityService } from "@/services/vendorPortal.service";
 
 const { t, locale } = useI18n();
 
 const bookings = ref([]);
+
+// The rest of the calendar: weeks away, days kept clear, dates pencilled in.
+// Loaded with the bookings and for the same window, so one range change fetches
+// both and they cannot show different months.
+const blocks = ref([]);
+const blockDraft = reactive({ status: "UNAVAILABLE", reason: "" });
 const summaries = reactive({});
 const error = ref(null);
 const saving = ref(false);
@@ -153,15 +193,96 @@ function formatHours(booking) {
 /** The calendar tells us which window it is showing; we fetch exactly that. */
 async function onRangeChange(fromKey, toKey) {
   error.value = null;
+  currentWindow = { from: fromKey, to: toKey };
   try {
-    const { data } = await vendorPortalService.listBookings(
-      toInstant(fromKey, "00:00"),
-      toInstant(toKey, "23:59")
-    );
-    bookings.value = data;
+    const windowStart = toInstant(fromKey, "00:00");
+    const windowEnd = toInstant(toKey, "23:59");
+
+    // Both in one go, for the same window. Two calls with two ranges is how a
+    // calendar comes to show September's bookings over October's holidays.
+    const [bookingResponse, calendarResponse] = await Promise.all([
+      vendorPortalService.listBookings(windowStart, windowEnd),
+      vendorAvailabilityService.calendar(windowStart, windowEnd),
+    ]);
+
+    bookings.value = bookingResponse.data;
+    blocks.value = calendarResponse?.data?.blocks ?? calendarResponse?.data?.data?.blocks ?? [];
     refreshSelection();
   } catch (e) {
     error.value = e?.response?.data?.message ?? e.message;
+  }
+}
+
+/**
+ * The blocks that touch the selected day.
+ *
+ * <p>Overlap, not "starts on": a week away has one row and covers seven days,
+ * and a day inside it must show it.
+ */
+const selectedBlocks = computed(() => {
+  if (!selectedDate.value) return [];
+
+  const dayStart = new Date(selectedDate.value);
+  dayStart.setHours(0, 0, 0, 0);
+  const dayEnd = new Date(dayStart);
+  dayEnd.setDate(dayEnd.getDate() + 1);
+
+  return blocks.value.filter((block) =>
+    new Date(block.startsAt) < dayEnd && new Date(block.endsAt) > dayStart);
+});
+
+/**
+ * Blocks the whole selected day.
+ *
+ * <p>Sends the date and the browser's zone, not a pair of instants — the day
+ * the clocks change is 23 or 25 hours long, and the server is the one that
+ * knows which.
+ */
+async function blockDay() {
+  error.value = null;
+  try {
+    await vendorAvailabilityService.block({
+      date: selectedKey.value,
+      status: blockDraft.status,
+      reason: blockDraft.reason || null,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    });
+    blockDraft.reason = "";
+    await reloadCurrentWindow();
+  } catch (e) {
+    error.value = e?.detail ?? e?.response?.data?.message ?? e.message;
+  }
+}
+
+async function confirmHold(block) {
+  error.value = null;
+  try {
+    await vendorAvailabilityService.confirmHold(block.id);
+    await reloadCurrentWindow();
+  } catch (e) {
+    // The server refuses an expired hold and says why — that message is more
+    // useful than anything this page could invent.
+    error.value = e?.detail ?? e?.response?.data?.message ?? e.message;
+  }
+}
+
+async function releaseBlock(block) {
+  error.value = null;
+  try {
+    await vendorAvailabilityService.release(block.id);
+    await reloadCurrentWindow();
+  } catch (e) {
+    error.value = e?.detail ?? e?.response?.data?.message ?? e.message;
+  }
+}
+
+/** The window the calendar last asked for, so an action can refresh exactly
+ *  what is on screen rather than guessing at a month. */
+let currentWindow = null;
+
+async function reloadCurrentWindow() {
+  if (currentWindow) {
+    await onRangeChange(currentWindow.from, currentWindow.to);
   }
 }
 
@@ -243,9 +364,6 @@ async function loadSummary(booking) {
 </script>
 
 <style scoped>
-.page-head {
-  margin-bottom: 1.25rem;
-}
 
 h1 {
   font-size: 1.2rem;

@@ -1,12 +1,10 @@
 <template>
   <section>
-    <header class="page-head">
-      <div>
-        <h1>{{ t('vendorPortal.packages') }}</h1>
-        <p class="subtitle">{{ t('vendorPortal.packagesSubtitle') }}</p>
-      </div>
-      <button class="btn-primary" @click="startNew">{{ t('vendorPortal.newPackage') }}</button>
-    </header>
+    <PageHeader :title="t('vendorPortal.packages')" :subtitle="t('vendorPortal.packagesSubtitle')">
+      <template #actions>
+        <button class="btn-primary" @click="startNew">{{ t('vendorPortal.newPackage') }}</button>
+      </template>
+    </PageHeader>
 
     <p v-if="error" class="error">{{ error }}</p>
 
@@ -80,6 +78,7 @@
 </template>
 
 <script setup>
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { vendorPortalService } from "@/services/vendorPortal.service";
@@ -176,13 +175,6 @@ onMounted(load);
 </script>
 
 <style scoped>
-.page-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
-}
 
 h1 {
   font-size: 1.2rem;

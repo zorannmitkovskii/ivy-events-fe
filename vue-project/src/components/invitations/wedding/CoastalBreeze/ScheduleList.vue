@@ -55,7 +55,7 @@ const cssVars = computed(() => ({
   font-family: var(--sl-heading-font);
   font-size: 40px;
   font-weight: 400;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   margin: 0 0 16px;
 }
 
@@ -96,7 +96,7 @@ const cssVars = computed(() => ({
   font-family: var(--sl-heading-font);
   font-size: 28px;
   font-weight: 400;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   margin: 0;
   line-height: 1.2;
 }
@@ -105,7 +105,7 @@ const cssVars = computed(() => ({
   font-family: var(--sl-body-font);
   font-size: 11px;
   text-transform: uppercase;
-  color: var(--theme-text-muted, #6b7280);
+  color: var(--theme-text-muted, var(--ink-3));
   margin: 0;
 }
 
@@ -118,14 +118,14 @@ const cssVars = computed(() => ({
   font-family: var(--sl-heading-font);
   font-size: 20px;
   font-weight: 500;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   margin: 0 0 4px;
 }
 
 .item-description {
   font-family: var(--sl-body-font);
   font-size: 14px;
-  color: var(--theme-text-muted, #4b5563);
+  color: var(--theme-text-muted, var(--ink-2));
   margin: 0;
   line-height: 1.5;
 }

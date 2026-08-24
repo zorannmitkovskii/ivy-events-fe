@@ -1,4 +1,5 @@
 import axios from "axios";
+import { decodeJwtPayload } from "@/services/jwt";
 import { baseUrl } from "./baseUrl";
 
 function getToken() {
@@ -114,13 +115,8 @@ apiClient.interceptors.response.use(
 let refreshTimer = null;
 
 function getTokenExp(token) {
-  if (!token) return null;
-  try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    return payload.exp ? payload.exp * 1000 : null; // ms
-  } catch {
-    return null;
-  }
+  const payload = decodeJwtPayload(token);
+  return payload?.exp ? payload.exp * 1000 : null; // ms
 }
 
 function scheduleProactiveRefresh() {
@@ -178,12 +174,26 @@ function normalizeAxiosError(err) {
   const status = err?.response?.status;
   const data = err?.response?.data;
 
-  if (typeof data === "string" && data.trim()) return new Error(data);
-  if (data?.message) return new Error(data.message);
-  if (data?.error) return new Error(data.error);
-  if (status) return new Error(`HTTP ${status}`);
+  if (typeof data === "string" && data.trim()) return withStatus(new Error(data), status);
+  if (data?.message) return withStatus(new Error(data.message), status);
+  if (data?.error) return withStatus(new Error(data.error), status);
+  if (status) return withStatus(new Error(`HTTP ${status}`), status);
 
   return new Error(err?.message || "Network error");
+}
+
+/**
+ * Keeps the HTTP status on the fallback error.
+ *
+ * Without it, an endpoint that answers 404 with an empty body arrives as a
+ * plain Error reading "HTTP 404" and the only way to recognise it is to match
+ * that string — so callers that want to tell "this article has no Macedonian
+ * version" apart from "something broke" end up parsing a message. ApiError
+ * already carries `status`; this makes the two shapes agree.
+ */
+function withStatus(error, status) {
+  if (status) error.status = status;
+  return error;
 }
 
 /**

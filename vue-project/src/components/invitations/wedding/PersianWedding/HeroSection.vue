@@ -111,7 +111,7 @@ function scrollToRsvp() {
 }
 
 .couple-names {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 48px;
   font-weight: 500;
   color: #333;
@@ -138,7 +138,7 @@ function scrollToRsvp() {
 }
 
 .wedding-date {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 32px;
   font-weight: 500;
   color: #333;

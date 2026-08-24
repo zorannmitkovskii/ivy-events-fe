@@ -1,9 +1,15 @@
 <template>
+  <SitePage>
+  <div class="directory-page">
+    <!--
+      The directory had neither header nor footer: a reader who arrived here
+      had no way on to any other part of the site, and no way back. It is a
+      public marketing page and now looks like one (IVY-1401) — SitePage is
+      what brings both, and the redesign's stylesheet with them.
+    -->
+    <PageHero :eyebrow="t('directory.title')" :title="t('directory.subtitle')" />
+
   <div class="directory">
-    <header class="head">
-      <h1>{{ t('directory.title') }}</h1>
-      <p class="sub">{{ t('directory.subtitle') }}</p>
-    </header>
 
     <form class="filters" @submit.prevent="search">
       <input
@@ -65,10 +71,14 @@
       </button>
     </nav>
   </div>
+  </div>
+  </SitePage>
 </template>
 
 <script setup>
 import { onMounted, reactive, ref, watch } from 'vue'
+import SitePage from '@/layouts/SitePage.vue'
+import PageHero from '@/components/ui/PageHero.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { vendorDirectoryService } from '@/services/vendorDirectory.service'
@@ -173,15 +183,17 @@ function readable(type) {
 </script>
 
 <style scoped>
+.directory-page { display: flex; flex-direction: column; min-height: 100vh; }
+.directory-page > .directory { flex: 1; }
 .directory { max-width: 1080px; margin: 0 auto; padding: 24px 16px; }
 
 .head { text-align: center; margin-bottom: 24px; }
 .head h1 { margin: 0 0 6px; font-size: 28px; }
-.sub { margin: 0; color: #6b6b6b; }
+.sub { margin: 0; color: var(--ink-3); }
 
 .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
 .filters input, .filters select {
-  padding: 10px 12px; border: 1px solid #ddd8cf; border-radius: 10px; font-size: 15px;
+  padding: 10px 12px; border: 1px solid var(--line-2); border-radius: 10px; font-size: 15px;
 }
 .search { flex: 1 1 240px; }
 
@@ -189,27 +201,27 @@ function readable(type) {
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
 
 .card { display: flex; gap: 14px; padding: 14px; border-radius: 12px;
-  background: #fff; border: 1px solid #ece8e0; text-decoration: none; color: inherit; }
-.card:hover { border-color: #d8cfbf; }
+  background: var(--surface); border: 1px solid var(--line); text-decoration: none; color: inherit; }
+.card:hover { border-color: var(--ink-4); }
 
 .logo { width: 64px; height: 64px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
 .logo-placeholder {
   display: flex; align-items: center; justify-content: center;
-  background: #f3f0ea; font-size: 24px; color: #a09585;
+  background: var(--sunken); font-size: 24px; color: var(--ink-4);
 }
 
 .card-body h2 { margin: 0; font-size: 16px; }
-.meta { margin: 3px 0 0; font-size: 12.5px; color: #8a8a8a; }
-.blurb { margin: 8px 0 0; font-size: 13.5px; color: #4a4a4a; }
-.rating { margin: 8px 0 0; font-size: 13px; color: #b8954e; }
+.meta { margin: 3px 0 0; font-size: 12.5px; color: var(--ink-3); }
+.blurb { margin: 8px 0 0; font-size: 13.5px; color: var(--ink-2); }
+.rating { margin: 8px 0 0; font-size: 13px; color: var(--brand-gold); }
 
 .pager { display: flex; gap: 16px; justify-content: center; align-items: center;
   margin-top: 28px; font-size: 14px; }
 
-.state { text-align: center; padding: 40px 0; color: #6b6b6b; }
+.state { text-align: center; padding: 40px 0; color: var(--ink-3); }
 
-.btn { padding: 10px 18px; border: 0; border-radius: 10px; background: #5a7a52;
-  color: #fff; font-size: 15px; cursor: pointer; }
-.link-btn { border: 0; background: none; color: #5a7a52; cursor: pointer; font-size: 14px; }
+.btn { padding: 10px 18px; border: 0; border-radius: 10px; background: var(--brand);
+  color: var(--surface); font-size: 15px; cursor: pointer; }
+.link-btn { border: 0; background: none; color: var(--brand); cursor: pointer; font-size: 14px; }
 .link-btn:disabled { opacity: 0.4; cursor: default; }
 </style>

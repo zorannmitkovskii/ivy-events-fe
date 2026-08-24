@@ -111,7 +111,7 @@ defineProps({
   font-family: var(--font-heading, inherit);
   font-size: 36px;
   font-weight: 400;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   margin: 0 0 12px;
 }
 
@@ -144,7 +144,7 @@ defineProps({
   font-family: var(--font-heading, inherit);
   font-size: 18px;
   font-weight: 500;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -168,17 +168,17 @@ defineProps({
 .info-date {
   font-size: 15px;
   font-weight: 600;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
 }
 
 .info-time {
   font-size: 14px;
-  color: var(--theme-text-muted, #6b7280);
+  color: var(--theme-text-muted, var(--ink-3));
 }
 
 .info-venue {
   font-size: 15px;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
 }
 
 .info-map {

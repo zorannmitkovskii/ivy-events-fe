@@ -1,9 +1,10 @@
 <template>
   <div class="announcements-page">
-    <header class="page-head">
-      <h1>{{ t('announcements.title') }}</h1>
-      <p class="sub">{{ t('announcements.subtitle') }}</p>
-    </header>
+    <PageHeader :title="t('announcements.title')">
+      <template #actions>
+        <p class="sub">{{ t('announcements.subtitle') }}</p>
+      </template>
+    </PageHeader>
 
     <form class="composer" @submit.prevent="publish">
       <label class="field">
@@ -62,11 +63,13 @@
       </li>
     </ul>
 
-    <p v-if="!items.length" class="empty">{{ t('announcements.empty') }}</p>
+    <EmptyState v-if="!items.length" tone="no-results" :title="t('announcements.empty')" />
   </div>
 </template>
 
 <script setup>
+import EmptyState from '@/components/ui/EmptyState.vue'
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { announcementsService } from '@/services/announcements.service'
@@ -169,10 +172,9 @@ function isLive(item) {
 .badge.urgent { background: #fdeceb; color: #a3271f; }
 .badge.muted { background: #eee; color: #777; }
 
-.empty { font-size: 13px; color: #6b6b6b; }
 .error { font-size: 13px; color: #a3271f; }
 
-.btn { align-self: flex-start; padding: 9px 16px; border: 0; border-radius: 8px; background: #5a7a52; color: #fff; font-size: 14px; cursor: pointer; }
+.btn { align-self: flex-start; padding: 9px 16px; border: 0; border-radius: 8px; background: var(--brand); color: #fff; font-size: 14px; cursor: pointer; }
 .btn:disabled { opacity: 0.5; cursor: default; }
 .link-btn { border: 0; background: none; color: #a3271f; cursor: pointer; font-size: 13px; padding: 6px 0 0; }
 </style>

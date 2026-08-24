@@ -1,6 +1,5 @@
 <template>
   <AuthShell>
-    <AuthHeader />
 
     <AuthCard>
       <AuthCardTitle
@@ -71,7 +70,6 @@ import { computed, ref, onMounted } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 import AuthShell from "@/components/auth/AuthShell.vue";
 import AuthCard from "@/components/auth/AuthCard.vue";
-import AuthHeader from "@/components/auth/AuthHeader.vue";
 import AuthCardTitle from "@/components/auth/AuthCardTitle.vue";
 import AuthInput from "@/components/auth/AuthInput.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";

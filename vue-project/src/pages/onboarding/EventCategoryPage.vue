@@ -177,7 +177,7 @@ function onBack() {
 <style scoped>
 .category-page {
   min-height: 100vh;
-  background: var(--bg-main, #f9fafb);
+  background: var(--bg-main, var(--sunken));
   display: flex;
   flex-direction: column;
 }
@@ -210,14 +210,14 @@ function onBack() {
   border-radius: 10px;
   border: 1px solid rgba(16, 24, 40, 0.1);
   background: #fff;
-  color: var(--neutral-700, #374151);
+  color: var(--neutral-700, var(--ink-2));
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 .back-btn:hover {
-  background: var(--bg-main, #f9fafb);
+  background: var(--bg-main, var(--sunken));
   border-color: rgba(16, 24, 40, 0.18);
 }
 
@@ -230,14 +230,14 @@ function onBack() {
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: var(--neutral-900, #111827);
+  color: var(--neutral-900, var(--ink));
   line-height: 1.3;
 }
 
 .header-subtitle {
   margin: 2px 0 0;
   font-size: 13px;
-  color: var(--neutral-500, #6b7280);
+  color: var(--neutral-500, var(--ink-3));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -255,7 +255,7 @@ function onBack() {
   margin: 0 0 10px;
   font-size: 14px;
   font-weight: 600;
-  color: var(--neutral-700, #374151);
+  color: var(--neutral-700, var(--ink-2));
 }
 
 .type-options {
@@ -270,7 +270,7 @@ function onBack() {
   border-radius: 22px;
   border: 1.5px solid rgba(16, 24, 40, 0.12);
   background: #fff;
-  color: var(--neutral-700, #374151);
+  color: var(--neutral-700, var(--ink-2));
   font-family: inherit;
   font-size: 14px;
   font-weight: 500;
@@ -279,12 +279,12 @@ function onBack() {
 }
 
 .type-option:hover {
-  border-color: var(--accent, #5a7a52);
+  border-color: var(--accent, var(--brand));
 }
 
 .type-option--on {
-  background: var(--accent, #5a7a52);
-  border-color: var(--accent, #5a7a52);
+  background: var(--accent, var(--brand));
+  border-color: var(--accent, var(--brand));
   color: #fff;
 }
 

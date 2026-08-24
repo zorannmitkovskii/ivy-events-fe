@@ -1,6 +1,6 @@
 <template>
   <div class="logo-area">
-    <img src="/logoInv.svg" alt="Ivy Events" class="logo-full" />
+    <span class="ivy-logo ivy-logo--inverse logo-full" role="img" aria-label="Ivy Events"></span>
     <div class="logo-tag">{{ tagline }}</div>
   </div>
 </template>
@@ -21,22 +21,22 @@ const tagline = computed(() => {
 </script>
 
 <style scoped>
+/* The design's brand block: no rule under it, and the tagline in the same
+   letter-spaced micro-caps the sidebar uses for its section labels. */
 .logo-area {
-  padding: 28px 24px 22px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 22px 22px 20px;
 }
 
 .logo-full {
+  --logo-h: 30px;
   display: block;
-  height: 32px;
-  width: auto;
 }
 
 .logo-tag {
-  font-size: 9px;
+  margin-top: 10px;
+  font-size: 8px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.28);
-  margin-top: 6px;
+  color: #789084;
 }
 </style>

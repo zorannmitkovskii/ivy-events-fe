@@ -218,7 +218,7 @@ function readable(value) {
 
 .completeness { display: flex; gap: 10px; align-items: center; font-size: 12.5px; color: #6b6b6b; }
 .bar { flex: 1; height: 6px; border-radius: 3px; background: #ece8e0; overflow: hidden; }
-.fill { height: 100%; background: #5a7a52; transition: width 200ms ease; }
+.fill { height: 100%; background: var(--brand); transition: width 200ms ease; }
 
 .card { border: 1px solid #ece8e0; border-radius: 10px; background: #fff; padding: 16px;
   display: flex; flex-direction: column; gap: 12px; }
@@ -237,9 +237,9 @@ function readable(value) {
 
 .buttons { display: flex; gap: 14px; align-items: center; }
 .btn { align-self: flex-start; padding: 9px 16px; border: 0; border-radius: 8px;
-  background: #5a7a52; color: #fff; font-size: 14px; cursor: pointer; }
+  background: var(--brand); color: #fff; font-size: 14px; cursor: pointer; }
 .btn:disabled { opacity: 0.5; cursor: default; }
-.link-btn { border: 0; background: none; color: #5a7a52; cursor: pointer; font-size: 13px; padding: 0; }
+.link-btn { border: 0; background: none; color: var(--brand); cursor: pointer; font-size: 13px; padding: 0; }
 .link-btn:disabled { opacity: 0.5; cursor: default; }
 
 .state { color: #6b6b6b; }

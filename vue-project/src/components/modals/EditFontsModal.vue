@@ -142,7 +142,7 @@ function onSave() {
 .font-section-label {
   font-size: 13px;
   font-weight: 600;
-  color: #374151;
+  color: var(--ink-2);
 }
 
 .font-list {
@@ -151,7 +151,7 @@ function onSave() {
   gap: 4px;
   max-height: 200px;
   overflow-y: auto;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--line);
   border-radius: 8px;
   padding: 4px;
 }
@@ -164,20 +164,20 @@ function onSave() {
   border-radius: 6px;
   background: #fff;
   font-size: 16px;
-  color: #374151;
+  color: var(--ink-2);
   cursor: pointer;
   text-align: left;
   transition: border-color 0.2s, background 0.2s;
 }
 
 .font-btn:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
+  background: var(--sunken);
+  border-color: var(--line-2);
 }
 
 .font-btn--active {
-  border-color: var(--brand-main, #374151);
-  background: #f3f4f6;
+  border-color: var(--brand-main, var(--ink-2));
+  background: var(--sunken);
   font-weight: 600;
 }
 </style>

@@ -129,9 +129,9 @@ function readable(value) {
 .field { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; }
 .field input { padding: 7px 10px; border: 1px solid #ddd8cf; border-radius: 8px; font-size: 13px; }
 
-.btn { padding: 9px 16px; border: 0; border-radius: 8px; background: #5a7a52;
+.btn { padding: 9px 16px; border: 0; border-radius: 8px; background: var(--brand);
   color: #fff; font-size: 14px; cursor: pointer; }
-.link-btn { border: 0; background: none; color: #5a7a52; cursor: pointer;
+.link-btn { border: 0; background: none; color: var(--brand); cursor: pointer;
   font-size: 13px; padding: 0; text-align: left; }
 .link-btn.danger { color: #a3271f; }
 

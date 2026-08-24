@@ -63,7 +63,7 @@ const storyPhotos = computed(() => {
   font-family: var(--font-heading, var(--sc-heading-font));
   font-size: 40px;
   font-weight: 400;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   margin: 0 0 16px;
 }
 
@@ -100,7 +100,7 @@ const storyPhotos = computed(() => {
   font-family: var(--font-heading, var(--sc-heading-font));
   font-size: 22px;
   font-weight: 500;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   margin: 0 0 8px;
 }
 
@@ -117,7 +117,7 @@ const storyPhotos = computed(() => {
 .chapter-text {
   font-family: var(--font-body, var(--sc-body-font));
   font-size: 15px;
-  color: var(--theme-text-muted, #6b7280);
+  color: var(--theme-text-muted, var(--ink-3));
   margin: 0;
   line-height: 1.7;
 }

@@ -1,10 +1,6 @@
 <template>
   <div class="dash-page">
-    <div class="dash-page-header">
-      <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
-      <h1 class="dash-page-title">{{ t("sidebar.notifications") }}</h1>
-      <p class="dash-page-subtitle">{{ t("notifications.subtitle") }}</p>
-    </div>
+    <PageHeader :title="t('sidebar.notifications')" :subtitle="t('notifications.subtitle')" />
     <div class="d-card d-card-pad placeholder">
       {{ t("notifications.placeholder") }}
     </div>
@@ -12,6 +8,7 @@
 </template>
 
 <script setup>
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 </script>

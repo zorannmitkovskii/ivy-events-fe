@@ -1,24 +1,24 @@
 <template>
   <div class="check-in">
-    <header class="page-head">
-      <div>
-        <h1>{{ t('checkin.title') }}</h1>
+    <PageHeader :title="t('checkin.title')">
+      <template #actions>
+        <div>
         <p class="sub">{{ t('checkin.subtitle') }}</p>
-      </div>
-
-      <!-- The one thing staff need to glance at. Not a spinner: the app works
-           the same either way, and the badge is how they find out it is
-           catching up rather than by the buttons behaving differently. -->
-      <div class="status" role="status">
+        </div>
+        <!-- The one thing staff need to glance at. Not a spinner: the app works
+        the same either way, and the badge is how they find out it is
+        catching up rather than by the buttons behaving differently. -->
+        <div class="status" role="status">
         <span class="pill" :class="online ? 'pill-online' : 'pill-offline'">
-          {{ online ? t('checkin.online') : t('checkin.offline') }}
+        {{ online ? t('checkin.online') : t('checkin.offline') }}
         </span>
         <span v-if="pending.length" class="pill pill-pending">
-          {{ t('checkin.waitingToSync', { n: pending.length }) }}
+        {{ t('checkin.waitingToSync', { n: pending.length }) }}
         </span>
         <span v-if="syncing" class="pill">{{ t('checkin.syncing') }}</span>
-      </div>
-    </header>
+        </div>
+      </template>
+    </PageHeader>
 
     <section v-if="summary" class="counts" :aria-label="t('checkin.counts')">
       <div class="count">
@@ -134,7 +134,7 @@
           </li>
         </ul>
 
-        <p v-if="!roster.length" class="empty">{{ t('checkin.noRoster') }}</p>
+        <EmptyState v-if="!roster.length" tone="no-results" :title="t('checkin.noRoster')" />
       </section>
     </div>
 
@@ -145,6 +145,8 @@
 </template>
 
 <script setup>
+import EmptyState from '@/components/ui/EmptyState.vue'
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import useCheckIn from '@/composables/useCheckIn'
@@ -252,7 +254,6 @@ async function arriveByName(guest) {
 <style scoped>
 .check-in { display: flex; flex-direction: column; gap: 16px; padding: 4px; }
 
-.page-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
 .page-head h1 { margin: 0; font-size: 22px; }
 .sub { margin: 4px 0 0; font-size: 13px; color: #6b6b6b; }
 
@@ -303,9 +304,9 @@ async function arriveByName(guest) {
 
 .hidden-note, .empty { font-size: 12px; color: #6b6b6b; margin: 6px 0 0; }
 
-.btn { padding: 9px 16px; border: 0; border-radius: 8px; background: #5a7a52; color: #fff; font-size: 14px; cursor: pointer; }
+.btn { padding: 9px 16px; border: 0; border-radius: 8px; background: var(--brand); color: #fff; font-size: 14px; cursor: pointer; }
 .btn:disabled { opacity: 0.5; cursor: default; }
-.link-btn { border: 0; background: none; color: #5a7a52; cursor: pointer; font-size: 13px; padding: 0; }
+.link-btn { border: 0; background: none; color: var(--brand); cursor: pointer; font-size: 13px; padding: 0; }
 
 .visually-hidden {
   position: absolute; width: 1px; height: 1px; overflow: hidden;

@@ -1,22 +1,39 @@
-/* Import fonts from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap');
+/* Type
+   ---------------------------------------------------------------------------
+   The 2026 redesign is set in Georgia and Arial. Both ship with every machine
+   the product runs on, so the page paints its final type on the first frame
+   instead of reflowing into a webfont a second later — which on the invitation
+   pages, where the couple's names are 70px, was the most visible jump on the
+   site.
 
-/* Base styles */
+   The two families live in `--font-display` and `--font-ui` (see
+   `ivy/tokens.css`); nothing should name a family directly. The Google Fonts
+   import that used to be here — Cormorant Garamond, Inter, Outfit, Playfair
+   Display — is gone with it, along with the render-blocking request.
+   --------------------------------------------------------------------------- */
+
 body {
-  font-family: 'Outfit', 'Inter', sans-serif;
-  font-size: 15px;
-  line-height: 1.6;
+  font-family: var(--font-ui);
   margin: 0;
   padding: 0;
-  -webkit-font-smoothing: antialiased;
 }
 
-/* Headings */
-h1, h2, h3, h4 {
-  font-weight: 600;
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
   margin-bottom: 12px;
 }
 
-h1 { font-size: 32px; }
-h2 { font-size: 24px; }
-h3 { font-size: 18px; }
+h1 {
+  font-size: 32px;
+}
+
+h2 {
+  font-size: 24px;
+}
+
+h3 {
+  font-size: 18px;
+}

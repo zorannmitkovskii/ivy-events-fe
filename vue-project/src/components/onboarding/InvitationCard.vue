@@ -87,7 +87,7 @@ defineEmits(['select', 'preview']);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--neutral-100, #f3f4f6);
+  background: var(--neutral-100, var(--sunken));
 }
 
 .selected-badge {
@@ -130,7 +130,7 @@ defineEmits(['select', 'preview']);
   border-radius: 100px;
   border: none;
   background: #fff;
-  color: var(--neutral-900, #111827);
+  color: var(--neutral-900, var(--ink));
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -149,12 +149,12 @@ defineEmits(['select', 'preview']);
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  color: var(--neutral-900, #111827);
+  color: var(--neutral-900, var(--ink));
 }
 
 .card-subtitle {
   margin: 2px 0 0;
   font-size: 12px;
-  color: var(--neutral-500, #6b7280);
+  color: var(--neutral-500, var(--ink-3));
 }
 </style>

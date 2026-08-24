@@ -1,17 +1,14 @@
 <template>
   <div class="dash-page">
     <!-- Header -->
-    <div class="dash-page-header">
-      <div>
-        <div class="page-eyebrow">{{ $t("sidebar.navigation") }}</div>
-        <h1 class="dash-page-title">{{ $t('support.title') }}</h1>
-        <p class="dash-page-subtitle">{{ $t('support.subtitle') }}</p>
-      </div>
-      <button class="btn-create" @click="openCreate">
+    <PageHeader :title="$t('support.title')" :subtitle="$t('support.subtitle')">
+      <template #actions>
+        <button class="btn-create" @click="openCreate">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
         {{ $t('support.newMessage') }}
-      </button>
-    </div>
+        </button>
+      </template>
+    </PageHeader>
 
     <!-- Loading -->
     <div v-if="loading" class="loading">
@@ -28,50 +25,21 @@
       <p>{{ $t('support.emptyText') }}</p>
     </div>
 
-    <!-- Table Card -->
-    <div v-else class="table-card">
-      <div class="table-wrap">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>{{ $t('support.thName') }}</th>
-              <th>{{ $t('support.thEmail') }}</th>
-              <th>{{ $t('support.thPhone') }}</th>
-              <th>{{ $t('support.thSubject') }}</th>
-              <th>{{ $t('support.thMessage') }}</th>
-              <th>{{ $t('support.thDate') }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="row in messages"
-              :key="row.id"
-              class="row-hover row-click"
-              @click="openEdit(row)"
-            >
-              <td>
-                <div class="cell-title">{{ row.name || '—' }}</div>
-              </td>
-              <td>
-                <div class="text-sub">{{ row.email || '—' }}</div>
-              </td>
-              <td>
-                <div class="text-sub">{{ row.phone || '—' }}</div>
-              </td>
-              <td>
-                <div class="cell-title">{{ row.subject || '—' }}</div>
-              </td>
-              <td>
-                <div class="text-sub text-sub--wide">{{ row.message || '—' }}</div>
-              </td>
-              <td>
-                <span class="text-sub">{{ formatDate(row.createdAt) }}</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <DataTable
+      v-else
+      :columns="columns"
+      :rows="messages"
+      row-key="id"
+      clickable-rows
+      @row-click="openEdit"
+    >
+      <template #cell-name="{ row }"><div class="cell-title">{{ row.name || '—' }}</div></template>
+      <template #cell-email="{ row }"><div class="text-sub">{{ row.email || '—' }}</div></template>
+      <template #cell-phone="{ row }"><div class="text-sub">{{ row.phone || '—' }}</div></template>
+      <template #cell-subject="{ row }"><div class="cell-title">{{ row.subject || '—' }}</div></template>
+      <template #cell-message="{ row }"><div class="text-sub text-sub--wide">{{ row.message || '—' }}</div></template>
+      <template #cell-date="{ row }"><span class="text-sub">{{ formatDate(row.createdAt) }}</span></template>
+    </DataTable>
 
     <!-- Create / Edit Dialog -->
     <BaseModal :open="dialogOpen" :title="editingId ? $t('support.editMessage') : $t('support.newMessage')" @close="closeDialog">
@@ -113,10 +81,24 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import DataTable from '@/components/ui/DataTable.vue'
+import PageHeader from '@/components/ui/PageHeader.vue'
+import { computed, ref, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import { contactService } from "@/services/contact.service";
 import { onboardingStore } from "@/store/onboarding.store";
+
+const { t } = useI18n();
+
+const columns = computed(() => [
+  { key: "name", label: t("support.thName") },
+  { key: "email", label: t("support.thEmail") },
+  { key: "phone", label: t("support.thPhone") },
+  { key: "subject", label: t("support.thSubject") },
+  { key: "message", label: t("support.thMessage") },
+  { key: "date", label: t("support.thDate") },
+]);
 
 const messages = ref([]);
 const loading = ref(true);
@@ -226,19 +208,12 @@ function formatDate(d) {
 </script>
 
 <style scoped>
-.dash-page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  flex-wrap: wrap;
-}
 
 .btn-create {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 9px 18px; border: none; border-radius: 9px;
   background: var(--dash-sage); color: #fff;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   font-size: 13px; font-weight: 500; cursor: pointer;
   transition: background 0.15s;
 }
@@ -254,7 +229,7 @@ function formatDate(d) {
   color: var(--dash-light);
 }
 .empty-state h3 {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 18px;
   font-weight: 400;
   color: var(--dash-charcoal);
@@ -318,7 +293,7 @@ function formatDate(d) {
   border: 1.5px solid var(--dash-cream-border);
   border-radius: 9px;
   font-size: 13px;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   background: var(--dash-cream);
   color: var(--dash-ink);
   outline: none;
@@ -350,7 +325,7 @@ function formatDate(d) {
 .btn-cancel {
   padding: 9px 20px; border: 1.5px solid var(--dash-cream-border); border-radius: 9px;
   background: var(--dash-cream-card); color: var(--dash-ink); font-size: 13px; font-weight: 500;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   cursor: pointer; transition: all 0.15s;
 }
 .btn-cancel:hover { border-color: var(--dash-sage-light); }
@@ -358,7 +333,7 @@ function formatDate(d) {
 .btn-save {
   padding: 9px 24px; border: none; border-radius: 9px;
   background: var(--dash-sage); color: #fff;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   font-size: 13px; font-weight: 500; cursor: pointer;
   transition: background 0.15s;
 }
@@ -366,7 +341,6 @@ function formatDate(d) {
 .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
 
 @media (max-width: 600px) {
-  .dash-page-header { flex-direction: column; }
-  .form-row { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
 }
 </style>

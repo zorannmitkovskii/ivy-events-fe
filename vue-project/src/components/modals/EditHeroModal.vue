@@ -155,7 +155,7 @@ async function submit() {
 }
 
 .image-upload-area {
-  border: 2px dashed var(--neutral-300, #d1d5db);
+  border: 2px dashed var(--neutral-300, var(--line-2));
   border-radius: 10px;
   padding: 28px 16px;
   display: flex;
@@ -164,13 +164,13 @@ async function submit() {
   justify-content: center;
   gap: 6px;
   cursor: pointer;
-  color: var(--neutral-400, #9ca3af);
+  color: var(--neutral-400, var(--ink-4));
   transition: border-color 0.2s, color 0.2s;
 }
 
 .image-upload-area:hover {
-  border-color: var(--brand-gold, #c8a24d);
-  color: var(--brand-gold, #c8a24d);
+  border-color: var(--brand-gold, var(--brand-gold));
+  color: var(--brand-gold, var(--brand-gold));
 }
 
 .upload-text {
@@ -181,7 +181,7 @@ async function submit() {
 .image-preview-wrap {
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid var(--neutral-200, #e5e7eb);
+  border: 1px solid var(--neutral-200, var(--line));
 }
 
 .image-preview {
@@ -195,7 +195,7 @@ async function submit() {
   display: block;
   width: 100%;
   padding: 8px;
-  background: var(--neutral-50, #f9fafb);
+  background: var(--neutral-50, var(--sunken));
   border: none;
   cursor: pointer;
   font-size: 12px;

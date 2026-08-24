@@ -204,28 +204,28 @@ function emitUpdate() {
 .adv-label {
   font-size: 13px;
   font-weight: 600;
-  color: #374151;
+  color: var(--ink-2);
 }
 
 .adv-label-sm {
   font-size: 12px;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--ink-3);
   margin-bottom: 4px;
 }
 
 .adv-input {
   padding: 8px 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--line-2);
   border-radius: 8px;
   font-size: 13px;
   font-family: monospace;
-  color: #1f2937;
+  color: var(--ink);
 }
 
 .adv-input:focus {
   outline: none;
-  border-color: #6b7280;
+  border-color: var(--ink-3);
 }
 
 /* Chips */
@@ -237,12 +237,12 @@ function emitUpdate() {
 
 .chip {
   padding: 6px 14px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--line);
   border-radius: 8px;
   background: #fff;
   font-size: 13px;
   font-weight: 500;
-  color: #374151;
+  color: var(--ink-2);
   cursor: pointer;
   transition: border-color 0.15s;
   font-family: inherit;
@@ -254,12 +254,12 @@ function emitUpdate() {
 }
 
 .chip:hover {
-  border-color: #9ca3af;
+  border-color: var(--ink-4);
 }
 
 .chip--active {
-  border-color: #1f2937;
-  background: #f3f4f6;
+  border-color: var(--ink);
+  background: var(--sunken);
   font-weight: 600;
 }
 
@@ -269,7 +269,7 @@ function emitUpdate() {
   height: 24px;
   border-radius: 12px;
   border: none;
-  background: #d1d5db;
+  background: var(--line-2);
   cursor: pointer;
   position: relative;
   transition: background 0.2s;
@@ -302,9 +302,9 @@ function emitUpdate() {
   flex-direction: column;
   gap: 12px;
   padding: 12px;
-  background: #f9fafb;
+  background: var(--sunken);
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--line);
 }
 
 /* Color fields */
@@ -323,7 +323,7 @@ function emitUpdate() {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--line);
   flex-shrink: 0;
 }
 
@@ -342,22 +342,22 @@ function emitUpdate() {
 }
 
 .color-picker::-webkit-color-swatch {
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--line-2);
   border-radius: 6px;
 }
 
 .color-hex {
   flex: 1;
   padding: 6px 10px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--line-2);
   border-radius: 6px;
   font-size: 12px;
   font-family: monospace;
-  color: #1f2937;
+  color: var(--ink);
 }
 
 .color-hex:focus {
   outline: none;
-  border-color: #6b7280;
+  border-color: var(--ink-3);
 }
 </style>

@@ -438,7 +438,7 @@ onMounted(() => {
 }
 
 .cart-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 17px;
   font-weight: 500;
   color: var(--dash-charcoal);
@@ -503,7 +503,7 @@ onMounted(() => {
 }
 
 .cart-item-price {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 15px;
   font-weight: 500;
   color: var(--dash-charcoal);
@@ -549,7 +549,7 @@ onMounted(() => {
 }
 
 .cart-total-amount {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 22px;
   font-weight: 500;
   color: var(--dash-charcoal);
@@ -564,7 +564,7 @@ onMounted(() => {
   border-radius: 10px;
   background: linear-gradient(135deg, var(--dash-gold), #9a7a3e);
   color: #fff;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -612,7 +612,7 @@ onMounted(() => {
   border-radius: 10px;
   background: var(--dash-cream-card);
   color: var(--dash-muted);
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   font-size: 13.5px;
   font-weight: 500;
   cursor: pointer;
@@ -665,7 +665,7 @@ onMounted(() => {
 }
 
 .empty-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: 18px;
   color: var(--dash-charcoal);
@@ -724,7 +724,7 @@ onMounted(() => {
 }
 
 .package-name {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 22px;
   font-weight: 400;
   color: var(--dash-charcoal);
@@ -748,7 +748,7 @@ onMounted(() => {
 }
 
 .price-amount {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 2rem;
   font-weight: 400;
   color: var(--dash-charcoal);
@@ -790,7 +790,7 @@ onMounted(() => {
   border-radius: 10px;
   background: #fff;
   color: var(--dash-charcoal);
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
@@ -835,7 +835,7 @@ onMounted(() => {
   border: 1.5px solid var(--dash-cream-border);
   border-radius: 9px;
   font-size: 13px;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   background: var(--dash-cream);
   color: var(--dash-ink);
   max-width: 320px;
@@ -854,7 +854,7 @@ onMounted(() => {
   border-radius: 9px;
   background: linear-gradient(135deg, var(--dash-gold), #9a7a3e);
   color: #fff;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;

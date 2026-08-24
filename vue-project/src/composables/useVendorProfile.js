@@ -21,10 +21,15 @@ async function load() {
 
   inFlight = vendorPortalService
     .me()
-    .then(({ data }) => {
-      profile.value = data;
+    // The body, not an axios response: `api.get` unwraps `res.data` before it
+    // returns. Destructuring `{ data }` off it read a property the profile
+    // does not have, so `profile` was set to undefined on every success — the
+    // portal drew no tabs, no vendor name, and no "not linked" notice either,
+    // because as far as this was concerned the call had worked.
+    .then((vendor) => {
+      profile.value = vendor;
       notLinked.value = false;
-      return data;
+      return vendor;
     })
     .catch((error) => {
       // A VENDOR role with no vendor row behind it is a setup problem, not a

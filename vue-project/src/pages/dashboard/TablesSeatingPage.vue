@@ -1,10 +1,6 @@
 <template>
   <div class="dash-page">
-    <div class="dash-page-header">
-      <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
-      <h1 class="dash-page-title">{{ t("tables.title") }}</h1>
-      <p class="dash-page-subtitle">{{ t("tables.subtitle") }}</p>
-    </div>
+    <PageHeader :title="t('tables.title')" :subtitle="t('tables.subtitle')" />
 
     <div class="view-switch" role="tablist" :aria-label="t('tables.title')">
       <button
@@ -82,6 +78,7 @@
 </template>
 
 <script setup>
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useTablesSeating } from "@/composables/useTablesSeating";
@@ -193,9 +190,9 @@ async function sendNotification() {
 <style scoped>
 .view-switch { display: flex; gap: 6px; margin-bottom: 16px; }
 .view-switch button {
-  padding: 7px 16px; border: 1px solid #e5e7eb; border-radius: 20px;
-  background: #fff; color: #6b7280; font-family: inherit; font-size: 13px;
+  padding: 7px 16px; border: 1px solid var(--line); border-radius: 20px;
+  background: #fff; color: var(--ink-3); font-family: inherit; font-size: 13px;
   font-weight: 600; cursor: pointer;
 }
-.view-switch button.on { background: #5a7a52; border-color: #5a7a52; color: #fff; }
+.view-switch button.on { background: var(--brand); border-color: var(--brand); color: #fff; }
 </style>

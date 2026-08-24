@@ -212,7 +212,7 @@ async function uploadAll() {
   height: 120px;
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid var(--neutral-200, #e5e7eb);
+  border: 1px solid var(--neutral-200, var(--line));
 }
 
 .gallery-image {
@@ -254,7 +254,7 @@ async function uploadAll() {
 .upload-area {
   width: 120px;
   height: 120px;
-  border: 2px dashed var(--neutral-300, #d1d5db);
+  border: 2px dashed var(--neutral-300, var(--line-2));
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -262,13 +262,13 @@ async function uploadAll() {
   justify-content: center;
   gap: 4px;
   cursor: pointer;
-  color: var(--neutral-400, #9ca3af);
+  color: var(--neutral-400, var(--ink-4));
   transition: border-color 0.2s, color 0.2s;
 }
 
 .upload-area:hover {
-  border-color: var(--brand-gold, #c8a24d);
-  color: var(--brand-gold, #c8a24d);
+  border-color: var(--brand-gold, var(--brand-gold));
+  color: var(--brand-gold, var(--brand-gold));
 }
 
 .upload-text {

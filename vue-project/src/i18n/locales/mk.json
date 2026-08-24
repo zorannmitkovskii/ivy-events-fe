@@ -270,7 +270,8 @@
       "privacy": "Приватност",
       "security": "Безбедност",
       "designs": "Дизајни",
-      "feedback": "Повратни информации"
+      "feedback": "Повратни информации",
+      "vendors": "Професионалци"
     },
     "copyright": "Сите права се задржани."
   },
@@ -303,7 +304,8 @@
       "gallery": "Фото галерија",
       "about": "За нас",
       "terms": "Услови и правила",
-      "contact": "Контакт"
+      "contact": "Контакт",
+      "vendors": "Професионалци"
     }
   },
   "nav": {
@@ -381,7 +383,10 @@
       "orContinue": "или продолжи со",
       "continueWithGoogle": "Продолжи со Google",
       "terms": "Услови за користење",
-      "privacy": "Политика за приватност"
+      "privacy": "Политика за приватност",
+      "visualLabel": "ВЕ ПОКАНУВААТ",
+      "visualDate": "15 · 06 · 2026",
+      "visualQuote": "„Планирањето започнува со еден убав, едноставен чекор.“"
     },
     "fields": {
       "email": "Емаил адреса",
@@ -404,7 +409,9 @@
       "signIn": "Најави се",
       "forgotPassword": "Ја заборавивте лозинката?",
       "noAccount": "Немате профил?",
-      "createAccount": "Креирај профил"
+      "createAccount": "Креирај профил",
+      "eyebrow": "ДОБРЕДОЈДОВТЕ НАЗАД",
+      "heading": "Најавете се"
     },
     "register": {
       "title": "Креирајте профил",
@@ -412,7 +419,8 @@
       "createAccount": "Креирај профил",
       "haveAccount": "Веќе имате профил?",
       "signIn": "Најави се",
-      "agree": "Се согласувам со Условите за користење и Политиката за приватност"
+      "agree": "Се согласувам со Условите за користење и Политиката за приватност",
+      "eyebrow": "ЗАПОЧНЕТЕ БЕСПЛАТНО"
     },
     "verify": {
       "title": "Потврдете ја е-поштата",
@@ -514,7 +522,7 @@
     "payment": {
       "title": "Информации за плаќање",
       "email": "Емаил адреса",
-      "emailPh": "userexample.com",
+      "emailPh": "ime@primer.mk",
       "cardNumber": "Број на картичка",
       "expiry": "Важи до",
       "cvc": "CVC",
@@ -572,7 +580,7 @@
       "titleAccent1": "прекрасни",
       "titleLine2": "покани. Планирајте",
       "titleAccent2": "незаборавни",
-      "titleLine3": "покани.",
+      "titleLine3": "настани.",
       "subtitle": "Сè-во-едно платформа за елегантни дигитални покани, лесно следење на RSVP и безстресно управување со настани.",
       "primaryCta": "✦ Започни бесплатно",
       "secondaryCta": "Погледни дизајни",
@@ -582,17 +590,21 @@
       "chipConfirm": "Нова потврда!",
       "chipConfirmSub": "Марија потврди присуство",
       "chipGuests": "47 / 80 гости",
-      "chipGuestsSub": "потврдиле присуство",
+      "chipGuestsSub": "од 80 гости потврдиле",
       "cardLabel": "Вие сте поканети на",
       "cardNames": "Ана & Марко",
       "cardDate": "15 Јуни 2025 · 18:00",
-      "cardLocation": "Охрид, Македонија"
+      "cardLocation": "Охрид, Македонија",
+      "ratingScore": "4.9",
+      "ratingSource": "од нашите корисници",
+      "cardCta": "ПОТВРДИ ПРИСУСТВО",
+      "chipGuestsCount": "47"
     },
     "howItWorks": {
       "eyebrow": "Како функционира",
       "title": "Како функционира",
-      "titleBefore": "Четири чекори до",
-      "titleAccent": "совршена покана",
+      "titleBefore": "Не е само покана.",
+      "titleAccent": "Тоа е почетокот на доживувањето.",
       "subtitle": "Од шаблон до испратена покана — за помалку од 10 минути",
       "steps": {
         "chooseTemplate": {
@@ -611,7 +623,8 @@
           "title": "Следи RSVP",
           "description": "Следи одговори и управувај со листата на гости во реално време"
         }
-      }
+      },
+      "explore": "ИСТРАЖИ"
     },
     "whyChoose": {
       "title": "Зошто да го изберете IvyEvents?",
@@ -661,13 +674,17 @@
           "cardNames": "18-ти роденден",
           "cardDate": "12 Мај · Битола"
         }
-      }
+      },
+      "paperLabel": "ЗАЕДНО СО НИВНИТЕ СЕМЕЈСТВА",
+      "paperDate": "24 · 08 · 2026",
+      "cardCaption": "Интерактивна свадбена покана",
+      "empty": "Сè уште нема достапни дизајни."
     },
     "features": {
       "eyebrow": "Можности",
       "title": "Можности за секоја етапа од организацијата",
-      "titleBefore": "Сè за секоја",
-      "titleAccent": "етапа од организацијата",
+      "titleBefore": "Сè е под контрола.",
+      "titleAccent": "Вие сте присутни.",
       "subtitle": "Платформата ги покрива сите аспекти — од дизајн до следење на гости — за беспрекорно искуство.",
       "rsvpLabel": "Live RSVP преглед",
       "rsvpTitle": "Следи кој доаѓа — во реално време",
@@ -709,7 +726,17 @@
           "title": "Аналитика во реално време",
           "description": "Добијте увид во одговори, стапки на присуство и ангажман"
         }
-      }
+      },
+      "cta": "Откриј го планерот",
+      "dashGreeting": "ДОБРО УТРО, АНА",
+      "dashHeadline": "Вашиот ден се приближува.",
+      "dashConfirmed": "Потврдени",
+      "dashTasks": "Задачи",
+      "dashBudget": "Буџет",
+      "dashItem1": "Дегустација на мени",
+      "dashItem1When": "Денес · 18:30",
+      "dashItem2": "Потврди декорација",
+      "dashItem2When": "Утре · 10:00"
     },
     "faq": {
       "title": "Најчесто поставувани прашања",
@@ -784,6 +811,10 @@
       "subtitle": "Приклучете се на илјадници задоволни корисници — започнете бесплатно",
       "primaryCta": "Започни со планирање",
       "secondaryCta": "Погледни дизајни"
+    },
+    "quote": {
+      "text": "За првпат планирањето не ни изгледаше како обврска. Сè беше јасно, убаво и навистина наше.",
+      "attribution": "АНА & МАРКО, ОХРИД"
     }
   },
   "overview": {
@@ -937,7 +968,7 @@
       "addressLine": "Адреса",
       "city": "Град",
       "postalCode": "Поштенски код",
-      "googleMapsUrl": "Google Maps URL",
+      "googleMapsUrl": "Линк до Google Maps",
       "description": "Опис",
       "visibility": "Видливост",
       "status": "Статус"
@@ -1092,7 +1123,7 @@
     "support": "Поддршка",
     "premium": "ПРЕМИУМ",
     "eventPlanner": "Организатор",
-    "weddingPlanner": "Wedding Planner",
+    "weddingPlanner": "Планер за свадба",
     "eventSettings": "Подесувања на настан",
     "notifications": "Известувања",
     "signOut": "Одјави се",
@@ -1108,10 +1139,17 @@
     "checkIn": "Пријава",
     "announcements": "Објави",
     "contributions": "Придонеси",
-    "postEvent": "По настанот"
+    "postEvent": "По настанот",
+    "quotes": "Понуди",
+    "approvals": "Одобрувања",
+    "pipeline": "Продажен тек",
+    "agency": "Агенција",
+    "content": "Содржина",
+    "contentAnalytics": "Содржина и конверзии"
   },
   "admin": {
     "sidebar": {
+      "dashboard": "Табла",
       "events": "Настани",
       "packages": "Пакети",
       "users": "Корисници",
@@ -1120,7 +1158,13 @@
       "faq": "ЧПП",
       "invitationTemplates": "Покани",
       "emailTemplates": "Емаил шаблони",
-      "emailSend": "Испрати емаили"
+      "emailSend": "Испрати емаили",
+      "content": "Содржина",
+      "contentAnalytics": "Конверзии",
+      "organizers": "Организатори",
+      "vendors": "Професионалци",
+      "vendorQueue": "Ред за одобрување",
+      "settings": "Подесувања"
     },
     "reviews": {
       "title": "Рецензии",
@@ -1174,7 +1218,9 @@
       "thAnswer": "Одговор",
       "thOrder": "Редослед",
       "thActive": "Статус",
-      "thActions": "Акции"
+      "thActions": "Акции",
+      "statusActive": "Активно",
+      "statusInactive": "Неактивно"
     },
     "invitationTemplates": {
       "title": "Шаблони за покани",
@@ -1197,7 +1243,10 @@
       "thCategory": "Категорија",
       "thActive": "Статус",
       "thActions": "Акции",
-      "active": "Активно"
+      "active": "Активно",
+      "uploadHint": "Кликни за да качиш слика",
+      "removeImage": "Отстрани слика",
+      "selectCategory": "Избери категорија"
     },
     "emailTemplates": {
       "title": "Емаил шаблони",
@@ -1221,7 +1270,9 @@
       "thCreatedAt": "Креирано",
       "thActions": "Акции",
       "deleteConfirm": "Избриши \"{name}\"?",
-      "previewTitle": "Преглед на емаил"
+      "previewTitle": "Преглед на емаил",
+      "noHtml": "Нема HTML содржина",
+      "uploadHtml": "Качи HTML"
     },
     "emailSend": {
       "title": "Испрати емаили",
@@ -1279,7 +1330,12 @@
     "loadingAddress": "Се вчитува адреса...",
     "loading": "Се обработува…",
     "copy": "Копирај",
-    "copied": "Копирано"
+    "copied": "Копирано",
+    "remove": "Отстрани",
+    "showingRange": "Прикажани {from}–{to} од {total}",
+    "preview": "Прегледај",
+    "menu": "Мени",
+    "notifications": "Известувања"
   },
   "tables": {
     "title": "Маси и распоред",
@@ -1420,7 +1476,10 @@
     "deleting": "Се брише...",
     "confirmDelete": "Сигурно ли сакаш да ја избришеш оваа слика?",
     "confirmDeleteMany": "Сигурно ли сакаш да ги избришеш овие {count} слики?",
-    "deleteError": "Бришењето не успеа"
+    "deleteError": "Бришењето не успеа",
+    "lockedTitle": "Галеријата не е достапна",
+    "lockedBody": "За оваа можност ти треба пакет со галерија. Надгради го планот за да качуваш и споделуваш фотографии.",
+    "lockedAction": "Види ги пакетите"
   },
   "settings": {
     "title": "Подесувања на настан",
@@ -1469,7 +1528,8 @@
       "gallery": "Галерија на приказна",
       "collage": "Колаж фотографии",
       "weddingDetails": "Детали за свадба"
-    }
+    },
+    "locationPh": "Хотел Порта, Скопје"
   },
   "invitationLinks": {
     "title": "Линкови за покана",
@@ -1540,7 +1600,30 @@
     "cartEmpty": "Вашата кошничка е празна",
     "cartTotal": "Вкупно",
     "checkout": "Продолжи со плаќање",
-    "removeFromCart": "Отстрани"
+    "removeFromCart": "Отстрани",
+    "heroEyebrow": "ПАКЕТИ ЗА ДИГИТАЛНИ ПОКАНИ",
+    "heroTitle": "Од покана до",
+    "heroAccent": "организиран настан.",
+    "heroLead": "Еднократно плаќање за еден настан. Започнете бесплатно, а пакет изберете пред објавување.",
+    "gallery": {
+      "eyebrow": "ФОТО ГАЛЕРИЈА",
+      "title": "Спомените имаат свој пакет.",
+      "text": "Галеријата е независна од поканата. Гостите поставуваат фотографии и видеа преку приватен линк или QR-код.",
+      "cta": "Креирај галерија",
+      "tierSmall": "За помал настан",
+      "tierMedium": "За цела прослава",
+      "tierLarge": "Фотографии и видеа"
+    },
+    "compare": {
+      "eyebrow": "БРЗА СПОРЕДБА",
+      "title": "Кој пакет е за вас?",
+      "feature": "Функционалност",
+      "invitation": "Дигитална покана + RSVP",
+      "allDesigns": "Сите дизајни",
+      "seating": "Распоред на маси",
+      "advancedTasks": "Напредни задачи",
+      "notifications": "Email и SMS известувања"
+    }
   },
   "about": {
     "title": "За нас",
@@ -1555,7 +1638,12 @@
     "valueElegance": "Елеганција",
     "valueEleganceDesc": "Секој детал е важен од поканите до последниот танц.",
     "valueInclusion": "Инклузија",
-    "valueInclusionDesc": "Прекрасни настани за секоја култура, буџет и прослава."
+    "valueInclusionDesc": "Прекрасни настани за секоја култура, буџет и прослава.",
+    "heroEyebrow": "ЗОШТО IVY EVENTS",
+    "heroTitle": "Технологија што остава",
+    "heroAccent": "простор за емоцијата.",
+    "storyEyebrow": "НАШАТА ИДЕЈА",
+    "storyTitle": "Најважните моменти не треба да започнат со spreadsheet хаос."
   },
   "terms": {
     "title": "Услови и правила",
@@ -1594,7 +1682,10 @@
         "title": "8. Контакт",
         "text": "За прашања во врска со овие услови, контактирајте нè на support{'@'}ivyevents.com."
       }
-    }
+    },
+    "eyebrow": "Правно",
+    "contents": "Содржина",
+    "heroEyebrow": "ПРАВНИ ИНФОРМАЦИИ"
   },
   "contact": {
     "title": "Контактирајте нè",
@@ -1612,7 +1703,22 @@
     "send": "Испрати порака",
     "sending": "Се испраќа...",
     "successTitle": "Пораката е испратена!",
-    "successText": "Ви благодариме за контактирањето. Ќе ви одговориме во најкус можен рок."
+    "successText": "Ви благодариме за контактирањето. Ќе ви одговориме во најкус можен рок.",
+    "info": {
+      "email": "Е-пошта",
+      "phone": "Телефон",
+      "location": "Адреса",
+      "city": "Скопје, Македонија"
+    },
+    "heroEyebrow": "КОНТАКТ",
+    "heroTitle": "Кажете ни како можеме",
+    "heroAccent": "да ви помогнеме.",
+    "leadTitle": "Да разговараме.",
+    "leadText": "За поддршка, наведете ја email адресата со која сте регистрирани и името на настанот.",
+    "hoursLabel": "Работно време",
+    "hoursValue": "Пон–Пет · 09:00–17:00",
+    "replyLabel": "Одговор",
+    "replyValue": "Во рок од еден работен ден"
   },
   "feedback": {
     "title": "Споделете повратна информација",
@@ -1669,7 +1775,7 @@
     "city": "Град",
     "countryIso3": "Држава (ISO3)",
     "capacity": "Капацитет",
-    "googleMapsUrl": "Google Maps URL",
+    "googleMapsUrl": "Линк до Google Maps",
     "description": "Опис",
     "notes": "Белешки",
     "photoUrl": "URL на фотографија",
@@ -1918,7 +2024,7 @@
     "sectionHidden": "Сокриј секција",
     "showSection": "Прикажи секција",
     "hideSection": "Сокриј секција",
-    "anchorId": "Anchor ID",
+    "anchorId": "Ознака за котва",
     "animation": "Анимација",
     "animationNone": "Без",
     "animationFade": "Појавување",
@@ -1957,7 +2063,11 @@
     "groomName": "Име на младоженец",
     "weddingDate": "Датум на свадба",
     "venue": "Место / Локација",
-    "storyImages": "Слики за приказна"
+    "storyImages": "Слики за приказна",
+    "readability": "Читливост",
+    "readabilityPass": "поминува",
+    "readabilityFail": "слаб контраст",
+    "readabilityHint": "Комбинација под 4.5:1 е тешка за читање на телефон и на сонце. Затемни го текстот или посветли ја подлогата."
   },
   "organizerOverview": {
     "title": "Преглед на организатор",
@@ -2008,7 +2118,18 @@
       "PENDING": "На чекање",
       "ACTIVATED": "Активен",
       "ACHIVED": "Архивиран"
-    }
+    },
+    "needsAttention": "Бара внимание",
+    "pinnedSection": "Закачени",
+    "upcomingSection": "Претстојни",
+    "completedSection": "Завршени",
+    "searchPlaceholder": "Барај настан...",
+    "noDate": "Без датум",
+    "today": "Денес",
+    "daysLeft": "уште {count} дена",
+    "daysAgo": "пред {count} дена",
+    "overdueTasks": "{count} задоцнети задачи",
+    "noneMatch": "Ниту еден настан не одговара на пребарувањето."
   },
   "vendorPortal": {
     "logout": "Одјави се",
@@ -2094,7 +2215,20 @@
       "AUDIO": "Музика"
     },
     "application": "Апликација",
-    "microsite": "Микро-сајт"
+    "microsite": "Микро-сајт",
+    "availability": {
+      "AVAILABLE": "Слободен",
+      "HOLD": "Во исчекување",
+      "CONFIRMED": "Потврден",
+      "UNAVAILABLE": "Зафатен",
+      "status": "Состојба",
+      "noReason": "Без образложение",
+      "reasonPlaceholder": "Зошто? (по избор)",
+      "blockDay": "Означи го денот",
+      "confirm": "Потврди",
+      "release": "Ослободи"
+    },
+    "inbox": "Барања"
   },
   "catering": {
     "title": "Мени од ресторанот",
@@ -2288,7 +2422,7 @@
     "subtitle": "Благодарност, галерија и барање за оцена — неколку дена откако ќе заврши.",
     "actionTHANK_YOU": "Благодарност до гостите",
     "actionGALLERY_ACCESS": "Линк до галеријата",
-    "actionVENDOR_REVIEW_REQUEST": "Барање за оцена на добавувачите",
+    "actionVENDOR_REVIEW_REQUEST": "Барање за оцена на професионалците",
     "delayDays": "Денови по настанот",
     "audience": "До кого",
     "audienceCHECKED_IN": "Кои дојдоа",
@@ -2310,7 +2444,7 @@
     "cancelled": "Пакетот е откажан. Зачувај повторно за да го вратиш."
   },
   "directory": {
-    "title": "Добавувачи",
+    "title": "Професионалци",
     "subtitle": "Најди фотограф, ресторан, бенд или декоратор.",
     "searchPlaceholder": "Барај по име…",
     "category": "Категорија",
@@ -2362,7 +2496,7 @@
     }
   },
   "vendorQueue": {
-    "title": "Апликации од добавувачи",
+    "title": "Апликации од професионалци",
     "subtitle": "Најстарите први.",
     "empty": "Нема апликации што чекаат.",
     "approve": "Одобри",
@@ -2402,5 +2536,573 @@
       "ACTIVE": "Активен преку HTTPS.",
       "FAILED": "Не успеа."
     }
+  },
+  "inbox": {
+    "title": "Барања од клиенти",
+    "subtitle": "Најбрзиот одговор ја добива работата.",
+    "median": "Просечен одговор",
+    "unanswered": "Без одговор",
+    "empty": "Сè уште нема барања.",
+    "someone": "Некој",
+    "noDate": "Без датум",
+    "guests": "{n} гости",
+    "where": "Каде",
+    "attachment": "Прилог",
+    "replyPlaceholder": "Одговори…",
+    "send": "Испрати",
+    "accept": "Прифати",
+    "askQuestion": "Прашај нешто",
+    "decline": "Одбиј",
+    "minutes": "{n} мин",
+    "hours": "{n} ч",
+    "days": "{n} д",
+    "status": {
+      "SENT": "Чека одговор",
+      "QUESTION_ASKED": "Прашано",
+      "ACCEPTED": "Прифатено",
+      "DECLINED": "Одбиено",
+      "QUOTED": "Понудено",
+      "EXPIRED": "Истечено"
+    }
+  },
+  "inquiry": {
+    "contact": "Побарај понуда",
+    "yourName": "Твоето име",
+    "email": "Е-пошта",
+    "phone": "Телефон",
+    "date": "Датум на настанот",
+    "guests": "Број на гости",
+    "budget": "Буџет (од – до)",
+    "requirements": "Што ти треба",
+    "askedOnceHint": "Ова се прашањата што професионалецот и онака би ги поставил. Одговори ги сега и добиваш одговор наместо контра-прашање.",
+    "send": "Испрати",
+    "sent": "Барањето е испратено. Професионалецот ќе ти одговори."
+  },
+  "quotes": {
+    "title": "Понуди",
+    "subtitle": "Сите активни понуди една до друга.",
+    "empty": "Сè уште нема понуди.",
+    "vendor": "Професионалец",
+    "comparable": "Споредливо",
+    "extras": "Додатоци",
+    "total": "Вкупно",
+    "deposit": "Аванс",
+    "accept": "Прифати",
+    "decline": "Одбиј",
+    "version": "верзија {n}",
+    "included": "Вклучено",
+    "optional": "По избор",
+    "expires": "Важи до {when}",
+    "comparableExplain": "Споредливата цена ги исклучува додатоците по избор. Кај еден професионалец албумот е вклучен, кај друг се наплаќа посебно — вкупната сума сама по себе го крие тоа."
+  },
+  "crm": {
+    "title": "Договарање",
+    "subtitle": "Барања од клиенти, додека не станат настан.",
+    "overdue": "Следен чекор задоцнет кај {count}.",
+    "noNextAction": "{count} без следен чекор — тоа се leads што никој не ги работи.",
+    "name": "Име",
+    "email": "Е-пошта",
+    "source": "Извор",
+    "nextAction": "Следен чекор",
+    "nextActionAt": "Кога",
+    "add": "Додај",
+    "stageINQUIRY": "Прашување",
+    "stageCONSULTATION": "Консултација",
+    "stagePROPOSAL": "Понуда",
+    "stageWON": "Добиено",
+    "stageLOST": "Изгубено",
+    "moveTo": "Премести во",
+    "win": "Добиено",
+    "lose": "Изгубено",
+    "openEvent": "Отвори настан",
+    "noAction": "Нема следен чекор",
+    "fee": "Хонорар",
+    "emptyColumn": "Празно",
+    "loseHeading": "Зошто е изгубено: {name}?",
+    "lostReason": "Причина",
+    "lostNote": "Забелешка",
+    "confirmLoss": "Потврди",
+    "lostPRICE": "Цена",
+    "lostAVAILABILITY": "Слободен термин",
+    "lostCOMPETITOR": "Конкуренција",
+    "lostCANCELLED": "Откажано",
+    "lostNO_RESPONSE": "Без одговор",
+    "lostOTHER": "Друго"
+  },
+  "agency": {
+    "title": "Агенција",
+    "subtitle": "Изглед, план и бројки.",
+    "plan": "План",
+    "planLapsed": "Планот истече.",
+    "activeEvents": "Активни настани: {count}",
+    "tierFREE": "Бесплатен",
+    "tierPERSONAL": "Личен",
+    "tierORGANIZER": "Организатор",
+    "tierAGENCY": "Агенција",
+    "tierVENDOR": "Професионалец",
+    "branding": "Изглед",
+    "primaryColor": "Основна боја",
+    "surfaceColor": "Позадина",
+    "textColor": "Текст",
+    "senderName": "Име на испраќач",
+    "replyTo": "Одговори на",
+    "contrastText": "Контраст текст/позадина: {ratio}:1",
+    "contrastPrimary": "Контраст бело врз основната боја: {ratio}:1",
+    "contrastFail": "под 4.5:1, тешко се чита",
+    "previewTitle": "Вака го гледа клиентот",
+    "previewButton": "Копче",
+    "noCustomCode": "Само бои и лого. HTML и JavaScript не се дозволени — би се извршиле на нашиот домен кај другите клиенти.",
+    "numbers": "Бројки",
+    "financeOnly": "За приходи и маржа треба финансиски пристап.",
+    "wonLeads": "Добиени",
+    "agencyRevenue": "Приход на агенцијата",
+    "clientSpend": "Потрошувачка на клиентите",
+    "referrals": "Кодови за препорака",
+    "code": "Код",
+    "reward": "Награда",
+    "createCode": "Создај",
+    "codeHint": "Кодот се печати на картичка — нека биде нешто што човек ќе го напише.",
+    "revoke": "Поништи",
+    "revoked": "Поништен",
+    "eventsEarned": "{count} настани"
+  },
+  "approvals": {
+    "title": "Одобрувања",
+    "subtitle": "Работи на кои клиентот треба да каже да.",
+    "subject": "Клуч (пр. menu)",
+    "subjectTitle": "Наслов",
+    "due": "Рок",
+    "description": "Опис",
+    "ask": "Побарај одобрување",
+    "supersedeHint": "Ново барање за иста тема ја заменува претходната верзија.",
+    "statusPENDING": "Чека",
+    "statusAPPROVED": "Одобрено",
+    "statusREJECTED": "Одбиено",
+    "superseded": "Заменето",
+    "overdue": "Задоцнето",
+    "decidedBy": "{who}, {when}",
+    "dueOn": "Рок: {date}",
+    "comment": "Коментар",
+    "approve": "Одобри",
+    "reject": "Одбиј",
+    "empty": "Сè уште нема барања."
+  },
+  "blog": {
+    "title": "Блог",
+    "subtitle": "Идеи и совети за настани.",
+    "all": "Сè",
+    "categoryWEDDING": "Свадби",
+    "categoryBIRTHDAY": "Родендени",
+    "categoryCORPORATE": "Корпоративни",
+    "categoryVENUE": "Локации",
+    "categoryVENDOR": "Професионалци",
+    "categoryPLANNING": "Планирање",
+    "empty": "Нема објавени текстови на овој јазик.",
+    "notFound": "Текстот не постои на овој јазик.",
+    "alsoIn": "Исто и на:",
+    "related": "Поврзано"
+  },
+  "inspiration": {
+    "subtitle": "{count} професионалци",
+    "vendors": "Професионалци",
+    "reading": "За читање",
+    "thin": "Оваа страница не се индексира — под {minimum} понуди.",
+    "empty": "Сè уште нема ништо тука.",
+    "notFound": "Оваа страница не постои."
+  },
+  "contentEditor": {
+    "title": "Уредување содржина",
+    "subtitle": "Текстови, преводи и SEO.",
+    "newTitle": "Наслов",
+    "category": "Категорија",
+    "create": "Создај",
+    "variantTitle": "Наслов",
+    "excerpt": "Извадок",
+    "body": "Текст",
+    "seo": "SEO",
+    "seoTitle": "SEO наслов",
+    "seoDescription": "SEO опис",
+    "canonical": "Канонска адреса",
+    "socialImage": "Слика за споделување",
+    "searchPreview": "Како ќе изгледа во пребарувач",
+    "noindex": "Оваа верзија нема да се индексира.",
+    "noWarnings": "Нема предупредувања.",
+    "status": "Статус",
+    "stateDRAFT": "Нацрт",
+    "stateREVIEW": "На преглед",
+    "stateSCHEDULED": "Закажано",
+    "statePUBLISHED": "Објавено",
+    "stateARCHIVED": "Архивирано",
+    "moveREVIEW": "На преглед",
+    "moveSCHEDULED": "Закажи",
+    "movePUBLISHED": "Објави",
+    "moveARCHIVED": "Архивирај",
+    "publishAt": "Време на објава",
+    "publishHint": "Закажувањето бара време; објавата важи веднаш.",
+    "links": "Поврзани",
+    "unusable": "Недостапно",
+    "noLinks": "Нема поврзани работи."
+  },
+  "contentAnalytics": {
+    "title": "Содржина и конверзии",
+    "subtitle": "Дали текстовите носат прашувања.",
+    "lastDays": "Последни {days} дена",
+    "views": "Прегледи",
+    "vendorClicks": "Кликови кон професионалец",
+    "inquiries": "Започнати прашувања",
+    "events": "Создадени настани",
+    "journeys": "{withJourney} од {total} сесии стигнале подалеку од читање.",
+    "privacy": "Без лични податоци. Сесиите се анонимни и без согласност се брои само бројка."
+  },
+  "adminOverview": {
+    "title": "Платформска табла",
+    "subtitle": "Сите настани на платформата, низ сите организации.",
+    "refresh": "Освежи",
+    "refreshing": "Освежувам…",
+    "lastUpdated": "Ажурирано {time}",
+    "from": "Од",
+    "to": "До",
+    "eventType": "Тип настан",
+    "allTypes": "Сите типови",
+    "apply": "Примени",
+    "clear": "Исчисти",
+    "totalEvents": "Вкупно настани",
+    "upcoming": "Претстојни настани",
+    "days": "Следни {n} дена",
+    "cumulative": "Кумулативно — настан за 20 дена влегува во сите три.",
+    "guests": "Гости",
+    "rsvpRate": "RSVP стапка",
+    "invited": "Поканети",
+    "confirmed": "Потврдени",
+    "delayedTasks": "Задоцнети задачи",
+    "delayedTasksNote": "Со поминат датум, ниту завршени ниту откажани.",
+    "attention": "Бара внимание",
+    "attentionCount": "{n} настани",
+    "attentionEmpty": "Ништо не бара внимание.",
+    "attentionTruncated": "Прикажани {shown} од {total}. Филтрирај за да ја стесниш листата.",
+    "overdueOpen": "{overdue} задоцнети · {open} отворени",
+    "inDays": "за {n} дена",
+    "daysAgo": "пред {n} дена",
+    "undated": "Без датум",
+    "status": {
+      "DRAFT": "Нацрт",
+      "PENDING": "Во чекање",
+      "ACTIVATED": "Активни",
+      "ACHIVED": "Архивирани"
+    },
+    "reason": {
+      "OVERDUE_TASKS": "Задоцнет",
+      "AT_RISK": "Ризичен"
+    },
+    "declined": "Одбиле",
+    "awaiting": "Чекаат одговор",
+    "rsvpChart": "Разложување на RSVP",
+    "rsvpChartEmpty": "Сè уште нема испратени покани.",
+    "monthlyChart": "Настани по месец",
+    "monthlyHint": "Влегуваат само настани со датум. Настан без датум сепак се брои во збировите, но не припаѓа на ниту еден месец.",
+    "monthlyEmpty": "Нема настани со датум во овој период.",
+    "quickNav": "Брза навигација",
+    "changeWindow": "Смени го прозорецот",
+    "attentionSummary": "{overdue} со веќе задоцнета работа, {atRisk} се приближуваат во рок од {days} дена со сè уште отворени задачи.",
+    "attentionSummaryMixed": "{overdue} со веќе задоцнета работа, {atRisk} се приближуваат со сè уште отворени задачи. Секоја организација си го поставува својот прозорец.",
+    "nav": {
+      "events": "Настани",
+      "activeEvents": "активни настани",
+      "users": "Корисници",
+      "vendors": "Професионалци",
+      "reports": "Извештаи",
+      "organizers": "Организатори",
+      "settings": "Подесувања"
+    },
+    "delayedOnEvents": "Настани со задоцнето",
+    "filters": "Филтри и опсег на датум"
+  },
+  "agencyOverview": {
+    "title": "Табла на агенцијата",
+    "subtitle": "Сите настани што ги води твојата агенција.",
+    "nav": {
+      "settings": "Подесувања",
+      "team": "Тим"
+    }
+  },
+  "agencySettings": {
+    "title": "Подесувања на агенцијата",
+    "subtitle": "Поставки што важат само за твојата агенција.",
+    "backToDashboard": "← Назад на таблата",
+    "riskWindowTitle": "Прозорец на ризик",
+    "riskWindowExplain": "Колку дена пред настанот се смета за ризичен додека сè уште има отворени задачи. Настаните со веќе задоцнета работа се прикажуваат секогаш, без разлика на оваа вредност.",
+    "riskWindowDays": "Дена",
+    "save": "Зачувај",
+    "saving": "Зачувувам…",
+    "saved": "Зачувано. Таблата ќе го користи новиот прозорец.",
+    "inherited": "Наследено од платформскиот дифолт"
+  },
+  "userDirectory": {
+    "create": "Нов корисник",
+    "search": "Пребарај корисници...",
+    "allRoles": "Сите улоги",
+    "allPackages": "Сите пакети",
+    "loading": "Се вчитуваат корисниците...",
+    "loadFailed": "Списокот на корисници не можеше да се вчита.",
+    "loadUserFailed": "Деталите за корисникот не се вчитаа",
+    "saveFailed": "Корисникот не се зачува",
+    "selected": "Избрани: {count}",
+    "delete": "Избриши",
+    "clear": "Откажи избор",
+    "user": "Корисник",
+    "role": "Улога",
+    "package": "Пакет",
+    "status": "Статус",
+    "actions": "Дејства",
+    "empty": "Нема пронајдени корисници",
+    "active": "Активен",
+    "inactive": "Неактивен",
+    "edit": "Измени",
+    "showing": "Прикажани {from} - {to} од {total}",
+    "previous": "Претходна",
+    "next": "Следна",
+    "editUser": "Измени корисник",
+    "createUser": "Нов корисник",
+    "firstName": "Име",
+    "lastName": "Презиме",
+    "email": "Е-пошта",
+    "roles": "Улоги",
+    "packageTypes": "Типови пакети",
+    "events": "Настани",
+    "searchEvents": "Пребарај настани по име...",
+    "unnamed": "Без име",
+    "noEvents": "Нема пронајдени настани",
+    "cancel": "Откажи",
+    "saving": "Се зачувува...",
+    "update": "Зачувај",
+    "createAction": "Создај",
+    "firstNameRequired": "Името е задолжително",
+    "lastNameRequired": "Презимето е задолжително",
+    "emailRequired": "Е-поштата е задолжителна",
+    "roleRequired": "Потребна е барем една улога",
+    "confirmDelete": "Да се избрише корисникот „{name}“?",
+    "loadFailedTitle": "Директориумот не можеше да се вчита"
+  },
+  "adminUsers": {
+    "title": "Корисници",
+    "subtitle": "Управувај и следи ги сите кориснички сметки",
+    "discountSubscribe": "Попуст — пријава",
+    "name": "Име",
+    "fullName": "Име и презиме",
+    "phone": "Телефон",
+    "subscribe": "Пријави",
+    "subscribing": "Се пријавува...",
+    "subscribed": "Успешна пријава!",
+    "subscribeFailed": "Пријавата не успеа",
+    "nameRequired": "Името е задолжително",
+    "emailInvalid": "Внеси валидна е-пошта"
+  },
+  "agencyTeam": {
+    "title": "Тим",
+    "subtitle": "Организаторите и клиентите на твојата агенција.",
+    "backToDashboard": "← Назад на таблата",
+    "roleNote": "Можеш да додаваш организатори и кориснички сметки. Сопственици на агенција и платформски администратори додава платформата."
+  },
+  "adminOrganizers": {
+    "title": "Организатори",
+    "subtitle": "Сите што водат настани и колку носи секој од нив.",
+    "search": "Пребарај по име или е-пошта...",
+    "loading": "Се вчитуваат организаторите...",
+    "loadFailed": "Директориумот не можеше да се вчита",
+    "empty": "Нема пронајдени организатори",
+    "organizer": "Организатор",
+    "status": "Статус",
+    "activeEvents": "Доделени активни настани",
+    "overdueTasks": "Задоцнети на нивните настани",
+    "actions": "Дејства",
+    "enable": "Овозможи",
+    "disable": "Оневозможи",
+    "changeRole": "Промени улога",
+    "statusValue": {
+      "ACTIVE": "Активен",
+      "DISABLED": "Оневозможен"
+    },
+    "showing": "Прикажани {from} - {to} од {total}",
+    "truncated": "Прикажани се првите {shown} од најмногу {limit} вчитани организатори — стесни го пребарувањето за да си сигурен дека ги гледаш сите.",
+    "drillSummary": "{events} доделени настани, {overdue} задоцнети задачи на нив.",
+    "drillTasks": "{overdue} задоцнети / {open} отворени",
+    "drillEmpty": "Сè уште нема доделени настани."
+  },
+  "adminSettings": {
+    "title": "Системски подесувања",
+    "subtitle": "Конфигурација на платформата и прозорецот за ризик по агенција.",
+    "configuration": "Конфигурација",
+    "emailTemplatesNote": "Што испраќа платформата и на кој јазик.",
+    "invitationTemplatesNote": "Дизајните од кои избираат двојките.",
+    "packagesNote": "Што содржи и колку чини секој план.",
+    "emailSendNote": "Еднократна порака до одбрана група.",
+    "riskWindowTitle": "Прозорец за ризик по организација",
+    "riskWindowExplain": "Колку дена однапред настан со отворени задачи се смета за ризичен. Агенциите што немаат избрано го наследуваат стандардот на платформата.",
+    "organization": "Организација",
+    "organizationPlaceholder": "ID на организација",
+    "riskWindowDays": "Денови",
+    "loadCurrent": "Вчитај тековно",
+    "loading": "Се вчитува...",
+    "save": "Зачувај",
+    "saving": "Се зачувува...",
+    "saved": "Зачувано.",
+    "inherited": "Наследено од стандардот на платформата"
+  },
+  "teamWorkload": {
+    "title": "Оптоварување на тимот",
+    "manage": "Управувај со тимот",
+    "loading": "Се вчитува тимот...",
+    "failed": "Тимот не можеше да се вчита.",
+    "empty": "Сè уште нема никој во тимот.",
+    "addFirst": "Додади прв организатор",
+    "lede": "Подредено по задоцнета работа, не по име.",
+    "events": "{n} активни настани",
+    "overdue": "{n} задоцнети",
+    "more": "Прикажани {shown} од {total}."
+  },
+  "eventTypes": {
+    "WEDDING": "Свадба",
+    "BIRTHDAY": "Роденден",
+    "CORPORATE": "Корпоративен",
+    "CONFERENCE": "Конференција",
+    "DINNER": "Приватна вечера",
+    "BABY_SHOWER": "Бејби шауер",
+    "GRADUATION": "Матура",
+    "ANNIVERSARY": "Годишнина",
+    "GALLERY": "Фото галерија"
+  },
+  "emptyDashboard": {
+    "title": "Сè уште нема настани",
+    "body": "Таблата се полни сама штом има што да се води — гостите, задачите, календарот и бројките доаѓаат по првиот настан.",
+    "action": "Создади прв настан"
+  },
+  "months": {
+    "short": [
+      "јан",
+      "фев",
+      "мар",
+      "апр",
+      "мај",
+      "јун",
+      "јул",
+      "авг",
+      "сеп",
+      "окт",
+      "ное",
+      "дек"
+    ]
+  },
+  "adminPackages": {
+    "title": "Пакети",
+    "subtitle": "Управувај со претплатнички пакети и цени",
+    "create": "Нов пакет",
+    "search": "Пребарај пакети...",
+    "allCategories": "Сите категории",
+    "name": "Назив",
+    "category": "Категорија",
+    "type": "Тип",
+    "price": "Цена",
+    "discount": "Попуст",
+    "currency": "Валута",
+    "description": "Опис",
+    "features": "Ставки",
+    "actions": "Дејства",
+    "empty": "Нема пронајдени пакети",
+    "previous": "Претходна",
+    "next": "Следна",
+    "cancel": "Откажи",
+    "edit": "Измени",
+    "delete": "Избриши",
+    "removeRow": "Отстрани",
+    "selectCategory": "Избери категорија",
+    "selectType": "Избери тип",
+    "packageName": "Назив на пакетот",
+    "packageCategory": "Категорија на пакетот",
+    "packageType": "Тип на пакет",
+    "namePlaceholder": "на пр. Свадба Премиум",
+    "shortDescription": "Краток опис",
+    "descriptionOptional": "Опис (по избор)",
+    "featureName": "Назив на ставка",
+    "englishName": "Назив на англиски",
+    "englishDescription": "Опис на англиски"
+  },
+  "adminEvents": {
+    "title": "Настани",
+    "subtitle": "Сите настани на платформата, низ сите агенции.",
+    "search": "Пребарај настани...",
+    "allCategories": "Сите категории",
+    "allStatuses": "Сите статуси",
+    "eventName": "Назив на настанот",
+    "eventDate": "Датум на настанот",
+    "category": "Категорија",
+    "status": "Статус",
+    "date": "Датум",
+    "location": "Локација",
+    "guests": "Гости",
+    "gallery": "Галерија",
+    "galleryStorage": "Простор за галерија",
+    "bride": "Невеста",
+    "groom": "Младоженец",
+    "brideName": "Име на невестата",
+    "groomName": "Име на младоженецот",
+    "bridePlaceholder": "Име на невестата",
+    "groomPlaceholder": "Име на младоженецот",
+    "namePlaceholder": "на пр. Свадбен прием",
+    "venuePlaceholder": "Име на локал или адреса",
+    "actions": "Дејства",
+    "activate": "Активирај настан",
+    "adminCreated": "Создаден од админ",
+    "cancel": "Откажи",
+    "close": "Затвори",
+    "clear": "Исчисти",
+    "save": "Зачувај",
+    "edit": "Измени",
+    "delete": "Избриши",
+    "view": "Преглед",
+    "empty": "Нема пронајдени настани",
+    "previous": "Претходна",
+    "next": "Следна",
+    "create": "Нов настан",
+    "info": "Информации",
+    "urlsQr": "Линкови и QR кодови",
+    "privateInvite": "Приватна покана",
+    "packagesHeading": "Пакети",
+    "noPackages": "Нема доделени пакети",
+    "galleryStorageH": "Простор за галерија",
+    "packageType": "Тип на пакет",
+    "selectPackage": "Избери пакет",
+    "selectCategory": "Избери категорија",
+    "invitationTpl": "Шаблон за покана",
+    "noneSetLater": "Ништо (подоцна)",
+    "loading": "Се вчитува…",
+    "qrGallery": "Галерија",
+    "qrInvitation": "Покана",
+    "activateAssign": "Активирај и додели пакет"
+  },
+  "agencySidebar": {
+    "dashboard": "Табла на агенцијата",
+    "myEvents": "Мои настани",
+    "pipeline": "Договарање",
+    "team": "Тим",
+    "settings": "Поставки",
+    "role": "Агенција",
+    "closeMenu": "Затвори мени"
+  },
+  "rsvpSuccess": {
+    "title": "Одговорот е примен",
+    "message": "Ви благодариме. Го запишавме вашиот одговор и се радуваме што ќе славиме заедно.",
+    "guests": "Гости",
+    "back": "Назад кон поканата"
+  },
+  "editEntry": {
+    "type": "Тип",
+    "design": "Дизајн",
+    "title": "Уреди ставка"
+  },
+  "faq": {
+    "heroEyebrow": "ЧЕСТИ ПРАШАЊА",
+    "heroTitle": "Сè што треба да знаете",
+    "heroAccent": "пред да започнете.",
+    "heroLead": "Кратки и директни одговори за поканите, RSVP, пакетите и галеријата."
   }
 }

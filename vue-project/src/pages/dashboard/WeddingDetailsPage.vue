@@ -1,10 +1,6 @@
 <template>
   <div class="dash-page">
-    <div class="dash-page-header">
-      <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
-      <h1 class="dash-page-title">{{ t('weddingDetails.title') }}</h1>
-      <p class="dash-page-subtitle">{{ t('weddingDetails.subtitle') }}</p>
-    </div>
+    <PageHeader :title="t('weddingDetails.title')" :subtitle="t('weddingDetails.subtitle')" />
 
     <div class="toolbar">
       <div></div>
@@ -78,10 +74,10 @@
             <span>{{ EventDetailTypeIcon[item.type] }}</span>
           </div>
           <div class="detail-actions">
-            <button class="action-btn" @click="openEdit(item)" title="Edit">
+            <button class="action-btn" @click="openEdit(item)" :title="$t('common.edit')">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             </button>
-            <button class="action-btn action-btn--delete" @click="onDelete(item)" title="Delete">
+            <button class="action-btn action-btn--delete" @click="onDelete(item)" :title="$t('common.delete')">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
             </button>
           </div>
@@ -154,6 +150,7 @@
 </template>
 
 <script setup>
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import BaseModal from "@/components/ui/BaseModal.vue";
@@ -361,7 +358,7 @@ async function onDelete(item) {
   border-radius: 9px;
   background: var(--dash-sage);
   color: #fff;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -400,7 +397,7 @@ async function onDelete(item) {
   gap: 8px;
 }
 .empty-icon { color: var(--dash-light); margin-bottom: 8px; }
-.empty-title { font-family: 'Playfair Display', serif; font-weight: 400; font-size: 18px; color: var(--dash-charcoal); margin: 0; }
+.empty-title { font-family: var(--font-display); font-weight: 400; font-size: 18px; color: var(--dash-charcoal); margin: 0; }
 .empty-sub { font-size: 13px; color: var(--dash-muted); margin: 0 0 8px; }
 
 /* ---- Hero Image ---- */
@@ -463,7 +460,7 @@ async function onDelete(item) {
   color: #fff;
   font-size: 12px;
   font-weight: 500;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   cursor: pointer;
   transition: background 0.15s;
 }
@@ -569,7 +566,7 @@ async function onDelete(item) {
 .action-btn--delete:hover { background: var(--dash-blush-pale); color: #9a5e56; }
 
 .detail-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 18px;
   font-weight: 400;
   color: var(--dash-charcoal);
@@ -620,7 +617,7 @@ async function onDelete(item) {
   border: 1.5px solid var(--dash-cream-border);
   border-radius: 9px;
   font-size: 13px;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   background: var(--dash-cream);
   color: var(--dash-ink);
   outline: none;
@@ -648,7 +645,7 @@ async function onDelete(item) {
 .btn-cancel {
   padding: 9px 20px; border: 1.5px solid var(--dash-cream-border); border-radius: 9px;
   background: var(--dash-cream-card); color: var(--dash-ink); font-size: 13px; font-weight: 500;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   cursor: pointer; transition: all 0.15s;
 }
 .btn-cancel:hover { border-color: var(--dash-sage-light); }
@@ -656,7 +653,7 @@ async function onDelete(item) {
 .btn-save {
   padding: 9px 20px; border: none; border-radius: 9px;
   background: var(--dash-sage); color: #fff; font-size: 13px; font-weight: 500;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   cursor: pointer; transition: all 0.15s;
 }
 .btn-save:hover { background: var(--dash-sage-dark); }

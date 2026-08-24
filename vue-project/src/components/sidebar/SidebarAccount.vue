@@ -78,9 +78,12 @@ function onSignOut() { menuOpen.value = false; emit("signOut"); }
 </script>
 
 <style scoped>
+/* The design's profile row: pushed to the bottom of the column, a hairline
+   above it, and the avatar in the one warm green the sidebar allows itself. */
 .sidebar-user-wrap {
-  padding: 14px 18px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: auto;
+  padding: 18px 16px 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
   position: relative;
 }
 
@@ -98,15 +101,15 @@ function onSignOut() { menuOpen.value = false; emit("signOut"); }
 }
 
 .av {
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: var(--dash-sage);
+  background: #789b67;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: var(--font-display);
   font-size: 11px;
-  font-weight: 600;
   color: #fff;
   flex-shrink: 0;
 }
@@ -117,17 +120,17 @@ function onSignOut() { menuOpen.value = false; emit("signOut"); }
 }
 
 .av-name {
+  font-family: var(--font-display);
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.75);
-  font-weight: 500;
+  color: #fff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .av-role {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.3);
+  font-size: 8px;
+  color: #82978c;
 }
 
 .chevron {
@@ -148,7 +151,7 @@ function onSignOut() { menuOpen.value = false; emit("signOut"); }
   right: 14px;
   background: var(--dash-cream-card);
   border: 1px solid var(--dash-cream-border);
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   box-shadow: var(--dash-shadow-lg);
   padding: 6px;
   z-index: 200;
@@ -163,9 +166,9 @@ function onSignOut() { menuOpen.value = false; emit("signOut"); }
   border: none;
   background: none;
   border-radius: 8px;
-  font-family: 'Outfit', sans-serif;
-  font-size: 12.5px;
-  font-weight: 500;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
   color: var(--dash-ink);
   cursor: pointer;
   transition: background 0.15s;

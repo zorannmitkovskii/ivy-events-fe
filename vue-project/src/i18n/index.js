@@ -35,6 +35,14 @@ export function setLocale(newLocale) {
 
   i18n.global.locale.value = newLocale;
 
+  // The document has to say which language it is in (IVY-1204). `index.html`
+  // hardcodes `mk`, so before this the English site told every screen reader
+  // and every crawler that it was Macedonian — and a reader with a Macedonian
+  // voice pronounced English text with it.
+  if (typeof document !== "undefined") {
+    document.documentElement.lang = newLocale;
+  }
+
   try {
     localStorage.setItem("lang", newLocale);
   } catch (_) {}

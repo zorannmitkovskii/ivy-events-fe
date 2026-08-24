@@ -54,15 +54,15 @@ const activeLabel = computed(() => {
   border-radius: 100px;
   font-size: 13px;
   font-weight: 500;
-  border: 1px solid var(--neutral-200, #e5e7eb);
+  border: 1px solid var(--neutral-200, var(--line));
   background: #fff;
-  color: var(--neutral-700, #374151);
+  color: var(--neutral-700, var(--ink-2));
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .pill:hover:not(.pill--active):not(.pill--locked) {
-  border-color: var(--neutral-400, #9ca3af);
+  border-color: var(--neutral-400, var(--ink-4));
 }
 
 .pill--active {

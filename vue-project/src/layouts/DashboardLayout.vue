@@ -71,7 +71,7 @@ watch(isGallery, redirectGalleryIfNeeded);
   min-height: 100vh;
   display: grid;
   grid-template-columns: var(--dash-sidebar-w) 1fr;
-  background: var(--dash-cream);
+  background: var(--d-ground);
 }
 
 .dash-sidebar {
@@ -88,8 +88,12 @@ watch(isGallery, redirectGalleryIfNeeded);
 }
 
 .content {
-  padding: 36px 40px;
   flex: 1;
+  max-width: 1500px;
+  width: 100%;
+  min-width: 0;
+  margin: 0 auto;
+  padding: 36px clamp(24px, 3vw, 48px) 70px;
 }
 
 .backdrop {
@@ -122,12 +126,12 @@ watch(isGallery, redirectGalleryIfNeeded);
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(7, 18, 13, 0.71);
     z-index: 999;
   }
 
   .content {
-    padding: 24px 16px;
+    padding: 26px 16px 50px;
   }
 }
 </style>

@@ -47,7 +47,7 @@
   border: 1.5px solid var(--dash-cream-border);
   border-radius: 9px;
   font-size: 13px;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   color: var(--dash-ink);
   background: var(--dash-cream);
   outline: none;

@@ -115,6 +115,17 @@ const routes = [
       { path: "vendors/:category", name: "VendorCategory", component: () => import("@/pages/VendorDirectoryPage.vue") },
       { path: "vendors/:category/:slug", name: "VendorProfile", component: () => import("@/pages/VendorProfilePage.vue") },
 
+      // BLOG AND INSPIRATION HUBS (IVY-901, IVY-904)
+      // Under the language prefix like every other public page: an article has
+      // one address per language, and that address is what the canonical tag
+      // and the sitemap both point at.
+      { path: "blog", name: "Blog", component: () => import("@/pages/BlogPage.vue") },
+      { path: "blog/:slug", name: "BlogPost", component: () => import("@/pages/BlogPostPage.vue") },
+      // City is a query parameter rather than a path segment. Only approved
+      // combinations exist, and a path pattern invites crawling every city
+      // somebody can type.
+      { path: "inspiration/:category", name: "Inspiration", component: () => import("@/pages/InspirationPage.vue") },
+
       // GUEST CONTRIBUTIONS AND THE LIVE WALL (IVY-605)
       // The wall runs on a screen at the venue; contribute is the guest form.
       { path: "wall", name: "LiveWall", component: () => import("@/pages/LiveWallPage.vue") },
@@ -145,6 +156,31 @@ const routes = [
       // ORGANIZER standalone (no sidebar)
       { path: "organizer", name: "dashboard.organizer", component: () => import("@/pages/dashboard/OrganizerOverviewPage.vue"), meta: { requiresAuth: true } },
 
+      // AGENCY OWNER (IVY-1201). Separate from /organizer on purpose: that page
+      // is built for somebody running their own events, this one for somebody
+      // running an agency. Both are org-scoped by the backend already; only
+      // this one is shaped for it.
+      //
+      // Under AgencyLayout since IVY-1401: these three were the only signed-in
+      // screens with no shell, so the dashboard's tile grid was doing the
+      // sidebar's job and there was no way back from the team screen.
+      {
+        path: "org",
+        component: () => import("@/layouts/AgencyLayout.vue"),
+        meta: { requiresAuth: true },
+        children: [
+          { path: "dashboard", name: "org.dashboard", component: () => import("@/pages/dashboard/AgencyOverviewPage.vue") },
+          { path: "settings", name: "org.settings", component: () => import("@/pages/dashboard/AgencySettingsPage.vue") },
+          // The pipeline is the agency's, not an event's. It sat under the
+          // event shell, which gave it the wrong sidebar and no way back to
+          // the agency; the old path still resolves, below.
+          { path: "pipeline", name: "org.pipeline", component: () => import("@/pages/dashboard/AgencyPipelinePage.vue") },
+          // The agency's team (IVY-1203). requiresAgency and not requiresAdmin:
+          // the screen is the admin panel's, the scope is one organization's.
+          { path: "users", name: "org.users", component: () => import("@/pages/dashboard/AgencyTeamPage.vue"), meta: { requiresAgency: true } },
+        ],
+      },
+
       // DASHBOARD (all pages share sidebar/topbar via DashboardLayout)
       {
         path: "dashboard",
@@ -159,6 +195,7 @@ const routes = [
           { path: "events/check-in", name: "dashboard.check-in", component: () => import("@/pages/dashboard/CheckInPage.vue") },
           { path: "events/announcements", name: "dashboard.announcements", component: () => import("@/pages/dashboard/AnnouncementsPage.vue") },
           { path: "events/contributions", name: "dashboard.contributions", component: () => import("@/pages/dashboard/ContributionsPage.vue") },
+          { path: "events/quotes", name: "dashboard.quotes", component: () => import("@/pages/dashboard/QuoteComparisonPage.vue") },
           { path: "events/post-event", name: "dashboard.post-event", component: () => import("@/pages/dashboard/PostEventPage.vue") },
           { path: "events/agenda", name: "dashboard.agenda", component: AgendaPage },
           { path: "events/budget", name: "dashboard.budget", component: BudgetPage },
@@ -169,8 +206,26 @@ const routes = [
           { path: "events/team", name: "dashboard.team", component: TeamPage },
           { path: "events/settings", name: "dashboard.settings", component: EventSettingsPage },
           { path: "events/invitation-links", name: "dashboard.invitation-links", component: () => import("@/pages/dashboard/InvitationLinksPage.vue") },
+          // Picking an invitation from inside the product, with the shell kept
+          // (IVY-1401). The same screen is also an onboarding step at
+          // /event-invitations, and there it is deliberately bare — a wizard
+          // has one job. Somebody who already has an event is not in a wizard,
+          // and losing the sidebar mid-task left them with the back button.
+          { path: "events/invitations", name: "dashboard.invitations", component: EventInvitationsPage },
           { path: "events/support", name: "dashboard.support", component: () => import("@/pages/dashboard/SupportPage.vue") },
           { path: "events/packages", name: "dashboard.packages", component: () => import("@/pages/dashboard/DashboardPackagesPage.vue") },
+
+          // THE AGENCY SIDE (EPIC-10)
+          // Pipeline and settings sit outside events/ because a lead is work
+          // before there is an event to hang it on — which is the whole reason
+          // the CRM exists rather than being a status field on an event.
+          // Moved to /org/pipeline (IVY-1401). Kept as a redirect rather than
+          // deleted: anyone who bookmarked it still lands on the page.
+          { path: "pipeline", redirect: (to) => `/${to.params.lang}/org/pipeline` },
+          // Same screen as /org/settings, reached by a second path. Redirected
+          // rather than served twice, so the two cannot drift apart.
+          { path: "agency", redirect: (to) => `/${to.params.lang}/org/settings` },
+          { path: "events/approvals", name: "dashboard.approvals", component: () => import("@/pages/dashboard/ClientApprovalsPage.vue") },
 
           // default dashboard redirect (if someone opens /mk/dashboard)
           { path: "", redirect: (to) => homeForCurrentUser(to.params.lang) }
@@ -186,6 +241,7 @@ const routes = [
           { path: "packages", name: "vendor.packages", component: VendorPackagesPage },
           { path: "floor-plans", name: "vendor.floorPlans", component: VendorFloorPlansPage },
           { path: "portfolio", name: "vendor.portfolio", component: VendorPortfolioPage },
+          { path: "inbox", name: "vendor.inbox", component: () => import("@/pages/vendorDashboard/VendorInboxPage.vue") },
           { path: "application", name: "vendor.application", component: () => import("@/pages/vendorDashboard/VendorApplicationPage.vue") },
           { path: "microsite", name: "vendor.microsite", component: () => import("@/pages/vendorDashboard/VendorMicrositePage.vue") },
           { path: "calendar", name: "vendor.calendar", component: VendorCalendarPage },
@@ -201,9 +257,25 @@ const routes = [
         component: AdminDashboardLayout,
         meta: { requiresAuth: true, requiresAdmin: true },
         children: [
+          // The dashboard (IVY-1101). Until now /admin redirected straight to
+          // the events table and there was no overview at all — the component
+          // that looked like one rendered four hardcoded numbers and no route
+          // reached it.
+          { path: "dashboard", name: "admin.dashboard", component: () => import("@/pages/adminDashboard/AdminOverviewPage.vue") },
           { path: "events", name: "admin.events", component: AdminEventPage },
           { path: "packages", name: "admin.packages", component: AdminPackagesPage },
           { path: "users", name: "admin.users", component: AdminUsersPage },
+          // The organizer directory (IVY-1102). Separate from users: that one
+          // is every account on the platform, this one is the people running
+          // events and what each of them is carrying.
+          { path: "organizers", name: "admin.organizers", component: () => import("@/pages/adminDashboard/AdminOrganizersPage.vue") },
+          // No /admin/vendors route. `AdminVendorsPage.vue` looked like the
+          // page this card wanted and was six hardcoded rows importing four
+          // components from a directory that does not exist — it could not
+          // render at all, which is why nothing ever routed it. Deleted with
+          // the other mock dashboards (IVY-1103); the Vendors card points at
+          // the approval queue, which is real.
+          { path: "settings", name: "admin.settings", component: () => import("@/pages/adminDashboard/AdminSettingsPage.vue") },
           { path: "reviews", name: "admin.reviews", component: () => import("@/pages/adminDashboard/AdminReviewsPage.vue") },
           { path: "vendor-queue", name: "admin.vendorQueue", component: () => import("@/pages/adminDashboard/AdminVendorQueuePage.vue") },
           { path: "contacts", name: "admin.contacts", component: () => import("@/pages/adminDashboard/AdminContactsPage.vue") },
@@ -212,10 +284,14 @@ const routes = [
           { path: "email-templates", name: "admin.emailTemplates", component: () => import("@/pages/adminDashboard/AdminEmailTemplatesPage.vue") },
           { path: "email-send", name: "admin.emailSend", component: () => import("@/pages/adminDashboard/AdminEmailSendPage.vue") },
 
-          // default admin redirect
+          // EDITORIAL (IVY-901, IVY-902, IVY-905)
+          { path: "content", name: "admin.content", component: () => import("@/pages/adminDashboard/ContentEditorPage.vue") },
+          { path: "content-analytics", name: "admin.contentAnalytics", component: () => import("@/pages/adminDashboard/ContentAnalyticsPage.vue") },
+
+          // default admin landing — the dashboard, not the events table
           {
             path: "",
-            redirect: (to) => `/${to.params.lang}/admin/events`
+            redirect: (to) => `/${to.params.lang}/admin/dashboard`
           }
         ]
       }
@@ -262,6 +338,14 @@ router.beforeEach(async (to, from, next) => {
     return;
   }
 
+  // Agency-owner routes (IVY-1203). A platform administrator is let through
+  // too: they manage every organization, so refusing them their own product's
+  // agency screen would be a rule with no purpose.
+  if (to.meta.requiresAgency && !hasRole("ORG_ADMIN") && !hasRole("ADMIN")) {
+    next(homeForCurrentUser(lang));
+    return;
+  }
+
   // Vendor-only routes. Sent to their own home rather than to the couple's
   // dashboard, which would be an empty screen for a restaurant.
   if (to.meta.requiresVendor && !hasRole("VENDOR")) {
@@ -301,7 +385,9 @@ router.beforeEach(async (to, from, next) => {
 
   // Block invitations page until category selected (for authenticated users in onboarding)
   // Allow unauthenticated users to browse freely (guest invitation flow)
-  const isInvitationsPage = to.name === 'EventInvitationsPage';
+  // Both names render the same screen: the bare onboarding step and the one
+  // inside the dashboard shell. The gate applies to either.
+  const isInvitationsPage = to.name === 'EventInvitationsPage' || to.name === 'dashboard.invitations';
   if (isInvitationsPage && !onboardingStore.selectedCategory && isAuthenticated() && !onboardingStore.eventId) {
     next({ name: 'EventCategoryPage', params: { lang } });
     return;

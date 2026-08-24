@@ -1,6 +1,6 @@
 <template>
   <div class="brand">
-    <img src="/logo.svg" alt="IvyEvents" class="brand__img" />
+    <span class="ivy-logo brand__img" role="img" aria-label="Ivy Events"></span>
   </div>
 </template>
 
@@ -15,7 +15,6 @@
 }
 
 .brand__img {
-  height: 30px;
-  width: auto;
+  --logo-h: 30px;
 }
 </style>

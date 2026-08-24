@@ -99,7 +99,7 @@ defineExpose({ enterSite });
 .wax-circle:hover { transform: scale(1.05); }
 
 .wax-initials {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 28px;
   color: rgba(255, 255, 255, 0.85);
   letter-spacing: 2px;
@@ -174,7 +174,7 @@ defineExpose({ enterSite });
   transform: translateY(10px);
 }
 .wax-names {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 36px;
   color: #1a1a1a;
   margin: 0 0 8px;
@@ -194,7 +194,7 @@ defineExpose({ enterSite });
 }
 .wax-tap-hidden { opacity: 0; }
 .wax-tap-text {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 18px;
   font-style: italic;
   color: #666;

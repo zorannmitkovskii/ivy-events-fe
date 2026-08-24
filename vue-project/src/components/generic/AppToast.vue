@@ -173,6 +173,8 @@ const { toasts, dismiss } = useToast();
     right: 12px;
     left: 12px;
     max-width: none;
+    /* left+right pin the box; a 100% width on top of that is 12px of overflow. */
+    width: auto;
   }
   .toast-item {
     min-width: 0;

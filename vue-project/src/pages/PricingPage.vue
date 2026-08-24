@@ -1,13 +1,19 @@
 <template>
-  <div>
-    <Header />
+  <SitePage>
+    <section class="packagesHero">
+      <p class="tag">{{ $t('packages.heroEyebrow') }}</p>
+      <h1>
+        {{ $t('packages.heroTitle') }}<br>
+        <em>{{ $t('packages.heroAccent') }}</em>
+      </h1>
+      <p>{{ $t('packages.heroLead') }}</p>
+    </section>
+
     <PackagesSection />
-    <Footer />
-  </div>
+  </SitePage>
 </template>
 
 <script setup>
-import Header from "@/components/header/Header.vue";
-import Footer from "@/components/layout/Footer.vue";
+import SitePage from "@/layouts/SitePage.vue";
 import PackagesSection from "@/components/landingPage/PackagesSection.vue";
 </script>

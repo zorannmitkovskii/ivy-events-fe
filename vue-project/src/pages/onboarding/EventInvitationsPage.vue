@@ -268,7 +268,7 @@ async function onContinue() {
 <style scoped>
 .invitations-page {
   min-height: 100vh;
-  background: var(--bg-main, #f9fafb);
+  background: var(--bg-main, var(--sunken));
   display: flex;
   flex-direction: column;
 }
@@ -301,14 +301,14 @@ async function onContinue() {
   border-radius: 10px;
   border: 1px solid rgba(16, 24, 40, 0.1);
   background: #fff;
-  color: var(--neutral-700, #374151);
+  color: var(--neutral-700, var(--ink-2));
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 .back-btn:hover:not(:disabled) {
-  background: var(--bg-main, #f9fafb);
+  background: var(--bg-main, var(--sunken));
   border-color: rgba(16, 24, 40, 0.18);
 }
 
@@ -326,14 +326,14 @@ async function onContinue() {
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: var(--neutral-900, #111827);
+  color: var(--neutral-900, var(--ink));
   line-height: 1.3;
 }
 
 .header-subtitle {
   margin: 2px 0 0;
   font-size: 13px;
-  color: var(--neutral-500, #6b7280);
+  color: var(--neutral-500, var(--ink-3));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -352,7 +352,7 @@ async function onContinue() {
   align-items: center;
   gap: 14px;
   padding: 14px 16px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--line);
   border-radius: 12px;
   background: #fff;
   cursor: pointer;
@@ -361,7 +361,7 @@ async function onContinue() {
   text-align: left;
 }
 .action-card:hover {
-  border-color: #d1d5db;
+  border-color: var(--line-2);
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   transform: translateY(-1px);
 }
@@ -379,11 +379,11 @@ async function onContinue() {
 .action-card--build .action-icon { background: #f0f9ff; color: #0284c7; }
 
 .action-text { flex: 1; min-width: 0; }
-.action-title { display: block; font-size: 14px; font-weight: 600; color: #1f2937; }
-.action-desc { display: block; font-size: 12px; color: #9ca3af; margin-top: 1px; }
+.action-title { display: block; font-size: 14px; font-weight: 600; color: var(--ink); }
+.action-desc { display: block; font-size: 12px; color: var(--ink-4); margin-top: 1px; }
 
-.action-arrow { color: #d1d5db; flex-shrink: 0; transition: transform 0.15s; }
-.action-card:hover .action-arrow { transform: translateX(2px); color: #9ca3af; }
+.action-arrow { color: var(--line-2); flex-shrink: 0; transition: transform 0.15s; }
+.action-card:hover .action-arrow { transform: translateX(2px); color: var(--ink-4); }
 
 .content {
   flex: 1;
@@ -403,7 +403,7 @@ async function onContinue() {
   align-items: center;
   gap: 12px;
   padding: 48px 16px;
-  color: var(--neutral-500, #6b7280);
+  color: var(--neutral-500, var(--ink-3));
   font-size: 14px;
 }
 

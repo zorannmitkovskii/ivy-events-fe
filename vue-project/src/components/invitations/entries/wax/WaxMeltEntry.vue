@@ -101,7 +101,7 @@ defineExpose({ enterSite });
 .melt-circle:hover { transform: scale(1.05); }
 
 .melt-initials {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 28px;
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 2px;
@@ -158,7 +158,7 @@ defineExpose({ enterSite });
   transform: translateY(10px);
 }
 .melt-names {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 36px;
   color: #f5f0e8;
   margin: 0 0 8px;
@@ -178,7 +178,7 @@ defineExpose({ enterSite });
 }
 .melt-tap-hidden { opacity: 0; }
 .melt-tap-text {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 18px;
   font-style: italic;
   color: #a8a29e;

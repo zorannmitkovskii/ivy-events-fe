@@ -1,7 +1,7 @@
 <template>
   <header class="topbar">
     <div class="topbar-left">
-      <button v-if="showHamburger" class="menu-toggle" @click="$emit('toggle-menu')" aria-label="Menu">
+      <button v-if="showHamburger" class="menu-toggle" @click="$emit('toggle-menu')" :aria-label="$t('common.menu')">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="3" y1="6" x2="21" y2="6" />
@@ -15,7 +15,7 @@
 
     <div class="topbar-right">
       <router-link
-        :to="{ name: 'EventInvitationsPage', params: { lang }, query: { from: 'dashboard' } }"
+        :to="{ name: 'dashboard.invitations', params: { lang }, query: { from: 'dashboard' } }"
         class="tb-btn tb-btn-ghost"
       >
         &#9993; {{ t("overview.editInvitation") }}
@@ -30,7 +30,7 @@
 
       <!-- Notification bell -->
       <div class="notif-wrapper" ref="notifWrapperRef">
-        <button class="notif-bell" @click="toggleNotifPanel" aria-label="Notifications">
+        <button class="notif-bell" @click="toggleNotifPanel" :aria-label="$t('common.notifications')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
@@ -136,6 +136,7 @@ const title = computed(() => {
     "dashboard.check-in": t("sidebar.checkIn"),
     "dashboard.announcements": t("sidebar.announcements"),
     "dashboard.contributions": t("sidebar.contributions"),
+    "dashboard.quotes": t("sidebar.quotes"),
     "dashboard.post-event": t("sidebar.postEvent"),
     "dashboard.agenda": t("sidebar.agenda"),
     "dashboard.gallery": t("sidebar.gallery"),
@@ -147,15 +148,26 @@ const title = computed(() => {
     "dashboard.packages": t("sidebar.packages"),
     "dashboard.invitation-links": t("sidebar.invitationLinks"),
     "dashboard.support": t("sidebar.support"),
-    "admin.events": "Events",
-    "admin.packages": "Packages",
-    "admin.users": "Users",
-    "admin.reviews": "Reviews",
-    "admin.contacts": "Contacts",
-    "admin.faq": "FAQ",
-    "admin.invitationTemplates": "Invitation Templates",
+    // The admin half of this map was hardcoded English while the sidebar
+    // beside it was translated, so the bar said Users over a menu that said
+    // Корисници (IVY-1206). Same keys the sidebar already uses.
+    "admin.dashboard": t("admin.sidebar.dashboard"),
+    "admin.events": t("admin.sidebar.events"),
+    "admin.packages": t("admin.sidebar.packages"),
+    "admin.users": t("admin.sidebar.users"),
+    "admin.organizers": t("admin.sidebar.organizers"),
+    "admin.vendorQueue": t("admin.sidebar.vendorQueue"),
+    "admin.reviews": t("admin.sidebar.reviews"),
+    "admin.contacts": t("admin.sidebar.contacts"),
+    "admin.faq": t("admin.sidebar.faq"),
+    "admin.invitationTemplates": t("admin.sidebar.invitationTemplates"),
+    "admin.emailTemplates": t("admin.sidebar.emailTemplates"),
+    "admin.emailSend": t("admin.sidebar.emailSend"),
+    "admin.content": t("admin.sidebar.content"),
+    "admin.contentAnalytics": t("admin.sidebar.contentAnalytics"),
+    "admin.settings": t("admin.sidebar.settings"),
   };
-  return map[String(route.name)] ?? "Dashboard";
+  return map[String(route.name)] ?? t("admin.sidebar.dashboard");
 });
 
 // Notification logic
@@ -214,13 +226,17 @@ watch(eventId, (newId) => {
 </script>
 
 <style scoped>
+/* The redesign's top bar: 64px, translucent paper over the scroll, and a
+   single hairline. --header-height is the public site's 82px and does not
+   apply here — the two bars were the same variable and the design gives them
+   different jobs and different heights. */
 .topbar {
-  background: rgba(250, 246, 239, 0.85);
+  background: rgba(255, 253, 249, 0.91);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--dash-cream-border);
-  padding: 0 40px;
-  height: var(--header-height);
+  border-bottom: 1px solid var(--d-border);
+  padding: 0 28px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -249,9 +265,9 @@ watch(eventId, (newId) => {
 }
 
 .topbar-page {
-  font-size: 13px;
+  font-family: var(--font-display);
+  font-size: 14px;
   color: var(--dash-ink);
-  font-weight: 500;
 }
 
 .live-dot {
@@ -278,37 +294,37 @@ watch(eventId, (newId) => {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 18px;
-  border-radius: 9px;
-  font-family: 'Outfit', sans-serif;
-  font-size: 12.5px;
-  font-weight: 500;
+  padding: 12px 17px;
+  border-radius: var(--radius-control);
+  font-family: var(--font-ui);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   cursor: pointer;
   transition: all 0.18s;
-  letter-spacing: 0.01em;
   text-decoration: none;
   border: none;
 }
 
 .tb-btn-ghost {
-  background: transparent;
+  background: #fff;
   color: var(--dash-ink);
-  border: 1.5px solid var(--dash-cream-border);
+  border: 1px solid var(--d-border);
 }
 
 .tb-btn-ghost:hover {
-  border-color: var(--dash-sage-light);
-  color: var(--dash-sage-dark);
+  border-color: var(--brand-soft);
 }
 
+/* The design's one filled action in this bar, and it is ink — the gold
+   gradient was competing with the gold marker in the sidebar for the eye. */
 .tb-btn-gold {
-  background: linear-gradient(135deg, var(--dash-gold), #9a7a3e);
+  background: #1b382d;
   color: #fff;
-  box-shadow: 0 2px 10px rgba(184, 149, 78, 0.35);
 }
 
 .tb-btn-gold:hover {
-  box-shadow: 0 4px 16px rgba(184, 149, 78, 0.5);
+  background: var(--brand-strong);
   transform: translateY(-1px);
 }
 
@@ -316,10 +332,10 @@ watch(eventId, (newId) => {
   display: none;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: 1.5px solid var(--dash-cream-border);
-  border-radius: 9px;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--d-border);
+  border-radius: var(--radius-control);
   background: transparent;
   color: var(--dash-ink);
   cursor: pointer;

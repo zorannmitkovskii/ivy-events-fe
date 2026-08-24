@@ -98,7 +98,7 @@ function scrollToRsvp() {
   font-family: var(--font-heading);
   font-style: italic;
   font-size: 24px;
-  color: #4b5563;
+  color: var(--ink-2);
   margin: 0 0 16px;
   letter-spacing: 0.15em;
 }
@@ -107,7 +107,7 @@ function scrollToRsvp() {
   font-family: var(--font-heading);
   font-size: clamp(56px, 10vw, 112px);
   font-weight: 400;
-  color: #1f2937;
+  color: var(--ink);
   margin: 0 0 24px;
   line-height: 1.1;
 }
@@ -144,7 +144,7 @@ function scrollToRsvp() {
 .hero-line {
   height: 1px;
   width: 48px;
-  background: #9ca3af;
+  background: var(--ink-4);
 }
 
 .hero-location {
@@ -152,14 +152,14 @@ function scrollToRsvp() {
   font-size: 20px;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: #4b5563;
+  color: var(--ink-2);
   margin: 0;
 }
 
 .hero-date {
   font-family: var(--font-heading);
   font-size: 32px;
-  color: #374151;
+  color: var(--ink-2);
   margin: 0 0 48px;
 }
 
@@ -168,7 +168,7 @@ function scrollToRsvp() {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(8px);
   border: 1px solid #dec69a;
-  color: #1f2937;
+  color: var(--ink);
   font-family: var(--font-heading);
   font-size: 18px;
   padding: 16px 48px;

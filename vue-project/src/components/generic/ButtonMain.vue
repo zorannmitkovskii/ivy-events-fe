@@ -61,40 +61,45 @@ function onClick(e) {
 </script>
 
 <style scoped>
-/* ===== Base ===== */
+/* ===== Base =====
+   The 2026 redesign's button, so a ButtonMain sitting on a redesigned page
+   and a bare `.btn` next to it are the same object: 46px tall, 10px radius,
+   small letter-spaced caps in the UI face, and a 2px lift on hover. */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
 
-  height: 44px;
-  padding: 0 18px;
+  min-height: 46px;
+  padding: 0 24px;
 
-  border-radius: 12px;
-  font-weight: 600;
+  border-radius: var(--radius-control);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   text-decoration: none;
   cursor: pointer;
   user-select: none;
 
   transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease,
-    background 0.18s ease,
-    border-color 0.18s ease,
-    color 0.18s ease;
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
 }
 
-/* 1px up on hover */
 .btn:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(23, 55, 43, 0.18);
 }
 
 /* focus */
 .btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(200, 162, 77, 0.25);
+  box-shadow: 0 0 0 3px rgba(23, 55, 43, 0.2);
 }
 
 /* ===== Disabled / loading ===== */
@@ -132,8 +137,6 @@ function onClick(e) {
 
 .btn--main:hover {
   background: var(--brand-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(147, 162, 154, 0.3);
 }
 
 /* Outline brand main */
@@ -151,15 +154,14 @@ function onClick(e) {
 
 /* Solid gold */
 .btn--gold {
-  background: var(--brand-gold);
+  background: var(--gold);
   color: var(--bg-white);
-  border: 1px solid var(--brand-gold);
+  border: 1px solid var(--gold);
 }
 
 .btn--gold:hover {
-  background: var(--secondary-gold);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(200, 162, 77, 0.3);
+  background: var(--gold-text);
+  border-color: var(--gold-text);
 }
 
 /* Secondary */

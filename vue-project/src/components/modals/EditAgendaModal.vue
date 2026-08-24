@@ -120,8 +120,8 @@ function onTimeChange(item, hour, minute) {
 }
 
 .item-card {
-  background: var(--neutral-50, #f9fafb);
-  border: 1px solid var(--neutral-200, #e5e7eb);
+  background: var(--neutral-50, var(--sunken));
+  border: 1px solid var(--neutral-200, var(--line));
   border-radius: 10px;
   overflow: hidden;
 }
@@ -136,7 +136,7 @@ function onTimeChange(item, hour, minute) {
 }
 
 .item-card-header:hover {
-  background: var(--neutral-100, #f3f4f6);
+  background: var(--neutral-100, var(--sunken));
 }
 
 .item-info {
@@ -148,12 +148,12 @@ function onTimeChange(item, hour, minute) {
 .item-type {
   font-size: 14px;
   font-weight: 600;
-  color: var(--brand-main, #1f2937);
+  color: var(--brand-main, var(--ink));
 }
 
 .item-time {
   font-size: 12px;
-  color: var(--neutral-500, #6b7280);
+  color: var(--neutral-500, var(--ink-3));
 }
 
 .item-actions {
@@ -164,7 +164,7 @@ function onTimeChange(item, hour, minute) {
 
 .expand-chevron {
   transition: transform 0.2s ease;
-  color: var(--neutral-400, #9ca3af);
+  color: var(--neutral-400, var(--ink-4));
 }
 
 .expand-chevron--open {
@@ -227,16 +227,16 @@ function onTimeChange(item, hour, minute) {
   align-items: center;
   justify-content: center;
   background: #fff;
-  border: 1px solid var(--neutral-200, #e5e7eb);
+  border: 1px solid var(--neutral-200, var(--line));
   border-radius: 6px;
   cursor: pointer;
-  color: var(--neutral-600, #4b5563);
+  color: var(--neutral-600, var(--ink-2));
   transition: all 0.15s ease;
 }
 
 .icon-btn:hover {
-  background: var(--neutral-100, #f3f4f6);
-  border-color: var(--neutral-300, #d1d5db);
+  background: var(--neutral-100, var(--sunken));
+  border-color: var(--neutral-300, var(--line-2));
 }
 
 .icon-btn--danger:hover {
@@ -247,7 +247,7 @@ function onTimeChange(item, hour, minute) {
 
 .empty-msg {
   text-align: center;
-  color: var(--neutral-500, #6b7280);
+  color: var(--neutral-500, var(--ink-3));
   font-size: 14px;
   padding: 24px 0;
 }

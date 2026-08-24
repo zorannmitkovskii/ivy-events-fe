@@ -105,3 +105,37 @@ export const eventCateringService = {
     return api.put(`/events/${encodeURIComponent(eventId)}/catering/package`, { packageId });
   }
 };
+
+/**
+ * The rest of the vendor's calendar (IVY-801).
+ *
+ * <p>Separate from bookings on purpose: a week away is not a job, and mixing
+ * the two means every count of work has to remember to subtract the holidays.
+ */
+export const vendorAvailabilityService = {
+  calendar(from, to) {
+    return api.get("/vendor-portal/availability", { params: { from, to } });
+  },
+
+  /** Answers with the reasons, buffers included — "free at 08:00" and "free at
+   *  08:00 but you need two hours to load in" are different sentences. */
+  check(from, to) {
+    return api.get("/vendor-portal/availability/check", { params: { from, to } });
+  },
+
+  /** Pass `date` for a whole day and the server builds it in the vendor's own
+   *  zone. The day the clocks change is 23 or 25 hours long, so a client that
+   *  computes start + 24h is wrong twice a year. */
+  block({ date, from, to, status = "UNAVAILABLE", reason, timezone }) {
+    return api.post("/vendor-portal/availability",
+      { date, from, to, status, reason, timezone });
+  },
+
+  confirmHold(blockId) {
+    return api.post(`/vendor-portal/availability/${encodeURIComponent(blockId)}/confirm`);
+  },
+
+  release(blockId) {
+    return api.del(`/vendor-portal/availability/${encodeURIComponent(blockId)}`);
+  },
+};

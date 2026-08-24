@@ -42,74 +42,71 @@ defineProps({
 </script>
 
 <style scoped>
+/*
+  The redesign's field: a small bold label above a plain bordered box on white.
+  Gone are the 12px radius, the tinted resting background and the gold focus
+  glow — the whole page now has one focus treatment, set in `ivy/bridge.css`.
+  The optional leading icon stays; it is the only thing here the mock's fields
+  do not have, and dropping it would leave the email and password rows
+  indistinguishable at a glance.
+*/
 .field {
   display: grid;
-  gap: 8px;
+  gap: 0;
+  font-family: var(--font-ui);
+  font-size: 9px;
+  font-weight: 700;
 }
 
 .field__label {
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(51, 67, 56, 0.75);
+  margin: 9px 0 0;
 }
 
-/* Wrapper that gets focus ring */
 .field__control {
   position: relative;
   display: flex;
   align-items: center;
-
   width: 100%;
-  border: 1px solid var(--neutral-300);
-  border-radius: 12px;
-
-  background: color-mix(in srgb, var(--bg-main) 30%, transparent);
-  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 7px;
+  border: 1px solid #d6dcd7;
+  border-radius: var(--radius-control);
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-/* Hover like the example */
-.field__control:hover {
-  background: var(--bg-white);
-}
-
-/* Icon sits inside input area */
 .field__icon {
   position: absolute;
-  left: 12px;
+  left: 14px;
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  color: var(--bg-dark-gray);
+  color: var(--ink-4);
 }
 
-/* Input */
 .field__input {
   width: 100%;
   border: 0;
   outline: 0;
   background: transparent;
-
-  padding: 12px 12px 12px 44px; /* LEFT SPACE FOR ICON */
-  font-size: 14px;
-  color: var(--neutral-900);
+  padding: 14px 14px 14px 44px;
+  font: 13px var(--font-ui);
+  font-weight: 400;
+  color: var(--ink);
 }
 
 .field__input::placeholder {
-  color: var(--bg-dark-gray);
+  color: var(--ink-4);
 }
 
-/* Focus ring */
 .field__control:focus-within {
-  border-color: var(--brand-gold);
-  box-shadow: 0 0 0 3px rgba(200, 162, 77, 0.15);
+  border-color: var(--brand-mid);
+  box-shadow: 0 0 0 3px rgba(23, 55, 43, 0.1);
 }
+
 input:focus {
   outline: none;
-  box-shadow: none;
 }
 </style>

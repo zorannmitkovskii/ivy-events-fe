@@ -209,7 +209,7 @@ provide("editPanelMode", ref(true));
   display: flex;
   flex-direction: column;
   background: #fff;
-  border-left: 1px solid #e5e7eb;
+  border-left: 1px solid var(--line);
   overflow: hidden;
 }
 
@@ -218,7 +218,7 @@ provide("editPanelMode", ref(true));
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--line);
   gap: 8px;
 }
 
@@ -238,12 +238,12 @@ provide("editPanelMode", ref(true));
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--line-2);
   border-radius: 8px;
   background: #fff;
   font-size: 13px;
   font-weight: 600;
-  color: #9ca3af;
+  color: var(--ink-4);
   cursor: not-allowed;
   transition: all 0.2s;
   font-family: inherit;
@@ -266,29 +266,29 @@ provide("editPanelMode", ref(true));
   justify-content: center;
   width: 32px;
   height: 32px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--line);
   border-radius: 6px;
   background: #fff;
-  color: #9ca3af;
+  color: var(--ink-4);
   cursor: pointer;
   transition: all 0.15s;
 }
 
 .preview-btn:hover {
-  border-color: #9ca3af;
-  color: #374151;
+  border-color: var(--ink-4);
+  color: var(--ink-2);
 }
 
 .preview-btn--active {
-  border-color: #374151;
-  background: #f3f4f6;
-  color: #374151;
+  border-color: var(--ink-2);
+  background: var(--sunken);
+  color: var(--ink-2);
 }
 
 /* Tab bar */
 .edit-sidebar__tabs {
   display: flex;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--line);
 }
 
 .tab-btn {
@@ -298,7 +298,7 @@ provide("editPanelMode", ref(true));
   background: none;
   font-size: 13px;
   font-weight: 600;
-  color: #9ca3af;
+  color: var(--ink-4);
   cursor: pointer;
   transition: color 0.15s, box-shadow 0.15s;
   font-family: inherit;
@@ -306,12 +306,12 @@ provide("editPanelMode", ref(true));
 }
 
 .tab-btn:hover {
-  color: #6b7280;
+  color: var(--ink-3);
 }
 
 .tab-btn--active {
-  color: #1f2937;
-  box-shadow: inset 0 -2px 0 #1f2937;
+  color: var(--ink);
+  box-shadow: inset 0 -2px 0 var(--ink);
 }
 
 .edit-sidebar__body {
@@ -320,7 +320,7 @@ provide("editPanelMode", ref(true));
 }
 
 .accordion-section {
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--line);
 }
 
 .accordion-header {
@@ -334,17 +334,17 @@ provide("editPanelMode", ref(true));
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  color: #374151;
+  color: var(--ink-2);
   transition: background 0.15s;
   font-family: inherit;
 }
 
 .accordion-header:hover {
-  background: #f9fafb;
+  background: var(--sunken);
 }
 
 .accordion-header--active {
-  background: #f3f4f6;
+  background: var(--sunken);
 }
 
 .accordion-icon {
@@ -353,7 +353,7 @@ provide("editPanelMode", ref(true));
   justify-content: center;
   width: 20px;
   height: 20px;
-  color: #6b7280;
+  color: var(--ink-3);
   flex-shrink: 0;
 }
 
@@ -372,7 +372,7 @@ provide("editPanelMode", ref(true));
   height: 20px;
   border-radius: 10px;
   border: none;
-  background: #d1d5db;
+  background: var(--line-2);
   cursor: pointer;
   position: relative;
   transition: background 0.2s;
@@ -403,7 +403,7 @@ provide("editPanelMode", ref(true));
 .accordion-chevron {
   transition: transform 0.25s ease;
   margin-left: auto;
-  color: #9ca3af;
+  color: var(--ink-4);
   flex-shrink: 0;
 }
 
@@ -420,7 +420,7 @@ provide("editPanelMode", ref(true));
 /* Sub-tab bar */
 .sub-tab-bar {
   display: flex;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--line);
   background: #fafafa;
   margin: -12px -16px 12px;
 }
@@ -432,7 +432,7 @@ provide("editPanelMode", ref(true));
   background: none;
   font-size: 12px;
   font-weight: 600;
-  color: #9ca3af;
+  color: var(--ink-4);
   cursor: pointer;
   transition: color 0.15s, box-shadow 0.15s;
   font-family: inherit;
@@ -440,12 +440,12 @@ provide("editPanelMode", ref(true));
 }
 
 .sub-tab-btn:hover {
-  color: #6b7280;
+  color: var(--ink-3);
 }
 
 .sub-tab-btn--active {
-  color: #1f2937;
-  box-shadow: inset 0 -2px 0 #1f2937;
+  color: var(--ink);
+  box-shadow: inset 0 -2px 0 var(--ink);
 }
 
 /* Accordion transition */

@@ -46,7 +46,7 @@ function clamp(p){ return Math.max(0, Math.min(100, Number(p||0))); }
 }
 
 .card.dark{
-  background: linear-gradient(135deg, #2a3d28, #3d5637);
+  background: linear-gradient(135deg, #2a3d28, var(--brand-strong));
   border-color: transparent;
 }
 
@@ -64,7 +64,7 @@ function clamp(p){ return Math.max(0, Math.min(100, Number(p||0))); }
 
 .value{
   margin-top: 10px;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 32px;
   font-weight: 400;
   line-height: 1;

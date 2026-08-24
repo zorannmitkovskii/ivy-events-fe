@@ -10,7 +10,7 @@
   border-radius: 20px;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(135deg, #2a3d28 0%, #3d5637 40%, #4a6845 100%);
+  background: linear-gradient(135deg, #2a3d28 0%, var(--brand-strong) 40%, #4a6845 100%);
   padding: 40px 48px;
   display: flex;
   align-items: center;
@@ -71,7 +71,7 @@
 }
 
 .hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 52px;
   font-weight: 400;
   line-height: 1;
@@ -132,7 +132,7 @@
 .hc-unit { text-align: center; }
 
 .hc-num {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 48px;
   font-weight: 400;
   line-height: 1;
@@ -151,7 +151,7 @@
 }
 
 .hc-sep {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 36px;
   color: rgba(255, 255, 255, 0.2);
   padding-bottom: 8px;
@@ -238,7 +238,7 @@
 .ic-sky { background: rgba(122, 157, 184, 0.12); }
 
 .stat-value {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 42px;
   font-weight: 400;
   line-height: 1;
@@ -339,7 +339,7 @@
 }
 
 .card-big-num {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 52px;
   font-weight: 400;
   line-height: 1;
@@ -363,7 +363,7 @@
 
 /* ── KPI ── */
 .kpi {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   margin-top: 8px;
   font-size: 30px;
   font-weight: 400;
@@ -412,7 +412,7 @@
 }
 
 .donut-center-num {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 30px;
   font-weight: 400;
   color: var(--dash-charcoal);
@@ -454,7 +454,7 @@
 .legend-right { display: flex; align-items: center; gap: 12px; }
 
 .legend-count {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 22px;
   font-weight: 400;
   color: var(--dash-charcoal);
@@ -603,7 +603,7 @@
 .mini-stat:last-child { border-right: none; }
 
 .mini-stat-num {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 22px;
   font-weight: 400;
   color: var(--dash-charcoal);
@@ -624,7 +624,7 @@
   color: var(--dash-ink);
   border-radius: 9px;
   padding: 8px 18px;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   font-weight: 500;
   font-size: 12.5px;
   cursor: pointer;
@@ -642,7 +642,7 @@
   color: #fff;
   border-radius: 9px;
   padding: 8px 18px;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   font-weight: 500;
   font-size: 12.5px;
   cursor: pointer;
@@ -660,7 +660,7 @@
   border: none;
   border-radius: 9px;
   padding: 8px 18px;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   font-weight: 500;
   font-size: 12.5px;
   cursor: pointer;
@@ -674,7 +674,7 @@
   border: 1.5px solid var(--dash-cream-border);
   border-radius: 9px;
   padding: 8px 18px;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   font-weight: 500;
   font-size: 12.5px;
   cursor: pointer;
@@ -695,7 +695,7 @@
 }
 
 .ov-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 38px;
   font-weight: 400;
   margin: 0;
@@ -743,7 +743,7 @@
 }
 
 .dash-page-title, .page-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 38px;
   font-weight: 400;
   color: var(--dash-charcoal);
@@ -761,7 +761,7 @@
 
 /* ── BANNER ── */
 .ov-banner {
-  background: linear-gradient(135deg, #2a3d28, #3d5637);
+  background: linear-gradient(135deg, #2a3d28, var(--brand-strong));
   color: white;
   border-radius: 16px;
   padding: 22px 26px;

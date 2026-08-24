@@ -1,6 +1,6 @@
 <template>
+  <SitePage>
   <div class="feedback-page">
-    <Header />
 
     <!-- Hero -->
     <section class="feedback-hero">
@@ -49,16 +49,14 @@
         </button>
       </form>
     </section>
-
-    <Footer />
   </div>
+  </SitePage>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
-import Header from "@/components/header/Header.vue";
-import Footer from "@/components/layout/Footer.vue";
+import SitePage from "@/layouts/SitePage.vue";
 import StarRating from "@/components/ui/StarRating.vue";
 import { feedbackService } from "@/services/feedback.service";
 import { getErrorMessage } from "@/services/apiError";
@@ -108,7 +106,7 @@ async function submit() {
 .feedback-hero {
   text-align: center;
   padding: 80px 24px 56px;
-  background: linear-gradient(135deg, var(--neutral-50, #f9fafb) 0%, var(--bg-white, #fff) 100%);
+  background: linear-gradient(135deg, var(--neutral-50, var(--sunken)) 0%, var(--bg-white, #fff) 100%);
 }
 
 .feedback-hero__title {
@@ -120,7 +118,7 @@ async function submit() {
 
 .feedback-hero__subtitle {
   font-size: 1.125rem;
-  color: var(--neutral-600, #4b5563);
+  color: var(--neutral-600, var(--ink-2));
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.6;
@@ -148,7 +146,7 @@ async function submit() {
 .field label {
   font-size: 13px;
   font-weight: 600;
-  color: #475569;
+  color: var(--ink-2);
 }
 
 .req {
@@ -157,7 +155,7 @@ async function submit() {
 
 .input {
   padding: 10px 14px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--line);
   border-radius: 10px;
   font-size: 14px;
   background: #fff;
@@ -240,7 +238,7 @@ async function submit() {
 
 .success-card__text {
   font-size: 1rem;
-  color: var(--neutral-600, #4b5563);
+  color: var(--neutral-600, var(--ink-2));
   line-height: 1.6;
   margin: 0;
 }

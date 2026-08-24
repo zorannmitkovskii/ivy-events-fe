@@ -8,24 +8,24 @@
         </svg>
       </div>
 
-      <h1 class="success-title">RSVP Submitted!</h1>
-      <p class="success-message">
-        Thank you for your response. We've received your RSVP and look forward to celebrating with you!
-      </p>
+      <h1 class="success-title">{{ t('rsvpSuccess.title') }}</h1>
+      <p class="success-message">{{ t('rsvpSuccess.message') }}</p>
 
       <div class="success-details" v-if="guestNames.length">
-        <p class="details-label">Guests</p>
+        <p class="details-label">{{ t('rsvpSuccess.guests') }}</p>
         <p class="details-value">{{ guestNames.join(', ') }}</p>
       </div>
 
       <div class="success-actions">
-        <button class="back-btn" @click="goBack">Back to Invitation</button>
+        <button class="back-btn" @click="goBack">{{ t('rsvpSuccess.back') }}</button>
       </div>
     </div>
   </main>
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -57,7 +57,7 @@ function goBack() {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f9fafb;
+  background: var(--sunken);
   padding: 24px;
 }
 
@@ -78,19 +78,19 @@ function goBack() {
 .success-title {
   font-size: 28px;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--ink);
   margin: 0 0 12px;
 }
 
 .success-message {
   font-size: 15px;
-  color: #6b7280;
+  color: var(--ink-3);
   line-height: 1.6;
   margin: 0 0 32px;
 }
 
 .success-details {
-  background: #f9fafb;
+  background: var(--sunken);
   border-radius: 12px;
   padding: 16px 20px;
   margin-bottom: 32px;
@@ -102,13 +102,13 @@ function goBack() {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #9ca3af;
+  color: var(--ink-4);
   margin: 0 0 4px;
 }
 
 .details-value {
   font-size: 15px;
-  color: #1f2937;
+  color: var(--ink);
   margin: 0;
 }
 
@@ -122,9 +122,9 @@ function goBack() {
   align-items: center;
   padding: 12px 32px;
   border-radius: 10px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--line);
   background: #fff;
-  color: #374151;
+  color: var(--ink-2);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -132,7 +132,7 @@ function goBack() {
 }
 
 .back-btn:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
+  background: var(--sunken);
+  border-color: var(--line-2);
 }
 </style>

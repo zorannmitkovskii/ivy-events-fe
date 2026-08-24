@@ -138,13 +138,13 @@ function openPicker() {
   border: none;
   padding: 4px;
   cursor: pointer;
-  color: var(--neutral-400, #9ca3af);
+  color: var(--neutral-400, var(--ink-4));
   display: flex;
   align-items: center;
   transition: color 0.15s;
 }
 
 .date-input-btn:hover {
-  color: var(--neutral-600, #4b5563);
+  color: var(--neutral-600, var(--ink-2));
 }
 </style>

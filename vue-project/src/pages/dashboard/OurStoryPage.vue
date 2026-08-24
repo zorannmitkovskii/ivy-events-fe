@@ -194,7 +194,7 @@ async function onDelete(id) {
 }
 
 .empty-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: 18px;
   color: var(--dash-charcoal);

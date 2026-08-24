@@ -178,7 +178,7 @@ watch(issued, async (value) => {
 
 .error { margin: 8px 0 0; font-size: 13px; color: #a3271f; }
 
-.link-btn { border: 0; background: none; color: #5a7a52; cursor: pointer; font-size: 13px; padding: 0; }
+.link-btn { border: 0; background: none; color: var(--brand); cursor: pointer; font-size: 13px; padding: 0; }
 .link-btn.danger { color: #a3271f; }
 .link-btn:disabled { opacity: 0.5; cursor: default; }
 </style>

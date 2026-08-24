@@ -1,10 +1,6 @@
 <template>
   <div class="dash-page">
-    <div class="dash-page-header">
-      <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
-      <h1 class="dash-page-title">{{ t("team.title") }}</h1>
-      <p class="dash-page-subtitle">{{ t("team.subtitle") }}</p>
-    </div>
+    <PageHeader :title="t('team.title')" :subtitle="t('team.subtitle')" />
 
     <div v-if="eventId" class="d-card">
       <CollaboratorsPanel :event-id="eventId" />
@@ -16,6 +12,7 @@
 </template>
 
 <script setup>
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import CollaboratorsPanel from "@/components/collaborators/CollaboratorsPanel.vue";

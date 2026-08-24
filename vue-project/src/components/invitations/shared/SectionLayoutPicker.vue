@@ -41,7 +41,7 @@ const emit = defineEmits(['select']);
   align-items: center;
   gap: 8px;
   padding: 14px 10px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--line);
   border-radius: 12px;
   background: #fff;
   cursor: pointer;
@@ -50,12 +50,12 @@ const emit = defineEmits(['select']);
 }
 
 .layout-card:hover {
-  border-color: #9ca3af;
+  border-color: var(--ink-4);
 }
 
 .layout-card--active {
-  border-color: #1f2937;
-  background: #f3f4f6;
+  border-color: var(--ink);
+  background: var(--sunken);
 }
 
 .layout-diagram {
@@ -65,7 +65,7 @@ const emit = defineEmits(['select']);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6b7280;
+  color: var(--ink-3);
 }
 
 .layout-diagram :deep(svg) {
@@ -76,11 +76,11 @@ const emit = defineEmits(['select']);
 .layout-label {
   font-size: 11px;
   font-weight: 600;
-  color: #374151;
+  color: var(--ink-2);
   text-align: center;
 }
 
 .layout-card--active .layout-label {
-  color: #1f2937;
+  color: var(--ink);
 }
 </style>

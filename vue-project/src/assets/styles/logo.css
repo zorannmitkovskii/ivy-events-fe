@@ -1,0 +1,27 @@
+@import './variables.css';
+
+/* The logo, as one asset
+   ---------------------------------------------------------------------------
+   IVY-1402. `logo.svg` and `logoInv.svg` were the same mark in two colours,
+   which meant two files to keep in sync and a component having to know which
+   ground it was sitting on.
+
+   Here the mark is a CSS mask painted with `currentColor`, so one asset serves
+   both: cream on the dark sidebar, #2F3E36 on the light header. Set the size
+   with `--logo-h`; the width follows the artwork's own ratio
+   (1719.14 / 543.88 = 3.161), so it can never be stretched.
+   --------------------------------------------------------------------------- */
+.ivy-logo {
+  display: block;
+  width: calc(var(--logo-h, 24px) * 3.161);
+  height: var(--logo-h, 24px);
+  background-color: currentColor;
+  -webkit-mask: url('/logo.svg') no-repeat center / contain;
+  mask: url('/logo.svg') no-repeat center / contain;
+  flex: none;
+}
+
+/* On a dark ground the mark takes the cream of the old logoInv.svg. */
+.ivy-logo--inverse {
+  color: var(--bg-main);
+}

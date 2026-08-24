@@ -127,6 +127,10 @@ const allNavItems = [
   { key: "check-in", path: "check-in", labelKey: "sidebar.checkIn", icon: Icons.check },
   { key: "announcements", path: "announcements", labelKey: "sidebar.announcements", icon: Icons.mail },
   { key: "contributions", path: "contributions", labelKey: "sidebar.contributions", icon: Icons.image },
+  // Per-event, unlike the pipeline and the agency settings: an approval belongs
+  // to one wedding, so it belongs in the sidebar that is already scoped to one.
+  { key: "approvals", path: "approvals", labelKey: "sidebar.approvals", icon: Icons.check },
+  { key: "quotes", path: "quotes", labelKey: "sidebar.quotes", icon: Icons.card },
   { key: "post-event", path: "post-event", labelKey: "sidebar.postEvent", icon: Icons.mail },
   { key: "gallery", path: "gallery", labelKey: "sidebar.gallery", icon: Icons.image },
   { key: "links", path: "invitation-links", labelKey: "sidebar.invitationLinks", icon: Icons.mail }
@@ -216,26 +220,21 @@ function signOut() { logout(); clearOnboarding(); router.push(`/${lang.value}/au
 </script>
 
 <style scoped>
+/*
+  The redesign's sidebar: a flatter, darker green than the old charcoal, and
+  no decoration on it at all. The radial glow that used to sit in the bottom
+  corner is gone — the design keeps the panel plain so the gold marker on the
+  active row is the only bright thing in the column.
+*/
 .sidebar {
   height: 100vh;
-  background: var(--dash-charcoal);
+  padding: 8px 6px;
+  background: var(--d-side);
   display: flex;
   flex-direction: column;
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
-}
-
-.sidebar::before {
-  content: '';
-  position: absolute;
-  bottom: -80px;
-  right: -80px;
-  width: 220px;
-  height: 220px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(90, 122, 82, 0.2) 0%, transparent 70%);
-  pointer-events: none;
 }
 
 .sidebar-head {
@@ -288,7 +287,7 @@ function signOut() { logout(); clearOnboarding(); router.push(`/${lang.value}/au
 }
 
 .ei-names {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 16px;
   color: rgba(255, 255, 255, 0.92);
   font-style: italic;
@@ -319,9 +318,18 @@ function signOut() { logout(); clearOnboarding(); router.push(`/${lang.value}/au
 .nav {
   display: flex;
   flex-direction: column;
+  /*
+    Bootstrap's own `.nav` sets `flex-wrap: wrap`, and this rule is more
+    specific for everything it declares but not for what it leaves out. With a
+    column direction and a bounded height that wrap turns the overflow into a
+    SECOND COLUMN of links, half of it clipped by the sidebar's edge. It showed
+    up the moment the redesign made each row taller.
+  */
+  flex-wrap: nowrap;
   padding: 12px 0;
   flex: 1;
   min-height: 0;
+  overflow-y: auto;
 }
 
 .nav-label {
@@ -345,29 +353,29 @@ function signOut() { logout(); clearOnboarding(); router.push(`/${lang.value}/au
   justify-content: center;
   gap: 8px;
   width: 100%;
-  padding: 8px;
-  border-radius: 8px;
-  font-family: 'Outfit', sans-serif;
-  font-size: 12px;
+  padding: 9px;
+  border-radius: 9px;
+  font-family: var(--font-ui);
+  font-size: 11px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.18s;
-  border: 1.5px dashed rgba(255, 255, 255, 0.15);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
   background: transparent;
-  color: rgba(255, 255, 255, 0.45);
+  color: #91a49b;
   letter-spacing: 0.02em;
 }
 
 .switch-btn:hover {
   border-color: rgba(255, 255, 255, 0.3);
-  color: rgba(255, 255, 255, 0.8);
-  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  background: var(--d-side-hover);
 }
 
 .switch-menu {
   margin-top: 6px;
   padding: 6px;
-  border-radius: 8px;
+  border-radius: 9px;
   background: rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
@@ -386,13 +394,13 @@ function signOut() { logout(); clearOnboarding(); router.push(`/${lang.value}/au
 .switch-item,
 .switch-all {
   width: 100%;
-  padding: 7px 8px;
+  padding: 8px;
   border: none;
-  border-radius: 6px;
+  border-radius: 7px;
   background: transparent;
-  color: rgba(255, 255, 255, 0.7);
-  font-family: 'Outfit', sans-serif;
-  font-size: 12.5px;
+  color: #b3c2ba;
+  font-family: var(--font-ui);
+  font-size: 11px;
   text-align: left;
   cursor: pointer;
   overflow: hidden;
@@ -402,7 +410,7 @@ function signOut() { logout(); clearOnboarding(); router.push(`/${lang.value}/au
 
 .switch-item:hover,
 .switch-all:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--d-side-hover);
   color: #fff;
 }
 
@@ -432,48 +440,53 @@ function signOut() { logout(); clearOnboarding(); router.push(`/${lang.value}/au
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 7px;
   width: 100%;
-  padding: 8px;
-  border-radius: 8px;
-  font-family: 'Outfit', sans-serif;
-  font-size: 12px;
-  font-weight: 500;
+  padding: 11px;
+  border-radius: 9px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   cursor: pointer;
   transition: all 0.18s;
   border: none;
-  letter-spacing: 0.02em;
 }
 
+/* On the dark panel the primary action is the pale one — an ink button on an
+   ink sidebar is invisible, which is what the old --dash-sage fill became once
+   the sidebar itself moved to the same green. */
 .cta-primary {
-  background: var(--dash-sage);
-  color: #fff;
+  background: #eef2ea;
+  color: var(--ink);
 }
 
 .cta-primary:hover {
-  background: var(--dash-sage-dark);
+  background: #fff;
 }
 
 .cta-outline {
   background: transparent;
-  color: rgba(255, 255, 255, 0.5);
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  color: #91a49b;
+  border: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .cta-outline:hover {
-  border-color: rgba(255, 255, 255, 0.22);
-  color: rgba(255, 255, 255, 0.75);
+  border-color: rgba(255, 255, 255, 0.28);
+  background: var(--d-side-hover);
+  color: #fff;
 }
 
 .cta-upgrade {
-  background: linear-gradient(135deg, var(--dash-gold), var(--dash-gold-light));
-  color: #1a1a1a;
+  background: var(--d-gold);
+  color: #17372b;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
 }
+
 .cta-upgrade:hover {
-  filter: brightness(1.1);
+  filter: brightness(1.08);
 }
 </style>

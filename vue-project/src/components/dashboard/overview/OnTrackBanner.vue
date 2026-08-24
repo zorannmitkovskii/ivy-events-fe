@@ -31,7 +31,7 @@ defineProps({ percent: Number, message: String });
   color: #fff;
   border-radius: 9px;
   padding: 10px 18px;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   font-weight: 500;
   font-size: 12.5px;
   cursor: pointer;

@@ -17,56 +17,58 @@ defineProps({
 </script>
 
 <style scoped>
+/*
+  The redesign's nav row: a rounded pill that fills on hover and when active,
+  and a short gold bar pushed to the right edge of the row rather than a
+  full-height rule glued to the panel edge. Smaller and quieter than before —
+  in the design the sidebar is navigation, not a second headline.
+*/
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 20px;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.44);
+  gap: 13px;
+  margin: 0 8px;
+  padding: 12px 14px;
+  border-radius: 9px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: #91a49b;
   cursor: pointer;
-  transition: all 0.18s;
+  transition: background 0.2s, color 0.2s;
   text-decoration: none;
-  position: relative;
-  letter-spacing: 0.01em;
 }
 
-.nav-item:hover {
-  color: rgba(255, 255, 255, 0.78);
-  background: rgba(255, 255, 255, 0.04);
-}
-
+.nav-item:hover,
 .nav-item.active {
+  background: var(--d-side-hover);
   color: #fff;
-  background: rgba(90, 122, 82, 0.18);
 }
 
 .nav-item.active::after {
   content: '';
-  position: absolute;
-  right: 0;
-  top: 25%;
-  bottom: 25%;
   width: 3px;
-  background: var(--dash-sage-mid);
-  border-radius: 3px 0 0 3px;
+  height: 18px;
+  margin-left: auto;
+  border-radius: 3px;
+  background: var(--d-gold);
 }
 
 .nav-icon {
-  width: 18px;
-  text-align: center;
-  font-size: 13px;
+  width: 22px;
+  height: 22px;
+  flex: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-size: 16px;
 }
 
 .nav-icon :deep(svg) {
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
   stroke: currentColor;
   fill: none;
-  stroke-width: 2;
+  stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -78,12 +80,20 @@ defineProps({
   flex: 1;
 }
 
+/* The badge and the active marker both want the row's right edge; when a row
+   has both, the badge sits first and the marker closes the row. */
 .nav-badge {
-  background: var(--dash-gold);
-  color: #fff;
-  border-radius: 20px;
-  padding: 2px 8px;
-  font-size: 10px;
-  font-weight: 600;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(200, 163, 89, 0.18);
+  color: var(--d-gold);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.nav-item.active .nav-label {
+  flex: initial;
 }
 </style>

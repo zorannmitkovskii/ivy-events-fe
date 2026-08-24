@@ -150,7 +150,7 @@ function sendAnother() {
   padding: 8px 16px; border: 1px solid #ddd8cf; border-radius: 999px;
   background: #fff; cursor: pointer; font-size: 14px;
 }
-.type-btn.active { background: #5a7a52; color: #fff; border-color: #5a7a52; }
+.type-btn.active { background: var(--brand); color: #fff; border-color: var(--brand); }
 
 .field { display: flex; flex-direction: column; gap: 5px; font-size: 13px; }
 .field input, .field textarea {
@@ -158,9 +158,9 @@ function sendAnother() {
   font-size: 16px; font-family: inherit;
 }
 
-.btn { padding: 12px 20px; border: 0; border-radius: 10px; background: #5a7a52; color: #fff; font-size: 16px; cursor: pointer; }
+.btn { padding: 12px 20px; border: 0; border-radius: 10px; background: var(--brand); color: #fff; font-size: 16px; cursor: pointer; }
 .btn:disabled { opacity: 0.5; cursor: default; }
-.link-btn { border: 0; background: none; color: #5a7a52; cursor: pointer; font-size: 14px; }
+.link-btn { border: 0; background: none; color: var(--brand); cursor: pointer; font-size: 14px; }
 
 .thanks { text-align: center; padding: 60px 0; }
 .thanks h1 { font-size: 22px; margin: 0 0 8px; }

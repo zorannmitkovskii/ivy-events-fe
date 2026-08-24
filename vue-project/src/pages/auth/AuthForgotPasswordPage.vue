@@ -1,6 +1,5 @@
 <template>
   <AuthShell>
-    <AuthHeader />
 
     <AuthCard>
       <!-- Step 1: Enter email -->
@@ -145,7 +144,6 @@ import { RouterLink, useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import AuthShell from "@/components/auth/AuthShell.vue";
 import AuthCard from "@/components/auth/AuthCard.vue";
-import AuthHeader from "@/components/auth/AuthHeader.vue";
 import AuthCardTitle from "@/components/auth/AuthCardTitle.vue";
 import AuthInput from "@/components/auth/AuthInput.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";

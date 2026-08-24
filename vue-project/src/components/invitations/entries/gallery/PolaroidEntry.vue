@@ -107,7 +107,7 @@ defineExpose({ enterSite });
   left: 0;
   width: 100%;
   text-align: center;
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 18px;
   font-style: italic;
   color: #1a1a1a;
@@ -132,7 +132,7 @@ defineExpose({ enterSite });
   margin: 0 0 8px;
 }
 .entry-tap {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 22px;
   font-style: italic;
   color: #1a1a1a;

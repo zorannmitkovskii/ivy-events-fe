@@ -139,7 +139,7 @@ defineExpose({ enterSite });
   transform: translateY(10px);
 }
 .pulse-initials {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 14px;
   color: #e11d48;
   letter-spacing: 6px;
@@ -147,7 +147,7 @@ defineExpose({ enterSite });
   margin: 0 0 8px;
 }
 .pulse-names {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 36px;
   color: #1a1a1a;
   margin: 0 0 8px;
@@ -167,7 +167,7 @@ defineExpose({ enterSite });
 }
 .pulse-tap-hidden { opacity: 0; }
 .pulse-tap-text {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 18px;
   font-style: italic;
   color: #666;

@@ -57,15 +57,25 @@ const isActive = (section) => {
 };
 
 const navItems = [
+  { key: "dashboard", path: "dashboard", labelKey: "admin.sidebar.dashboard", icon: Icons.grid },
   { key: "events", path: "events", labelKey: "admin.sidebar.events", icon: Icons.calendar },
   { key: "packages", path: "packages", labelKey: "admin.sidebar.packages", icon: Icons.package },
   { key: "users", path: "users", labelKey: "admin.sidebar.users", icon: Icons.users },
+  { key: "organizers", path: "organizers", labelKey: "admin.sidebar.organizers", icon: Icons.userPlus },
+  // The queue was routed but missing from the sidebar, so the only admin
+  // vendor screen was reachable by typing the URL (IVY-1103).
+  { key: "vendorQueue", path: "vendor-queue", labelKey: "admin.sidebar.vendorQueue", icon: Icons.package },
   { key: "reviews", path: "reviews", labelKey: "admin.sidebar.reviews", icon: Icons.star },
   { key: "contacts", path: "contacts", labelKey: "admin.sidebar.contacts", icon: Icons.mail },
   { key: "faq", path: "faq", labelKey: "admin.sidebar.faq", icon: Icons.messageCircle },
   { key: "invitationTemplates", path: "invitation-templates", labelKey: "admin.sidebar.invitationTemplates", icon: Icons.image },
   { key: "emailTemplates", path: "email-templates", labelKey: "admin.sidebar.emailTemplates", icon: Icons.clipboardList },
   { key: "emailSend", path: "email-send", labelKey: "admin.sidebar.emailSend", icon: Icons.send },
+  // The editorial desk (EPIC-09). Content sits with admin rather than with an
+  // event because an article belongs to the site, not to somebody's wedding.
+  { key: "content", path: "content", labelKey: "admin.sidebar.content", icon: Icons.clipboardList },
+  { key: "contentAnalytics", path: "content-analytics", labelKey: "admin.sidebar.contentAnalytics", icon: Icons.star },
+  { key: "settings", path: "settings", labelKey: "admin.sidebar.settings", icon: Icons.settings },
 ];
 
 const userName = computed(() => getFullName() || "Admin");

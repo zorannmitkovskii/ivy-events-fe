@@ -57,7 +57,7 @@ function priorityClass(p) {
   padding: 10px;
   border: 1.5px solid var(--dash-cream-border);
   border-radius: 9px;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   font-size: 12px;
   font-weight: 500;
   color: var(--dash-ink);

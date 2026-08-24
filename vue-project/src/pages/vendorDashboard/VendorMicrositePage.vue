@@ -196,7 +196,7 @@ const previewHref = computed(() => `/${locale.value}/vendor/microsite/preview`)
 .themes { display: flex; gap: 8px; flex-wrap: wrap; }
 .theme { padding: 8px 16px; border: 1px solid #ddd8cf; border-radius: 999px;
   background: #fff; cursor: pointer; font-size: 14px; }
-.theme.active { background: #5a7a52; color: #fff; border-color: #5a7a52; }
+.theme.active { background: var(--brand); color: #fff; border-color: var(--brand); }
 
 .status { margin: 0; padding: 8px 12px; border-radius: 8px; font-size: 13px; background: #f0efe9; }
 .status.ok { background: #e6f2e2; color: #2f6b28; }
@@ -216,9 +216,9 @@ const previewHref = computed(() => `/${locale.value}/vendor/microsite/preview`)
 .buttons { display: flex; gap: 14px; align-items: center; }
 
 .btn { align-self: flex-start; padding: 9px 16px; border: 0; border-radius: 8px;
-  background: #5a7a52; color: #fff; font-size: 14px; cursor: pointer; }
+  background: var(--brand); color: #fff; font-size: 14px; cursor: pointer; }
 .btn:disabled { opacity: 0.5; cursor: default; }
-.link-btn { border: 0; background: none; color: #5a7a52; cursor: pointer;
+.link-btn { border: 0; background: none; color: var(--brand); cursor: pointer;
   font-size: 13px; padding: 0; text-decoration: none; }
 .link-btn.danger { color: #a3271f; }
 

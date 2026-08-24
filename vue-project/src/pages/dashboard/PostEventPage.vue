@@ -1,9 +1,10 @@
 <template>
   <div class="post-event">
-    <header class="page-head">
-      <h1>{{ t('postEvent.title') }}</h1>
-      <p class="sub">{{ t('postEvent.subtitle') }}</p>
-    </header>
+    <PageHeader :title="t('postEvent.title')">
+      <template #actions>
+        <p class="sub">{{ t('postEvent.subtitle') }}</p>
+      </template>
+    </PageHeader>
 
     <p v-if="settings.ranAt" class="sent-note" role="status">
       {{ t('postEvent.alreadySent', { n: settings.recipientsNotified ?? 0 }) }}
@@ -101,6 +102,7 @@
 </template>
 
 <script setup>
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { postEventService } from '@/services/postEvent.service'
@@ -241,9 +243,9 @@ function formatted(iso) {
 
 .error { font-size: 13px; color: #a3271f; }
 
-.btn { padding: 9px 16px; border: 0; border-radius: 8px; background: #5a7a52; color: #fff; font-size: 14px; cursor: pointer; }
+.btn { padding: 9px 16px; border: 0; border-radius: 8px; background: var(--brand); color: #fff; font-size: 14px; cursor: pointer; }
 .btn:disabled { opacity: 0.5; cursor: default; }
-.link-btn { border: 0; background: none; color: #5a7a52; cursor: pointer; font-size: 13px; padding: 0; }
+.link-btn { border: 0; background: none; color: var(--brand); cursor: pointer; font-size: 13px; padding: 0; }
 .link-btn.danger { color: #a3271f; }
 
 .visually-hidden {

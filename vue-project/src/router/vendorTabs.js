@@ -15,6 +15,10 @@ export const VENDOR_TABS = [
   { name: "vendor.portfolio", label: "vendorPortal.portfolio", capability: "GALLERY" },
   { name: "vendor.calendar", label: "vendorPortal.calendar", capability: "CALENDAR" },
 
+  // Ungated as well: an inquiry can reach any approved vendor whatever they
+  // do, so an inbox is not something a capability should be able to hide.
+  { name: "vendor.inbox", label: "vendorPortal.inbox", capability: null },
+
   // No capability: every vendor has an application, and any approved vendor may
   // have a microsite, whatever trade they are in. Placed after the
   // capability-gated ones so firstTabFor still lands somebody on their work

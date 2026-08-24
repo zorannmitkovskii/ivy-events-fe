@@ -36,7 +36,7 @@ export function fakeToken({ sub, roles = ['ORGANIZER'], packages = [] }) {
  * router guard reads the token during the very first navigation, so a token
  * written afterwards is one redirect too late.
  */
-export async function signIn(page, { userId, eventId, lang = 'mk' }) {
+export async function signIn(page, { userId, eventId, lang = 'mk', roles = ['ORGANIZER'] }) {
   await page.addInitScript(
     ({ token, eventId, lang }) => {
       localStorage.setItem('access_token', token)
@@ -55,6 +55,6 @@ export async function signIn(page, { userId, eventId, lang = 'mk' }) {
         }),
       )
     },
-    { token: fakeToken({ sub: userId }), eventId, lang },
+    { token: fakeToken({ sub: userId, roles }), eventId, lang },
   )
 }

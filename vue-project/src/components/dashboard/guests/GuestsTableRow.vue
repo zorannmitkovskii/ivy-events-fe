@@ -137,7 +137,7 @@ function onChangeStatus(value) {
   border: 1.5px solid var(--dash-cream-border);
   border-radius: 9px;
   font-size: 12.5px;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   color: var(--dash-ink);
   background: var(--dash-cream);
   outline: none;

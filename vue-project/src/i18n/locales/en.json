@@ -270,7 +270,8 @@
       "privacy": "Privacy",
       "security": "Security",
       "designs": "Designs",
-      "feedback": "Feedback"
+      "feedback": "Feedback",
+      "vendors": "Professionals"
     },
     "copyright": "All rights reserved."
   },
@@ -303,7 +304,8 @@
       "gallery": "Photo Gallery",
       "about": "About Us",
       "terms": "Terms & Conditions",
-      "contact": "Contact"
+      "contact": "Contact",
+      "vendors": "Professionals"
     }
   },
   "nav": {
@@ -381,7 +383,10 @@
       "orContinue": "or continue with",
       "continueWithGoogle": "Continue with Google",
       "terms": "Terms of Service",
-      "privacy": "Privacy Policy"
+      "privacy": "Privacy Policy",
+      "visualLabel": "YOU ARE INVITED",
+      "visualDate": "15 · 06 · 2026",
+      "visualQuote": "“Planning begins with one small, beautiful step.”"
     },
     "placeholders": {
       "email": "your{'@'}email.com",
@@ -395,7 +400,9 @@
       "signIn": "Sign In",
       "forgotPassword": "Forgot password?",
       "noAccount": "Don't have an account?",
-      "createAccount": "Create account"
+      "createAccount": "Create account",
+      "eyebrow": "WELCOME BACK",
+      "heading": "Sign in"
     },
     "register": {
       "title": "Create your account",
@@ -403,7 +410,8 @@
       "createAccount": "Create Account",
       "haveAccount": "Already have an account?",
       "signIn": "Sign in",
-      "agree": "I agree to the Terms of Service and Privacy Policy"
+      "agree": "I agree to the Terms of Service and Privacy Policy",
+      "eyebrow": "START FOR FREE"
     },
     "fields": {
       "email": "Email Address",
@@ -513,7 +521,7 @@
     "payment": {
       "title": "Payment Information",
       "email": "Email Address",
-      "emailPh": "userexample.com",
+      "emailPh": "name@example.com",
       "cardNumber": "Card Number",
       "expiry": "Expiry Date",
       "cvc": "CVC",
@@ -571,7 +579,7 @@
       "titleAccent1": "beautiful",
       "titleLine2": "invitations. Plan",
       "titleAccent2": "unforgettable",
-      "titleLine3": "invitations.",
+      "titleLine3": "events.",
       "subtitle": "The all-in-one platform for elegant digital invitations, seamless RSVP tracking, and stress-free event management.",
       "primaryCta": "✦ Get Started Free",
       "secondaryCta": "View Templates",
@@ -581,17 +589,21 @@
       "chipConfirm": "New confirmation!",
       "chipConfirmSub": "Maria confirmed attendance",
       "chipGuests": "47 / 80 guests",
-      "chipGuestsSub": "confirmed attendance",
+      "chipGuestsSub": "of 80 guests confirmed",
       "cardLabel": "You are invited to",
       "cardNames": "Ana & Marko",
       "cardDate": "June 15, 2025 · 6:00 PM",
-      "cardLocation": "Ohrid, Macedonia"
+      "cardLocation": "Ohrid, Macedonia",
+      "ratingScore": "4.9",
+      "ratingSource": "from our users",
+      "cardCta": "CONFIRM ATTENDANCE",
+      "chipGuestsCount": "47"
     },
     "howItWorks": {
       "eyebrow": "How It Works",
       "title": "How It Works",
-      "titleBefore": "Four steps to a",
-      "titleAccent": "perfect invitation",
+      "titleBefore": "It is not just an invitation.",
+      "titleAccent": "It is where the experience begins.",
       "subtitle": "From template to sent invitation — in less than 10 minutes",
       "steps": {
         "chooseTemplate": {
@@ -610,7 +622,8 @@
           "title": "Track RSVPs",
           "description": "Monitor responses and manage your guest list in real-time"
         }
-      }
+      },
+      "explore": "EXPLORE"
     },
     "whyChoose": {
       "title": "Why Choose IvyEvents?",
@@ -660,13 +673,17 @@
           "cardNames": "18th Birthday",
           "cardDate": "May 12 · Bitola"
         }
-      }
+      },
+      "paperLabel": "TOGETHER WITH THEIR FAMILIES",
+      "paperDate": "24 · 08 · 2026",
+      "cardCaption": "Interactive wedding invitation",
+      "empty": "No designs available yet."
     },
     "features": {
       "eyebrow": "Features",
       "title": "Features for Every Stage of Event Management",
-      "titleBefore": "Everything for every",
-      "titleAccent": "stage of planning",
+      "titleBefore": "Everything under control.",
+      "titleAccent": "You are simply present.",
       "subtitle": "The platform covers all aspects — from design to guest tracking — for a seamless experience.",
       "rsvpLabel": "Live RSVP Overview",
       "rsvpTitle": "Track who's coming — in real time",
@@ -708,7 +725,17 @@
           "title": "Real-Time Analytics",
           "description": "Get insights into guest responses, attendance rates, and engagement metrics"
         }
-      }
+      },
+      "cta": "Explore the planner",
+      "dashGreeting": "GOOD MORNING, ANA",
+      "dashHeadline": "Your day is getting closer.",
+      "dashConfirmed": "Confirmed",
+      "dashTasks": "Tasks",
+      "dashBudget": "Budget",
+      "dashItem1": "Menu tasting",
+      "dashItem1When": "Today · 18:30",
+      "dashItem2": "Approve the décor",
+      "dashItem2When": "Tomorrow · 10:00"
     },
     "faq": {
       "title": "Frequently Asked Questions",
@@ -783,6 +810,10 @@
       "subtitle": "Join thousands of satisfied users — get started for free",
       "primaryCta": "Start Planning",
       "secondaryCta": "View Templates"
+    },
+    "quote": {
+      "text": "For the first time, planning did not feel like a chore. Everything was clear, beautiful and truly ours.",
+      "attribution": "ANA & MARKO, OHRID"
     }
   },
   "guests": {
@@ -1056,10 +1087,17 @@
     "checkIn": "Check-in",
     "announcements": "Announcements",
     "contributions": "Contributions",
-    "postEvent": "After the event"
+    "postEvent": "After the event",
+    "quotes": "Quotes",
+    "approvals": "Approvals",
+    "pipeline": "Pipeline",
+    "agency": "Agency",
+    "content": "Content",
+    "contentAnalytics": "Content analytics"
   },
   "admin": {
     "sidebar": {
+      "dashboard": "Dashboard",
       "events": "Events",
       "packages": "Packages",
       "users": "Users",
@@ -1068,7 +1106,13 @@
       "faq": "FAQ",
       "invitationTemplates": "Invitations",
       "emailTemplates": "Email Templates",
-      "emailSend": "Send Emails"
+      "emailSend": "Send Emails",
+      "content": "Content",
+      "contentAnalytics": "Conversions",
+      "organizers": "Organizers",
+      "vendors": "Professionals",
+      "vendorQueue": "Professional queue",
+      "settings": "Settings"
     },
     "reviews": {
       "title": "Reviews",
@@ -1122,7 +1166,9 @@
       "thAnswer": "Answer",
       "thOrder": "Order",
       "thActive": "Status",
-      "thActions": "Actions"
+      "thActions": "Actions",
+      "statusActive": "Active",
+      "statusInactive": "Inactive"
     },
     "invitationTemplates": {
       "title": "Invitation Templates",
@@ -1145,7 +1191,10 @@
       "thCategory": "Category",
       "thActive": "Status",
       "thActions": "Actions",
-      "active": "Active"
+      "active": "Active",
+      "uploadHint": "Click to upload an image",
+      "removeImage": "Remove image",
+      "selectCategory": "Select a category"
     },
     "emailTemplates": {
       "title": "Email Templates",
@@ -1169,7 +1218,9 @@
       "thCreatedAt": "Created At",
       "thActions": "Actions",
       "deleteConfirm": "Delete \"{name}\"?",
-      "previewTitle": "Email Preview"
+      "previewTitle": "Email Preview",
+      "noHtml": "No HTML content",
+      "uploadHtml": "Upload HTML"
     },
     "emailSend": {
       "title": "Send Emails",
@@ -1278,7 +1329,12 @@
     "loadingAddress": "Loading address...",
     "loading": "Working…",
     "copy": "Copy",
-    "copied": "Copied"
+    "copied": "Copied",
+    "remove": "Remove",
+    "showingRange": "Showing {from}–{to} of {total}",
+    "preview": "Preview",
+    "menu": "Menu",
+    "notifications": "Notifications"
   },
   "tables": {
     "title": "Tables & Seating",
@@ -1418,7 +1474,10 @@
     "deleting": "Deleting...",
     "confirmDelete": "Are you sure you want to delete this image?",
     "confirmDeleteMany": "Are you sure you want to delete these {count} images?",
-    "deleteError": "Delete failed"
+    "deleteError": "Delete failed",
+    "lockedTitle": "Gallery not available",
+    "lockedBody": "This needs a package that includes the gallery. Upgrade your plan to upload and share photos.",
+    "lockedAction": "See the packages"
   },
   "settings": {
     "title": "Event Settings",
@@ -1538,7 +1597,30 @@
     "cartEmpty": "Your cart is empty",
     "cartTotal": "Total",
     "checkout": "Proceed to Payment",
-    "removeFromCart": "Remove"
+    "removeFromCart": "Remove",
+    "heroEyebrow": "DIGITAL INVITATION PACKAGES",
+    "heroTitle": "From invitation to",
+    "heroAccent": "an organised event.",
+    "heroLead": "A one-off payment per event. Start free and choose a package before you publish.",
+    "gallery": {
+      "eyebrow": "PHOTO GALLERY",
+      "title": "Memories get a package of their own.",
+      "text": "The gallery is independent of the invitation. Guests upload photos and video through a private link or QR code.",
+      "cta": "Create a gallery",
+      "tierSmall": "For a smaller event",
+      "tierMedium": "For the whole celebration",
+      "tierLarge": "Photos and video"
+    },
+    "compare": {
+      "eyebrow": "QUICK COMPARISON",
+      "title": "Which package is for you?",
+      "feature": "Feature",
+      "invitation": "Digital invitation + RSVP",
+      "allDesigns": "Every design",
+      "seating": "Table seating plan",
+      "advancedTasks": "Advanced tasks",
+      "notifications": "Email and SMS notifications"
+    }
   },
   "about": {
     "title": "About Us",
@@ -1553,7 +1635,12 @@
     "valueElegance": "Elegance",
     "valueEleganceDesc": "Every detail matters from invitations to the last dance.",
     "valueInclusion": "Inclusion",
-    "valueInclusionDesc": "Beautiful events for every culture, budget, and celebration."
+    "valueInclusionDesc": "Beautiful events for every culture, budget, and celebration.",
+    "heroEyebrow": "WHY IVY EVENTS",
+    "heroTitle": "Technology that leaves",
+    "heroAccent": "room for the feeling.",
+    "storyEyebrow": "OUR IDEA",
+    "storyTitle": "The moments that matter most should not start in a spreadsheet."
   },
   "terms": {
     "title": "Terms & Conditions",
@@ -1592,7 +1679,10 @@
         "title": "8. Contact",
         "text": "For questions about these terms, please contact us at support{'@'}ivyevents.com."
       }
-    }
+    },
+    "eyebrow": "Legal",
+    "contents": "Contents",
+    "heroEyebrow": "LEGAL"
   },
   "contact": {
     "title": "Contact Us",
@@ -1610,7 +1700,22 @@
     "send": "Send Message",
     "sending": "Sending...",
     "successTitle": "Message Sent!",
-    "successText": "Thank you for reaching out. We'll get back to you as soon as possible."
+    "successText": "Thank you for reaching out. We'll get back to you as soon as possible.",
+    "info": {
+      "email": "Email",
+      "phone": "Phone",
+      "location": "Location",
+      "city": "Skopje, North Macedonia"
+    },
+    "heroEyebrow": "CONTACT",
+    "heroTitle": "Tell us how we can",
+    "heroAccent": "help you.",
+    "leadTitle": "Let us talk.",
+    "leadText": "For support, include the email address you registered with and the name of your event.",
+    "hoursLabel": "Opening hours",
+    "hoursValue": "Mon–Fri · 09:00–17:00",
+    "replyLabel": "Response",
+    "replyValue": "Within one working day"
   },
   "feedback": {
     "title": "Share Your Feedback",
@@ -1955,7 +2060,11 @@
     "groomName": "Groom Name",
     "weddingDate": "Wedding Date",
     "venue": "Venue / Location",
-    "storyImages": "Story Images"
+    "storyImages": "Story Images",
+    "readability": "Readability",
+    "readabilityPass": "passes",
+    "readabilityFail": "low contrast",
+    "readabilityHint": "Below 4.5:1 is hard to read on a phone and in sunlight. Darken the text or lighten the background."
   },
   "organizerOverview": {
     "title": "Organizer Overview",
@@ -2006,7 +2115,18 @@
       "PENDING": "Pending",
       "ACTIVATED": "Active",
       "ACHIVED": "Archived"
-    }
+    },
+    "needsAttention": "Needs attention",
+    "pinnedSection": "Pinned",
+    "upcomingSection": "Upcoming",
+    "completedSection": "Recently completed",
+    "searchPlaceholder": "Search events...",
+    "noDate": "No date",
+    "today": "Today",
+    "daysLeft": "{count} days left",
+    "daysAgo": "{count} days ago",
+    "overdueTasks": "{count} overdue tasks",
+    "noneMatch": "No events match your search."
   },
   "vendorPortal": {
     "logout": "Sign out",
@@ -2092,7 +2212,20 @@
       "AUDIO": "Music"
     },
     "application": "Application",
-    "microsite": "Microsite"
+    "microsite": "Microsite",
+    "availability": {
+      "AVAILABLE": "Free",
+      "HOLD": "On hold",
+      "CONFIRMED": "Confirmed",
+      "UNAVAILABLE": "Busy",
+      "status": "Status",
+      "noReason": "No reason given",
+      "reasonPlaceholder": "Why? (optional)",
+      "blockDay": "Mark the day",
+      "confirm": "Confirm",
+      "release": "Free up"
+    },
+    "inbox": "Inquiries"
   },
   "catering": {
     "title": "The venue’s menu",
@@ -2286,7 +2419,7 @@
     "subtitle": "Thank-you, gallery and review requests — a few days after it ends.",
     "actionTHANK_YOU": "Thank-you to guests",
     "actionGALLERY_ACCESS": "Gallery link",
-    "actionVENDOR_REVIEW_REQUEST": "Vendor review requests",
+    "actionVENDOR_REVIEW_REQUEST": "Ask for reviews of the professionals",
     "delayDays": "Days after the event",
     "audience": "Audience",
     "audienceCHECKED_IN": "Who came",
@@ -2308,7 +2441,7 @@
     "cancelled": "The package is cancelled. Save again to restore it."
   },
   "directory": {
-    "title": "Suppliers",
+    "title": "Professionals",
     "subtitle": "Find a photographer, venue, band or decorator.",
     "searchPlaceholder": "Search by name…",
     "category": "Category",
@@ -2360,7 +2493,7 @@
     }
   },
   "vendorQueue": {
-    "title": "Vendor applications",
+    "title": "Applications from professionals",
     "subtitle": "Oldest first.",
     "empty": "Nothing waiting.",
     "approve": "Approve",
@@ -2400,5 +2533,573 @@
       "ACTIVE": "Live over HTTPS.",
       "FAILED": "Failed."
     }
+  },
+  "inbox": {
+    "title": "Client inquiries",
+    "subtitle": "The fastest reply gets the work.",
+    "median": "Typical reply",
+    "unanswered": "Unanswered",
+    "empty": "No inquiries yet.",
+    "someone": "Someone",
+    "noDate": "No date",
+    "guests": "{n} guests",
+    "where": "Where",
+    "attachment": "Attachment",
+    "replyPlaceholder": "Reply…",
+    "send": "Send",
+    "accept": "Accept",
+    "askQuestion": "Ask a question",
+    "decline": "Decline",
+    "minutes": "{n} min",
+    "hours": "{n} h",
+    "days": "{n} d",
+    "status": {
+      "SENT": "Waiting for you",
+      "QUESTION_ASKED": "You asked",
+      "ACCEPTED": "Accepted",
+      "DECLINED": "Declined",
+      "QUOTED": "Quoted",
+      "EXPIRED": "Expired"
+    }
+  },
+  "inquiry": {
+    "contact": "Ask for a quote",
+    "yourName": "Your name",
+    "email": "Email",
+    "phone": "Phone",
+    "date": "Event date",
+    "guests": "Guest count",
+    "budget": "Budget (from – to)",
+    "requirements": "What you need",
+    "askedOnceHint": "These are the questions the professional would ask anyway. Answer them now and you get an answer instead of a counter-question.",
+    "send": "Send",
+    "sent": "Sent. The professional will get back to you."
+  },
+  "quotes": {
+    "title": "Quotes",
+    "subtitle": "Every live offer, side by side.",
+    "empty": "No quotes yet.",
+    "vendor": "Professional",
+    "comparable": "Comparable",
+    "extras": "Extras",
+    "total": "Total",
+    "deposit": "Deposit",
+    "accept": "Accept",
+    "decline": "Decline",
+    "version": "version {n}",
+    "included": "Included",
+    "optional": "Optional",
+    "expires": "Valid until {when}",
+    "comparableExplain": "The comparable price leaves out optional extras. One professional includes the album, another charges for it — a headline total on its own hides that."
+  },
+  "crm": {
+    "title": "Deals",
+    "subtitle": "Client enquiries, until they become an event.",
+    "overdue": "Next step overdue on {count}.",
+    "noNextAction": "{count} with no next step — those are leads nobody is working.",
+    "name": "Name",
+    "email": "Email",
+    "source": "Source",
+    "nextAction": "Next step",
+    "nextActionAt": "When",
+    "add": "Add",
+    "stageINQUIRY": "Inquiry",
+    "stageCONSULTATION": "Consultation",
+    "stagePROPOSAL": "Proposal",
+    "stageWON": "Won",
+    "stageLOST": "Lost",
+    "moveTo": "Move to",
+    "win": "Won",
+    "lose": "Lost",
+    "openEvent": "Open event",
+    "noAction": "No next step",
+    "fee": "Fee",
+    "emptyColumn": "Empty",
+    "loseHeading": "Why was {name} lost?",
+    "lostReason": "Reason",
+    "lostNote": "Note",
+    "confirmLoss": "Confirm",
+    "lostPRICE": "Price",
+    "lostAVAILABILITY": "Availability",
+    "lostCOMPETITOR": "Competitor",
+    "lostCANCELLED": "Cancelled",
+    "lostNO_RESPONSE": "No response",
+    "lostOTHER": "Other"
+  },
+  "agency": {
+    "title": "Agency",
+    "subtitle": "Look, plan and numbers.",
+    "plan": "Plan",
+    "planLapsed": "The plan has lapsed.",
+    "activeEvents": "Active events: {count}",
+    "tierFREE": "Free",
+    "tierPERSONAL": "Personal",
+    "tierORGANIZER": "Organizer",
+    "tierAGENCY": "Agency",
+    "tierVENDOR": "Professional",
+    "branding": "Branding",
+    "primaryColor": "Primary colour",
+    "surfaceColor": "Surface",
+    "textColor": "Text",
+    "senderName": "Sender name",
+    "replyTo": "Reply-to",
+    "contrastText": "Text on surface: {ratio}:1",
+    "contrastPrimary": "White on the primary colour: {ratio}:1",
+    "contrastFail": "below 4.5:1, hard to read",
+    "previewTitle": "What the client sees",
+    "previewButton": "Button",
+    "noCustomCode": "Colours and a logo only. HTML and JavaScript are not accepted — they would run on our domain against other customers.",
+    "numbers": "Numbers",
+    "financeOnly": "Revenue and margin need finance access.",
+    "wonLeads": "Won",
+    "agencyRevenue": "Agency revenue",
+    "clientSpend": "Client spend",
+    "referrals": "Referral codes",
+    "code": "Code",
+    "reward": "Reward",
+    "createCode": "Create",
+    "codeHint": "The code gets printed on a card — make it something a person will type.",
+    "revoke": "Revoke",
+    "revoked": "Revoked",
+    "eventsEarned": "{count} events"
+  },
+  "approvals": {
+    "title": "Approvals",
+    "subtitle": "Things the client has to say yes to.",
+    "subject": "Key (e.g. menu)",
+    "subjectTitle": "Title",
+    "due": "Due",
+    "description": "Description",
+    "ask": "Request approval",
+    "supersedeHint": "A new request for the same subject replaces the previous version.",
+    "statusPENDING": "Pending",
+    "statusAPPROVED": "Approved",
+    "statusREJECTED": "Rejected",
+    "superseded": "Superseded",
+    "overdue": "Overdue",
+    "decidedBy": "{who}, {when}",
+    "dueOn": "Due: {date}",
+    "comment": "Comment",
+    "approve": "Approve",
+    "reject": "Reject",
+    "empty": "No requests yet."
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Ideas and advice for events.",
+    "all": "All",
+    "categoryWEDDING": "Weddings",
+    "categoryBIRTHDAY": "Birthdays",
+    "categoryCORPORATE": "Corporate",
+    "categoryVENUE": "Venues",
+    "categoryVENDOR": "Professionals",
+    "categoryPLANNING": "Planning",
+    "empty": "Nothing published in this language yet.",
+    "notFound": "This article is not available in this language.",
+    "alsoIn": "Also in:",
+    "related": "Related"
+  },
+  "inspiration": {
+    "subtitle": "{count} professionals",
+    "vendors": "Professionals",
+    "reading": "Reading",
+    "thin": "This page is not indexed — fewer than {minimum} listings.",
+    "empty": "Nothing here yet.",
+    "notFound": "This page does not exist."
+  },
+  "contentEditor": {
+    "title": "Content",
+    "subtitle": "Articles, translations and SEO.",
+    "newTitle": "Title",
+    "category": "Category",
+    "create": "Create",
+    "variantTitle": "Title",
+    "excerpt": "Excerpt",
+    "body": "Body",
+    "seo": "SEO",
+    "seoTitle": "SEO title",
+    "seoDescription": "SEO description",
+    "canonical": "Canonical URL",
+    "socialImage": "Social image",
+    "searchPreview": "How this looks in search",
+    "noindex": "This version will not be indexed.",
+    "noWarnings": "No warnings.",
+    "status": "Status",
+    "stateDRAFT": "Draft",
+    "stateREVIEW": "In review",
+    "stateSCHEDULED": "Scheduled",
+    "statePUBLISHED": "Published",
+    "stateARCHIVED": "Archived",
+    "moveREVIEW": "Send to review",
+    "moveSCHEDULED": "Schedule",
+    "movePUBLISHED": "Publish",
+    "moveARCHIVED": "Archive",
+    "publishAt": "Publish at",
+    "publishHint": "Scheduling needs a time; publishing takes effect immediately.",
+    "links": "Related items",
+    "unusable": "Not publishable",
+    "noLinks": "No related items."
+  },
+  "contentAnalytics": {
+    "title": "Content and conversions",
+    "subtitle": "Whether the writing brings inquiries.",
+    "lastDays": "Last {days} days",
+    "views": "Views",
+    "vendorClicks": "Clicks to a professional",
+    "inquiries": "Inquiries started",
+    "events": "Events created",
+    "journeys": "{withJourney} of {total} sessions went further than reading.",
+    "privacy": "No personal data. Sessions are anonymous, and without consent only a count is kept."
+  },
+  "adminOverview": {
+    "title": "Platform dashboard",
+    "subtitle": "Every event on the platform, across all organizations.",
+    "refresh": "Refresh",
+    "refreshing": "Refreshing…",
+    "lastUpdated": "Updated {time}",
+    "from": "From",
+    "to": "To",
+    "eventType": "Event type",
+    "allTypes": "All types",
+    "apply": "Apply",
+    "clear": "Clear",
+    "totalEvents": "Total events",
+    "upcoming": "Upcoming events",
+    "days": "Next {n} days",
+    "cumulative": "Cumulative — an event in 20 days counts in all three.",
+    "guests": "Guests",
+    "rsvpRate": "RSVP rate",
+    "invited": "Invited",
+    "confirmed": "Confirmed",
+    "delayedTasks": "Delayed tasks",
+    "delayedTasksNote": "Past their date and neither done nor cancelled.",
+    "attention": "Requires attention",
+    "attentionCount": "{n} events",
+    "attentionEmpty": "Nothing needs attention.",
+    "attentionTruncated": "Showing {shown} of {total}. Filter to narrow the list.",
+    "overdueOpen": "{overdue} overdue · {open} open",
+    "inDays": "in {n} days",
+    "daysAgo": "{n} days ago",
+    "undated": "No date",
+    "status": {
+      "DRAFT": "Draft",
+      "PENDING": "Pending",
+      "ACTIVATED": "Active",
+      "ACHIVED": "Archived"
+    },
+    "reason": {
+      "OVERDUE_TASKS": "Overdue",
+      "AT_RISK": "At risk"
+    },
+    "declined": "Declined",
+    "awaiting": "Awaiting reply",
+    "rsvpChart": "RSVP breakdown",
+    "rsvpChartEmpty": "No invitations sent yet.",
+    "monthlyChart": "Events per month",
+    "monthlyHint": "Only dated events appear. An event with no date still counts in the totals but belongs to no month.",
+    "monthlyEmpty": "No dated events in this period.",
+    "quickNav": "Quick navigation",
+    "changeWindow": "Change the window",
+    "attentionSummary": "{overdue} with work already late, {atRisk} approaching within {days} days with tasks still open.",
+    "attentionSummaryMixed": "{overdue} with work already late, {atRisk} approaching with tasks still open. Each organization sets its own window.",
+    "nav": {
+      "events": "Events",
+      "activeEvents": "active events",
+      "users": "Users",
+      "vendors": "Professionals",
+      "reports": "Reports",
+      "organizers": "Organizers",
+      "settings": "Settings"
+    },
+    "delayedOnEvents": "Events affected",
+    "filters": "Filters and date range"
+  },
+  "agencyOverview": {
+    "title": "Agency dashboard",
+    "subtitle": "Every event your agency is running.",
+    "nav": {
+      "settings": "Settings",
+      "team": "Team"
+    }
+  },
+  "agencySettings": {
+    "title": "Agency settings",
+    "subtitle": "Configuration that applies to your agency only.",
+    "backToDashboard": "← Back to dashboard",
+    "riskWindowTitle": "At-risk window",
+    "riskWindowExplain": "How many days before an event it counts as at risk while it still has open tasks. Events with something already overdue are always listed, whatever this is set to.",
+    "riskWindowDays": "Days",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved. The dashboard will use the new window.",
+    "inherited": "Inherited from the platform default"
+  },
+  "userDirectory": {
+    "create": "Create User",
+    "search": "Search users...",
+    "allRoles": "All Roles",
+    "allPackages": "All Packages",
+    "loading": "Loading users...",
+    "loadFailed": "The user list could not be loaded.",
+    "loadUserFailed": "Failed to load user details",
+    "saveFailed": "Failed to save user",
+    "selected": "{count} selected",
+    "delete": "Delete",
+    "clear": "Clear",
+    "user": "User",
+    "role": "Role",
+    "package": "Package",
+    "status": "Status",
+    "actions": "Actions",
+    "empty": "No users found",
+    "active": "Active",
+    "inactive": "Inactive",
+    "edit": "Edit",
+    "showing": "Showing {from} - {to} of {total}",
+    "previous": "Previous",
+    "next": "Next",
+    "editUser": "Edit User",
+    "createUser": "Create User",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "roles": "Roles",
+    "packageTypes": "Package Types",
+    "events": "Events",
+    "searchEvents": "Search events by name...",
+    "unnamed": "Unnamed",
+    "noEvents": "No events found",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "update": "Update",
+    "createAction": "Create",
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required",
+    "emailRequired": "Email is required",
+    "roleRequired": "At least one role is required",
+    "confirmDelete": "Delete user \"{name}\"?",
+    "loadFailedTitle": "The directory could not be loaded"
+  },
+  "adminUsers": {
+    "title": "Users",
+    "subtitle": "Manage and monitor all user accounts",
+    "discountSubscribe": "Discount Subscribe",
+    "name": "Name",
+    "fullName": "Full name",
+    "phone": "Phone",
+    "subscribe": "Subscribe",
+    "subscribing": "Subscribing...",
+    "subscribed": "Subscribed successfully!",
+    "subscribeFailed": "Failed to subscribe",
+    "nameRequired": "Name is required",
+    "emailInvalid": "Please enter a valid email"
+  },
+  "agencyTeam": {
+    "title": "Team",
+    "subtitle": "The organizers and clients of your agency.",
+    "backToDashboard": "← Back to the dashboard",
+    "roleNote": "You can add organizers and client accounts. Agency owners and platform administrators are added by the platform."
+  },
+  "adminOrganizers": {
+    "title": "Organizers",
+    "subtitle": "Everyone running events, and what each of them is carrying.",
+    "search": "Search by name or email...",
+    "loading": "Loading organizers...",
+    "loadFailed": "The directory could not be loaded",
+    "empty": "No organizers found",
+    "organizer": "Organizer",
+    "status": "Status",
+    "activeEvents": "Assigned active events",
+    "overdueTasks": "Overdue on their events",
+    "actions": "Actions",
+    "enable": "Enable",
+    "disable": "Disable",
+    "changeRole": "Change role",
+    "statusValue": {
+      "ACTIVE": "Active",
+      "DISABLED": "Disabled"
+    },
+    "showing": "Showing {from} - {to} of {total}",
+    "truncated": "Showing the first {shown} of at most {limit} organizers loaded — narrow the search to be sure you are seeing everyone.",
+    "drillSummary": "{events} assigned events, {overdue} overdue tasks on them.",
+    "drillTasks": "{overdue} overdue / {open} open",
+    "drillEmpty": "No events assigned yet."
+  },
+  "adminSettings": {
+    "title": "System settings",
+    "subtitle": "Platform configuration, and the at-risk window each agency is measured by.",
+    "configuration": "Configuration",
+    "emailTemplatesNote": "What the platform sends, and in which language.",
+    "invitationTemplatesNote": "The designs couples choose from.",
+    "packagesNote": "What each plan includes and costs.",
+    "emailSendNote": "Send a one-off message to a segment.",
+    "riskWindowTitle": "At-risk window per organization",
+    "riskWindowExplain": "How many days ahead an event with open tasks counts as at risk. Agencies that never chose inherit the platform default.",
+    "organization": "Organization",
+    "organizationPlaceholder": "Organization id",
+    "riskWindowDays": "Days",
+    "loadCurrent": "Load current",
+    "loading": "Loading...",
+    "save": "Save",
+    "saving": "Saving...",
+    "saved": "Saved.",
+    "inherited": "Inherited from the platform default"
+  },
+  "teamWorkload": {
+    "title": "Team workload",
+    "manage": "Manage the team",
+    "loading": "Loading the team...",
+    "failed": "The team could not be loaded.",
+    "empty": "Nobody on the team yet.",
+    "addFirst": "Add the first organizer",
+    "lede": "Ordered by late work, not by name.",
+    "events": "{n} active events",
+    "overdue": "{n} overdue",
+    "more": "Showing {shown} of {total}."
+  },
+  "eventTypes": {
+    "WEDDING": "Wedding",
+    "BIRTHDAY": "Birthday",
+    "CORPORATE": "Corporate",
+    "CONFERENCE": "Conference",
+    "DINNER": "Private dinner",
+    "BABY_SHOWER": "Baby shower",
+    "GRADUATION": "Graduation",
+    "ANNIVERSARY": "Anniversary",
+    "GALLERY": "Photo gallery"
+  },
+  "emptyDashboard": {
+    "title": "No events yet",
+    "body": "Your dashboard fills itself as soon as there is something to run — guests, tasks, the calendar and the numbers all follow the first event.",
+    "action": "Create the first event"
+  },
+  "months": {
+    "short": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ]
+  },
+  "adminPackages": {
+    "title": "Packages",
+    "subtitle": "Manage subscription packages and pricing",
+    "create": "New package",
+    "search": "Search packages...",
+    "allCategories": "All Categories",
+    "name": "Name",
+    "category": "Category",
+    "type": "Type",
+    "price": "Price",
+    "discount": "Discount",
+    "currency": "Currency",
+    "description": "Description",
+    "features": "Features",
+    "actions": "Actions",
+    "empty": "No packages found",
+    "previous": "Previous",
+    "next": "Next",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "removeRow": "Remove",
+    "selectCategory": "Select category",
+    "selectType": "Select type",
+    "packageName": "Package Name",
+    "packageCategory": "Package Category",
+    "packageType": "Package Type",
+    "namePlaceholder": "e.g. Wedding Premium",
+    "shortDescription": "Short description",
+    "descriptionOptional": "Description (optional)",
+    "featureName": "Feature name",
+    "englishName": "English name",
+    "englishDescription": "English description"
+  },
+  "adminEvents": {
+    "title": "Events",
+    "subtitle": "Manage and monitor all events on the platform",
+    "search": "Search events...",
+    "allCategories": "All Categories",
+    "allStatuses": "All Statuses",
+    "eventName": "Event Name",
+    "eventDate": "Event Date",
+    "category": "Category",
+    "status": "Status",
+    "date": "Date",
+    "location": "Location",
+    "guests": "Guests",
+    "gallery": "Gallery",
+    "galleryStorage": "Gallery Storage",
+    "bride": "Bride",
+    "groom": "Groom",
+    "brideName": "Bride Name",
+    "groomName": "Groom Name",
+    "bridePlaceholder": "Bride name",
+    "groomPlaceholder": "Groom name",
+    "namePlaceholder": "e.g. Wedding Reception",
+    "venuePlaceholder": "Venue name or address",
+    "actions": "Actions",
+    "activate": "Activate Event",
+    "adminCreated": "Admin Created",
+    "cancel": "Cancel",
+    "close": "Close",
+    "clear": "Clear",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View",
+    "empty": "No events found",
+    "previous": "Previous",
+    "next": "Next",
+    "create": "Create event",
+    "info": "Info",
+    "urlsQr": "URLs & QR Codes",
+    "privateInvite": "Private Invitation",
+    "packagesHeading": "Packages",
+    "noPackages": "No packages assigned",
+    "galleryStorageH": "Gallery Storage",
+    "packageType": "Package Type",
+    "selectPackage": "Select package",
+    "selectCategory": "Select category",
+    "invitationTpl": "Invitation Template",
+    "noneSetLater": "None (set later)",
+    "loading": "Loading…",
+    "qrGallery": "Gallery",
+    "qrInvitation": "Invitation",
+    "activateAssign": "Activate and assign a package"
+  },
+  "agencySidebar": {
+    "dashboard": "Agency dashboard",
+    "myEvents": "My events",
+    "pipeline": "Deals",
+    "team": "Team",
+    "settings": "Settings",
+    "role": "Agency",
+    "closeMenu": "Close menu"
+  },
+  "rsvpSuccess": {
+    "title": "RSVP received",
+    "message": "Thank you for your response. We've recorded your RSVP and look forward to celebrating with you.",
+    "guests": "Guests",
+    "back": "Back to the invitation"
+  },
+  "editEntry": {
+    "type": "Type",
+    "design": "Design",
+    "title": "Edit entry"
+  },
+  "faq": {
+    "heroEyebrow": "FREQUENTLY ASKED",
+    "heroTitle": "Everything worth knowing",
+    "heroAccent": "before you begin.",
+    "heroLead": "Short, direct answers about invitations, RSVP, packages and the gallery."
   }
 }

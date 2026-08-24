@@ -1,11 +1,6 @@
 <template>
   <section class="catering">
-    <header class="page-head">
-      <div>
-        <h1>{{ t('catering.title') }}</h1>
-        <p class="subtitle">{{ t('catering.subtitle') }}</p>
-      </div>
-    </header>
+    <PageHeader :title="t('catering.title')" :subtitle="t('catering.subtitle')" />
 
     <p v-if="loading" class="muted">{{ t('catering.loading') }}</p>
 
@@ -68,6 +63,7 @@
 </template>
 
 <script setup>
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAuthUser } from "@/composables/useAuthUser";
@@ -150,9 +146,6 @@ function message(e) {
 </script>
 
 <style scoped>
-.page-head {
-  margin-bottom: 1.25rem;
-}
 
 h1 {
   font-size: 1.2rem;

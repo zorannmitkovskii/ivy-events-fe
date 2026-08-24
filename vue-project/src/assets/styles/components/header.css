@@ -199,7 +199,15 @@
   transform: translateY(-8px);
   opacity: 0;
   pointer-events: none;
-  transition: transform 0.25s ease, opacity 0.25s ease;
+  /*
+    visibility, not only opacity. Opacity and pointer-events hide a menu from
+    the eye and the mouse and leave it in the tab order: on a desktop viewport
+    the keyboard walked the whole header, then walked this copy of it again —
+    eight stops through a menu nobody can see — and a screen reader read every
+    link twice. Delayed to the end of the transition so the panel still fades.
+  */
+  visibility: hidden;
+  transition: transform 0.25s ease, opacity 0.25s ease, visibility 0s linear 0.25s;
   z-index: 45;
 }
 
@@ -207,6 +215,8 @@
   transform: translateY(0);
   opacity: 1;
   pointer-events: auto;
+  visibility: visible;
+  transition: transform 0.25s ease, opacity 0.25s ease, visibility 0s;
 }
 
 .mobile-nav {

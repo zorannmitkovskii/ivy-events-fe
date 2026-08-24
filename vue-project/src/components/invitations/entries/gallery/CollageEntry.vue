@@ -135,7 +135,7 @@ defineExpose({ enterSite });
   opacity: 0;
 }
 .entry-names {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 40px;
   color: #1c1917;
   margin: 0 0 8px;

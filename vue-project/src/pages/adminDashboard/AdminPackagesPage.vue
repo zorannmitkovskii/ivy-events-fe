@@ -1,115 +1,75 @@
 <template>
   <div class="admin-page">
     <!-- Header -->
-    <div class="page-header">
-      <div>
-        <h2 class="page-title">Packages</h2>
-        <p class="page-subtitle">Manage subscription packages and pricing</p>
-      </div>
-      <button class="btn-create" @click="openCreate">
+    <PageHeader :title="t('adminPackages.title')" :subtitle="t('adminPackages.subtitle')">
+      <template #actions>
+        <button class="btn-create" @click="openCreate">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
         Create Package
-      </button>
-    </div>
+        </button>
+      </template>
+    </PageHeader>
 
     <!-- Toolbar -->
-    <div class="toolbar">
-      <div class="toolbar-left">
-        <div class="search-box">
-          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input type="text" v-model="nameSearch" placeholder="Search packages..." class="search-input" />
-        </div>
+    <Toolbar v-model:search="nameSearch" :search-placeholder="t('adminPackages.search')">
+      <template #filters>
         <select v-model="selectedCategory" class="filter-select">
-          <option value="">All Categories</option>
-          <option v-for="cat in packageCategoryOptions" :key="cat" :value="cat">{{ cat }}</option>
+        <option value="">{{ t('adminPackages.allCategories') }}</option>
+        <option v-for="cat in packageCategoryOptions" :key="cat" :value="cat">{{ cat }}</option>
         </select>
-      </div>
-    </div>
+      </template>
+    </Toolbar>
 
-    <!-- Loading -->
-    <div v-if="loading" class="loading">
-      <div class="spinner"></div>
-      <span>Loading packages...</span>
-    </div>
-
-    <!-- Table Card -->
-    <div v-else class="table-card">
-      <div class="table-wrap">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Package Name</th>
-              <th>Category</th>
-              <th>Type</th>
-              <th>Price</th>
-              <th>Discount</th>
-              <th class="th-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="paginated.length === 0">
-              <td colspan="6" class="empty">No packages found</td>
-            </tr>
-            <tr v-for="row in paginated" :key="row.id" class="row-hover">
-              <td>
-                <div class="cell-main">
-                  <div class="icon-box icon-box--purple">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.89 1.45l8 4A2 2 0 0 1 22 7.24v9.53a2 2 0 0 1-1.11 1.79l-8 4a2 2 0 0 1-1.79 0l-8-4A2 2 0 0 1 2 16.76V7.24a2 2 0 0 1 1.11-1.79l8-4a2 2 0 0 1 1.78 0z"/><path d="M2.32 6.16L12 11l9.68-4.84"/><path d="M12 22.76V11"/></svg>
-                  </div>
-                  <div>
-                    <div class="cell-title">{{ row.name || '—' }}</div>
-                    <div class="text-sub">{{ row.description || `ID: ${row.id}` }}</div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <span class="pill pill--blue">{{ row.packageCategory || '—' }}</span>
-              </td>
-              <td>
-                <span class="pill pill--gray">{{ row.packageType || '—' }}</span>
-              </td>
-              <td>
-                <span class="price">{{ row.price != null ? `${row.price} ${row.currency || 'MKD'}` : '—' }}</span>
-              </td>
-              <td>
-                <template v-if="row.activeDiscount && row.discount">
-                  <span class="pill pill--green">{{ row.discount }}%</span>
-                </template>
-                <template v-else>—</template>
-              </td>
-              <td class="td-actions">
-                <div class="actions">
-                  <button class="action-btn action-btn--edit" @click="openEdit(row)" title="Edit">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                  </button>
-                  <button class="action-btn action-btn--danger" @click="remove(row)" title="Delete">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Pagination -->
-      <div v-if="filtered.length > 0" class="pagination-bar">
-        <span class="pagination-info">
-          Showing <strong>{{ startIndex }}</strong> - <strong>{{ endIndex }}</strong> of <strong>{{ filtered.length }}</strong>
-        </span>
-        <div class="pagination-btns">
-          <button class="pg-btn" :disabled="page === 1" @click="prev">Previous</button>
-          <button
-            v-for="n in totalPages"
-            :key="n"
-            class="pg-btn"
-            :class="{ 'pg-btn--active': n === page }"
-            @click="goto(n)"
-          >{{ n }}</button>
-          <button class="pg-btn" :disabled="page === totalPages" @click="next">Next</button>
+<!-- Table Card -->
+    <DataTable
+      :columns="columns"
+      :rows="paginated"
+      row-key="id"
+      :loading="loading"
+      :empty-title="t('adminPackages.empty')"
+    >
+      <template #cell-packageName="{ row }">
+        <div class="cell-main">
+        <div class="icon-box icon-box--purple">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.89 1.45l8 4A2 2 0 0 1 22 7.24v9.53a2 2 0 0 1-1.11 1.79l-8 4a2 2 0 0 1-1.79 0l-8-4A2 2 0 0 1 2 16.76V7.24a2 2 0 0 1 1.11-1.79l8-4a2 2 0 0 1 1.78 0z"/><path d="M2.32 6.16L12 11l9.68-4.84"/><path d="M12 22.76V11"/></svg>
         </div>
-      </div>
-    </div>
+        <div>
+        <div class="cell-title">{{ row.name || '—' }}</div>
+        <div class="text-sub">{{ row.description || `ID: ${row.id}` }}</div>
+        </div>
+        </div>
+      </template>
+
+      <template #cell-category="{ row }">
+        <StatusPill tone="info">{{ row.packageCategory || '—' }}</StatusPill>
+      </template>
+
+      <template #cell-type="{ row }">
+        <StatusPill tone="neutral">{{ row.packageType || '—' }}</StatusPill>
+      </template>
+
+      <template #cell-price="{ row }">
+        <span class="price">{{ row.price != null ? `${row.price} ${row.currency || 'MKD'}` : '—' }}</span>
+      </template>
+
+      <template #cell-discount="{ row }">
+        <template v-if="row.activeDiscount && row.discount">
+        <StatusPill tone="ok">{{ row.discount }}%</StatusPill>
+        </template>
+        <template v-else>—</template>
+      </template>
+
+      <template #cell-actions="{ row }">
+        <div class="actions">
+        <button class="action-btn action-btn--edit" @click="openEdit(row)" :title="t('adminPackages.edit')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <button class="action-btn action-btn--danger" @click="remove(row)" :title="t('adminPackages.delete')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+        </div>
+      </template>
+    </DataTable>
 
     <!-- Create/Edit Dialog -->
     <div v-if="dialogOpen" class="dialog-overlay" @click.self="closeDialog">
@@ -122,12 +82,12 @@
         <div class="dialog-body">
           <div class="form-grid">
             <div class="form-group form-group--full">
-              <label>Name <span class="req">*</span></label>
-              <input v-model="form.name" type="text" placeholder="e.g. Wedding Premium" class="form-input" />
+              <label>{{ t('adminPackages.name') }} <span class="req">*</span></label>
+              <input v-model="form.name" type="text" :placeholder="t('adminPackages.namePlaceholder')" class="form-input" />
               <div class="i18n-group">
                 <div class="i18n-field">
                   <span class="i18n-tag">EN</span>
-                  <input v-model="form.nameI18n.en" type="text" placeholder="English name" class="form-input" />
+                  <input v-model="form.nameI18n.en" type="text" :placeholder="t('adminPackages.englishName')" class="form-input" />
                 </div>
                 <div class="i18n-field">
                   <span class="i18n-tag">MK</span>
@@ -141,12 +101,12 @@
             </div>
 
             <div class="form-group form-group--full">
-              <label>Description</label>
-              <input v-model="form.description" type="text" placeholder="Short description" class="form-input" />
+              <label>{{ t('adminPackages.description') }}</label>
+              <input v-model="form.description" type="text" :placeholder="t('adminPackages.shortDescription')" class="form-input" />
               <div class="i18n-group">
                 <div class="i18n-field">
                   <span class="i18n-tag">EN</span>
-                  <input v-model="form.descriptionI18n.en" type="text" placeholder="English description" class="form-input" />
+                  <input v-model="form.descriptionI18n.en" type="text" :placeholder="t('adminPackages.englishDescription')" class="form-input" />
                 </div>
                 <div class="i18n-field">
                   <span class="i18n-tag">MK</span>
@@ -160,28 +120,28 @@
             </div>
 
             <div class="form-group">
-              <label>Package Category <span class="req">*</span></label>
+              <label>{{ t('adminPackages.packageCategory') }} <span class="req">*</span></label>
               <select v-model="form.packageCategory" class="form-input">
-                <option value="" disabled>Select category</option>
+                <option value="" disabled>{{ t('adminPackages.selectCategory') }}</option>
                 <option v-for="cat in packageCategoryOptions" :key="cat" :value="cat">{{ cat }}</option>
               </select>
             </div>
 
             <div class="form-group">
-              <label>Package Type <span class="req">*</span></label>
+              <label>{{ t('adminPackages.packageType') }} <span class="req">*</span></label>
               <select v-model="form.packageType" class="form-input">
-                <option value="" disabled>Select type</option>
+                <option value="" disabled>{{ t('adminPackages.selectType') }}</option>
                 <option v-for="pt in packageTypeOptions" :key="pt" :value="pt">{{ pt }}</option>
               </select>
             </div>
 
             <div class="form-group">
-              <label>Price <span class="req">*</span></label>
+              <label>{{ t('adminPackages.price') }} <span class="req">*</span></label>
               <input v-model.number="form.price" type="number" step="0.01" min="0" placeholder="0.00" class="form-input" />
             </div>
 
             <div class="form-group">
-              <label>Currency</label>
+              <label>{{ t('adminPackages.currency') }}</label>
               <select v-model="form.currency" class="form-input">
                 <option value="MKD">MKD</option>
                 <option value="EUR">EUR</option>
@@ -205,7 +165,7 @@
           <!-- Features -->
           <div class="features-section">
             <div class="features-header">
-              <label>Features</label>
+              <label>{{ t('adminPackages.features') }}</label>
               <button class="btn-add-feature" @click="addFeature">+ Add Feature</button>
             </div>
             <div v-for="(feat, i) in form.features" :key="i" class="feature-card">
@@ -215,12 +175,12 @@
                   <input v-model="feat.included" type="checkbox" />
                   Included
                 </label>
-                <button class="btn-remove-feature" @click="form.features.splice(i, 1)" title="Remove">&times;</button>
+                <button class="btn-remove-feature" @click="form.features.splice(i, 1)" :title="t('adminPackages.removeRow')">&times;</button>
               </div>
               <div class="feature-fields">
                 <div class="form-group">
-                  <label>Name</label>
-                  <input v-model="feat.name" type="text" placeholder="Feature name" class="form-input" />
+                  <label>{{ t('adminPackages.name') }}</label>
+                  <input v-model="feat.name" type="text" :placeholder="t('adminPackages.featureName')" class="form-input" />
                   <div class="i18n-group">
                     <div class="i18n-field">
                       <span class="i18n-tag">EN</span>
@@ -237,8 +197,8 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <label>Description</label>
-                  <input v-model="feat.description" type="text" placeholder="Description (optional)" class="form-input" />
+                  <label>{{ t('adminPackages.description') }}</label>
+                  <input v-model="feat.description" type="text" :placeholder="t('adminPackages.descriptionOptional')" class="form-input" />
                   <div class="i18n-group">
                     <div class="i18n-field">
                       <span class="i18n-tag">EN</span>
@@ -262,7 +222,7 @@
         </div>
 
         <div class="dialog-footer">
-          <button class="btn-cancel" @click="closeDialog">Cancel</button>
+          <button class="btn-cancel" @click="closeDialog">{{ t('adminPackages.cancel') }}</button>
           <button class="btn-save" :disabled="saving" @click="save">
             {{ saving ? 'Saving...' : (editingId ? 'Update' : 'Create') }}
           </button>
@@ -273,6 +233,24 @@
 </template>
 
 <script setup>
+import DataTable from '@/components/ui/DataTable.vue'
+import StatusPill from '@/components/ui/StatusPill.vue'
+import Toolbar from '@/components/ui/Toolbar.vue'
+import PageHeader from '@/components/ui/PageHeader.vue'
+import { useI18n } from "vue-i18n";
+
+const { t: tt } = useI18n()
+
+const columns = computed(() => [
+  { key: 'packageName', label: tt('adminPackages.packageName') },
+  { key: 'category', label: tt('adminPackages.category') },
+  { key: 'type', label: tt('adminPackages.type') },
+  { key: 'price', label: tt('adminPackages.price') },
+  { key: 'discount', label: tt('adminPackages.discount') },
+  { key: 'actions', label: tt('adminPackages.actions'), align: 'right' },
+])
+
+const { t } = useI18n();
 import { ref, computed, onMounted, watch } from "vue";
 import { packageService } from "@/services/package.service";
 import { PackageCategoryEnum } from "@/enums/PackageCategory";
@@ -482,10 +460,6 @@ async function remove(pkg) {
 <style scoped>
 .admin-page { max-width: 1200px; }
 
-.page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }
-.page-title { font-size: 24px; font-weight: 700; color: var(--neutral-900); margin: 0; }
-.page-subtitle { font-size: 14px; color: #64748b; margin: 4px 0 0; }
-
 .btn-create {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 10px 20px; border: none; border-radius: 10px;
@@ -495,42 +469,20 @@ async function remove(pkg) {
 }
 .btn-create:hover { background: var(--brand-dark); }
 
-.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-.toolbar-left { display: flex; gap: 12px; flex: 1; flex-wrap: wrap; }
-
-.search-box { position: relative; flex: 1; max-width: 360px; min-width: 200px; }
-.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: #94a3b8; pointer-events: none; }
-.search-input {
-  width: 100%; padding: 9px 14px 9px 38px;
-  border: 1px solid #e2e8f0; border-radius: 10px;
-  font-size: 14px; background: #fff; outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-.search-input:focus { border-color: var(--brand-main); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
-
 .filter-select {
-  padding: 9px 14px; border: 1px solid #e2e8f0; border-radius: 10px;
+  padding: 9px 14px; border: 1px solid var(--line); border-radius: 10px;
   font-size: 14px; background: #fff; cursor: pointer; outline: none; min-width: 160px;
 }
 .filter-select:focus { border-color: var(--brand-main); }
 
-.loading { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 60px 0; color: #64748b; font-size: 14px; }
-.spinner { width: 20px; height: 20px; border: 2.5px solid #e2e8f0; border-top-color: var(--brand-main); border-radius: 50%; animation: spin 0.6s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.table-card { background: #fff; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); overflow: hidden; }
-.table-wrap { overflow-x: auto; }
-
-.table { width: 100%; border-collapse: collapse; text-align: left; }
-.table thead tr { background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
-.table th { padding: 14px 20px; font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
-.th-right { text-align: right; }
-.table td { padding: 14px 20px; font-size: 14px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+.table thead tr { background: var(--sunken); border-bottom: 1px solid var(--line); }
+.table th { padding: 14px 20px; font-size: 11px; font-weight: 600; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+.table td { padding: 14px 20px; font-size: 14px; border-bottom: 1px solid var(--sunken); vertical-align: middle; }
 .table tbody tr:last-child td { border-bottom: none; }
 
-.row-hover { transition: background 0.15s; }
-.row-hover:hover { background: #f8fafc; }
-.empty { text-align: center; color: #94a3b8; padding: 40px 20px !important; }
+.row-hover:hover { background: var(--sunken); }
 
 .cell-main { display: flex; align-items: center; gap: 12px; }
 .icon-box { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -538,14 +490,9 @@ async function remove(pkg) {
 .icon-box--purple { background: #f3e8ff; color: #7c3aed; }
 
 .cell-title { font-weight: 600; color: var(--brand-main); }
-.text-sub { font-size: 12px; color: #94a3b8; margin-top: 2px; max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.text-sub { font-size: 12px; color: var(--ink-4); margin-top: 2px; max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-.pill { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
-.pill--blue { background: #eff6ff; color: #2563eb; }
-.pill--gray { background: #f1f5f9; color: #475569; }
-.pill--green { background: #ecfdf5; color: #059669; }
-
-.price { font-weight: 700; color: #0f172a; font-size: 15px; }
+.price { font-weight: 700; color: var(--ink); font-size: 15px; }
 
 .td-actions { text-align: right; }
 .actions { display: flex; justify-content: flex-end; gap: 6px; opacity: 0; transition: opacity 0.15s; }
@@ -554,23 +501,21 @@ async function remove(pkg) {
 .action-btn {
   width: 32px; height: 32px; border-radius: 8px; border: none;
   display: inline-flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: all 0.15s; background: transparent; color: #94a3b8;
+  cursor: pointer; transition: all 0.15s; background: transparent; color: var(--ink-4);
 }
 .action-btn svg { width: 16px; height: 16px; }
 .action-btn--edit:hover { background: #eff6ff; color: #2563eb; }
 .action-btn--danger:hover { background: #fef2f2; color: #dc2626; }
 
-.pagination-bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-top: 1px solid #e2e8f0; flex-wrap: wrap; gap: 12px; }
-.pagination-info { font-size: 13px; color: #64748b; }
-.pagination-info strong { color: #0f172a; }
+.pagination-info strong { color: var(--ink); }
 .pagination-btns { display: flex; gap: 4px; }
 
 .pg-btn {
-  padding: 6px 14px; border: 1px solid #e2e8f0; border-radius: 8px;
-  font-size: 13px; font-weight: 500; background: #fff; color: #475569;
+  padding: 6px 14px; border: 1px solid var(--line); border-radius: 8px;
+  font-size: 13px; font-weight: 500; background: #fff; color: var(--ink-2);
   cursor: pointer; transition: all 0.15s;
 }
-.pg-btn:hover:not(:disabled) { background: #f8fafc; }
+.pg-btn:hover:not(:disabled) { background: var(--sunken); }
 .pg-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .pg-btn--active { background: var(--brand-main); color: #fff; border-color: var(--brand-main); }
 .pg-btn--active:hover { background: var(--brand-dark); }
@@ -592,14 +537,14 @@ async function remove(pkg) {
 
 .dialog-header {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 20px 24px; border-bottom: 1px solid #e2e8f0;
+  padding: 20px 24px; border-bottom: 1px solid var(--line);
 }
-.dialog-header h3 { margin: 0; font-size: 18px; font-weight: 700; color: #0f172a; }
+.dialog-header h3 { margin: 0; font-size: 18px; font-weight: 700; color: var(--ink); }
 .dialog-close {
-  background: none; border: none; font-size: 24px; color: #94a3b8;
+  background: none; border: none; font-size: 24px; color: var(--ink-4);
   cursor: pointer; line-height: 1; padding: 0;
 }
-.dialog-close:hover { color: #475569; }
+.dialog-close:hover { color: var(--ink-2); }
 
 .dialog-body {
   padding: 24px; overflow-y: auto; flex: 1;
@@ -611,18 +556,18 @@ async function remove(pkg) {
 
 .form-group { display: flex; flex-direction: column; gap: 4px; }
 .form-group--full { grid-column: 1 / -1; }
-.form-group label { font-size: 13px; font-weight: 600; color: #475569; }
+.form-group label { font-size: 13px; font-weight: 600; color: var(--ink-2); }
 .req { color: #dc2626; }
 
-.i18n-group { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; padding-left: 10px; border-left: 2px solid #e2e8f0; }
+.i18n-group { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; padding-left: 10px; border-left: 2px solid var(--line); }
 .i18n-field { display: flex; align-items: center; gap: 8px; }
 .i18n-tag {
-  font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase;
+  font-size: 11px; font-weight: 700; color: var(--ink-4); text-transform: uppercase;
   min-width: 22px; text-align: center;
 }
 
 .form-input {
-  padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 8px;
+  padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px;
   font-size: 14px; background: #fff; outline: none;
   transition: border-color 0.2s;
 }
@@ -631,7 +576,7 @@ async function remove(pkg) {
 .form-group--check { display: flex; align-items: flex-end; }
 .check-label {
   display: flex; align-items: center; gap: 8px;
-  font-size: 14px; font-weight: 500; color: #475569; cursor: pointer;
+  font-size: 14px; font-weight: 500; color: var(--ink-2); cursor: pointer;
 }
 .check-label input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
 
@@ -641,29 +586,29 @@ async function remove(pkg) {
   display: flex; justify-content: space-between; align-items: center;
   margin-bottom: 10px;
 }
-.features-header label { font-size: 13px; font-weight: 600; color: #475569; }
+.features-header label { font-size: 13px; font-weight: 600; color: var(--ink-2); }
 
 .btn-add-feature {
-  background: none; border: 1px dashed #cbd5e1; border-radius: 6px;
-  padding: 4px 12px; font-size: 13px; font-weight: 500; color: #64748b;
+  background: none; border: 1px dashed var(--line-2); border-radius: 6px;
+  padding: 4px 12px; font-size: 13px; font-weight: 500; color: var(--ink-3);
   cursor: pointer; transition: all 0.15s;
 }
 .btn-add-feature:hover { border-color: var(--brand-main); color: var(--brand-main); }
 
 .feature-card {
-  border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px;
+  border: 1px solid var(--line); border-radius: 10px; padding: 14px;
   margin-bottom: 10px; background: #fafbfc;
 }
 .feature-card-head {
   display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
 }
-.feature-num { font-size: 12px; font-weight: 700; color: #94a3b8; }
+.feature-num { font-size: 12px; font-weight: 700; color: var(--ink-4); }
 .feature-fields { display: flex; flex-direction: column; gap: 12px; }
 
 .check-label--sm { font-size: 13px; }
 
 .btn-remove-feature {
-  background: none; border: none; font-size: 20px; color: #94a3b8;
+  background: none; border: none; font-size: 20px; color: var(--ink-4);
   cursor: pointer; line-height: 1; padding: 4px; margin-left: auto;
 }
 .btn-remove-feature:hover { color: #dc2626; }
@@ -676,15 +621,15 @@ async function remove(pkg) {
 
 .dialog-footer {
   display: flex; justify-content: flex-end; gap: 10px;
-  padding: 16px 24px; border-top: 1px solid #e2e8f0;
+  padding: 16px 24px; border-top: 1px solid var(--line);
 }
 
 .btn-cancel {
-  padding: 9px 20px; border: 1px solid #e2e8f0; border-radius: 8px;
-  background: #fff; color: #475569; font-size: 14px; font-weight: 500;
+  padding: 9px 20px; border: 1px solid var(--line); border-radius: 8px;
+  background: #fff; color: var(--ink-2); font-size: 14px; font-weight: 500;
   cursor: pointer; transition: all 0.15s;
 }
-.btn-cancel:hover { background: #f8fafc; }
+.btn-cancel:hover { background: var(--sunken); }
 
 .btn-save {
   padding: 9px 24px; border: none; border-radius: 8px;
@@ -697,6 +642,5 @@ async function remove(pkg) {
 
 @media (max-width: 600px) {
   .form-grid { grid-template-columns: 1fr; }
-  .page-header { flex-direction: column; }
-}
+  }
 </style>

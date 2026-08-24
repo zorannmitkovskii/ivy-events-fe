@@ -165,27 +165,27 @@ function onSave() {
 .field-icon {
   width: 18px;
   height: 18px;
-  color: #6b7280;
+  color: var(--ink-3);
   flex-shrink: 0;
 }
 
 .field-label {
   font-size: 13px;
   font-weight: 600;
-  color: #374151;
+  color: var(--ink-2);
 }
 
 .field-divider {
   height: 1px;
-  background: #f3f4f6;
+  background: var(--sunken);
 }
 
 .field-input {
   padding: 10px 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--line-2);
   border-radius: 8px;
   font-size: 14px;
-  color: #1f2937;
+  color: var(--ink);
   font-family: inherit;
 }
 
@@ -196,7 +196,7 @@ function onSave() {
 
 .field-input:focus {
   outline: none;
-  border-color: #6b7280;
+  border-color: var(--ink-3);
 }
 
 /* Stepper */
@@ -204,7 +204,7 @@ function onSave() {
   display: flex;
   align-items: center;
   gap: 0;
-  background: #f3f4f6;
+  background: var(--sunken);
   border-radius: 8px;
   padding: 2px;
 }
@@ -217,7 +217,7 @@ function onSave() {
   background: transparent;
   font-size: 15px;
   font-weight: 600;
-  color: #374151;
+  color: var(--ink-2);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -226,7 +226,7 @@ function onSave() {
 }
 
 .stepper-btn:hover:not(:disabled) {
-  background: #e5e7eb;
+  background: var(--line);
 }
 
 .stepper-btn:disabled {
@@ -237,7 +237,7 @@ function onSave() {
 .stepper-value {
   font-size: 14px;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--ink);
   min-width: 28px;
   text-align: center;
 }
@@ -248,7 +248,7 @@ function onSave() {
   height: 24px;
   border-radius: 12px;
   border: none;
-  background: #d1d5db;
+  background: var(--line-2);
   cursor: pointer;
   position: relative;
   transition: background 0.2s;
@@ -299,24 +299,24 @@ function onSave() {
 
 .chip {
   padding: 6px 14px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--line);
   border-radius: 8px;
   background: #fff;
   font-size: 13px;
   font-weight: 500;
-  color: #374151;
+  color: var(--ink-2);
   cursor: pointer;
   transition: border-color 0.15s;
   font-family: inherit;
 }
 
 .chip:hover {
-  border-color: #9ca3af;
+  border-color: var(--ink-4);
 }
 
 .chip--active {
-  border-color: #1f2937;
-  background: #f3f4f6;
+  border-color: var(--ink);
+  background: var(--sunken);
   font-weight: 600;
 }
 
@@ -337,7 +337,7 @@ function onSave() {
 
 .question-label {
   font-size: 13px;
-  color: #6b7280;
+  color: var(--ink-3);
 }
 
 /* Radius chips */
@@ -352,7 +352,7 @@ function onSave() {
   justify-content: center;
   width: 40px;
   height: 40px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--line);
   border-radius: 8px;
   background: #fff;
   cursor: pointer;
@@ -361,24 +361,24 @@ function onSave() {
 }
 
 .radius-chip:hover {
-  border-color: #9ca3af;
+  border-color: var(--ink-4);
 }
 
 .radius-chip--active {
-  border-color: #1f2937;
-  background: #f3f4f6;
+  border-color: var(--ink);
+  background: var(--sunken);
 }
 
 .radius-preview {
   width: 22px;
   height: 22px;
-  border: 2px solid #9ca3af;
-  background: #f9fafb;
+  border: 2px solid var(--ink-4);
+  background: var(--sunken);
   transition: border-color 0.15s;
 }
 
 .radius-chip--active .radius-preview {
-  border-color: #374151;
-  background: #e5e7eb;
+  border-color: var(--ink-2);
+  background: var(--line);
 }
 </style>

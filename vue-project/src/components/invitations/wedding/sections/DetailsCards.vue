@@ -124,7 +124,7 @@ defineProps({
 
 <style scoped>
 .section-header { text-align: center; margin-bottom: 32px; }
-.section-title { font-family: var(--font-heading, inherit); font-size: 36px; font-weight: 400; color: var(--theme-text, #1f2937); margin: 0 0 12px; }
+.section-title { font-family: var(--font-heading, inherit); font-size: 36px; font-weight: 400; color: var(--theme-text, var(--ink)); margin: 0 0 12px; }
 .section-divider { width: 64px; height: 1px; margin: 0 auto; }
 .details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-bottom: 32px; }
 .card-svg { width: 100%; height: 100%; }

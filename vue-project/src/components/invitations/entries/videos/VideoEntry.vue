@@ -169,7 +169,7 @@ defineExpose({ enterSite });
   padding: 0 24px;
 }
 .entry-names {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 36px;
   margin: 0 0 8px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
@@ -183,7 +183,7 @@ defineExpose({ enterSite });
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
 }
 .tap-text {
-  font-family: var(--font-heading, 'Playfair Display', serif);
+  font-family: var(--font-display);
   font-size: 18px;
   font-style: italic;
   opacity: 0.8;

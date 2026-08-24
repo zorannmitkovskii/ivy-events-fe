@@ -1,39 +1,60 @@
 <template>
-  <section class="templates" :id="id">
-    <div class="wrap">
-      <div class="s-head">
-        <span class="eyebrow">{{ $t('home.templates.eyebrow') }}</span>
-        <h2>{{ $t('home.templates.titleBefore') }} <em>{{ $t('home.templates.titleAccent') }}</em></h2>
+  <section class="designs" :id="id">
+    <div class="title reveal">
+      <div>
+        <p class="tag">{{ $t('home.templates.eyebrow') }}</p>
+        <h2>
+          {{ $t('home.templates.titleBefore') }}<br>
+          <em>{{ $t('home.templates.titleAccent') }}</em>
+        </h2>
       </div>
+      <router-link :to="resolvedCtaTo" class="link">
+        {{ $t('home.templates.cta') }} ↗
+      </router-link>
+    </div>
 
-      <div v-if="loading" class="loading-state">
-        <span class="spinner" />
-      </div>
+    <div v-if="loading" class="loading-state">
+      <span class="spinner" />
+    </div>
 
-      <InvitationGrid
-        v-else
-        :invitations="displayTemplates"
-        :empty-message="$t('home.templates.empty', 'No templates available yet.')"
-        @select="onOpenEdit"
-        @preview="onOpenEdit"
-      />
+    <p v-else-if="!cards.length" class="empty">
+      {{ $t('home.templates.empty', 'No templates available yet.') }}
+    </p>
 
-      <div class="tpl-cta">
-        <router-link :to="resolvedCtaTo" class="btn-lg ghost">
-          {{ $t('home.templates.cta') }} →
-        </router-link>
-      </div>
+    <div v-else class="cardgrid">
+      <a
+        v-for="(card, i) in cards"
+        :key="card.id"
+        class="card reveal"
+        :class="card.tone"
+        :href="card.href"
+        :style="{ transitionDelay: `${i * 120}ms` }"
+        @click.prevent="open(card)"
+      >
+        <div class="paper" :style="card.artStyle">
+          <template v-if="!card.thumbnailUrl">
+            <small>{{ $t('home.templates.paperLabel') }}</small>
+            <strong>{{ card.sampleNames }}</strong>
+            <span>{{ $t('home.templates.paperDate') }}</span>
+          </template>
+        </div>
+        <h3>
+          {{ card.name }}
+          <button type="button" tabindex="-1" aria-hidden="true">↗</button>
+        </h3>
+        <p>{{ $t('home.templates.cardCaption') }}</p>
+      </a>
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useI18n } from 'vue-i18n';
-import InvitationGrid from '@/components/onboarding/InvitationGrid.vue';
-import { invitationTemplateService } from '@/services/invitationTemplate.service';
-import { EventCategoryEnum } from '@/enums/EventCategory';
+import { useI18n } from "vue-i18n";
+import { invitationTemplateService } from "@/services/invitationTemplate.service";
+import { EventCategoryEnum } from "@/enums/EventCategory";
+import { observeReveals, useReveal } from "@/composables/useReveal";
 
 const { t } = useI18n();
 const route = useRoute();
@@ -52,66 +73,72 @@ const resolvedCtaTo = computed(() =>
 const templates = ref([]);
 const loading = ref(false);
 
-const displayTemplates = computed(() => {
-  const mapped = templates.value.map(t => ({
-    id: t.id,
-    name: t.name,
-    thumbnailUrl: t.thumbnailImage || (t.path ? `/thumbnails/${t.path.split('/').pop()}.svg` : ''),
-  }));
-  return mapped.slice(-3).reverse();
-});
+/*
+  The three grounds the redesign cycles through — sage, sun, night. They are a
+  property of the position in the row, not of the template: the section is
+  three cards wide and the design wants those three to be visibly different
+  from each other.
+*/
+const TONES = ["sage", "sun", "night"];
+
+/* The sample couple printed on a card that has no thumbnail. These three are
+   already translated — they were the captions on the old template cards. */
+const SAMPLE_NAME_KEYS = [
+  "home.templates.items.elegantWedding.cardNames",
+  "home.templates.items.birthday.cardNames",
+  "home.templates.items.corporate.cardNames",
+];
+
+/*
+  The mock draws its own invitation on each card, in type. A real template has
+  a thumbnail, and showing the actual design beats showing a stand-in of it —
+  so the thumbnail becomes the card art when there is one, and the typographic
+  paper is what a template without a thumbnail falls back to.
+*/
+const cards = computed(() =>
+  templates.value.slice(-3).reverse().map((tpl, i) => {
+    const thumbnailUrl =
+      tpl.thumbnailImage || (tpl.path ? `/thumbnails/${tpl.path.split("/").pop()}.svg` : "");
+    return {
+      id: tpl.id,
+      name: tpl.name,
+      path: tpl.path,
+      tone: TONES[i % TONES.length],
+      thumbnailUrl,
+      sampleNames: t(SAMPLE_NAME_KEYS[i % SAMPLE_NAME_KEYS.length]),
+      href: tpl.path ? `/${lang.value}/${tpl.path}` : "#",
+      artStyle: thumbnailUrl
+        ? { backgroundImage: `url(${thumbnailUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
+        : undefined,
+    };
+  })
+);
 
 onMounted(async () => {
   loading.value = true;
   try {
     const data = await invitationTemplateService.listByCategory(EventCategoryEnum.WEDDING);
-    templates.value = (data || []).filter(t => t.active !== false);
+    templates.value = (data || []).filter(tpl => tpl.active !== false);
   } catch (e) {
     console.warn('[TemplatesGallery] failed to load templates:', e);
   } finally {
     loading.value = false;
+    // The cards arrive after the page-level observer has already swept, so
+    // without this they would sit at opacity 0 forever.
+    await nextTick();
+    observeReveals();
   }
 });
 
-function onOpenEdit(id) {
-  const inv = templates.value.find(t => t.id === id);
-  if (!inv?.path) return;
-  router.push(`/${lang.value}/${inv.path}?edit=true`);
+useReveal();
+
+function open(card) {
+  if (!card.path) return;
+  router.push(`/${lang.value}/${card.path}?edit=true`);
 }
 </script>
 
 <style scoped>
-.templates {
-  padding: 96px 52px;
-  background: var(--bg-white);
-}
-
-.wrap { max-width: 1200px; margin: 0 auto; }
-
-.s-head { text-align: center; margin-bottom: 56px; }
-
-.eyebrow {
-  display: inline-block;
-  font-size: 13.5px;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--brand-main);
-  margin-bottom: 12px;
-}
-
-h2 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(36px, 4vw, 54px);
-  font-weight: 400;
-  line-height: 1.15;
-  margin: 0;
-  color: var(--brand-main);
-}
-
-h2 em { font-style: italic; color: var(--brand-gold); }
-
-/* Loading */
 .loading-state {
   display: flex;
   justify-content: center;
@@ -121,8 +148,8 @@ h2 em { font-style: italic; color: var(--brand-gold); }
 .spinner {
   width: 32px;
   height: 32px;
-  border: 3px solid rgba(0, 0, 0, 0.1);
-  border-top-color: var(--brand-gold, #c4956a);
+  border: 3px solid rgba(23, 55, 43, 0.12);
+  border-top-color: var(--gold);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -131,35 +158,8 @@ h2 em { font-style: italic; color: var(--brand-gold); }
   to { transform: rotate(360deg); }
 }
 
-/* CTA */
-.tpl-cta {
-  text-align: center;
-  margin-top: 36px;
-}
-
-.btn-lg {
-  padding: 14px 30px;
-  border-radius: 14px;
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 0.3s;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.btn-lg.ghost {
-  border: 1.5px solid var(--soft-light);
-  background: #fff;
-  color: var(--brand-main);
-}
-
-.btn-lg.ghost:hover {
-  border-color: var(--brand-main);
-}
-
-@media (max-width: 900px) {
-  .templates { padding: 64px 24px; }
+.empty {
+  font: 15px/1.8 var(--font-display);
+  color: var(--ink-3);
 }
 </style>

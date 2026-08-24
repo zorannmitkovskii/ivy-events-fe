@@ -90,7 +90,7 @@ const remainPct = computed(() => {
 
 <style scoped>
 .budget-big {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 32px;
   font-weight: 400;
   color: var(--dash-charcoal);
@@ -98,7 +98,7 @@ const remainPct = computed(() => {
 }
 
 .budget-big-label {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-ui);
   font-size: 16px;
   color: var(--dash-muted);
   font-weight: 400;

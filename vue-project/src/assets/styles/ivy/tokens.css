@@ -1,0 +1,201 @@
+/* Ivy 2026 — the redesign's palette and type, expressed as tokens
+   ---------------------------------------------------------------------------
+   Ported from `IvyEvents-design-source/app/globals.css`.
+
+   The redesign is an editorial one: a much darker green than the logo ramp we
+   had (#17372b against #2F3E36), a warmer cream ground, gold as the single
+   accent, and Georgia for anything set large. The palette is five colours; the
+   rest of this file is the same five under the names the app already uses, so
+   every component that reads a token picks the redesign up without being
+   edited.
+
+   Loaded after `variables.css`, which it deliberately overrides rather than
+   replaces — the legacy token names must keep resolving.
+   --------------------------------------------------------------------------- */
+:root {
+  /* ---- the five colours the redesign is built from ----------------------- */
+  --ink: #17372b;    /* headings, primary action, the dark ground */
+  --cream: #f6f0e6;  /* the page */
+  --paper: #fffdf8;  /* sections lifted off the page */
+  --gold: #c99b4a;   /* the one accent */
+  --sage: #b8caa5;   /* the quiet fill */
+
+  /* Gold at text size. The accent above is tuned for display type on cream;
+     under 16px it drops below AA there, so small gold text takes this instead.
+     Kept from the previous palette, where it was measured for exactly this. */
+  --gold-text: #b8954e;
+
+  /* ---- the brand ramp, re-pointed at the redesign ------------------------ */
+  --brand: var(--ink);
+  --brand-strong: #0c2018;
+  --brand-mid: #426542;
+  --brand-soft: var(--sage);
+  --brand-pale: #e9eee1;
+
+  /* ---- ink: same hue, full to muted -------------------------------------
+     Measured on the cream #f6f0e6: ink 11.4:1, ink-2 5.2:1, ink-3 4.8:1 — all
+     three pass AA for text. ink-4 is decoration only (axes, disabled). */
+  --ink-2: #60726a;
+  --ink-3: #677970;
+  --ink-4: #8b978f;
+
+  --line: rgba(23, 55, 43, 0.14);
+  --line-2: rgba(23, 55, 43, 0.24);
+  --surface: #ffffff;
+  --sunken: #f1efe9;
+
+  /* ---- legacy names, re-pointed ------------------------------------------ */
+  --brand-main: var(--brand);
+  --brand-light: var(--brand-soft);
+  --brand-dark: var(--brand-strong);
+  --brand-gold: var(--gold-text);
+
+  --soft-light: var(--line);
+
+  --secondary-sage: var(--sage);
+  --secondary-moss: var(--brand-mid);
+  --secondary-gold: #e1c699;
+
+  --neutral-900: var(--ink);
+  --neutral-800: var(--ink);
+  --neutral-700: var(--ink-2);
+  --neutral-600: var(--ink-3);
+  --neutral-500: var(--ink-3);
+  --neutral-300: var(--line);
+  --neutral-200: var(--line);
+  --neutral-100: var(--surface);
+  --neutral-50: var(--cream);
+
+  --bg-main: var(--cream);
+  --bg-white: var(--surface);
+  --bg-card: var(--surface);
+  --bg-gray: var(--line);
+  --bg-dark-gray: var(--ink-4);
+  --bg-darker-gray: var(--ink-3);
+
+  --primary-main: var(--brand);
+  --primary-light: var(--brand-soft);
+  --primary-dark: var(--brand-strong);
+
+  /* ---- geometry ----------------------------------------------------------
+     The redesign settled on soft-but-not-round: 10px on controls, 14px on
+     cards, pills only where something is genuinely a pill. */
+  --container: 1280px;
+  --text-container: 820px;
+  --section-space: 112px;
+
+  --radius-control: 10px;
+  --radius-card: 14px;
+  --radius-sm: 8px;
+  --radius-md: var(--radius-control);
+  --radius-lg: var(--radius-card);
+  --radius-button: var(--radius-control);
+
+  --shadow-sm: 0 6px 18px rgba(35, 59, 48, 0.06);
+  --shadow-md: 0 12px 28px rgba(23, 55, 43, 0.1);
+  --shadow-lg: 0 30px 60px rgba(23, 55, 43, 0.16);
+  --shadow-light: var(--shadow-sm);
+
+  --container-max: var(--container);
+  --header-height: 82px;
+
+  /* ---- type --------------------------------------------------------------
+     The redesign is set in Georgia and Arial — the two faces every machine
+     already has, chosen so the page paints its final type on first frame
+     rather than reflowing into a webfont. Cormorant/Outfit are kept as the
+     first fallback for anything that still asks for --font-family by name. */
+  --font-display: Georgia, 'Times New Roman', serif;
+  --font-family: var(--font-display);
+  --font-ui: Arial, Helvetica, ui-sans-serif, system-ui, sans-serif;
+
+  /* ---- dashboard ramp ----------------------------------------------------
+     The dashboard's own darker green (#14261f sidebar, #f7f4ed ground) plus
+     the same accents. Legacy --dash-* names follow. */
+  --d-ink: #18352a;
+  --d-ground: #f7f4ed;
+  --d-side: #14261f;
+  --d-side-hover: #274036;
+  --d-border: #dfddd6;
+  --d-gold: #c8a359;
+  --d-green: #315842;
+  --d-green-soft: #789568;
+
+  --dash-sage: var(--brand);
+  --dash-sage-dark: var(--brand-strong);
+  --dash-sage-mid: var(--brand-mid);
+  --dash-sage-light: var(--brand-soft);
+  --dash-sage-pale: var(--brand-pale);
+  --dash-sage-ghost: #f3f7f4;
+  --dash-cream: var(--d-ground);
+  --dash-cream-card: var(--surface);
+  --dash-cream-border: var(--d-border);
+  --dash-gold: var(--gold-text);
+  --dash-gold-light: #d4b070;
+  --dash-gold-pale: #f6efdf;
+  --dash-charcoal: var(--brand-strong);
+  --dash-ink: var(--d-ink);
+  --dash-muted: var(--ink-3);
+  --dash-light: var(--ink-4);
+  --dash-radius: var(--radius-card);
+  --dash-shadow-sm: 0 6px 18px rgba(35, 59, 48, 0.05);
+  --dash-shadow-md: 0 8px 24px rgba(32, 56, 45, 0.08);
+  --dash-shadow-lg: 0 14px 30px rgba(25, 52, 40, 0.14);
+  --dash-sidebar-w: 252px;
+}
+
+/* ---- base type ----------------------------------------------------------
+   `fonts.css` sets Outfit on the body and a 600 weight on headings; the
+   redesign wants Arial and a 400-weight serif. Both are stated here rather
+   than edited there so the old sheet stays a faithful record of what it was. */
+body {
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--cream);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+blockquote,
+.brand {
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+/* The redesign's one shared idiom: an italic word in a heading, in gold. */
+.ivy-site :is(h1, h2, h3) em {
+  color: var(--gold);
+  font-weight: 400;
+}
+
+/* Small, letter-spaced, bold — the eyebrow above almost every heading.
+   Scoped: the dashboard already had a `.tag` of its own on the seating list,
+   and a global rule here would have silently restyled it. */
+.ivy-site .tag {
+  font-family: var(--font-ui);
+  font-size: 9px;
+  letter-spacing: 0.23em;
+  font-weight: 700;
+  margin: 0 0 24px;
+}
+
+.ivy-site .tag em {
+  color: var(--gold);
+}
+
+@media (max-width: 900px) {
+  :root {
+    --section-space: 88px;
+    --header-height: 74px;
+  }
+}
+
+@media (max-width: 580px) {
+  :root {
+    --section-space: 72px;
+  }
+}

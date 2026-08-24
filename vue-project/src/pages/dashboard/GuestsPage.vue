@@ -1,12 +1,6 @@
 <template>
   <div class="dash-page">
-    <div class="dash-page-header">
-      <div>
-        <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
-        <h1 class="dash-page-title">{{ t("guests.title") }}</h1>
-        <p class="dash-page-subtitle">{{ t("guests.subtitle") }}</p>
-      </div>
-    </div>
+    <PageHeader :title="t('guests.title')" :subtitle="t('guests.subtitle')" />
 
     <div v-if="loading" class="d-card d-card-pad">
       {{ t("guests.loading") }}
@@ -92,6 +86,7 @@
 </template>
 
 <script setup>
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
@@ -226,7 +221,7 @@ async function onRemove(guestId) {
 }
 
 .empty-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: 18px;
   color: var(--dash-charcoal);
@@ -271,7 +266,7 @@ async function onRemove(guestId) {
 }
 
 .accent-sage { background: linear-gradient(90deg, var(--dash-sage-light), var(--dash-sage-pale)); }
-.accent-green { background: linear-gradient(90deg, #5a7a52, #b2c9aa); }
+.accent-green { background: linear-gradient(90deg, var(--brand), var(--brand-soft)); }
 .accent-gold { background: linear-gradient(90deg, var(--dash-gold), var(--dash-gold-light)); }
 .accent-blush { background: linear-gradient(90deg, var(--dash-blush), #d4b0a8); }
 
@@ -292,7 +287,7 @@ async function onRemove(guestId) {
 .ic-blush { background: rgba(196, 150, 142, 0.12); }
 
 .sc-value {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 36px;
   font-weight: 400;
   line-height: 1;

@@ -172,7 +172,7 @@ function scrollToRsvp() {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.25em;
-  color: var(--theme-text-muted, #6b7280);
+  color: var(--theme-text-muted, var(--ink-3));
   margin: 0 0 16px;
 }
 
@@ -180,7 +180,7 @@ function scrollToRsvp() {
   font-family: var(--font-heading, var(--hero-heading-font));
   font-size: 48px;
   font-weight: 400;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   margin: 0 0 12px;
   line-height: 1.1;
 }
@@ -188,7 +188,7 @@ function scrollToRsvp() {
 .hero-subtitle {
   font-family: var(--font-body, var(--hero-body-font));
   font-size: 16px;
-  color: var(--theme-text-muted, #6b7280);
+  color: var(--theme-text-muted, var(--ink-3));
   margin: 0 0 32px;
   line-height: 1.6;
   max-width: 420px;
@@ -220,14 +220,14 @@ function scrollToRsvp() {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   margin: 0 0 2px;
 }
 
 .date-year {
   font-family: var(--font-body, var(--hero-body-font));
   font-size: 14px;
-  color: var(--theme-text-muted, #6b7280);
+  color: var(--theme-text-muted, var(--ink-3));
   margin: 0;
 }
 
@@ -235,7 +235,7 @@ function scrollToRsvp() {
 .hero-message {
   font-family: var(--font-body, var(--hero-body-font));
   font-size: 16px;
-  color: var(--theme-text-muted, #6b7280);
+  color: var(--theme-text-muted, var(--ink-3));
   margin: 0 0 32px;
 }
 

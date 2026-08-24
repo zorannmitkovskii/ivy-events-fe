@@ -2,7 +2,7 @@
   <div class="vendor-shell">
     <header class="vendor-topbar">
       <div class="brand">
-        <img src="/logoInv.svg" alt="Ivy Events" class="brand-logo" />
+        <span class="ivy-logo ivy-logo--inverse brand-logo" role="img" aria-label="Ivy Events"></span>
         <span class="brand-name">{{ vendorName }}</span>
       </div>
       <button class="signout" @click="onLogout">{{ t('vendorPortal.logout') }}</button>
@@ -38,7 +38,11 @@ const vendorName = computed(() => profile.value?.name ?? "");
 
 const tabs = computed(() => {
   const capabilities = profile.value?.capabilities ?? [];
-  return VENDOR_TABS.filter((tab) => capabilities.includes(tab.capability));
+  // A null capability means the tab is ungated — the inbox, the application
+  // and the microsite belong to every vendor whatever their trade. Filtering
+  // on `includes` alone dropped all three, because no capability list
+  // contains null.
+  return VENDOR_TABS.filter((tab) => tab.capability === null || capabilities.includes(tab.capability));
 });
 
 onMounted(load);
@@ -71,7 +75,7 @@ function onLogout() {
 }
 
 .brand-logo {
-  height: 26px;
+  --logo-h: 26px;
 }
 
 .brand-name {

@@ -244,7 +244,7 @@ function onPreviewClick(e) {
   align-items: flex-start;
   justify-content: center;
   padding: 24px 16px;
-  background: #e5e7eb;
+  background: var(--line);
 }
 
 /* In split edit mode, contain fixed-positioned children (entry overlays)
@@ -258,13 +258,13 @@ function onPreviewClick(e) {
 /* Preview frame — always wraps the slot */
 .preview-frame--constrained {
   position: relative;
-  border: 12px solid #1f2937;
+  border: 12px solid var(--ink);
   border-radius: 36px;
   overflow: hidden;
   background: #fff;
   box-shadow:
     0 25px 60px -12px rgba(0, 0, 0, 0.25),
-    inset 0 0 0 2px #374151;
+    inset 0 0 0 2px var(--ink-2);
   flex-shrink: 0;
   max-height: calc(100vh - 140px);
   overflow-y: auto;
@@ -310,7 +310,7 @@ function onPreviewClick(e) {
 }
 
 .mobile-fab--edit {
-  background: #1f2937;
+  background: var(--ink);
   color: #fff;
 }
 
@@ -346,13 +346,13 @@ function onPreviewClick(e) {
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--line);
 }
 
 .mobile-sheet__title {
   font-size: 17px;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--ink);
 }
 
 .mobile-sheet__close {
@@ -362,16 +362,16 @@ function onPreviewClick(e) {
   align-items: center;
   justify-content: center;
   border: none;
-  background: #f3f4f6;
+  background: var(--sunken);
   border-radius: 50%;
   font-size: 18px;
-  color: #6b7280;
+  color: var(--ink-3);
   cursor: pointer;
 }
 
 .mobile-sheet__tabs {
   display: flex;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--line);
 }
 
 .mobile-tab-btn {
@@ -381,15 +381,15 @@ function onPreviewClick(e) {
   background: none;
   font-size: 14px;
   font-weight: 600;
-  color: #9ca3af;
+  color: var(--ink-4);
   cursor: pointer;
   font-family: inherit;
   transition: color 0.15s, box-shadow 0.15s;
 }
 
 .mobile-tab-btn--active {
-  color: #1f2937;
-  box-shadow: inset 0 -2px 0 #1f2937;
+  color: var(--ink);
+  box-shadow: inset 0 -2px 0 var(--ink);
 }
 
 .mobile-sheet__body {
@@ -409,14 +409,14 @@ function onPreviewClick(e) {
   cursor: pointer;
   font-size: 15px;
   font-weight: 500;
-  color: #374151;
+  color: var(--ink-2);
   transition: background 0.15s;
   text-align: left;
   font-family: inherit;
 }
 
 .mobile-sheet__item:hover {
-  background: #f9fafb;
+  background: var(--sunken);
 }
 
 .mobile-sheet__icon {
@@ -425,9 +425,9 @@ function onPreviewClick(e) {
   justify-content: center;
   width: 36px;
   height: 36px;
-  background: #f3f4f6;
+  background: var(--sunken);
   border-radius: 10px;
-  color: #6b7280;
+  color: var(--ink-3);
   flex-shrink: 0;
 }
 
@@ -441,13 +441,13 @@ function onPreviewClick(e) {
 }
 
 .mobile-sheet__chevron {
-  color: #d1d5db;
+  color: var(--line-2);
   flex-shrink: 0;
 }
 
 .mobile-sheet__footer {
   padding: 12px 20px 20px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--line);
 }
 
 .mobile-sheet__save {

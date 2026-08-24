@@ -1,10 +1,6 @@
 <template>
   <div class="dash-page">
-    <div class="dash-page-header">
-      <div class="page-eyebrow">{{ t("sidebar.navigation") }}</div>
-      <h1 class="dash-page-title">{{ t('budget.title') }}</h1>
-      <p class="dash-page-subtitle">{{ subtitle }}</p>
-    </div>
+    <PageHeader :title="t('budget.title')" :subtitle="subtitle" />
 
     <BudgetHeader
       :exportLabel="t('budget.export')"
@@ -64,6 +60,7 @@
 </template>
 
 <script setup>
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { computed, ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -137,7 +134,7 @@ function onExport() {
 }
 
 .empty-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: 18px;
   color: var(--dash-charcoal);

@@ -1,14 +1,15 @@
 <template>
   <div class="contributions">
-    <header class="page-head">
-      <div>
-        <h1>{{ t('contributions.title') }}</h1>
+    <PageHeader :title="t('contributions.title')">
+      <template #actions>
+        <div>
         <p class="sub">{{ t('contributions.subtitle') }}</p>
-      </div>
-      <a v-if="hasMusic" class="link-btn" :href="musicHref" download>
+        </div>
+        <a v-if="hasMusic" class="link-btn" :href="musicHref" download>
         {{ t('contributions.exportMusic') }}
-      </a>
-    </header>
+        </a>
+      </template>
+    </PageHeader>
 
     <!-- Settings first: nothing arrives until something here is switched on,
          so an empty queue with everything off is not a bug. -->
@@ -93,11 +94,13 @@
       </li>
     </ul>
 
-    <p v-if="!items.length" class="empty">{{ t('contributions.empty') }}</p>
+    <EmptyState v-if="!items.length" tone="no-results" :title="t('contributions.empty')" />
   </div>
 </template>
 
 <script setup>
+import EmptyState from '@/components/ui/EmptyState.vue'
+import PageHeader from '@/components/ui/PageHeader.vue'
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { contributionsService } from '@/services/contributions.service'
@@ -207,7 +210,6 @@ function mediaSrc(item) {
 
 <style scoped>
 .contributions { display: flex; flex-direction: column; gap: 16px; padding: 4px; }
-.page-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
 .page-head h1 { margin: 0; font-size: 22px; }
 .sub { margin: 4px 0 0; font-size: 13px; color: #6b6b6b; }
 
@@ -225,7 +227,7 @@ function mediaSrc(item) {
   padding: 7px 14px; border: 1px solid #ece8e0; border-radius: 999px;
   background: #fff; cursor: pointer; font-size: 13px;
 }
-.tabs button.active { background: #5a7a52; color: #fff; border-color: #5a7a52; }
+.tabs button.active { background: var(--brand); color: #fff; border-color: var(--brand); }
 .count { margin-left: 6px; font-weight: 600; }
 
 .queue { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
@@ -244,10 +246,9 @@ function mediaSrc(item) {
 .badge.ok { background: #e6f2e2; color: #2f6b28; }
 .badge.bad { background: #fdeceb; color: #a3271f; }
 
-.empty { font-size: 13px; color: #6b6b6b; }
 .error { font-size: 13px; color: #a3271f; }
 
-.btn { padding: 7px 14px; border: 0; border-radius: 8px; background: #5a7a52; color: #fff; font-size: 13px; cursor: pointer; }
-.link-btn { border: 0; background: none; color: #5a7a52; cursor: pointer; font-size: 13px; padding: 0; }
+.btn { padding: 7px 14px; border: 0; border-radius: 8px; background: var(--brand); color: #fff; font-size: 13px; cursor: pointer; }
+.link-btn { border: 0; background: none; color: var(--brand); cursor: pointer; font-size: 13px; padding: 0; }
 .link-btn.danger { color: #a3271f; }
 </style>

@@ -2,20 +2,16 @@ import apiPublic from "./backendApi";
 import iamApi from "./iamApi";
 import { scheduleProactiveRefresh } from "./api";
 import { getRuntimeEnv, detectDefaultEnvFromLocation, computeKeycloakBaseUrl } from '@/services/env';
+import { claimOnboardingFor } from '@/store/onboarding.store';
+import { decodeJwtPayload } from '@/services/jwt';
 
 export function isAuthenticated() {
   return !!localStorage.getItem("access_token");
 }
 
-// Parse the JWT payload and return a claim
+/** The access token's claims, or null when there is no usable token. */
 function parseToken() {
-  const token = localStorage.getItem("access_token");
-  if (!token) return null;
-  try {
-    return JSON.parse(atob(token.split(".")[1]));
-  } catch {
-    return null;
-  }
+  return decodeJwtPayload(localStorage.getItem("access_token"));
 }
 
 export function getUserId() {
@@ -63,6 +59,10 @@ export function logout() {
   localStorage.removeItem("refresh_token");
   localStorage.removeItem("id_token");
   localStorage.removeItem("onboarding_state_v1");
+  // The marker too. Left behind, the next sign-in compares against a subject
+  // whose state is already gone and skips a clear it no longer needs — harmless
+  // today, and exactly the sort of half-cleared pair that stops being harmless.
+  localStorage.removeItem("onboarding_owner_v1");
   sessionStorage.clear();
 
   // The check-in device holds a guest list and unsent arrivals in IndexedDB
@@ -135,6 +135,13 @@ export async function loginWithCredentials(email, password) {
   if (accessToken) localStorage.setItem('access_token', accessToken);
   if (refreshToken) localStorage.setItem('refresh_token', refreshToken);
   if (idToken) localStorage.setItem('id_token', idToken);
+
+  // After the token is stored, so the subject read here is the one that just
+  // signed in. Signing out was the only thing that cleared onboarding before,
+  // so any session ending another way — an expired token, a closed browser, a
+  // second account on the same machine — handed the next person the previous
+  // one's eventId, and their first save went to somebody else's event.
+  claimOnboardingFor(getUserId());
 
   scheduleProactiveRefresh();
   return data;

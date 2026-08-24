@@ -50,7 +50,7 @@ defineEmits(['click']);
 
 .section-edit-btn--light {
   background: rgba(255, 255, 255, 0.85);
-  color: #1f2937;
+  color: var(--ink);
   backdrop-filter: blur(4px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }

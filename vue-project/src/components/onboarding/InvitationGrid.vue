@@ -63,6 +63,6 @@ defineEmits(['select', 'preview']);
 .empty-message {
   margin: 0;
   font-size: 15px;
-  color: var(--neutral-500, #6b7280);
+  color: var(--neutral-500, var(--ink-3));
 }
 </style>

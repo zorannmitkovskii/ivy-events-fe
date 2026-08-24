@@ -48,6 +48,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
+import { decodeJwtPayload } from "@/services/jwt";
 import { useRouter, useRoute } from "vue-router";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import AuthShell from "@/components/auth/AuthShell.vue";
@@ -83,7 +84,7 @@ onMounted(async () => {
 
     // Assign USER role only if user has no meaningful role yet
     try {
-      const claims = JSON.parse(atob(localStorage.getItem("access_token").split(".")[1]));
+      const claims = decodeJwtPayload(localStorage.getItem("access_token"));
       const existingRoles = claims?.realm_access?.roles || [];
       const hasExistingRole = ["ADMIN", "VENDOR", "ORGANIZER"].some(r => existingRoles.includes(r));
 

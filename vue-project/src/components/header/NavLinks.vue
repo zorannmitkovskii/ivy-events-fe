@@ -1,42 +1,35 @@
 <template>
-  <ul class="nav-links">
-    <!-- Categories dropdown -->
-    <li class="nav-item has-submenu" ref="categoriesRef">
-      <button
-        class="categories-toggle"
-        :class="{ open: categoriesOpen }"
-        @click="categoriesOpen = !categoriesOpen"
-      >
+  <nav ref="navRef" :aria-label="$t('header.menu.categories')">
+    <div class="navcat" :class="{ open: categoriesOpen }">
+      <button class="navcat-toggle" @click="categoriesOpen = !categoriesOpen">
         {{ $t('header.menu.categories') }}
-        <svg class="chevron" :class="{ rotated: categoriesOpen }" width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <svg class="chev" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
           <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-      <ul v-show="categoriesOpen" class="categories-menu">
-        <li v-for="item in categoryItems" :key="item.enumValue">
-          <a href="#" class="categories-item" @click.prevent="goToCategory(item.enumValue)">
-            {{ $t(item.labelKey) }}
-          </a>
-        </li>
-      </ul>
-    </li>
+      <div v-show="categoriesOpen" class="navcat-menu">
+        <a
+          v-for="item in categoryItems"
+          :key="item.enumValue"
+          href="#"
+          @click.prevent="goToCategory(item.enumValue)"
+        >{{ $t(item.labelKey) }}</a>
+      </div>
+    </div>
 
-    <!-- Packages link -->
-    <li class="nav-item">
-      <router-link class="nav-link" :to="`/${lang}/packages`">{{ $t('header.menu.packages') }}</router-link>
-    </li>
+    <router-link
+      v-for="link in links"
+      :key="link.labelKey"
+      :to="`/${lang}/${link.path}`"
+      @click="emit('navigate')"
+    >{{ $t(link.labelKey) }}</router-link>
 
-    <!-- Static links -->
-    <li class="nav-item">
-      <router-link class="nav-link" :to="`/${lang}/about`">{{ $t('header.menu.about') }}</router-link>
-    </li>
-    <li class="nav-item">
-      <router-link class="nav-link" :to="`/${lang}/terms`">{{ $t('header.menu.terms') }}</router-link>
-    </li>
-    <li class="nav-item">
-      <router-link class="nav-link" :to="`/${lang}/contact`">{{ $t('header.menu.contact') }}</router-link>
-    </li>
-  </ul>
+    <!-- Below 900px the nav is the mobile sheet, so the header hands it the
+         session and language controls that have nowhere else to go. -->
+    <div class="navextra">
+      <slot name="mobile" />
+    </div>
+  </nav>
 </template>
 
 <script setup>
@@ -45,12 +38,25 @@ import { useRoute, useRouter } from "vue-router";
 import { EventCategoryEnum } from "@/enums/EventCategory.js";
 import { setSelectedCategory } from "@/store/onboarding.store.js";
 
+const emit = defineEmits(["navigate"]);
+
 const route = useRoute();
 const router = useRouter();
 const lang = computed(() => route.params.lang || "mk");
 
 const categoriesOpen = ref(false);
-const categoriesRef = ref(null);
+const navRef = ref(null);
+
+const links = [
+  // The vendor directory (EPIC-07). It was built, routed and filled, and then
+  // linked from nowhere: /vendors was reachable only by typing it. Ninety-six
+  // approved vendors were invisible to the people the directory exists for.
+  { labelKey: "header.menu.vendors", path: "vendors" },
+  { labelKey: "header.menu.packages", path: "packages" },
+  { labelKey: "header.menu.about", path: "about" },
+  { labelKey: "header.menu.faq", path: "faq" },
+  { labelKey: "header.menu.contact", path: "contact" },
+];
 
 const categoryItems = [
   { enumValue: EventCategoryEnum.WEDDING, labelKey: "header.menu.weddings" },
@@ -67,20 +73,15 @@ function goToCategory(enumValue) {
   categoriesOpen.value = false;
   setSelectedCategory(enumValue);
   router.push({ path: `/${lang.value}/event-invitations` });
-}
-
-function closeAll() {
-  categoriesOpen.value = false;
+  emit("navigate");
 }
 
 function onClickOutside(e) {
-  if (categoriesRef.value && !categoriesRef.value.contains(e.target)) {
-    categoriesOpen.value = false;
-  }
+  if (navRef.value && !navRef.value.contains(e.target)) categoriesOpen.value = false;
 }
 
 function onKeydown(e) {
-  if (e.key === "Escape") closeAll();
+  if (e.key === "Escape") categoriesOpen.value = false;
 }
 
 onMounted(() => {
@@ -95,85 +96,93 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
+/* Layout, colour and the open/closed behaviour of this `nav` all come from
+   `.sitehead nav` in `ivy/site.css` — the design's own rule. What is here is
+   only the category dropdown, which the concept header did not have. */
 
-.nav-item {
+.navcat {
   position: relative;
 }
 
-.categories-toggle {
+.navcat-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
+  padding: 0;
+  border: 0;
   background: none;
-  border: none;
+  color: inherit;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--neutral-700);
-  padding: 6px 2px;
-  transition: color 0.2s ease;
+  transition: color 0.25s;
 }
 
-.categories-toggle:hover,
-.categories-toggle.open {
-  color: var(--brand-dark);
+.navcat-toggle:hover,
+.navcat.open .navcat-toggle {
+  color: var(--gold);
 }
 
-.chevron {
-  transition: transform 0.2s ease;
+.chev {
+  transition: transform 0.2s;
 }
 
-.chevron.rotated {
+.navcat.open .chev {
   transform: rotate(180deg);
 }
 
-.categories-menu {
+.navcat-menu {
   position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  min-width: 200px;
-  background: var(--bg-white, #fff);
-  border: 1px solid var(--neutral-200, #e5e7eb);
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  padding: 6px;
-  list-style: none;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 100;
+  display: grid;
+  min-width: 210px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  box-shadow: 0 18px 40px rgba(23, 55, 43, 0.14);
 }
 
-.categories-item {
-  display: block;
-  padding: 10px 14px;
-  text-decoration: none;
-  color: var(--neutral-700);
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: 8px;
-  transition: background 0.15s ease, color 0.15s ease;
+.navcat-menu a {
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  transition: background 0.15s, color 0.15s;
 }
 
-.categories-item:hover {
-  background: var(--neutral-100, #f3f4f6);
-  color: var(--brand-dark);
+.navcat-menu a:hover {
+  background: var(--brand-pale);
+  color: var(--ink);
 }
 
-.nav-link {
-  text-decoration: none;
-  color: var(--neutral-700);
-  font-weight: 500;
-  font-size: 14px;
-  transition: color 0.2s ease;
+.navextra {
+  display: none;
 }
 
-.nav-link:hover {
-  color: var(--brand-dark);
+@media (max-width: 900px) {
+  .navcat {
+    width: 100%;
+  }
+
+  .navcat-menu {
+    position: static;
+    transform: none;
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+    padding: 10px 0 0 12px;
+  }
+
+  .navextra {
+    display: block;
+    width: 100%;
+    padding-top: 6px;
+    border-top: 1px solid var(--line);
+  }
 }
 </style>

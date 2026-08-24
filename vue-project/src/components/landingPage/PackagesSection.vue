@@ -1,85 +1,76 @@
 <template>
-  <section class="packages-section">
-    <div class="packages-container">
-      <header class="packages-header">
-        <h2 class="packages-title">{{ $t("packages.title") }}</h2>
-        <p class="packages-subtitle">{{ $t("packages.subtitle") }}</p>
-      </header>
+  <section class="invitationPackageSection" id="pricing">
+    <div class="packageIntro">
+      <div>
+        <p class="tag">{{ $t("packages.subtitle") }}</p>
+        <h2>{{ $t("packages.title") }}</h2>
+      </div>
 
-      <!-- Category Switch -->
-      <div class="switch-group">
+      <!-- Invitation plans or gallery plans. The design shows the two as
+           separate sections; here they share one grid and this switch, because
+           the packages themselves come from the API per category. -->
+      <div class="packageAnchor">
         <button
           v-for="tab in tabs"
           :key="tab.key"
-          class="switch-btn"
-          :class="{ active: activeTab === tab.key }"
+          type="button"
+          :class="{ on: activeTab === tab.key }"
           @click="activeTab = tab.key"
         >
           {{ tab.label }}
         </button>
       </div>
+    </div>
 
-      <!-- Loading -->
-      <div v-if="loading" class="packages-loading">
-        <span class="spinner"></span>
-      </div>
+    <div v-if="loading" class="packages-loading">
+      <span class="spinner"></span>
+    </div>
 
-      <!-- Error -->
-      <p v-else-if="error" class="packages-error">{{ error }}</p>
+    <p v-else-if="error" class="packages-note packages-error">{{ error }}</p>
 
-      <!-- Empty state -->
-      <p v-else-if="!packages.length" class="packages-empty">
-        {{ $t("packages.empty") }}
-      </p>
+    <p v-else-if="!packages.length" class="packages-note">{{ $t("packages.empty") }}</p>
 
-      <!-- Package Cards -->
-      <div v-else class="packages-grid">
-        <div
-          v-for="pkg in packages"
-          :key="pkg.id"
-          class="package-card"
-          :class="{ featured: pkg.packageType === 'INV_PRO' || pkg.packageType === 'GALLERY_PREMIUM' }"
-        >
-          <span
-            v-if="pkg.packageType === 'INV_PRO' || pkg.packageType === 'GALLERY_PREMIUM'"
-            class="badge-popular"
+    <div v-else class="pricegrid">
+      <article
+        v-for="pkg in packages"
+        :key="pkg.id"
+        class="pricecard"
+        :class="{ popular: isPopular(pkg) }"
+      >
+        <span class="planbadge">
+          {{ isPopular(pkg) ? $t("packages.popular") : "" }}
+        </span>
+
+        <p>{{ localized(pkg.nameI18n, pkg.name) }}</p>
+
+        <h2>
+          <template v-if="pkg.activeDiscount && pkg.discount">
+            <s class="price-old">{{ formatAmount(pkg.price) }}</s>
+            {{ formatAmount(pkg.currentPrice) }}
+          </template>
+          <template v-else>{{ formatAmount(pkg.currentPrice ?? pkg.price) }}</template>
+          <small> {{ pkg.currency || "MKD" }}</small>
+        </h2>
+
+        <p>{{ localized(pkg.descriptionI18n, pkg.description) }}</p>
+
+        <ul v-if="pkg.features && pkg.features.length">
+          <PricingFeature
+            v-for="feat in pkg.features"
+            :key="feat.id"
+            :included="feat.included"
           >
-            {{ $t("packages.popular") }}
-          </span>
+            {{ localized(feat.nameI18n, feat.name) }}
+          </PricingFeature>
+        </ul>
 
-          <h4 class="package-name">{{ localized(pkg.nameI18n, pkg.name) }}</h4>
-          <p class="package-desc" v-if="localized(pkg.descriptionI18n, pkg.description)">
-            {{ localized(pkg.descriptionI18n, pkg.description) }}
-          </p>
-
-          <div class="package-price">
-            <template v-if="pkg.activeDiscount && pkg.discount">
-              <span class="price-old">{{ formatPrice(pkg.price, pkg.currency) }}</span>
-              <span class="price-amount">{{ formatPrice(pkg.currentPrice, pkg.currency) }}</span>
-              <span class="price-badge">-{{ pkg.discount }}%</span>
-            </template>
-            <span v-else class="price-amount">{{ formatPrice(pkg.currentPrice ?? pkg.price, pkg.currency) }}</span>
-          </div>
-
-          <!-- Features -->
-          <ul v-if="pkg.features && pkg.features.length" class="card__features">
-            <PricingFeature
-              v-for="feat in pkg.features"
-              :key="feat.id"
-              :included="feat.included"
-            >
-              {{ localized(feat.nameI18n, feat.name) }}
-            </PricingFeature>
-          </ul>
-
-          <CpayButton
-            :packageType="pkg.packageType"
-            :price="pkg.currentPrice ?? pkg.price"
-            :label="$t('packages.choose')"
-            variant="gold"
-          />
-        </div>
-      </div>
+        <CpayButton
+          :packageType="pkg.packageType"
+          :price="pkg.currentPrice ?? pkg.price"
+          :label="`${$t('packages.choose')} ↗`"
+          variant="gold"
+        />
+      </article>
     </div>
   </section>
 </template>
@@ -98,16 +89,23 @@ const packages = ref([]);
 const loading = ref(true);
 const error = ref(null);
 
+const POPULAR_TYPES = ["INV_PRO", "GALLERY_PREMIUM"];
+
+function isPopular(pkg) {
+  return POPULAR_TYPES.includes(pkg.packageType);
+}
+
 function localized(i18nObj, fallback) {
   if (!i18nObj) return fallback || "";
   return i18nObj[locale.value] || i18nObj.en || fallback || "";
 }
 
-function formatPrice(price, currency) {
+/* The design sets the figure large in the serif and the currency small beside
+   it, so the two are formatted apart rather than as one string. */
+function formatAmount(price) {
   if (price == null) return "";
   const num = Number(price);
-  const formatted = Number.isInteger(num) ? num.toString() : num.toFixed(2);
-  return `${formatted} ${currency || "MKD"}`;
+  return Number.isInteger(num) ? num.toString() : num.toFixed(2);
 }
 
 const tabs = computed(() => [
@@ -140,212 +138,93 @@ onMounted(fetchPackages);
 </script>
 
 <style scoped>
-.packages-section {
-  background: var(--bg-white);
-  padding: 76px 20px;
+/* `.invitationPackageSection`, `.packageIntro`, `.packageAnchor`, `.pricegrid`
+   and `.pricecard` are all the design's, in `ivy/site.css`. Only the three
+   states the mock has no version of are local. */
+
+/* The design's right-hand column here is a paragraph of explanation; ours is
+   the category switch, so it sits on the heading's baseline at the far edge
+   rather than filling the column. */
+.packageIntro .packageAnchor {
+  justify-self: end;
+  align-self: end;
+  margin-top: 0;
 }
 
-.packages-container {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  text-align: center;
-}
-
-.packages-header {
-  margin-bottom: 34px;
-}
-
-.packages-title {
-  font-family: var(--font-family), serif;
-  font-size: 48px;
-  font-weight: 500;
-  margin: 0 0 10px;
-  color: var(--neutral-900);
-}
-
-.packages-subtitle {
-  margin: 0;
-  color: var(--neutral-700);
-  font-size: 17px;
-}
-
-/* ---- Switch Toggle ---- */
-.switch-group {
-  display: inline-flex;
-  background: var(--neutral-100, #f3f4f6);
-  border-radius: 10px;
-  padding: 4px;
-  gap: 4px;
-  margin-bottom: 40px;
-}
-
-.switch-btn {
-  padding: 10px 24px;
-  border: 1.5px solid var(--soft-light);
-  border-radius: 8px;
-  background: transparent;
-  color: var(--neutral-600, #4b5563);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.switch-btn.active {
-  background: var(--brand-gold, #c8a24d);
-  color: #fff;
-  border-color: var(--brand-gold);
-  box-shadow: 0 2px 8px rgba(200, 162, 77, 0.3);
-}
-
-.switch-btn:hover:not(.active) {
-  background: var(--neutral-200, #e5e7eb);
-}
-
-/* ---- Grid ---- */
-.packages-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-  text-align: center;
-}
-
-/* ---- Card ---- */
-.package-card {
-  position: relative;
-  background: #fff;
-  border: 1px solid var(--neutral-200, #e5e7eb);
-  border-radius: 16px;
-  padding: 36px 28px 32px;
+.packages-loading {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.package-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
-}
-
-.package-card.featured {
-  border-color: var(--brand-gold, #c8a24d);
-  box-shadow: 0 4px 20px rgba(200, 162, 77, 0.15);
-}
-
-.badge-popular {
-  position: absolute;
-  top: -12px;
-  background: var(--brand-gold, #c8a24d);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 4px 14px;
-  border-radius: 20px;
-}
-
-.package-name {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--brand-dark, #2f3e36);
-  margin: 0;
-}
-
-.package-desc {
-  font-size: 14.5px;
-  color: var(--neutral-700);
-  margin: 0;
-  line-height: 1.4;
-}
-
-.package-price {
-  margin: 8px 0 4px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
   justify-content: center;
+  padding: 48px 16px;
 }
 
-.price-amount {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--brand-dark, #2f3e36);
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(23, 55, 43, 0.12);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.packages-note {
+  padding: 0 24px;
+  text-align: center;
+  font: 15px/1.8 var(--font-display);
+  color: var(--ink-3);
+}
+
+.packages-error {
+  color: var(--error);
 }
 
 .price-old {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--neutral-400, #9ca3af);
-  text-decoration: line-through;
+  margin-right: 10px;
+  color: var(--ink-4);
+  font-size: 24px;
+  text-decoration-thickness: 1px;
 }
 
-.price-badge {
-  font-size: 12px;
-  font-weight: 700;
-  color: #fff;
-  background: #059669;
-  padding: 2px 8px;
-  border-radius: 12px;
-}
-
-/* ---- Features ---- */
-.card__features {
-  list-style: none;
-  padding: 0;
-  margin: 8px 0 12px;
+/*
+  The plan's call to action is CpayButton — a shared component with its own
+  variants, used here, in the checkout and in the event sidebar. Rather than
+  add a fifth variant for one page, the card restates it as the design's `.btn`
+  on the way past: full width, ink ground, no card glyph.
+*/
+.pricecard :deep(.cpay-btn) {
   width: 100%;
-  text-align: left;
+  justify-content: center;
+  min-height: 46px;
+  padding: 15px 24px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-/* ---- States ---- */
-.packages-loading { padding: 60px 0; }
-
-.spinner {
-  display: inline-block;
-  width: 32px;
-  height: 32px;
-  border: 3px solid var(--neutral-200, #e5e7eb);
-  border-top-color: var(--brand-gold, #c8a24d);
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
+.pricecard.popular :deep(.cpay-btn) {
+  background: var(--gold);
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.packages-error {
-  color: var(--error, #c62828);
-  font-weight: 600;
-  padding: 40px 0;
+.pricecard :deep(.cpay-btn:hover:not(:disabled)) {
+  background: var(--ink);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(23, 55, 43, 0.18);
 }
 
-.packages-empty {
-  color: var(--neutral-700);
-  padding: 40px 0;
-  font-size: 15px;
+.pricecard.popular :deep(.cpay-btn:hover:not(:disabled)) {
+  background: var(--gold);
 }
 
-@media (max-width: 980px) {
-  .packages-title { font-size: 32px; }
-
-  .switch-group {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .switch-btn {
-    padding: 8px 18px;
-    font-size: 13px;
-  }
-
-  .packages-grid {
-    grid-template-columns: 1fr;
-    max-width: 560px;
-    margin: 0 auto;
-  }
+.pricecard :deep(.cpay-icon) {
+  display: none;
 }
 </style>

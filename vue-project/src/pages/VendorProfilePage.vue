@@ -35,6 +35,55 @@
         </dl>
       </section>
 
+      <!-- The ask. Placed above the links because sending an inquiry is what
+           this page is for, and an Instagram link is where a visitor leaves. -->
+      <section class="block">
+        <button v-if="!inquiryOpen && !inquirySent" class="btn" @click="inquiryOpen = true">
+          {{ t('inquiry.contact') }}
+        </button>
+
+        <p v-if="inquirySent" class="sent" role="status">{{ t('inquiry.sent') }}</p>
+
+        <form v-if="inquiryOpen && !inquirySent" class="inquiry" @submit.prevent="sendInquiry">
+          <label class="field">
+            <span>{{ t('inquiry.yourName') }}</span>
+            <input v-model="inquiry.organizerName" type="text" required />
+          </label>
+          <label class="field">
+            <span>{{ t('inquiry.email') }}</span>
+            <input v-model="inquiry.contactEmail" type="email" />
+          </label>
+          <label class="field">
+            <span>{{ t('inquiry.phone') }}</span>
+            <input v-model="inquiry.contactPhone" type="tel" />
+          </label>
+          <label class="field">
+            <span>{{ t('inquiry.date') }}</span>
+            <input v-model="inquiry.eventDateLocal" type="date" />
+          </label>
+          <label class="field">
+            <span>{{ t('inquiry.guests') }}</span>
+            <input v-model.number="inquiry.guestCount" type="number" min="1" />
+          </label>
+          <label class="field">
+            <span>{{ t('inquiry.budget') }}</span>
+            <div class="range">
+              <input v-model.number="inquiry.budgetMin" type="number" min="0" />
+              <input v-model.number="inquiry.budgetMax" type="number" min="0" />
+            </div>
+          </label>
+          <label class="field wide">
+            <span>{{ t('inquiry.requirements') }}</span>
+            <textarea v-model="inquiry.requirements" rows="3"></textarea>
+          </label>
+
+          <p class="hint">{{ t('inquiry.askedOnceHint') }}</p>
+
+          <button class="btn" type="submit" :disabled="sending">{{ t('inquiry.send') }}</button>
+          <p v-if="inquiryError" class="error" role="alert">{{ inquiryError }}</p>
+        </form>
+      </section>
+
       <section v-if="vendor.website || vendor.instagramUrl" class="block links">
         <a v-if="vendor.website" :href="vendor.website" target="_blank" rel="noopener">
           {{ t('vendorProfile.website') }}
@@ -77,10 +126,11 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { vendorDirectoryService, vendorReviewService } from '@/services/vendorDirectory.service'
+import { inquiriesService } from '@/services/inquiries.service'
 import { baseUrl } from '@/services/baseUrl'
 
 const { t } = useI18n()
@@ -91,6 +141,52 @@ const reviews = ref([])
 const rating = ref(null)
 const loading = ref(true)
 const notFound = ref(false)
+
+const inquiryOpen = ref(false)
+const inquirySent = ref(false)
+const inquiryError = ref('')
+const sending = ref(false)
+
+// Asked once, up front. The first reply is otherwise always the same four
+// questions, and a three-day exchange becomes one answer.
+const inquiry = reactive({
+  organizerName: '',
+  contactEmail: '',
+  contactPhone: '',
+  eventDateLocal: '',
+  guestCount: null,
+  budgetMin: null,
+  budgetMax: null,
+  requirements: '',
+})
+
+async function sendInquiry() {
+  sending.value = true
+  inquiryError.value = ''
+  try {
+    await inquiriesService.send(vendor.value.id, {
+      organizerName: inquiry.organizerName,
+      contactEmail: inquiry.contactEmail || null,
+      contactPhone: inquiry.contactPhone || null,
+      // Sent with the browser's own offset: a wedding on the 12th must not
+      // become the 11th because the server runs in UTC.
+      eventDate: inquiry.eventDateLocal
+        ? new Date(`${inquiry.eventDateLocal}T12:00`).toISOString()
+        : null,
+      guestCount: inquiry.guestCount,
+      budgetMin: inquiry.budgetMin,
+      budgetMax: inquiry.budgetMax,
+      location: vendor.value.city,
+      requirements: inquiry.requirements,
+    })
+    inquirySent.value = true
+    inquiryOpen.value = false
+  } catch (e) {
+    inquiryError.value = e?.detail || e?.message || ''
+  } finally {
+    sending.value = false
+  }
+}
 
 onMounted(load)
 watch(() => route.params.slug, load)
@@ -232,7 +328,7 @@ function readable(value) {
 .details dd { margin: 2px 0 0; }
 
 .links { display: flex; gap: 16px; }
-.links a { color: #5a7a52; }
+.links a { color: var(--brand); }
 
 .reviews { list-style: none; margin: 0; padding: 0; }
 .reviews li { padding: 14px 0; border-bottom: 1px solid #f0eee8; }
@@ -244,6 +340,23 @@ function readable(value) {
 .review-text { margin: 6px 0 0; }
 .response { margin: 8px 0 0; padding: 8px 12px; border-radius: 8px; background: #faf8f4; font-size: 14px; }
 .how { margin-top: 14px; font-size: 11.5px; color: #8a8a8a; }
+
+.inquiry { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-top: 12px; }
+.inquiry .wide { grid-column: 1 / -1; }
+.field { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; }
+.field input, .field textarea {
+  padding: 8px 10px; border: 1px solid #ddd8cf; border-radius: 8px;
+  font-size: 14px; font-family: inherit;
+}
+.range { display: flex; gap: 8px; }
+.range input { width: 100%; }
+.hint { grid-column: 1 / -1; margin: 0; font-size: 11.5px; color: #8a8a8a; }
+.sent { padding: 10px 14px; border-radius: 8px; background: #e6f2e2; color: #2f6b28; font-size: 14px; }
+
+.btn { padding: 10px 18px; border: 0; border-radius: 10px; background: var(--brand);
+  color: #fff; font-size: 15px; cursor: pointer; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.error { grid-column: 1 / -1; margin: 0; font-size: 13px; color: #a3271f; }
 
 .empty, .state { color: #6b6b6b; text-align: center; padding: 20px 0; }
 .link-btn { border: 0; background: none; color: #a09585; cursor: pointer; font-size: 12px; padding: 6px 0 0; }

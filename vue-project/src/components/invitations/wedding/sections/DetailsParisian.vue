@@ -106,7 +106,7 @@ defineProps({
   font-family: var(--font-heading, inherit);
   font-size: 36px;
   font-weight: 400;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   margin: 0 0 16px;
 }
 
@@ -114,7 +114,7 @@ defineProps({
   font-family: var(--font-body, inherit);
   font-size: 20px;
   font-style: italic;
-  color: var(--theme-text-muted, #6b7280);
+  color: var(--theme-text-muted, var(--ink-3));
   margin: 0;
 }
 
@@ -160,14 +160,14 @@ defineProps({
   font-family: var(--font-heading, inherit);
   font-size: 24px;
   font-weight: 400;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   margin: 0 0 8px;
 }
 
 .card-time {
   font-family: var(--font-body, inherit);
   font-size: 18px;
-  color: var(--theme-text-muted, #6b7280);
+  color: var(--theme-text-muted, var(--ink-3));
   margin: 0 0 16px;
 }
 
@@ -213,7 +213,7 @@ defineProps({
   font-family: var(--font-heading, inherit);
   font-size: 24px;
   font-weight: 400;
-  color: var(--theme-text, #1f2937);
+  color: var(--theme-text, var(--ink));
   margin: 0 0 24px;
 }
 
@@ -221,7 +221,7 @@ defineProps({
   font-family: var(--font-body, inherit);
   font-style: italic;
   font-size: 16px;
-  color: var(--theme-text-muted, #6b7280);
+  color: var(--theme-text-muted, var(--ink-3));
   margin: 32px 0 0;
 }
 
