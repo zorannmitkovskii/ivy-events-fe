@@ -678,12 +678,35 @@ export function useWeddingInvitation(preset) {
         })
         .filter(Boolean);
     }
-    // Story photos for Persian family (separate photo grid)
-    if (ourStoryImages.length) {
-      config.storyPhotos = ourStoryImages.map((url, i) => ({ url, alt: `Photo ${i + 1}` }));
-      if (!config.storyImageUrl && ourStoryImages[0]) {
-        config.storyImageUrl = ourStoryImages[0];
-      }
+    /*
+      The story photo grid, from wherever the couple's pictures actually are.
+
+      There are two stores and this only ever read one. `ourStoryImages` is the
+      invitation-level list (uploaded through the "Story Images" panel); a
+      picture attached to a single chapter lives on that chapter instead, as
+      `ourStory[].imageUrl`. A couple who used the second one had
+      `config.storyPhotos` left holding the four Unsplash placeholders the
+      config ships with — and `StoryChapters` prefers `photos` over the
+      chapters' own images, so the placeholders won and the real pictures were
+      never reached. The editor showed them, because it builds its slots from
+      the API list directly.
+
+      Derived from `data`, never from `config.stories`: those are still the
+      demo chapters when the event has none, and reading them back would put
+      the placeholders straight back in.
+    */
+    const storyImagesOnEntries = Array.isArray(data.ourStory)
+      ? data.ourStory.map((s) => s.imageUrl).filter(Boolean)
+      : [];
+    const storyPhotoUrls = ourStoryImages.length ? ourStoryImages : storyImagesOnEntries;
+
+    if (storyPhotoUrls.length) {
+      config.storyPhotos = storyPhotoUrls.map((url, i) => ({ url, alt: `Photo ${i + 1}` }));
+      // Assigned outright, not "only if empty". The default is a placeholder
+      // URL, so it is never empty and that guard never fired — the same trap
+      // `refreshAllData` already works around for `heroPhotoUrl` by blanking
+      // it before this runs.
+      config.storyImageUrl = storyPhotoUrls[0];
     }
 
     // Collage/gallery photos from backend

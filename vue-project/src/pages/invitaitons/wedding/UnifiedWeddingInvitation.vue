@@ -606,8 +606,8 @@ const storyImageSlots = computed(() => {
   return slots;
 });
 
-// Sync slots to preview config live
 watch(storyImageSlots, (slots) => {
+  if (!isEditMode.value) return;
   const urls = slots.map(s => s.url).filter(Boolean);
   if (urls.length) {
     config.storyPhotos = urls.map((url, i) => ({ url, alt: `Photo ${i + 1}` }));
