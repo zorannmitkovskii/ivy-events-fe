@@ -1,0 +1,32 @@
+User-agent: *
+Allow: /
+
+# Authenticated / dashboard areas
+Disallow: /*/admin
+Disallow: /*/dashboard
+Disallow: /*/organizer
+
+# Auth flow (login, signup, verify, reset, callbacks)
+Disallow: /*/auth
+
+# Onboarding / checkout / payment
+Disallow: /*/event-category
+Disallow: /*/event-live
+Disallow: /*/checkout
+Disallow: /*/payment
+
+# Private invitation variant (draft/edit view)
+Disallow: /*/invitations/*/private
+
+# Guest-only utility pages (accessed via personal link, not organic search)
+Disallow: /*/rsvp-success
+Disallow: /*/gallery
+Disallow: /*/table-lookup
+
+# Backend API (served from api.ivyevents.mk — belt-and-braces)
+Disallow: /api/
+
+# Keycloak SSO helper
+Disallow: /silent-check-sso.html
+
+Sitemap: https://ivyevents.mk/sitemap.xml

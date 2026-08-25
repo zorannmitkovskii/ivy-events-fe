@@ -1,0 +1,14 @@
+# Ignore local dependencies and build output
+node_modules
+npm-debug.log
+.DS_Store
+
+# Root level dist (if any)
+dist
+
+# Vue project specific
+vue-project/node_modules
+vue-project/dist
+
+# GitHub workflows artifacts
+.github
