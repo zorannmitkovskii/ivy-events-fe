@@ -18,7 +18,13 @@
         <li v-for="key in featureKeys" :key="key">{{ $t(key) }}</li>
       </ul>
 
-      <router-link class="btn light" :to="{ name: 'features', params: { lang } }">
+      <!--
+        Packages, not /features. That route resolves to an empty component —
+        `pages/marketing/FeaturesPage.vue` is a stub with no template — so the
+        link opened a blank page. The planner's tiers are what this button is
+        really promising, and those live on the packages page.
+      -->
+      <router-link class="btn light" :to="{ name: 'packages', params: { lang } }">
         {{ $t('home.features.cta') }} ↗
       </router-link>
     </div>

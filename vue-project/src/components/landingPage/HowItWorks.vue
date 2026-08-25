@@ -68,7 +68,9 @@ const steps = computed(() => [
     glyph: "✓",
     titleKey: "home.howItWorks.steps.trackRsvps.title",
     descKey: "home.howItWorks.steps.trackRsvps.description",
-    to: { name: "features-rsvp", params: { lang: lang.value } },
+    // Not "features-rsvp": that route renders an empty component. The FAQ
+    // has a real answer for how RSVP tracking works.
+    to: { name: "faq", params: { lang: lang.value } },
   },
 ]);
 </script>
