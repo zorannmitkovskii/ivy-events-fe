@@ -21,9 +21,10 @@
 }
 
 .authalt {
-  margin-top: 26px;
+  margin: 26px 0 0;
   text-align: center;
-  font: 13px/1.7 var(--font-display);
+  font-family: var(--font-ui);
+  font-size: 14.5px;
   color: var(--ink-3);
 }
 </style>

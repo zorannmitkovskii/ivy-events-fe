@@ -27,6 +27,13 @@ export const invitationTemplateService = {
     return api.del(`/invitation-templates/${encodeURIComponent(id)}`);
   },
 
+  /** Every active template, whatever the category (public, no auth required).
+   *  What the public catalogue lists. */
+  async listAllActive() {
+    const response = await publicApi.get("/public/invitation-templates");
+    return response.data;
+  },
+
   /** List templates by category (public, no auth required) */
   async listByCategory(category) {
     const response = await publicApi.get(`/public/invitation-templates/category/${encodeURIComponent(category)}`);

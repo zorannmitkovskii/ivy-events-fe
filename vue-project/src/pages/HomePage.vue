@@ -1,22 +1,28 @@
 <template>
   <!--
-    The 2026 landing page, in the redesign's order: the invitation first, then
-    what the product does, then what it looks like, then the planner, then
-    proof, then the offer.
+    The landing page, in the standalone mockup's order: pick a category from
+    the turning deck, see the designs, see finished invitations, learn how long
+    it takes, see what a guest gets, see what happens after it is sent, read the
+    claim, then price, proof and offer.
 
-    `.ivy-site` is what puts the whole page inside the redesign's stylesheet —
-    see `assets/styles/ivy/site.css`. Every public page carries it.
+    It renders its own shell rather than using `SitePage` because the hero has
+    to sit directly under the header with no wrapper between them, and because
+    the nested `router-view` for the invitation preview belongs inside the
+    scope. `.ivy-site` is that scope — see `assets/styles/ivy/site.css`.
   -->
   <div class="ivy-site">
+    <a class="skip" href="#main">{{ $t('a11y.skipToContent') }}</a>
     <Header />
-    <main>
-      <HeroSection />
+    <main id="main">
+      <HeroCarousel />
+      <EventCategories v-model="selectedCategory" />
+      <DemoShowcase />
       <HowItWorks />
-      <TemplatesGallery id="templates" />
-      <EventCategories bg-class="bg-white" v-model="selectedCategory" />
-      <CoreFeatures id="features" />
-      <QuoteSection />
-      <PackagesSection id="pricing" />
+      <GuestExperience />
+      <PlannerTabs />
+      <StatementStats />
+      <PackagesSection />
+      <BlogTeaser />
       <HomepageFaq />
       <FinalCtaSection />
     </main>
@@ -26,44 +32,49 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, watch, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import Header from '@/components/header/Header.vue'
-import HeroSection from "@/components/landingPage/HeroSection.vue";
-import HowItWorks from "@/components/landingPage/HowItWorks.vue";
-import EventCategories from "@/components/landingPage/EventCategories.vue";
-import CoreFeatures from "@/components/landingPage/CoreFeatures.vue";
-import PackagesSection from "@/components/landingPage/PackagesSection.vue";
-import Footer from "@/components/layout/Footer.vue";
-import TemplatesGallery from "@/components/landingPage/TemplatesGallery.vue";
-import QuoteSection from "@/components/landingPage/QuoteSection.vue";
-import { setSelectedCategory } from '@/store/onboarding.store';
-import { categoryIdToEnum } from '@/helper/CategoryMapping.helper.js';
-import FinalCtaSection from "@/components/landingPage/FinalCtaSection.vue";
-import HomepageFaq from "@/components/landingPage/HomepageFaq.vue";
-import { useReveal } from "@/composables/useReveal";
+import Footer from '@/components/layout/Footer.vue'
+import HeroCarousel from '@/components/landingPage/HeroCarousel.vue'
+import EventCategories from '@/components/landingPage/EventCategories.vue'
+import DemoShowcase from '@/components/landingPage/DemoShowcase.vue'
+import HowItWorks from '@/components/landingPage/HowItWorks.vue'
+import GuestExperience from '@/components/landingPage/GuestExperience.vue'
+import PlannerTabs from '@/components/landingPage/PlannerTabs.vue'
+import StatementStats from '@/components/landingPage/StatementStats.vue'
+import PackagesSection from '@/components/landingPage/PackagesSection.vue'
+import BlogTeaser from '@/components/landingPage/BlogTeaser.vue'
+import HomepageFaq from '@/components/landingPage/HomepageFaq.vue'
+import FinalCtaSection from '@/components/landingPage/FinalCtaSection.vue'
+import { setSelectedCategory } from '@/store/onboarding.store'
+import { categoryIdToEnum } from '@/helper/CategoryMapping.helper.js'
+import { useReveal } from '@/composables/useReveal'
 
-const router = useRouter();
-const route = useRoute();
-const lang = computed(() => route.params.lang || 'mk');
-const selectedCategory = ref(null);
+const router = useRouter()
+const route = useRoute()
+const lang = computed(() => route.params.lang || 'mk')
+const selectedCategory = ref(null)
 
 // One sweep after the page mounts catches every `.reveal` on it; the sections
 // that load data asynchronously re-run it themselves once their cards exist.
-useReveal();
+useReveal()
 
+/*
+  A category card opens the public catalogue, filtered.
+
+  It used to push `EventInvitationsPage`, which is step two of the onboarding
+  flow — so a visitor who clicked "Weddings" on the landing page landed inside
+  event creation with a back button to nowhere. The pick is still remembered on
+  the onboarding store, so it survives if they do go on to sign up.
+*/
 watch(selectedCategory, async (newId) => {
-  if (newId) {
-    const enumValue = categoryIdToEnum(newId);
-    if (enumValue) {
-      setSelectedCategory(enumValue);
-      if (newId === 'gallery') {
-        await router.push({ name: 'signup', params: { lang: lang.value } });
-      } else {
-        await router.push({ name: 'EventInvitationsPage', params: { lang: lang.value } });
-      }
-    }
-    selectedCategory.value = null;
+  if (!newId) return
+  const enumValue = categoryIdToEnum(newId)
+  if (enumValue) {
+    setSelectedCategory(enumValue)
+    await router.push({ name: 'designs', params: { lang: lang.value }, query: { category: enumValue } })
   }
-});
+  selectedCategory.value = null
+})
 </script>

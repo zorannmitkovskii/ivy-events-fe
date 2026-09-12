@@ -1,18 +1,21 @@
 <template>
-  <div class="dashboard-layout">
-    <aside class="dash-sidebar" :class="{ open: drawerOpen }">
-      <AgencySidebarNav @close="drawerOpen = false" />
-    </aside>
+  <DashShell>
+    <template #side="{ close }">
+      <AgencySidebarNav @close="close" />
+    </template>
 
-    <div v-if="drawerOpen" class="backdrop" @click="drawerOpen = false"></div>
+    <template #top="{ toggle }">
+      <DashTopBar current="organizer" :search-hint="t('dash.searchAgency')" @toggle="toggle">
+        <template #action>
+          <router-link class="btn btn-primary btn-sm" :to="{ name: 'EventCategoryPage', params: { lang } }">
+            {{ t('dash.newEvent') }}
+          </router-link>
+        </template>
+      </DashTopBar>
+    </template>
 
-    <div class="main">
-      <TopBar @toggle-menu="drawerOpen = !drawerOpen" :show-hamburger="true" />
-      <main class="content">
-        <router-view />
-      </main>
-    </div>
-  </div>
+    <router-view />
+  </DashShell>
 </template>
 
 <script setup>
@@ -24,15 +27,14 @@
  * the navigation, and the redesign's claim that they duplicated it was simply
  * wrong. With a shell they are free to go.
  */
-import { ref, watch } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import DashShell from '@/components/dashboard/shell/DashShell.vue'
+import DashTopBar from '@/components/dashboard/shell/DashTopBar.vue'
 import AgencySidebarNav from '@/components/layout/AgencySidebarNav.vue'
-import TopBar from '@/components/layout/TopBar.vue'
 
-const drawerOpen = ref(false)
+const { t } = useI18n()
 const route = useRoute()
-
-watch(() => route.path, () => {
-  drawerOpen.value = false
-})
+const lang = computed(() => route.params.lang || 'mk')
 </script>

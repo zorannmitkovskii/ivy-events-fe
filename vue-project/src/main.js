@@ -7,8 +7,6 @@ import './services/auth.service'
 import './services/events.service'
 import { registerServiceWorker, showUpdatePrompt } from '@/services/pwa'
 
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import './assets/styles/colors.css'
 import './assets/styles/styles.css'
 import './assets/styles/accordion.css'
@@ -27,20 +25,30 @@ import './assets/styles/dashboard.css'
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 /*
-  The 2026 redesign, loaded last so it wins over Bootstrap and over the sheets
-  above without needing !important to do it.
+  The 2026 redesign, loaded last so it wins over the sheets above without
+  needing !important to do it.
 
-  - tokens: the palette and type, re-pointing the names the rest of the app
-    already reads, so untouched screens re-skin on their own.
-  - site:   the public site, scoped to `.ivy-site`. Scoped deliberately — the
-    design's class names (.btn, .card, .link, .title) collide head-on with
-    Bootstrap's, and unscoped they would restyle every dashboard button.
-  - dash:   the dashboard shell and its primitives, all `d`-prefixed.
-  - bridge: the leftovers on pages the design does not draw.
+  - tokens: the palette, the type and the dark theme, re-pointing the names the
+    rest of the app already reads so untouched screens re-skin on their own.
+    Also carries the reset that used to come from Bootstrap Reboot.
+  - site:   the design proper, scoped to `.ivy-site` and `.ivy-dash`. Scoped
+    deliberately — its class names (.btn, .card, .link, .row, .title) collide
+    head-on with the app's own, and unscoped they would restyle everything.
+  - dash:   what the dashboard adds on top, scoped to `.ivy-dash`.
+  - auth:   the sign-in split, scoped to `.ivy-site .authpage`. Its own file
+    because the mockup has no login screen — it is written in the design's
+    language rather than ported from it.
+  - bridge: native controls and the leftovers on pages the design does not draw.
+
+  Bootstrap's stylesheet and bundle are deliberately not imported: nothing in
+  `src` uses a Bootstrap layout class or a `data-bs-*` hook, and its .btn/.card
+  /.row defaults fought the design for every one of those names. The icon font
+  stays — 24 components use it.
 */
 import './assets/styles/ivy/tokens.css'
 import './assets/styles/ivy/site.css'
 import './assets/styles/ivy/dash.css'
+import './assets/styles/ivy/auth.css'
 import './assets/styles/ivy/bridge.css'
 
 async function bootstrap() {

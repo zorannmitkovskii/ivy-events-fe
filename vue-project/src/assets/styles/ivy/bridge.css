@@ -1,97 +1,56 @@
 /* Ivy 2026 — carrying the redesign into screens it does not draw
    ---------------------------------------------------------------------------
-   The design source covers the public site and one dashboard shell. The app
-   has around seventy dashboard pages built on Bootstrap and on the earlier
-   `dashboard.css` system, and those pages have to belong to the same product
-   the moment the theme lands — not once each has been rewritten.
+   The mockup draws 41 pages. The app has around 120, and the rest have to
+   belong to the same product the moment the theme lands — not once each has
+   been rewritten.
 
-   Almost all of that came free: those pages read `--brand`, `--ink`,
-   `--dash-*` and so on, which `tokens.css` re-points. What is left is the
-   handful of places that hard-code a Bootstrap default instead — a 0.375rem
-   radius, a #0d6efd, a system font stack. Each rule below exists because
-   something on screen still looked like Bootstrap.
+   Almost all of that comes free: those pages read `--brand`, `--ink`, `--line`,
+   `--dash-*` and so on, which `tokens.css` re-points, dark theme included.
+   What is left is this file: the native controls nobody styled, and the few
+   places the app hard-codes a value instead of reading a token.
 
-   Loaded last, after Bootstrap and after the app's own sheets.
+   Bootstrap's stylesheet used to be the other half of this problem. It is no
+   longer loaded — grep found no `data-bs-*` and no Bootstrap layout class in
+   the whole of `src` — so the `--bs-*` overrides that used to live here are
+   gone with it. Reboot's substance moved into `tokens.css`.
+
+   Loaded last, after the app's own sheets.
    --------------------------------------------------------------------------- */
 
-/* ═══ controls ═══════════════════════════════════════════════════════════ */
+/* ═══ native controls ════════════════════════════════════════════════════
+   Checkboxes, radios, range and progress all take the browser's blue until
+   told otherwise, and in dark mode the browser's own light form chrome. */
 
-.btn {
-  --bs-btn-border-radius: var(--radius-control);
-  border-radius: var(--radius-control);
-  font-family: var(--font-ui);
-  font-weight: 600;
+:root {
+  accent-color: var(--moss);
 }
 
-.btn-primary,
-.btn-main {
-  --bs-btn-bg: var(--brand);
-  --bs-btn-border-color: var(--brand);
-  --bs-btn-hover-bg: var(--brand-strong);
-  --bs-btn-hover-border-color: var(--brand-strong);
-  --bs-btn-active-bg: var(--brand-strong);
-  --bs-btn-active-border-color: var(--brand-strong);
-  --bs-btn-disabled-bg: var(--brand-soft);
-  --bs-btn-disabled-border-color: var(--brand-soft);
-}
-
-.btn-outline-primary,
-.btn-main-outline {
-  --bs-btn-color: var(--brand);
-  --bs-btn-border-color: var(--brand);
-  --bs-btn-hover-bg: var(--brand);
-  --bs-btn-hover-border-color: var(--brand);
-  --bs-btn-active-bg: var(--brand);
-  --bs-btn-active-border-color: var(--brand);
-}
-
-.btn-secondary {
-  --bs-btn-bg: var(--sunken);
-  --bs-btn-border-color: var(--line);
-  --bs-btn-color: var(--ink);
-  --bs-btn-hover-bg: var(--line);
-  --bs-btn-hover-border-color: var(--line-2);
-  --bs-btn-hover-color: var(--ink);
-}
-
-.btn-danger {
-  --bs-btn-bg: var(--error);
-  --bs-btn-border-color: var(--error);
-  --bs-btn-hover-bg: #8b1a25;
-  --bs-btn-hover-border-color: #8b1a25;
-}
-
-/* ═══ form fields ════════════════════════════════════════════════════════ */
-
-.form-control,
-.form-select,
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="search"],
-input[type="tel"],
-input[type="url"],
-input[type="number"],
-input[type="date"],
-input[type="time"],
-input[type="datetime-local"],
+input,
 select,
 textarea {
   font-family: var(--font-ui);
 }
 
-.form-control,
-.form-select {
-  --bs-border-radius: var(--radius-control);
-  border-color: var(--line-2);
-  border-radius: var(--radius-control);
+input:not([type='checkbox']):not([type='radio']):not([type='range']),
+select,
+textarea {
+  background: var(--surface);
   color: var(--ink);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-control);
 }
 
-.form-control:focus,
-.form-select:focus {
+input:not([type='checkbox']):not([type='radio']):not([type='range']):focus,
+select:focus,
+textarea:focus {
   border-color: var(--brand-mid);
-  box-shadow: 0 0 0 3px rgba(23, 55, 43, 0.1);
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--moss) 30%, transparent);
+}
+
+::placeholder {
+  color: var(--ink-3);
+  opacity: 1;
 }
 
 .form-label {
@@ -100,101 +59,10 @@ textarea {
   font-weight: 600;
 }
 
-.form-check-input:checked {
-  background-color: var(--brand);
-  border-color: var(--brand);
-}
-
-.form-check-input:focus {
-  border-color: var(--brand-mid);
-  box-shadow: 0 0 0 3px rgba(23, 55, 43, 0.1);
-}
-
-/* Native controls the app leaves unstyled — checkboxes, radios, range,
-   progress — all take the browser's blue unless told otherwise. */
-:root {
-  accent-color: var(--brand);
-}
-
-/* ═══ surfaces ═══════════════════════════════════════════════════════════ */
-
-.card {
-  --bs-card-border-radius: var(--radius-card);
-  --bs-card-border-color: var(--line);
-  --bs-card-bg: var(--surface);
-  border-radius: var(--radius-card);
-}
-
-.modal-content,
-.dropdown-menu,
-.offcanvas {
-  border-radius: var(--radius-card);
-  border-color: var(--line);
-}
-
-.dropdown-item.active,
-.dropdown-item:active {
-  background-color: var(--brand);
-}
-
-.badge {
-  font-family: var(--font-ui);
-  font-weight: 600;
-}
-
-.table {
-  --bs-table-color: var(--ink);
-  --bs-table-border-color: var(--line);
-}
-
-.table > thead {
-  color: var(--ink-3);
-  font-family: var(--font-ui);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.nav-link {
-  color: var(--ink-2);
-}
-
-.nav-link.active {
-  color: var(--brand);
-}
-
-.alert {
-  border-radius: var(--radius-card);
-}
-
-/* Bootstrap paints links #0d6efd; the app has always wanted them to inherit. */
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-a:hover {
-  color: inherit;
-}
-
-/* ═══ focus ══════════════════════════════════════════════════════════════
-   One visible ring, in the brand, everywhere — replacing Bootstrap's blue
-   glow and the browser's default outline both. */
-
-:focus-visible {
-  outline: 2px solid var(--brand-mid);
-  outline-offset: 2px;
-}
-
-.btn:focus-visible,
-.btn:focus {
-  box-shadow: 0 0 0 3px rgba(23, 55, 43, 0.15);
-}
-
-/* ═══ selection + scrollbars ═════════════════════════════════════════════ */
+/* ═══ selection, scrollbars, rules ═══════════════════════════════════════ */
 
 ::selection {
-  background: var(--sage);
+  background: var(--mist);
   color: var(--ink);
 }
 

@@ -43,23 +43,26 @@ defineProps({
 
 <style scoped>
 /*
-  The redesign's field: a small bold label above a plain bordered box on white.
-  Gone are the 12px radius, the tinted resting background and the gold focus
-  glow — the whole page now has one focus treatment, set in `ivy/bridge.css`.
-  The optional leading icon stays; it is the only thing here the mock's fields
-  do not have, and dropping it would leave the email and password rows
-  indistinguishable at a glance.
+  A field in the September system: a semibold label over a bordered box on the
+  card surface, matching `.form label` on the contact page so the two forms on
+  the public site are recognisably the same control.
+
+  The 9px letter-spaced label and the hard-coded #fff were the August scale.
+  The leading icon stays — it is the only thing here the design's own fields do
+  not have, and without it the email and password rows are indistinguishable at
+  a glance.
 */
 .field {
   display: grid;
-  gap: 0;
+  gap: 6px;
   font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: 700;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink-2);
 }
 
 .field__label {
-  margin: 9px 0 0;
+  margin: 0;
 }
 
 .field__control {
@@ -67,10 +70,10 @@ defineProps({
   display: flex;
   align-items: center;
   width: 100%;
-  margin-top: 7px;
-  border: 1px solid #d6dcd7;
+  min-height: 50px;
+  border: 1px solid var(--line);
   border-radius: var(--radius-control);
-  background: #fff;
+  background: var(--card);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -83,7 +86,7 @@ defineProps({
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  color: var(--ink-4);
+  color: var(--ink-3);
 }
 
 .field__input {
@@ -91,19 +94,22 @@ defineProps({
   border: 0;
   outline: 0;
   background: transparent;
-  padding: 14px 14px 14px 44px;
-  font: 13px var(--font-ui);
+  padding: 13px 14px 13px 44px;
+  font-family: var(--font-ui);
+  font-size: 16px;
   font-weight: 400;
   color: var(--ink);
 }
 
 .field__input::placeholder {
-  color: var(--ink-4);
+  color: var(--ink-3);
 }
 
+/* The same ring the contact form and every native control get, from
+   `ivy/bridge.css` — one focus treatment on the whole site. */
 .field__control:focus-within {
   border-color: var(--brand-mid);
-  box-shadow: 0 0 0 3px rgba(23, 55, 43, 0.1);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--moss) 30%, transparent);
 }
 
 input:focus {

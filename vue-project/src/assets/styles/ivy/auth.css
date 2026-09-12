@@ -1,0 +1,211 @@
+/* Ivy 2026 — signing in
+   ---------------------------------------------------------------------------
+   The one part of the public site the mockup does not draw. `ivyevents-site`
+   has forty-one pages and no login screen, so this is written in the design's
+   language rather than ported from it: the same split the marketing pages use
+   (`.band`, `.final`), the same dark `--ivy-deep` panel, the same Fraunces
+   heading over Instrument Sans body, the same pill buttons.
+
+   It exists as its own file because it replaces something that was lost. The
+   August stylesheet carried `.authpage`, `.authvisual`, `.authform`, `.or` and
+   `.social`; swapping in the September one took all five with it and left the
+   auth pages rendering as a column of unstyled text.
+
+   Scoped under `.ivy-site .authpage` — a descendant selector, so a page must
+   put the two classes on different elements. `AuthShell.vue` is the only thing
+   that renders them and it does exactly that.
+   --------------------------------------------------------------------------- */
+
+.ivy-site .authpage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: 100vh;
+  background: var(--paper);
+}
+
+/* Over the dark panel at wide sizes, over the paper once that panel is gone —
+   so it takes its colour from the half it is actually sitting on, rather than
+   being a dark mark on a dark ground. */
+.ivy-site .authpage > .brand {
+  position: absolute;
+  z-index: 2;
+  top: 28px;
+  left: clamp(20px, 4vw, 48px);
+  color: #fff;
+}
+
+/* ── the invitation half ─────────────────────────────────────────────────── */
+
+.ivy-site .authvisual {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: clamp(40px, 6vw, 80px);
+  overflow: hidden;
+  background: var(--ivy-deep);
+  color: #eef2ec;
+}
+
+/* The card the whole product is about, at rest. Same idiom as the dashboard's
+   `.mini-invite`: cream paper, an inset rule, the names in Fraunces. */
+.ivy-site .authinvite {
+  display: flex;
+  width: min(300px, 70%);
+  aspect-ratio: 3 / 4;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  position: relative;
+  border-radius: var(--radius);
+  background: #fffcf4;
+  color: #1e3d30;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  transform: rotate(-2deg);
+}
+
+.ivy-site .authinvite::before {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(30, 61, 48, 0.18);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.ivy-site .authinvite small {
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  color: #6b7a72;
+}
+
+.ivy-site .authinvite strong {
+  margin: 20px 0 10px;
+  font-family: var(--display);
+  font-size: clamp(26px, 2.4vw, 34px);
+  font-weight: 400;
+  line-height: 1.05;
+  font-variation-settings: 'SOFT' 60, 'opsz' 72;
+}
+
+.ivy-site .authinvite i {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.ivy-site .authinvite span {
+  font-size: 13px;
+  color: #4b5a52;
+}
+
+.ivy-site .authvisual blockquote {
+  max-width: 34ch;
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(18px, 1.7vw, 22px);
+  font-style: italic;
+  line-height: 1.35;
+  text-align: center;
+  color: #dce8dc;
+}
+
+/* ── the form half ───────────────────────────────────────────────────────── */
+
+.ivy-site .authform {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: min(420px, 100%);
+  margin-inline: auto;
+  padding: clamp(72px, 8vw, 96px) clamp(20px, 4vw, 48px) clamp(40px, 6vw, 64px);
+}
+
+.ivy-site .authform h1 {
+  font-size: clamp(32px, 3.4vw, 44px);
+  letter-spacing: -0.02em;
+}
+
+/* The small letter-spaced line over the heading. `tokens.css` styles `.tag`
+   inside `.ivy-site` already; only the colour and the spacing differ here. */
+.ivy-site .authform .tag {
+  margin: 0 0 10px;
+  color: var(--ink-3);
+}
+
+/* ── one rule, a word, one rule ──────────────────────────────────────────── */
+
+/*
+  `.or` and `.social` are the two names here the rest of the site also uses, so
+  unlike the `auth*` ones they go through `.authpage`. Left at `.ivy-site .social`
+  this tied with the sheet's own `.social` — the footer's row of three round
+  social links — and won on load order, turning it into one full-width white
+  pill. Anything generic added below belongs behind `.authpage` too.
+*/
+.ivy-site .authpage .or {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 4px 0;
+  font-size: 13.5px;
+  color: var(--ink-3);
+}
+
+.ivy-site .authpage .or span {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* ── the third-party button ──────────────────────────────────────────────── */
+
+.ivy-site .authpage .social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 50px;
+  padding: 0 24px;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.ivy-site .authpage .social:hover {
+  border-color: var(--ivy);
+  background: var(--mist-2);
+  text-decoration: none;
+}
+
+/* ── narrow ──────────────────────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  /*
+    The decorative half goes rather than stacking. A phone has least room for
+    a picture above the fold, and a form pushed below one is a form people
+    scroll past looking for it.
+  */
+  .ivy-site .authpage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ivy-site .authvisual {
+    display: none;
+  }
+
+  .ivy-site .authform {
+    padding-top: clamp(88px, 18vw, 112px);
+  }
+
+  /* No dark half left to sit on. */
+  .ivy-site .authpage > .brand {
+    color: var(--ink);
+  }
+}

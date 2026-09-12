@@ -47,11 +47,7 @@ const cardSecondName = computed(() => (names.value[1] || "").trim());
 
 <style scoped>
 .authbrand {
-  --logo-h: 28px;
-}
-
-.brand {
-  color: var(--ink);
+  --logo-h: 26px;
 }
 
 /* The form column holds a title block, a form and a footer link, and the

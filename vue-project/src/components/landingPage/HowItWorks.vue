@@ -1,76 +1,50 @@
 <template>
-  <!--
-    The redesign's `intro` + `features` pair: a centred statement on paper,
-    then the numbered cards directly under it on the same ground. They are one
-    component because they are one visual block — the cards have no top
-    padding of their own and read as the statement's answer.
-  -->
-  <section class="intro reveal" id="how">
-    <p class="tag">{{ $t('home.howItWorks.eyebrow') }}</p>
-    <h2>
-      {{ $t('home.howItWorks.titleBefore') }}<br>
-      <em>{{ $t('home.howItWorks.titleAccent') }}</em>
-    </h2>
-  </section>
+  <section class="steps section" id="how" aria-labelledby="steps-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="steps-title">{{ $t('home.howItWorks.title') }}</h2>
+      </div>
 
-  <section class="features four">
-    <article
-      v-for="(step, i) in steps"
-      :key="step.titleKey"
-      class="reveal"
-      :style="{ transitionDelay: `${i * 110}ms` }"
-    >
-      <span>{{ String(i + 1).padStart(2, '0') }}</span>
-      <b class="icon" aria-hidden="true">{{ step.glyph }}</b>
-      <h3>{{ $t(step.titleKey) }}</h3>
-      <p>{{ $t(step.descKey) }}</p>
-      <router-link :to="step.to">{{ $t('home.howItWorks.explore') }} ↗</router-link>
-    </article>
+      <div class="steps-grid">
+        <div v-for="step in steps" :key="step.titleKey" class="step reveal">
+          <h3>{{ $t(step.titleKey) }}</h3>
+          <p>{{ $t(step.descKey) }}</p>
+          <span class="time">{{ $t(step.timeKey) }}</span>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { useRoute } from "vue-router";
-import { useReveal } from "@/composables/useReveal";
+import { useReveal } from '@/composables/useReveal'
 
-const route = useRoute();
-const lang = computed(() => route.params.lang || "mk");
-
-useReveal();
+useReveal()
 
 /*
-  The emoji the steps used to carry — 🎨 ✏️ 📨 📊 — are gone. The redesign sets
-  its icons in the page's own serif (✦ ✓ ⌘ ◇), which keeps them the ink colour
-  and the same weight as the type around them; an emoji is a small colour
-  picture and was the only full-colour thing on the section.
+  Three steps, not four.
+
+  The previous version listed choose / customise / send / track, which reads as
+  four because "customise" and "track" are the same work seen from two ends.
+  The redesign says it in three and puts a time against each — the honest
+  version of "in under 10 minutes", which the old subtitle claimed for the
+  whole thing including entering a guest list.
 */
-const steps = computed(() => [
+const steps = [
   {
-    glyph: "✦",
-    titleKey: "home.howItWorks.steps.chooseTemplate.title",
-    descKey: "home.howItWorks.steps.chooseTemplate.description",
-    to: { name: "EventInvitationsPage", params: { lang: lang.value } },
+    titleKey: 'home.howItWorks.steps.chooseDesign.title',
+    descKey: 'home.howItWorks.steps.chooseDesign.description',
+    timeKey: 'home.howItWorks.steps.chooseDesign.time',
   },
   {
-    glyph: "◇",
-    titleKey: "home.howItWorks.steps.customizeEvent.title",
-    descKey: "home.howItWorks.steps.customizeEvent.description",
-    to: { name: "EventInvitationsPage", params: { lang: lang.value } },
+    titleKey: 'home.howItWorks.steps.addDetails.title',
+    descKey: 'home.howItWorks.steps.addDetails.description',
+    timeKey: 'home.howItWorks.steps.addDetails.time',
   },
   {
-    glyph: "⌘",
-    titleKey: "home.howItWorks.steps.sendInvitations.title",
-    descKey: "home.howItWorks.steps.sendInvitations.description",
-    to: { name: "packages", params: { lang: lang.value } },
+    titleKey: 'home.howItWorks.steps.shareLink.title',
+    descKey: 'home.howItWorks.steps.shareLink.description',
+    timeKey: 'home.howItWorks.steps.shareLink.time',
   },
-  {
-    glyph: "✓",
-    titleKey: "home.howItWorks.steps.trackRsvps.title",
-    descKey: "home.howItWorks.steps.trackRsvps.description",
-    // Not "features-rsvp": that route renders an empty component. The FAQ
-    // has a real answer for how RSVP tracking works.
-    to: { name: "faq", params: { lang: lang.value } },
-  },
-]);
+]
 </script>

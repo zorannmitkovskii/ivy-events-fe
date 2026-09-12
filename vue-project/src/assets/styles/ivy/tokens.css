@@ -1,48 +1,96 @@
 /* Ivy 2026 — the redesign's palette and type, expressed as tokens
    ---------------------------------------------------------------------------
-   Ported from `IvyEvents-design-source/app/globals.css`.
+   Ported from `ivyevents-site/` (the September mockup), which supersedes the
+   August port from `IvyEvents-design-source`. Same product, a different design
+   generation: a lighter, warmer ground (#FAFAF5 rather than cream), a deeper
+   green (#1E3D30), Fraunces and Instrument Sans in place of Georgia and Arial,
+   and — the reason this one is a bigger change than the last — a dark theme
+   the design carries throughout rather than bolts on.
 
-   The redesign is an editorial one: a much darker green than the logo ramp we
-   had (#17372b against #2F3E36), a warmer cream ground, gold as the single
-   accent, and Georgia for anything set large. The palette is five colours; the
-   rest of this file is the same five under the names the app already uses, so
-   every component that reads a token picks the redesign up without being
-   edited.
+   Three things live here and nowhere else:
 
-   Loaded after `variables.css`, which it deliberately overrides rather than
-   replaces — the legacy token names must keep resolving.
+   1. The design's own token names, verbatim from `styles.css`, so a rule
+      copied out of the mockup resolves without translation.
+   2. The same values under the names the rest of the app already reads, so
+      every screen that has not been rewritten yet re-skins on its own.
+   3. The dark theme. Both switches: the system preference, and an explicit
+      `data-theme` on <html> which overrides it in either direction.
+
+   The dark block is stated twice, once per switch. That duplication is in the
+   source too and is deliberate: resolving the theme in JS instead would mean
+   the first paint happens before the answer is known.
+
+   Loaded after `variables.css`, which it overrides rather than replaces — the
+   legacy names must keep resolving.
    --------------------------------------------------------------------------- */
-:root {
-  /* ---- the five colours the redesign is built from ----------------------- */
-  --ink: #17372b;    /* headings, primary action, the dark ground */
-  --cream: #f6f0e6;  /* the page */
-  --paper: #fffdf8;  /* sections lifted off the page */
-  --gold: #c99b4a;   /* the one accent */
-  --sage: #b8caa5;   /* the quiet fill */
 
-  /* Gold at text size. The accent above is tuned for display type on cream;
-     under 16px it drops below AA there, so small gold text takes this instead.
-     Kept from the previous palette, where it was measured for exactly this. */
-  --gold-text: #b8954e;
+:root {
+  /* ---- the design's five, plus what it builds from them ------------------ */
+  --ivy: #1e3d30; /* primary brand */
+  --ivy-deep: #0f2a20; /* footer, sidebar, dark band */
+  --ivy-soft: #2b5240; /* hover */
+  --moss: #5e7f58; /* success / confirmed */
+  --mist: #e4ede2; /* tinted surface */
+  --mist-2: #f0f4ee;
+  --paper: #fafaf5; /* the page */
+  --card: #ffffff;
+  --ink: #142019;
+  --ink-2: #4b5a52;
+  /* The design draws this at #7E8B84, which measures 3.4:1 on the paper. It
+     carries captions, counts and timestamps — text, at small sizes — and that
+     is below AA. Darkened until it clears 4.5:1 on both the paper and a card
+     (4.6 and 4.8). The hue and its place in the ramp are the design's. */
+  --ink-3: #66756e;
+  --line: #d6ded4;
+  --on-ivy: #ffffff; /* text on ivy surfaces */
+
+  /* Gold is the Premium accent and nothing else. */
+  --gold: #c99b4a;
+  /* The design's #A87C2E, taken two steps darker. It is a hover fill on
+     `.btn-gold` *and* a text colour on `.badge-gold-outline` and the pricing
+     table's Pro column, and at the lighter value it failed the second job:
+     3.2:1 on the pale gold behind it. At this one it clears AA there (4.6),
+     on the paper (5.2), and carries a white label (5.5). */
+  --gold-deep: #8a6222;
+  --gold-soft: #f6ecd4;
+  --on-gold: #1e2a14;
+
+  /* The five category tints the invitation catalogue is built from. */
+  --rose: #f3d7d2;
+  --rose-ink: #6f2730;
+  --night: #182f27;
+  --night-ink: #f1eadc;
+  --lav: #ded8f1;
+  --lav-ink: #2a2145;
+  --sky: #daecea;
+  --sky-ink: #21474b;
+
+  --radius: 14px;
+  --radius-s: 8px;
+  --shadow: 0 18px 50px rgba(20, 32, 25, 0.1);
+  --max: 1200px;
+  --display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --ui: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Gold at text size. The accent above is tuned for a 44px figure on a card;
+     under 16px it measures 3.6:1 on the paper, which is below AA. Small gold
+     text takes this instead — the same colour two steps darker, at 4.9:1. */
+  --gold-text: #8f6725;
+
+  /* Derived surfaces the app asks for by other names. */
+  --line-2: #b9c6bd;
+  --sunken: var(--mist-2);
+  --surface: var(--card);
+  --cream: var(--paper);
 
   /* ---- the brand ramp, re-pointed at the redesign ------------------------ */
-  --brand: var(--ink);
-  --brand-strong: #0c2018;
-  --brand-mid: #426542;
-  --brand-soft: var(--sage);
-  --brand-pale: #e9eee1;
+  --brand: var(--ivy);
+  --brand-strong: var(--ivy-deep);
+  --brand-mid: var(--moss);
+  --brand-soft: #a8bfa4;
+  --brand-pale: var(--mist);
 
-  /* ---- ink: same hue, full to muted -------------------------------------
-     Measured on the cream #f6f0e6: ink 11.4:1, ink-2 5.2:1, ink-3 4.8:1 — all
-     three pass AA for text. ink-4 is decoration only (axes, disabled). */
-  --ink-2: #60726a;
-  --ink-3: #677970;
-  --ink-4: #8b978f;
-
-  --line: rgba(23, 55, 43, 0.14);
-  --line-2: rgba(23, 55, 43, 0.24);
-  --surface: #ffffff;
-  --sunken: #f1efe9;
+  --ink-4: var(--ink-3);
 
   /* ---- legacy names, re-pointed ------------------------------------------ */
   --brand-main: var(--brand);
@@ -52,7 +100,7 @@
 
   --soft-light: var(--line);
 
-  --secondary-sage: var(--sage);
+  --secondary-sage: var(--brand-soft);
   --secondary-moss: var(--brand-mid);
   --secondary-gold: #e1c699;
 
@@ -61,136 +109,373 @@
   --neutral-700: var(--ink-2);
   --neutral-600: var(--ink-3);
   --neutral-500: var(--ink-3);
+  --neutral-400: var(--ink-3);
   --neutral-300: var(--line);
   --neutral-200: var(--line);
   --neutral-100: var(--surface);
-  --neutral-50: var(--cream);
+  --neutral-50: var(--paper);
 
-  --bg-main: var(--cream);
+  --bg-main: var(--paper);
   --bg-white: var(--surface);
   --bg-card: var(--surface);
   --bg-gray: var(--line);
-  --bg-dark-gray: var(--ink-4);
+  --bg-dark-gray: var(--ink-3);
   --bg-darker-gray: var(--ink-3);
 
   --primary-main: var(--brand);
   --primary-light: var(--brand-soft);
   --primary-dark: var(--brand-strong);
 
+  --theme-text: var(--ink);
+  --theme-text-muted: var(--ink-3);
+  --theme-accent: var(--gold-text);
+  --text-color: var(--ink);
+  --text-muted: var(--ink-3);
+  --border-color: var(--line);
+  --card-bg: var(--surface);
+  --card-shadow: var(--shadow-sm);
+  --cards-color: var(--surface);
+
   /* ---- geometry ----------------------------------------------------------
-     The redesign settled on soft-but-not-round: 10px on controls, 14px on
-     cards, pills only where something is genuinely a pill. */
-  --container: 1280px;
-  --text-container: 820px;
+     The redesign is rounder than the last one: 10px on controls, 14px on
+     cards, and pills — not rounded rectangles — on every button. */
+  --container: var(--max);
+  --container-max: var(--max);
+  --text-container: 760px;
   --section-space: 112px;
+  --header-height: 72px;
 
   --radius-control: 10px;
-  --radius-card: 14px;
-  --radius-sm: 8px;
+  --radius-card: var(--radius);
+  --radius-sm: var(--radius-s);
   --radius-md: var(--radius-control);
-  --radius-lg: var(--radius-card);
-  --radius-button: var(--radius-control);
+  --radius-lg: var(--radius);
+  --radius-button: 999px;
 
-  --shadow-sm: 0 6px 18px rgba(35, 59, 48, 0.06);
-  --shadow-md: 0 12px 28px rgba(23, 55, 43, 0.1);
-  --shadow-lg: 0 30px 60px rgba(23, 55, 43, 0.16);
+  --shadow-sm: 0 6px 18px rgba(20, 32, 25, 0.06);
+  --shadow-md: 0 12px 28px rgba(20, 32, 25, 0.1);
+  --shadow-lg: var(--shadow);
   --shadow-light: var(--shadow-sm);
 
-  --container-max: var(--container);
-  --header-height: 82px;
-
   /* ---- type --------------------------------------------------------------
-     The redesign is set in Georgia and Arial — the two faces every machine
-     already has, chosen so the page paints its final type on first frame
-     rather than reflowing into a webfont. Cormorant/Outfit are kept as the
-     first fallback for anything that still asks for --font-family by name. */
-  --font-display: Georgia, 'Times New Roman', serif;
-  --font-family: var(--font-display);
-  --font-ui: Arial, Helvetica, ui-sans-serif, system-ui, sans-serif;
+     Fraunces for anything set large, Instrument Sans for everything else.
+     Both are loaded from Google Fonts in `index.html`; the fallbacks are the
+     faces the previous design shipped, so a blocked font request degrades to
+     the August look rather than to Times. */
+  --font-display: var(--display);
+  --font-family: var(--display);
+  --font-heading: var(--display);
+  --font-ui: var(--ui);
+  --font-body: var(--ui);
+  --hero-body-font: var(--ui);
+
+  /* ---- status ------------------------------------------------------------
+     Kept off the brand green so "done" never reads as "brand". */
+  --success: #2e7d4f;
+  --success-pale: #e4f1e9;
+  --warning: #8a5a06;
+  --warning-pale: #fbf0dc;
+  --error: #a31e2c;
+  --error-pale: #fbeaec;
+  --info: #2c5670;
+  --info-pale: #e5eff5;
+  --secondary-salmon: var(--error);
+  --rsvp-accent: var(--moss);
 
   /* ---- dashboard ramp ----------------------------------------------------
-     The dashboard's own darker green (#14261f sidebar, #f7f4ed ground) plus
-     the same accents. Legacy --dash-* names follow. */
-  --d-ink: #18352a;
-  --d-ground: #f7f4ed;
-  --d-side: #14261f;
-  --d-side-hover: #274036;
-  --d-border: #dfddd6;
-  --d-gold: #c8a359;
-  --d-green: #315842;
-  --d-green-soft: #789568;
+     The new dashboard is the same palette, not a second one: the sidebar is
+     --ivy-deep, the ground is --paper, the cards are --card. The --dash-*
+     names survive only so the screens still on the old markup follow along. */
+  --d-ink: var(--ink);
+  --d-ground: var(--paper);
+  --d-side: var(--ivy-deep);
+  --d-side-hover: var(--ivy-soft);
+  --d-border: var(--line);
+  --d-gold: var(--gold);
+  --d-green: var(--ivy);
+  --d-green-soft: var(--moss);
 
   --dash-sage: var(--brand);
   --dash-sage-dark: var(--brand-strong);
   --dash-sage-mid: var(--brand-mid);
   --dash-sage-light: var(--brand-soft);
   --dash-sage-pale: var(--brand-pale);
-  --dash-sage-ghost: #f3f7f4;
-  --dash-cream: var(--d-ground);
+  --dash-sage-ghost: var(--mist-2);
+  --dash-cream: var(--paper);
   --dash-cream-card: var(--surface);
-  --dash-cream-border: var(--d-border);
+  --dash-cream-border: var(--line);
   --dash-gold: var(--gold-text);
   --dash-gold-light: #d4b070;
-  --dash-gold-pale: #f6efdf;
+  --dash-gold-pale: var(--gold-soft);
+  --dash-blush: var(--error);
+  --dash-blush-pale: var(--error-pale);
+  --dash-sky: var(--info);
+  --dash-sky-pale: var(--info-pale);
   --dash-charcoal: var(--brand-strong);
-  --dash-ink: var(--d-ink);
+  --dash-ink: var(--ink);
   --dash-muted: var(--ink-3);
-  --dash-light: var(--ink-4);
-  --dash-radius: var(--radius-card);
-  --dash-shadow-sm: 0 6px 18px rgba(35, 59, 48, 0.05);
-  --dash-shadow-md: 0 8px 24px rgba(32, 56, 45, 0.08);
-  --dash-shadow-lg: 0 14px 30px rgba(25, 52, 40, 0.14);
-  --dash-sidebar-w: 252px;
+  --dash-light: var(--ink-3);
+  --dash-radius: var(--radius);
+  --dash-shadow-sm: var(--shadow-sm);
+  --dash-shadow-md: var(--shadow-md);
+  --dash-shadow-lg: var(--shadow-lg);
+  --dash-sidebar-w: 248px;
 }
 
-/* ---- base type ----------------------------------------------------------
+/* ---- dark ----------------------------------------------------------------
+   Stated twice, identically. The media query is the system preference; the
+   attribute is the viewer overriding it, and it has to win in both
+   directions — hence :not([data-theme="light"]) on the first, so choosing
+   light while the OS is dark actually gets light.
+
+   Only values that are not an alias of the five appear here. Everything
+   re-pointed above follows on its own. */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    /* the design's five, inverted */
+    --paper: #0f1b15;
+    --card: #16251e;
+    --mist: #1b2e25;
+    --mist-2: #14241c;
+    --ink: #eef2ec;
+    --ink-2: #b8c4bc;
+    --ink-3: #8a978f;
+    --line: #2a3d33;
+    --ivy: #dce8dc;
+    --ivy-soft: #c6d8c8;
+    --ivy-deep: #0a1610;
+    --moss: #8fb287;
+    --on-ivy: #0f2a20;
+    --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+    --gold-soft: #3a2f17;
+
+    /* Derived values that are not simply an alias of the five, and so have to
+       be restated. Gold at text size goes lighter, not darker, on a dark
+       ground; the recessed surface and the hairline follow --mist-2/--line. */
+    --gold-text: #dcb267;
+    --line-2: #3c5347;
+    --sunken: var(--mist-2);
+    --brand-strong: #f2f7f1;
+    --brand-mid: #8fb287;
+    --brand-soft: #5b7a63;
+    --brand-pale: #1f342a;
+    --dash-sage-ghost: #16251e;
+    --dash-gold-light: #dcb267;
+    --dash-gold-pale: #3a2f17;
+
+    /* Status stays legible rather than staying the same: the light-mode tones
+       were measured against cream and go muddy on #0f1b15. */
+    --success: #6cc08a;
+    --success-pale: #14301f;
+    --warning: #d9a441;
+    --warning-pale: #33270f;
+    --error: #e8737f;
+    --error-pale: #34161a;
+    --info: #79b1cf;
+    --info-pale: #12262f;
+  }
+}
+
+:root[data-theme="dark"] {
+  /* the design's five, inverted */
+  --paper: #0f1b15;
+  --card: #16251e;
+  --mist: #1b2e25;
+  --mist-2: #14241c;
+  --ink: #eef2ec;
+  --ink-2: #b8c4bc;
+  --ink-3: #8a978f;
+  --line: #2a3d33;
+  --ivy: #dce8dc;
+  --ivy-soft: #c6d8c8;
+  --ivy-deep: #0a1610;
+  --moss: #8fb287;
+  --on-ivy: #0f2a20;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  --gold-soft: #3a2f17;
+
+  /* Derived values that are not simply an alias of the five, and so have to
+     be restated. Gold at text size goes lighter, not darker, on a dark
+     ground; the recessed surface and the hairline follow --mist-2/--line. */
+  --gold-text: #dcb267;
+  --line-2: #3c5347;
+  --sunken: var(--mist-2);
+  --brand-strong: #f2f7f1;
+  --brand-mid: #8fb287;
+  --brand-soft: #5b7a63;
+  --brand-pale: #1f342a;
+  --dash-sage-ghost: #16251e;
+  --dash-gold-light: #dcb267;
+  --dash-gold-pale: #3a2f17;
+
+  /* Status stays legible rather than staying the same: the light-mode tones
+     were measured against cream and go muddy on #0f1b15. */
+  --success: #6cc08a;
+  --success-pale: #14301f;
+  --warning: #d9a441;
+  --warning-pale: #33270f;
+  --error: #e8737f;
+  --error-pale: #34161a;
+  --info: #79b1cf;
+  --info-pale: #12262f;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+  }
+}
+
+/* ---- base -----------------------------------------------------------------
    `fonts.css` sets Outfit on the body and a 600 weight on headings; the
-   redesign wants Arial and a 400-weight serif. Both are stated here rather
-   than edited there so the old sheet stays a faithful record of what it was. */
+   redesign wants Instrument Sans and a 400-weight Fraunces. Both are stated
+   here rather than edited there, so the old sheet stays a faithful record.
+
+   `color-scheme` is what makes the browser's own furniture — scrollbars, form
+   controls, the canvas behind a rubber-band scroll — follow the theme. Without
+   it a dark page keeps white scrollbars. */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+:root {
+  color-scheme: light;
+}
+
 body {
-  font-family: var(--font-ui);
-  font-size: 16px;
-  line-height: 1.5;
+  margin: 0;
+  background: var(--paper);
   color: var(--ink);
-  background: var(--cream);
+  font-family: var(--ui);
+  font-size: 17px;
+  line-height: 1.55;
+  font-feature-settings: 'ss01';
   -webkit-font-smoothing: antialiased;
+}
+
+/* ---- reset ----------------------------------------------------------------
+   Bootstrap's stylesheet is no longer loaded (only its JS, for the modals), so
+   the handful of Reboot rules the app was leaning on are restated here. This
+   is Reboot's substance, not its whole: the parts that shape untouched markup
+   — heading and paragraph rhythm, list indent, table collapse, and controls
+   inheriting the page's font instead of the platform's. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 h1,
 h2,
 h3,
 h4,
-blockquote,
-.brand {
-  font-family: var(--font-display);
+h5,
+h6 {
+  margin-block: 0 0.5em;
+  font-family: var(--display);
   font-weight: 400;
+  line-height: 1.15;
 }
 
-/* The redesign's one shared idiom: an italic word in a heading, in gold. */
-.ivy-site :is(h1, h2, h3) em {
+p {
+  margin-block: 0 1rem;
+}
+
+ul,
+ol {
+  margin-block: 0 1rem;
+  padding-inline-start: 2rem;
+}
+
+ul ul,
+ol ol,
+ul ol,
+ol ul {
+  margin-block-end: 0;
+}
+
+dl,
+dd,
+figure,
+blockquote {
+  margin: 0;
+}
+
+hr {
+  margin: 1rem 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+table {
+  border-collapse: collapse;
+  caption-side: bottom;
+}
+
+th {
+  text-align: inherit;
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+}
+
+img,
+svg {
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+  margin: 0;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+:focus-visible {
+  outline: 3px solid var(--moss);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* The redesign's one shared idiom, kept from the previous port: an italic word
+   inside a heading, set in gold. */
+.ivy-site :is(h1, h2, h3) em,
+.ivy-dash :is(h1, h2, h3) em {
   color: var(--gold);
+  font-style: italic;
   font-weight: 400;
-}
-
-/* Small, letter-spaced, bold — the eyebrow above almost every heading.
-   Scoped: the dashboard already had a `.tag` of its own on the seating list,
-   and a global rule here would have silently restyled it. */
-.ivy-site .tag {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  letter-spacing: 0.23em;
-  font-weight: 700;
-  margin: 0 0 24px;
-}
-
-.ivy-site .tag em {
-  color: var(--gold);
 }
 
 @media (max-width: 900px) {
   :root {
     --section-space: 88px;
-    --header-height: 74px;
   }
 }
 

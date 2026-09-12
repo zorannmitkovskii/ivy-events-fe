@@ -52,3 +52,33 @@ export function categoryIdToEnum(id) {
 export function enumToCategoryId(enumValue) {
   return ENUM_TO_CATEGORY_ID[enumValue] || null;
 }
+
+/**
+ * Map from backend enum to the i18n key under `eventCategories.items`.
+ *
+ * <p>Not the same as {@link ENUM_TO_CATEGORY_ID}, and the difference is easy
+ * to miss: the component IDs are `birthdays`, `dinners`, `baby`, while the
+ * translation keys are `birthdaysParties`, `privateDinners`, `babyShowers`.
+ * Passing one where the other belongs prints the key on the page.
+ */
+export const ENUM_TO_LABEL_KEY = {
+  [EventCategoryEnum.WEDDING]: 'weddings',
+  [EventCategoryEnum.BIRTHDAY]: 'birthdaysParties',
+  [EventCategoryEnum.CORPORATE]: 'corporate',
+  [EventCategoryEnum.CONFERENCE]: 'conferences',
+  [EventCategoryEnum.DINNER]: 'privateDinners',
+  [EventCategoryEnum.BABY_SHOWER]: 'babyShowers',
+  [EventCategoryEnum.GRADUATION]: 'graduations',
+  [EventCategoryEnum.ANNIVERSARY]: 'anniversaries',
+  [EventCategoryEnum.GALLERY]: 'gallery',
+};
+
+/**
+ * The full translation key for a category's name, or null for a value the
+ * catalogue has never heard of — the caller shows the raw value rather than a
+ * key, which is the honest fallback for an enum the front end is behind on.
+ */
+export function categoryLabelKey(enumValue) {
+  const key = ENUM_TO_LABEL_KEY[enumValue];
+  return key ? `eventCategories.items.${key}.title` : null;
+}

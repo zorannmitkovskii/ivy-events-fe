@@ -1,43 +1,78 @@
 <template>
   <SitePage>
-    <section class="pagehero">
-      <p class="tag">{{ $t('about.heroEyebrow') }}</p>
-      <h1>
-        {{ $t('about.heroTitle') }}<br>
-        <em>{{ $t('about.heroAccent') }}</em>
-      </h1>
-      <p>{{ $t('about.heroSubtitle') }}</p>
-    </section>
-
-    <section class="story reveal">
-      <div>
-        <p class="tag">{{ $t('about.storyEyebrow') }}</p>
-        <h2>{{ $t('about.storyTitle') }}</h2>
+    <section class="page-hero">
+      <div class="wrap">
+        <Breadcrumb :current="$t('about.title')" />
+        <h1>{{ $t('about.heroTitle') }}</h1>
+        <p class="lead">{{ $t('about.heroSubtitle') }}</p>
       </div>
-      <p>{{ $t('about.missionText') }}</p>
     </section>
 
-    <section class="values">
-      <article
-        v-for="(value, i) in values"
-        :key="value.titleKey"
-        class="reveal"
-        :style="{ transitionDelay: `${i * 110}ms` }"
-      >
-        <b>{{ String(i + 1).padStart(2, '0') }}</b>
-        <h3>{{ $t(value.titleKey) }}</h3>
-        <p>{{ $t(value.textKey) }}</p>
-      </article>
+    <section class="section" style="padding-top: 0">
+      <div class="wrap">
+        <div class="split">
+          <div><h2>{{ $t('about.storyTitle') }}</h2></div>
+          <div class="prose" style="font-size: 17px">
+            <p>{{ $t('about.storyOrigin') }}</p>
+            <p>{{ $t('about.missionText') }}</p>
+
+            <div class="stats">
+              <div v-for="stat in stats" :key="stat.value" class="stat">
+                <b>{{ stat.value }}</b>
+                <span>{{ $t(stat.labelKey) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top: 0">
+      <div class="wrap">
+        <div class="section-head"><h2>{{ $t('about.valuesTitle') }}</h2></div>
+        <div class="values">
+          <div v-for="value in values" :key="value.titleKey" class="value reveal">
+            <h3>{{ $t(value.titleKey) }}</h3>
+            <p>{{ $t(value.textKey) }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section final">
+      <div class="wrap">
+        <div>
+          <h2>{{ $t('about.talkTitle') }}</h2>
+          <p>{{ $t('about.talkBody') }}</p>
+        </div>
+        <router-link class="btn btn-primary" :to="{ name: 'contact', params: { lang } }">
+          {{ $t('about.talkCta') }}
+        </router-link>
+      </div>
     </section>
   </SitePage>
 </template>
 
 <script setup>
-import SitePage from "@/layouts/SitePage.vue";
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import SitePage from '@/layouts/SitePage.vue'
+import Breadcrumb from '@/components/ui/Breadcrumb.vue'
+
+const route = useRoute()
+const lang = computed(() => route.params.lang || 'mk')
+
+/* Figures, not translations: a year and a city read the same in every locale,
+   and only the line under each one changes. */
+const stats = [
+  { value: '2024', labelKey: 'about.statFirstInvitation' },
+  { value: 'MK / EN', labelKey: 'about.statBilingual' },
+  { value: 'Скопје', labelKey: 'about.statTeam' },
+]
 
 const values = [
-  { titleKey: "about.valueSimplicity", textKey: "about.valueSimplicityDesc" },
-  { titleKey: "about.valueElegance", textKey: "about.valueEleganceDesc" },
-  { titleKey: "about.valueInclusion", textKey: "about.valueInclusionDesc" },
-];
+  { titleKey: 'about.valueSimplicity', textKey: 'about.valueSimplicityDesc' },
+  { titleKey: 'about.valueElegance', textKey: 'about.valueEleganceDesc' },
+  { titleKey: 'about.valueInclusion', textKey: 'about.valueInclusionDesc' },
+]
 </script>

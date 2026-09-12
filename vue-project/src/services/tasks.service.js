@@ -8,6 +8,18 @@ export const tasksService = {
     return api.get("/tasks", { params });
   },
 
+  /**
+   * Every task across the events the caller can see, with the event named on
+   * each row.
+   *
+   * <p>Not `list()` with the id left off: that endpoint requires an
+   * `eventId` and is guarded per event, which is right for the per-event
+   * board and makes the agency-wide question unaskable.
+   */
+  workspace() {
+    return api.get("/tasks/workspace");
+  },
+
   getById(taskId) {
     return api.get(`/tasks/${encodeURIComponent(taskId)}`);
   },

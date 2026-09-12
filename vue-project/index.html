@@ -8,10 +8,44 @@
           referrerpolicy="no-referrer">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- The 2026 redesign is set in Fraunces and Instrument Sans. Both are
+         variable faces; the axis ranges below are the ones the design uses
+         (Fraunces also drives its SOFT and optical-size axes). -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,0..100;1,9..144,300..700,0..100&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap"
+        rel="stylesheet">
+
+    <!--
+      Resolve the theme before the first paint.
+
+      The stylesheet handles the system preference on its own; this only has to
+      apply an explicit choice, which lives in localStorage. It has to be inline
+      and in <head>: run it from the bundle instead and a viewer who chose dark
+      gets a white flash on every load. Deliberately tiny and dependency-free
+      for the same reason.
+    -->
+    <script>
+        (function () {
+            try {
+                var v = localStorage.getItem("ivy-theme");
+                if (v === "dark" || v === "light") {
+                    document.documentElement.setAttribute("data-theme", v);
+                }
+            } catch (e) {
+                /* private mode, or storage blocked: the system preference stands */
+            }
+        })();
+    </script>
+
     <title>Ivy Events</title>
     <meta name="description" content="Plan your perfect event with Ivy Events - digital invitations, RSVP tracking, guest management, and more.">
     <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#5a7a52">
+    <!-- Browser chrome follows the theme: --paper light, --paper dark. -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FAFAF5">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F1B15">
     <link rel="manifest" href="/manifest.json">
 
     <!-- JSON-LD Structured Data -->

@@ -42,6 +42,10 @@
     "signup": {
       "title": "Create Account",
       "description": "Create your free Ivy Events account and start planning your perfect event today."
+    },
+    "designs": {
+      "title": "A design for every occasion",
+      "description": "Every design is a complete interactive invitation: the details, a map, the running order and your guests’ replies. Pick one, then change the names, the date and the colour."
     }
   },
   "homepageFaqs": [
@@ -68,62 +72,77 @@
   ],
   "faqPageFaqs": [
     {
+      "group": "invitations",
       "question": "What is a digital invitation and why should I use one instead of paper?",
       "answer": "A digital invitation is an online invitation you design, personalize, and send electronically to your guests. Unlike paper invitations, digital invitations are instant, eco-friendly, and cost-effective. With Ivy Events, your invitation includes interactive features like built-in RSVP, animated designs, and real-time guest tracking. You save time on printing and mailing, and your guests get a modern, convenient experience they can access from any device."
     },
     {
+      "group": "invitations",
       "question": "How do I create a digital wedding invitation on Ivy Events?",
       "answer": "Creating a digital wedding invitation is simple. Sign up for a free account, select the Wedding category, and browse our collection of wedding invitation templates. Choose a design you love, customize the text, colors, and details like venue, date, and time. Add your RSVP form, preview your invitation, and share it with your guests via a unique link. The entire process takes just minutes."
     },
     {
+      "group": "invitations",
       "question": "Can I create birthday invitations for both kids and adults?",
       "answer": "Absolutely. Ivy Events offers birthday invitation templates suitable for all ages — from colorful, playful designs for children's parties to elegant and modern templates for milestone birthdays and adult celebrations. Each template is fully customizable, so you can adjust colors, fonts, text, and images to match the birthday theme."
     },
     {
+      "group": "guests",
       "question": "How does RSVP tracking work on Ivy Events?",
       "answer": "When you share your digital invitation, guests can confirm their attendance directly from the invitation page with one click. All responses are collected automatically and displayed on your event dashboard in real time. You can see who has confirmed, who has declined, the number of plus-ones, and any special notes like dietary requirements. You can also send reminders to guests who have not yet responded."
     },
     {
+      "group": "guests",
       "question": "Can I use Ivy Events as a digital wedding planner?",
       "answer": "Yes. Ivy Events goes beyond invitations — it is a complete digital wedding planner. You can manage your guest list, track RSVPs, create a seating chart, plan your event agenda, set a budget, build your wedding story page, and coordinate with your team. Everything is organized in one dashboard, so you do not need multiple apps or spreadsheets to plan your wedding."
     },
     {
+      "group": "invitations",
       "question": "How do I share my digital invitation with guests?",
       "answer": "Ivy Events generates a unique link for your invitation that you can share through any channel — WhatsApp, Viber, email, Facebook, Instagram, SMS, or any other messaging app. You can share one general link for all guests or create personalized links for individual guests to enable precise RSVP tracking. There is no app download required for your guests."
     },
     {
+      "group": "guests",
       "question": "What makes Ivy Events different from other invitation tools?",
       "answer": "Ivy Events is not just an invitation maker — it is an all-in-one event planning platform. While most tools only let you design and send invitations, Ivy Events combines beautiful invitation templates with powerful planning features: RSVP tracking, guest list management, seating charts, budget planning, event agenda, team collaboration, and a photo gallery."
     },
     {
+      "group": "invitations",
       "question": "Can I create graduation invitations and announcements?",
       "answer": "Yes. Ivy Events offers dedicated graduation invitation templates for high school graduations, university graduations, and diploma celebrations. You can customize the design with your school colors, add event details, include a personal message, and share the invitation with friends and family. RSVP tracking is included so you know exactly who is coming."
     },
     {
+      "group": "guests",
       "question": "Is my guest list data private and secure?",
       "answer": "Absolutely. Ivy Events takes data privacy seriously. Your guest list, RSVP responses, and personal event details are stored securely and are never shared with third parties. Only you and any team members you explicitly grant access to can view your event data. We use industry-standard encryption to protect all information on the platform."
     },
     {
+      "group": "invitations",
       "question": "Can I edit my invitation after I have already sent it?",
       "answer": "Yes. One of the biggest advantages of digital invitations is flexibility. With Ivy Events, you can edit your invitation anytime — update the date, venue, text, or design even after you have shared the link with guests. Changes are reflected instantly, so your guests always see the latest version. No need to resend the link."
     },
     {
+      "group": "guests",
       "question": "Does Ivy Events work as an event planning app on mobile?",
       "answer": "Yes. Ivy Events is fully responsive and works seamlessly on smartphones, tablets, and desktop computers. You can create invitations, manage your guest list, check RSVPs, and update your event details from any device with a browser. No app download is needed — everything runs in the browser."
     },
     {
+      "group": "pricing",
       "question": "How much does it cost to create a digital invitation?",
       "answer": "You can create a digital invitation for free with our Free plan, which includes up to 50 guests, basic templates, and RSVP tracking. For larger events or premium features, our Pro plan offers up to 300 guests, premium templates, and SMS invitations. Visit our pricing page for full details on each plan."
     },
     {
+      "group": "invitations",
       "question": "Can I create an event website or invitation page for my event?",
       "answer": "Yes. Every invitation you create on Ivy Events functions as a dedicated event page or mini website. It showcases your event details, design, and RSVP form all in one beautiful, shareable page. Guests visit the link and see everything they need — date, time, venue, map, your personal message, and a button to confirm attendance."
     },
     {
+      "group": "guests",
       "question": "What event types can I plan with Ivy Events besides weddings?",
       "answer": "Beyond weddings, Ivy Events supports birthdays and parties, graduations, baby showers, anniversaries, corporate events, conferences, and private dinners. Each event type has dedicated invitation templates and relevant planning tools. We are continuously adding new event categories and designs."
     },
     {
+      "group": "invitations",
       "question": "How do I get started with Ivy Events?",
       "answer": "Getting started is quick and free. Visit ivyevents.mk, create your account, and select your event type. Browse the invitation templates, pick a design, and customize it with your event details. Add your RSVP form, preview the invitation, and share the unique link with your guests. The whole process takes just a few minutes from signup to sending your first invitation."
     }
@@ -248,13 +267,15 @@
   "footer": {
     "brand": {
       "logo": "IvyEvents",
-      "tagline": "Create beautiful invitations. Plan unforgettable events."
+      "tagline": "Digital invitations and event planning, made in Skopje for guests everywhere."
     },
     "columns": {
       "product": "Product",
       "company": "Company",
       "support": "Support",
-      "connect": "Connect"
+      "connect": "Connect",
+      "resources": "Resources",
+      "contact": "Contact"
     },
     "links": {
       "templates": "Templates",
@@ -273,14 +294,19 @@
       "feedback": "Feedback",
       "vendors": "Professionals"
     },
-    "copyright": "All rights reserved."
+    "copyright": "All rights reserved.",
+    "contact": {
+      "city": "Skopje, North Macedonia",
+      "hours": "Mon–Fri, 9am–5pm"
+    }
   },
   "header": {
     "logo": "IvyEvents",
     "actions": {
       "signIn": "Sign In",
       "getStartedFree": "Get Started Free",
-      "myDashboard": "My Dashboard"
+      "myDashboard": "My Dashboard",
+      "createInvitation": "Create an invitation"
     },
     "menu": {
       "templates": "Templates",
@@ -305,7 +331,17 @@
       "about": "About Us",
       "terms": "Terms & Conditions",
       "contact": "Contact",
-      "vendors": "Professionals"
+      "vendors": "Professionals",
+      "primary": "Main navigation",
+      "home": "Home",
+      "invitations": "Invitations",
+      "blog": "Blog",
+      "language": "Language",
+      "closeMenu": "Close menu"
+    },
+    "theme": {
+      "toDark": "Dark theme",
+      "toLight": "Light theme"
     }
   },
   "nav": {
@@ -320,8 +356,8 @@
   },
   "eventCategories": {
     "section": {
-      "title": "Perfect for Every Celebration",
-      "subtitle": "Beautiful invitations for all your special moments",
+      "title": "A design for every occasion",
+      "subtitle": "Open an example, then change the names, the date and the colour in minutes.",
       "eyebrow": "Categories",
       "titleBefore": "Perfect for",
       "titleAccent": "every celebration",
@@ -331,15 +367,18 @@
     "items": {
       "weddings": {
         "title": "Weddings",
-        "description": "Elegant invitations for your special day"
+        "description": "Elegant invitations for your special day",
+        "sample": "Elena & Nikola"
       },
       "birthdaysParties": {
         "title": "Birthdays & Parties",
-        "description": "Celebrate milestones in style"
+        "description": "Celebrate milestones in style",
+        "sample": "Mia turns 8"
       },
       "corporate": {
         "title": "Corporate Events",
-        "description": "Professional invitations for business"
+        "description": "Professional invitations for business",
+        "sample": "Annual gala"
       },
       "conferences": {
         "title": "Conferences",
@@ -351,11 +390,13 @@
       },
       "babyShowers": {
         "title": "Baby Showers",
-        "description": "Welcome the new arrival"
+        "description": "Welcome the new arrival",
+        "sample": "Welcome, Luka"
       },
       "graduations": {
         "title": "Graduations",
-        "description": "Celebrate achievements"
+        "description": "Celebrate achievements",
+        "sample": "Class of 2026"
       },
       "anniversaries": {
         "title": "Anniversaries",
@@ -366,7 +407,10 @@
         "description": "Share event photos with guests"
       }
     },
-    "comingSoon": "Coming Soon"
+    "comingSoon": "Coming Soon",
+    "allDesigns": "All designs",
+    "openExample": "Open the example",
+    "mostPopular": "Most popular"
   },
   "weddingsPage": {
     "templates": {
@@ -521,7 +565,7 @@
     "payment": {
       "title": "Payment Information",
       "email": "Email Address",
-      "emailPh": "name@example.com",
+      "emailPh": "name{'@'}example.com",
       "cardNumber": "Card Number",
       "expiry": "Expiry Date",
       "cvc": "CVC",
@@ -574,34 +618,79 @@
   },
   "home": {
     "hero": {
-      "pill": "Digital Invitations",
-      "titleLine1": "Create",
-      "titleAccent1": "beautiful",
-      "titleLine2": "invitations. Plan",
-      "titleAccent2": "unforgettable",
-      "titleLine3": "events.",
-      "subtitle": "The all-in-one platform for elegant digital invitations, seamless RSVP tracking, and stress-free event management.",
-      "primaryCta": "✦ Get Started Free",
-      "secondaryCta": "View Templates",
-      "statTemplates": "Templates",
-      "statSent": "Invitations Sent",
-      "statSatisfied": "Satisfied Users",
-      "chipConfirm": "New confirmation!",
-      "chipConfirmSub": "Maria confirmed attendance",
-      "chipGuests": "47 / 80 guests",
-      "chipGuestsSub": "of 80 guests confirmed",
-      "cardLabel": "You are invited to",
       "cardNames": "Ana & Marko",
-      "cardDate": "June 15, 2025 · 6:00 PM",
-      "cardLocation": "Ohrid, Macedonia",
-      "ratingScore": "4.9",
-      "ratingSource": "from our users",
-      "cardCta": "CONFIRM ATTENDANCE",
-      "chipGuestsCount": "47"
+      "trustLabel": "Terms",
+      "trustFree": "Free until you publish",
+      "carouselLabel": "Invitation categories",
+      "openInvitation": "Open the invitation",
+      "seeCategory": "See the category",
+      "seeDemo": "Watch the demo",
+      "openCategory": "Open {name}",
+      "previous": "Previous category",
+      "next": "Next category",
+      "trustNoApp": "No app to install",
+      "trustBilingual": "Macedonian and English",
+      "slides": {
+        "wedding": {
+          "tag": "Wedding invitations",
+          "short": "Wedding",
+          "title": "Your story starts here.",
+          "lead": "An elegant digital invitation with RSVP, a map to the venue, the menu and plus-ones, in Macedonian and English.",
+          "cardLead": "Elena",
+          "cardAccent": "&",
+          "cardTrail": "Nikola",
+          "date": "24 · 08 · 2026",
+          "place": "Ohrid · North Macedonia"
+        },
+        "birthday": {
+          "tag": "Birthday invitations",
+          "short": "Birthday",
+          "title": "A celebration with its own rhythm.",
+          "lead": "A playful birthday invitation with a quick reply from the parents, the venue and every detail of the party.",
+          "cardLead": "Mia turns",
+          "cardAccent": "8",
+          "cardTrail": "",
+          "date": "12 · 10 · 2026",
+          "place": "Skopje · North Macedonia"
+        },
+        "corporate": {
+          "tag": "Corporate events",
+          "short": "Corporate",
+          "title": "Professional. And still memorable.",
+          "lead": "A branded invitation for conferences, launches and galas, with registration, an agenda and QR check-in.",
+          "cardLead": "Ideas in",
+          "cardAccent": "motion",
+          "cardTrail": "",
+          "date": "06 · 11 · 2026",
+          "place": "Skopje · North Macedonia"
+        },
+        "graduation": {
+          "tag": "Graduation invitations",
+          "short": "Graduation",
+          "title": "The next chapter begins.",
+          "lead": "A modern design for graduation parties, with the running order, the venue and the gallery in one place.",
+          "cardLead": "Class of",
+          "cardAccent": "2026",
+          "cardTrail": "",
+          "date": "18 · 06 · 2026",
+          "place": "Skopje · North Macedonia"
+        },
+        "baby": {
+          "tag": "Baby invitations",
+          "short": "Christening",
+          "title": "A small moment. A great joy.",
+          "lead": "A gentle invitation for a christening or the newest arrival’s first party, with RSVP and photographs from your guests.",
+          "cardLead": "Welcome,",
+          "cardAccent": "Luka",
+          "cardTrail": "",
+          "date": "20 · 09 · 2026",
+          "place": "Veles · North Macedonia"
+        }
+      }
     },
     "howItWorks": {
       "eyebrow": "How It Works",
-      "title": "How It Works",
+      "title": "From an idea to a sent invitation in one afternoon",
       "titleBefore": "It is not just an invitation.",
       "titleAccent": "It is where the experience begins.",
       "subtitle": "From template to sent invitation — in less than 10 minutes",
@@ -621,31 +710,24 @@
         "trackRsvps": {
           "title": "Track RSVPs",
           "description": "Monitor responses and manage your guest list in real-time"
+        },
+        "chooseDesign": {
+          "title": "Choose a design",
+          "description": "Pick the occasion and the design. Everything you change you see at once, exactly as your guests will see it on a phone.",
+          "time": "about 5 minutes"
+        },
+        "addDetails": {
+          "title": "Add the details and the guests",
+          "description": "Date, venue with a map, the running order, and the questions you want answered: plus-ones, menu, children. Type the guest list or import it.",
+          "time": "10–15 minutes"
+        },
+        "shareLink": {
+          "title": "Share the link",
+          "description": "Every guest gets a private link over Viber, WhatsApp or email. The replies reach you on their own, without a single phone call.",
+          "time": "you pick a plan only before publishing"
         }
       },
       "explore": "EXPLORE"
-    },
-    "whyChoose": {
-      "title": "Why Choose IvyEvents?",
-      "subtitle": "The complete solution for modern event planning",
-      "items": {
-        "allInOne": {
-          "title": "All-in-One Platform",
-          "description": "Invitations, RSVPs, guest management, and more in one place"
-        },
-        "noAds": {
-          "title": "No Ads on Invitations",
-          "description": "Keep your invitations clean and professional without distractions"
-        },
-        "unlimitedGuests": {
-          "title": "Unlimited Guests",
-          "description": "Invite as many people as you need without restrictions"
-        },
-        "designedForEvents": {
-          "title": "Designed for Weddings & Events",
-          "description": "Purpose-built features for every type of celebration"
-        }
-      }
     },
     "templates": {
       "eyebrow": "Designs",
@@ -679,64 +761,6 @@
       "cardCaption": "Interactive wedding invitation",
       "empty": "No designs available yet."
     },
-    "features": {
-      "eyebrow": "Features",
-      "title": "Features for Every Stage of Event Management",
-      "titleBefore": "Everything under control.",
-      "titleAccent": "You are simply present.",
-      "subtitle": "The platform covers all aspects — from design to guest tracking — for a seamless experience.",
-      "rsvpLabel": "Live RSVP Overview",
-      "rsvpTitle": "Track who's coming — in real time",
-      "rsvpConfirmed": "Confirmed",
-      "rsvpGuest1": "Ana Stojanovska",
-      "rsvpTime1": "2 min ago",
-      "rsvpYes": "Confirmed ✓",
-      "rsvpGuest2": "Marko Petrovski",
-      "rsvpTime2": "15 min ago",
-      "rsvpNo": "Can't make it ✕",
-      "rsvpGuest3": "Ivana Nikolovska",
-      "rsvpTime3": "1 hour ago",
-      "rsvpMaybe": "Maybe ?",
-      "rsvpGuest4": "Boban Risteski",
-      "rsvpTime4": "2 hours ago",
-      "rsvpYes2": "Confirmed ✓",
-      "items": {
-        "beautifulDesigns": {
-          "title": "Beautiful Invitation Designs",
-          "description": "Choose from hundreds of professionally designed templates or create your own custom design"
-        },
-        "rsvpManagement": {
-          "title": "RSVP & Guest Management",
-          "description": "Track responses, manage guest lists, and send automated reminders effortlessly"
-        },
-        "automatedReminders": {
-          "title": "Automated Reminders",
-          "description": "Send timely reminders to guests automatically so you never miss an RSVP"
-        },
-        "mobileFriendly": {
-          "title": "Mobile-Friendly Experience",
-          "description": "Perfect viewing on any device - your guests can RSVP from anywhere"
-        },
-        "eventDetails": {
-          "title": "Event Details & Schedule",
-          "description": "Share venue information, directions, schedule, and important details in one place"
-        },
-        "analytics": {
-          "title": "Real-Time Analytics",
-          "description": "Get insights into guest responses, attendance rates, and engagement metrics"
-        }
-      },
-      "cta": "Explore the planner",
-      "dashGreeting": "GOOD MORNING, ANA",
-      "dashHeadline": "Your day is getting closer.",
-      "dashConfirmed": "Confirmed",
-      "dashTasks": "Tasks",
-      "dashBudget": "Budget",
-      "dashItem1": "Menu tasting",
-      "dashItem1When": "Today · 18:30",
-      "dashItem2": "Approve the décor",
-      "dashItem2When": "Tomorrow · 10:00"
-    },
     "faq": {
       "title": "Frequently Asked Questions",
       "subtitle": "Everything you need to know about IvyEvents",
@@ -769,51 +793,215 @@
           "question": "What if I need help or have questions?",
           "answer": "We offer a help center and email support. Pro and Premium users get priority support with faster response times."
         }
-      }
-    },
-    "socialProof": {
-      "rating": "4.9/5 Rating",
-      "eventsCreated": "50,000+ Events Created",
-      "trustedBy": "Trusted by 25,000+ Couples",
-      "satisfaction": "98% Customer Satisfaction"
-    },
-    "testimonials": {
-      "eyebrow": "Testimonials",
-      "title": "Loved by Thousands of Happy Couples",
-      "titleBefore": "What our",
-      "titleAccent": "users say",
-      "subtitle": "Real stories from real celebrations",
-      "items": {
-        "first": {
-          "text": "Ivy Events made the entire process incredibly easy. The invitations were beautiful and the guests were thrilled.",
-          "name": "Ana & Marko",
-          "event": "Wedding · Ohrid 2024"
-        },
-        "second": {
-          "text": "Perfect platform for RSVP tracking. We knew exactly who was coming, no stress and no phone calls.",
-          "name": "Sara Risteska",
-          "event": "Birthday · Skopje 2024"
-        },
-        "third": {
-          "text": "We used it for a corporate gala dinner. Simple, elegant, and professional. Highly recommend!",
-          "name": "Ivan Nikoloski",
-          "event": "Corporate Gala · 2024"
-        }
-      }
+      },
+      "seeAll": "All questions and answers"
     },
     "finalCta": {
       "eyebrow": "Ready?",
-      "title": "Ready to Create Your Perfect Event?",
+      "title": "Make your first invitation today",
       "titleLine1": "Create your perfect",
       "titleAccent": "event",
       "titleLine2": "today",
-      "subtitle": "Join thousands of satisfied users — get started for free",
-      "primaryCta": "Start Planning",
+      "subtitle": "Free, no card needed. If you like it, pick a plan when you are ready to send.",
+      "primaryCta": "Create an invitation, free",
       "secondaryCta": "View Templates"
     },
-    "quote": {
-      "text": "For the first time, planning did not feel like a chore. Everything was clear, beautiful and truly ours.",
-      "attribution": "ANA & MARKO, OHRID"
+    "demo": {
+      "stageLabel": "Interactive example: try it as a guest",
+      "phoneLabel": "Digital invitation preview",
+      "tryIt": "Try it as a guest",
+      "tryItSub": "reply to the invitation and watch what the organiser sees",
+      "inviteLanguage": "Invitation language",
+      "fewer": "Fewer",
+      "more": "More",
+      "organiser": "Organiser",
+      "organiserView": "What the organiser sees",
+      "confirmedOf": "confirmed of {total}",
+      "waiting": "awaiting a reply",
+      "declined": "replied: not coming",
+      "justConfirmed": "just confirmed",
+      "justConfirmedWith": "just confirmed · +{n}"
+    },
+    "planner": {
+      "title": "The invitation is where the work starts. Ivy is there for the rest.",
+      "subtitle": "Your guests’ replies become the list, the seating plan and the budget on their own. Nothing is typed twice.",
+      "tablistLabel": "Organiser tools",
+      "tabs": {
+        "guests": {
+          "title": "Guests and replies",
+          "hint": "Who confirmed, who is undecided, who has allergies"
+        },
+        "tables": {
+          "title": "Seating plan",
+          "hint": "Drag a guest onto a table; the guest finds out where they sit"
+        },
+        "budget": {
+          "title": "Budget and payments",
+          "hint": "Planned against spent, line by line"
+        },
+        "gallery": {
+          "title": "Gallery from guests",
+          "hint": "Guests upload photographs through a QR code"
+        }
+      },
+      "guests": {
+        "summary": "{invited} invited · {confirmed} confirmed · {awaitingReply} awaiting",
+        "rows": {
+          "vegetarian": "+1 · vegetarian menu",
+          "airport": "Zurich · would like an airport transfer",
+          "withChild": "+2 · child aged 4",
+          "watchingOnline": "Melbourne · watching online",
+          "nutAllergy": "nut allergy"
+        },
+        "names": {
+          "vegetarian": "Ana Petrovska",
+          "airport": "Darko Stojanov",
+          "withChild": "Marija Nikolovska",
+          "watchingOnline": "Goran Ilievski",
+          "nutAllergy": "Elena Trajkovska"
+        }
+      },
+      "tables": {
+        "summary": "12 tables · 3 seats free",
+        "one": "Table 1",
+        "two": "Table 2",
+        "three": "Table 3",
+        "family": "family",
+        "friends": "friends",
+        "colleagues": "colleagues",
+        "legend": "A green dot is a taken seat, a dashed one is free. Once you save, every guest sees \"Your table: 2\" in their own invitation."
+      },
+      "budget": {
+        "summary": "{percent} % of the plan spent",
+        "note": "Every line has a deadline and an owner, so the reminder arrives before it is late.",
+        "rows": {
+          "venue": "Venue and menu",
+          "photographer": "Photographer",
+          "music": "Music",
+          "decor": "Decoration"
+        },
+        "state": {
+          "deposit": "paid · deposit",
+          "agreed": "agreed",
+          "awaitingQuote": "awaiting a quote",
+          "open": "open"
+        }
+      },
+      "gallery": {
+        "summary": "214 photographs · 11 videos",
+        "privateLink": "A private link and a QR code on the tables",
+        "youApprove": "You approve what is visible",
+        "photoAlt": "A photograph from the event, uploaded by a guest"
+      }
+    },
+    "blog": {
+      "title": "Planning advice",
+      "subtitle": "Short, practical pieces from people who have run hundreds of events in Macedonia.",
+      "all": "All articles",
+      "featured": "Featured",
+      "minutes": "{n} min read",
+      "minutesShort": "{n} min",
+      "readArticle": "Read the article",
+      "read": "Read",
+      "newsletterPromise": "One article a month, no spam. Unsubscribe in a click.",
+      "emailLabel": "Email",
+      "subscribe": "Sign up",
+      "subscribing": "Sending…",
+      "subscribed": "You're signed up"
+    },
+    "demos": {
+      "title": "What your invitation could look like",
+      "subtitle": "Finished invitations from our clients. Yours is built in your colours, with the sections and features you choose. More examples on request.",
+      "watch": "Watch the demo",
+      "rsvp": "RSVP",
+      "yes": "Yes, I'm coming",
+      "no": "Can't make it",
+      "modalTitle": "Demo · {name}",
+      "modalNote": "The demo is a short excerpt; the real invitation is interactive.",
+      "makeOne": "Make one like this",
+      "noRecordingTitle": "Demo recording",
+      "noRecordingBody": "The recording is not in place yet. Put an .mp4 in public/demo and name it in the demo list.",
+      "cards": {
+        "wedding": {
+          "line": "The running order",
+          "name": "Marina & Viktor",
+          "when": "12 · 09 · 2026 · Skopje",
+          "about": "Personalised with initials on the seal, and the colours, flowers and sections you choose."
+        },
+        "birthday": {
+          "line": "First birthday",
+          "name": "Luka turns 1",
+          "when": "15 · 08 · 2026 · Veles",
+          "about": "Personalised with music, the details and the colours you choose."
+        },
+        "corporate": {
+          "line": "Agenda · 2–5 pm",
+          "name": "Grand opening",
+          "when": "30 · 09 · 2026 · Kavadarci",
+          "about": "Personalised with your logo on the seal, and your brand’s colours and borders."
+        }
+      }
+    },
+    "guest": {
+      "title": "What your guest experiences",
+      "subtitle": "The invitation opens without an app, on any phone. Press the seal to see.",
+      "back": "Back",
+      "openInvitation": "Open the invitation",
+      "tapToOpen": "Tap to open",
+      "upload": {
+        "title": "Upload photographs",
+        "subtitle": "Share your moments with us",
+        "nameLabel": "Your name (optional)",
+        "namePlaceholder": "Type your name…",
+        "drop": "Choose or drag photographs",
+        "formats": "JPG, PNG, HEIC · up to 10 at a time",
+        "cta": "Upload photographs",
+        "privacy": "Photographs are stored privately and are visible only to the hosts."
+      },
+      "invite": {
+        "kicker": "Together with our families",
+        "days": "days",
+        "hours": "hours",
+        "minutes": "min",
+        "rsvp": "Confirm attendance",
+        "close": "Close",
+        "whenDate": "Saturday, 24 August 2026, 6 pm",
+        "whenPlace": "Hotel Inex Gorica, Ohrid"
+      },
+      "seat": {
+        "title": "Find your seat",
+        "subtitle": "Type your name to find your table",
+        "table": "table",
+        "where": "Table 4 · by the window",
+        "onMap": "See on the map",
+        "mapLabel": "Room plan",
+        "stage": "Stage"
+      },
+      "couple": "Elena & Nikola",
+      "coupleLead": "Elena",
+      "coupleTrail": "Nikola",
+      "seal": "E",
+      "sealTrail": "N",
+      "guestName": "Adrijana Cepevska",
+      "guestQuery": "Adrijana C",
+      "sampleDate": "24.08.2026"
+    },
+    "statement": {
+      "title": "A digital invitation with every detail of the day, a map to the venue, the seating plan, a gallery from your guests and RSVPs that collect themselves.",
+      "stats": {
+        "cost": {
+          "label": "lower cost",
+          "note": "no printing, and no reprinting"
+        },
+        "planning": {
+          "label": "easier planning",
+          "note": "the replies become the list on their own"
+        },
+        "hours": {
+          "label": "hours saved",
+          "note": "no calls and no \"are you coming?\" messages"
+        }
+      }
     }
   },
   "guests": {
@@ -1093,7 +1281,14 @@
     "pipeline": "Pipeline",
     "agency": "Agency",
     "content": "Content",
-    "contentAnalytics": "Content analytics"
+    "contentAnalytics": "Content analytics",
+    "eventContext": "Event",
+    "vendors": "Suppliers",
+    "defaultUser": "User",
+    "accountMenu": "My account",
+    "upgradeTitle": "Upgrade to Premium",
+    "upgradeBody": "Tasks with deadlines, SMS notifications and a bespoke design.",
+    "upgradeCta": "See what you get"
   },
   "admin": {
     "sidebar": {
@@ -1112,7 +1307,10 @@
       "organizers": "Organizers",
       "vendors": "Professionals",
       "vendorQueue": "Professional queue",
-      "settings": "Settings"
+      "settings": "Settings",
+      "contextLabel": "Platform",
+      "contextName": "Ivy Events",
+      "payments": "Payments"
     },
     "reviews": {
       "title": "Reviews",
@@ -1575,8 +1773,8 @@
     "unknownTitle": "Unknown Status"
   },
   "packages": {
-    "title": "Our Packages",
-    "subtitle": "Choose the perfect package for your event needs",
+    "title": "Clear prices, paid once, for one event",
+    "subtitle": "Building and editing the invitation is free. You pay for a plan only before you publish and send it.",
     "tabs": {
       "invitation": "Invitation (Planner)",
       "organizer": "Organizer",
@@ -1598,49 +1796,77 @@
     "cartTotal": "Total",
     "checkout": "Proceed to Payment",
     "removeFromCart": "Remove",
-    "heroEyebrow": "DIGITAL INVITATION PACKAGES",
-    "heroTitle": "From invitation to",
-    "heroAccent": "an organised event.",
-    "heroLead": "A one-off payment per event. Start free and choose a package before you publish.",
+    "heroTitle": "Clear prices, paid once, for one event",
+    "heroLead": "Building and editing the invitation is free. You pay for a plan only before you publish and send it. No monthly subscription.",
     "gallery": {
-      "eyebrow": "PHOTO GALLERY",
-      "title": "Memories get a package of their own.",
-      "text": "The gallery is independent of the invitation. Guests upload photos and video through a private link or QR code.",
+      "title": "The photo gallery has its own plan",
+      "text": "Independent of the invitation. Guests upload photographs and video through a private link or a QR code on the tables, and you approve what is visible. It combines with any invitation plan.",
       "cta": "Create a gallery",
-      "tierSmall": "For a smaller event",
-      "tierMedium": "For the whole celebration",
-      "tierLarge": "Photos and video"
+      "tierSmall": "For a smaller event, around 400 photographs.",
+      "tierMedium": "For a whole celebration, photographs and short video.",
+      "tierLarge": "Photographs and long video, uncompressed.",
+      "jump": "Photo gallery plans",
+      "mostChosen": "Most chosen",
+      "choose": "Choose"
     },
     "compare": {
-      "eyebrow": "QUICK COMPARISON",
-      "title": "Which package is for you?",
+      "title": "Which plan is for you?",
       "feature": "Feature",
-      "invitation": "Digital invitation + RSVP",
+      "invitation": "Digital invitation and replies",
       "allDesigns": "Every design",
-      "seating": "Table seating plan",
-      "advancedTasks": "Advanced tasks",
-      "notifications": "Email and SMS notifications"
-    }
+      "seating": "Guests seated by table",
+      "advancedTasks": "Tasks, deadlines and reminders",
+      "notifications": "Email and SMS notifications",
+      "jump": "Compare",
+      "lead": "Pro is the right choice for almost any wedding or larger celebration. Basic is enough for a birthday or a smaller gathering. Premium is for when you want everything planned down to the last task.",
+      "included": "included",
+      "notIncluded": "not included",
+      "guestList": "Guest list and overview",
+      "menu": "Menu choice and personalisation",
+      "printed": "Printed invitations",
+      "prioritySupport": "Priority support"
+    },
+    "noteGallery": "The photo gallery is a separate plan: 1 GB, 3 GB or 10 GB.",
+    "notePayment": "Pay by card (cPay) or against an invoice.",
+    "fullComparison": "Compare the plans in full",
+    "finalTitle": "Start free, pay when you are sure",
+    "finalBody": "The whole invitation can be finished before you decide on a plan.",
+    "faq": {
+      "title": "Questions about paying",
+      "upgradeQ": "Can I change plan after paying?",
+      "upgradeA": "Yes. You can move up to a higher plan at any time and pay only the difference.",
+      "twoEventsQ": "What if I have two events?",
+      "twoEventsA": "Each event is its own plan. For several events a year — agencies, restaurants — write to us about organiser pricing.",
+      "printedQ": "Are printed invitations included in the price?",
+      "printedA": "Yes, on Pro and Premium. The design is the same as the digital invitation, with a QR code to it.",
+      "invoiceQ": "Do I get an invoice?",
+      "invoiceA": "Yes, automatically after payment, in your name or your company’s."
+    },
+    "startWith": "Start with {plan}"
   },
   "about": {
     "title": "About Us",
-    "heroSubtitle": "We're building the future of event planning beautiful, simple, and accessible to everyone.",
+    "heroSubtitle": "Ivy Events exists so that organising is calm, clear and beautiful, from the first idea to the day itself.",
     "missionTitle": "Our Mission",
-    "missionText": "To empower individuals and professionals to create unforgettable events with elegant digital tools that save time and delight guests.",
+    "missionText": "Ivy Events puts the invitation, the guests, their replies, the tables, the tasks, the budget and the photographs in one place. It is built for the Macedonian market — for our celebrations, our diaspora and our guests — with the intention of travelling further later.",
     "visionTitle": "Our Vision",
     "visionText": "A world where every celebration is effortlessly planned, beautifully presented, and deeply personal.",
-    "valuesTitle": "Our Values",
-    "valueSimplicity": "Simplicity",
-    "valueSimplicityDesc": "We believe great tools should be intuitive and joyful to use.",
-    "valueElegance": "Elegance",
-    "valueEleganceDesc": "Every detail matters from invitations to the last dance.",
-    "valueInclusion": "Inclusion",
-    "valueInclusionDesc": "Beautiful events for every culture, budget, and celebration.",
-    "heroEyebrow": "WHY IVY EVENTS",
-    "heroTitle": "Technology that leaves",
-    "heroAccent": "room for the feeling.",
-    "storyEyebrow": "OUR IDEA",
-    "storyTitle": "The moments that matter most should not start in a spreadsheet."
+    "valuesTitle": "Three things we do not compromise on",
+    "valueSimplicity": "Simple",
+    "valueSimplicityDesc": "Every step should make sense without a manual. If you need a video to understand a button, the button is wrong.",
+    "valueElegance": "Personal",
+    "valueEleganceDesc": "The design adapts to the event, not the other way round. A christening should not look like a corporate conference.",
+    "valueInclusion": "Safe",
+    "valueInclusionDesc": "Your guests and your memories stay under your control. Private links, no public lists, no selling data.",
+    "heroTitle": "Technology that leaves room for the feeling",
+    "storyTitle": "The moments that matter most should not begin in a spreadsheet",
+    "storyOrigin": "We started from a wedding of our own and one spreadsheet: 140 rows, 3 versions and not a single accurate number. Guests replied by phone, by message, through their parents. The tables were drawn on paper. The budget was known \"roughly\".",
+    "statFirstInvitation": "first invitation sent",
+    "statBilingual": "bilingual from day one",
+    "statTeam": "team and support, local",
+    "talkTitle": "Talk to us",
+    "talkBody": "An agency, a restaurant, or several events a year? We have terms for you.",
+    "talkCta": "Get in touch"
   },
   "terms": {
     "title": "Terms & Conditions",
@@ -1686,7 +1912,7 @@
   },
   "contact": {
     "title": "Contact Us",
-    "subtitle": "Have a question or need help? We'd love to hear from you.",
+    "subtitle": "We reply the same working day. In the days before an event, Premium customers have a priority line for anything urgent.",
     "name": "Full Name",
     "namePh": "e.g. Jane Doe",
     "email": "Email Address",
@@ -1707,15 +1933,24 @@
       "location": "Location",
       "city": "Skopje, North Macedonia"
     },
-    "heroEyebrow": "CONTACT",
-    "heroTitle": "Tell us how we can",
-    "heroAccent": "help you.",
-    "leadTitle": "Let us talk.",
+    "heroTitle": "We are here for any question",
+    "leadTitle": "Write to us",
     "leadText": "For support, include the email address you registered with and the name of your event.",
     "hoursLabel": "Opening hours",
-    "hoursValue": "Mon–Fri · 09:00–17:00",
+    "hoursValue": "Monday–Friday, 9am–5pm (CET)",
     "replyLabel": "Response",
-    "replyValue": "Within one working day"
+    "replyValue": "Within one working day",
+    "partnersLabel": "For agencies and restaurants",
+    "partnersValue": "Running several events a year? Choose \"Partnership\" in the form.",
+    "eventDate": "Event date (optional)",
+    "sendAnother": "Send another message",
+    "subjects": {
+      "invitation": "A question about invitations",
+      "billing": "Plans and payment",
+      "customDesign": "A bespoke design",
+      "partnership": "Partnership (agency, restaurant)",
+      "other": "Something else"
+    }
   },
   "feedback": {
     "title": "Share Your Feedback",
@@ -2225,7 +2460,10 @@
       "confirm": "Confirm",
       "release": "Free up"
     },
-    "inbox": "Inquiries"
+    "inbox": "Inquiries",
+    "contextLabel": "Supplier",
+    "role": "Supplier portal",
+    "approved": "Approved"
   },
   "catering": {
     "title": "The venue’s menu",
@@ -2686,7 +2924,7 @@
   },
   "blog": {
     "title": "Blog",
-    "subtitle": "Ideas and advice for events.",
+    "subtitle": "Short, practical pieces from people who have run hundreds of events in Macedonia. No philosophy, only what works.",
     "all": "All",
     "categoryWEDDING": "Weddings",
     "categoryBIRTHDAY": "Birthdays",
@@ -2697,7 +2935,12 @@
     "empty": "Nothing published in this language yet.",
     "notFound": "This article is not available in this language.",
     "alsoIn": "Also in:",
-    "related": "Related"
+    "related": "Related",
+    "filterLabel": "Filter by topic",
+    "loading": "Loading the articles…",
+    "byAuthor": "By {name}",
+    "authorRole": "the Ivy Events team",
+    "ctaText": "Make your invitation free and share it with a single link."
   },
   "inspiration": {
     "subtitle": "{count} professionals",
@@ -3083,7 +3326,15 @@
     "team": "Team",
     "settings": "Settings",
     "role": "Agency",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "contextLabel": "Agency",
+    "activeEvents": "{n} active events",
+    "planBadge": "{tier} plan",
+    "clients": "Clients",
+    "tasks": "Tasks",
+    "calendar": "Calendar",
+    "vendors": "Suppliers",
+    "reports": "Reports"
   },
   "rsvpSuccess": {
     "title": "RSVP received",
@@ -3097,9 +3348,168 @@
     "title": "Edit entry"
   },
   "faq": {
-    "heroEyebrow": "FREQUENTLY ASKED",
-    "heroTitle": "Everything worth knowing",
-    "heroAccent": "before you begin.",
-    "heroLead": "Short, direct answers about invitations, RSVP, packages and the gallery."
+    "heroTitle": "Everything worth knowing before you start",
+    "heroLead": "Short, direct answers about invitations, your guests’ replies, the plans and the gallery.",
+    "title": "Frequently asked questions",
+    "groups": {
+      "invitations": "Invitations",
+      "pricing": "Plans and payment",
+      "guests": "Guests, tables and gallery"
+    },
+    "noAnswerTitle": "Not found your answer?",
+    "noAnswerBody": "We reply the same working day.",
+    "noAnswerCta": "Write to us"
+  },
+  "a11y": {
+    "skipToContent": "Skip to content",
+    "breadcrumb": "Breadcrumb"
+  },
+  "designs": {
+    "title": "A design for every occasion",
+    "lead": "Every design is a complete interactive invitation: the details, a map, the running order and your guests’ replies. Pick one, then change the names, the date and the colour.",
+    "filterLabel": "Filter by occasion",
+    "all": "All",
+    "loading": "Loading the designs…",
+    "empty": "No designs in this category yet. Tell us what you need.",
+    "interactiveInvitation": "An interactive digital invitation",
+    "customTitle": "Not found your style?",
+    "customBody": "On the Premium plan we design one to your brief, with you.",
+    "customCta": "Ask for a bespoke design"
+  },
+  "dash": {
+    "roleSwitchLabel": "Workspace",
+    "sectionsLabel": "Workspace sections",
+    "searchHint": "Search…",
+    "searchEvent": "Search guests, tasks, suppliers…",
+    "searchAgency": "Search events, clients, team…",
+    "searchVendor": "Search enquiries, quotes, messages…",
+    "searchAdmin": "Search users, events, payments…",
+    "notifications": "Notifications",
+    "newEvent": "New event",
+    "workspaces": {
+      "event": "My event",
+      "organizer": "Organiser",
+      "vendor": "Supplier",
+      "admin": "Admin"
+    }
+  },
+  "agencyCalendar": {
+    "title": "Calendar",
+    "subtitle": "Every event the agency runs, month by month.",
+    "previous": "Previous",
+    "next": "Next",
+    "today": "Today",
+    "inMonth": "{n} events this month"
+  },
+  "agencyTasks": {
+    "title": "Tasks",
+    "subtitle": "Everything open across every event, in one place.",
+    "filterLabel": "Filter by event",
+    "allEvents": "All events",
+    "count": "{n} tasks",
+    "none": "Nothing here.",
+    "status": {
+      "PENDING": "To do",
+      "IN_PROGRESS": "In progress",
+      "DONE": "Done"
+    }
+  },
+  "agencyVendors": {
+    "title": "Suppliers",
+    "subtitle": "Approved suppliers you can book for your events.",
+    "filterLabel": "Filter by trade",
+    "allTypes": "All",
+    "searchLabel": "Search suppliers",
+    "searchPlaceholder": "Name or city…",
+    "publicDirectory": "Public directory",
+    "open": "Open",
+    "empty": "No suppliers match that filter."
+  },
+  "agencyReports": {
+    "title": "Reports",
+    "subtitle": "Profitability, and which events are in trouble.",
+    "financeOnly": "Revenue and margin need finance access. Ask the agency owner for it.",
+    "clientSpend": "Client budgets",
+    "agencyRevenue": "Your revenue",
+    "revenueNote": "commission and services",
+    "margin": "Margin",
+    "wonLeads": "from {n} won leads",
+    "atRisk": "Events at risk",
+    "atRiskNote": "over budget or running late",
+    "revenueByMonth": "Revenue by month",
+    "noMonthly": "Not enough data yet for a monthly chart.",
+    "health": "Event health",
+    "allEvents": "All events",
+    "allHealthy": "No event needs attention.",
+    "overdue": "{n} tasks overdue",
+    "approaching": "{n} days to the event",
+    "tone": {
+      "warn": "Attention",
+      "risk": "At risk"
+    }
+  },
+  "adminPayments": {
+    "title": "Payments",
+    "subtitle": "Every payment attempt and what became of it.",
+    "filterLabel": "Filter by status",
+    "allStatuses": "All",
+    "count": "{n} payments",
+    "reference": "Reference",
+    "customer": "Customer",
+    "package": "Plan",
+    "amount": "Amount",
+    "when": "When",
+    "status": "Status",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {pages}",
+    "empty": "No payments match that filter.",
+    "statuses": {
+      "SUCCESS": "Succeeded",
+      "PENDING": "Pending",
+      "FAILED": "Failed",
+      "CANCELED": "Cancelled",
+      "EXPIRED": "Expired"
+    }
+  },
+  "tasks": {
+    "assignee": {
+      "COUPLE": "The couple",
+      "BRIDE": "Bride",
+      "GROOM": "Groom"
+    }
+  },
+  "vendorType": {
+    "PHOTOGRAPHY": "Photography",
+    "BRIDAL_ATTIRE": "Bridal attire",
+    "GROOM_ATTIRE": "Groom attire",
+    "MAKEUP_HAIR": "Make-up and hair",
+    "DECORATION": "Decoration",
+    "FLOWERS": "Flowers",
+    "LIGHTING": "Lighting",
+    "CAKE": "Cake",
+    "CATERING": "Catering",
+    "BAR_SERVICE": "Bar service",
+    "FOOD": "Food",
+    "DJ": "DJ",
+    "BAND": "Band",
+    "ENTERTAINMENT": "Entertainment",
+    "HOST_EMCEE": "Host / MC",
+    "TRAINING_FACILITATOR": "Training and team building",
+    "OUTDOOR_ACTIVITY": "Outdoor activities",
+    "TRANSPORTATION": "Transport",
+    "EQUIPMENT_RENTAL": "Equipment hire",
+    "VENUE": "Venue",
+    "DECOR_RENTAL": "Decor hire",
+    "PRINTING": "Printing",
+    "SECURITY": "Security",
+    "CLEANING": "Cleaning",
+    "OTHER": "Other"
+  },
+  "guestStatus": {
+    "CONFIRMED": "Coming",
+    "INVITED": "Awaiting reply",
+    "DECLINED": "Not coming",
+    "PENDING": "Not invited yet"
   }
 }

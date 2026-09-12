@@ -22,20 +22,18 @@ defineProps({
   display: contents;
 }
 
+/* Size comes from `.authform h1` in `ivy/auth.css`, which clamps it the way
+   every other heading in the September design is clamped. A fixed 50px here
+   was the August scale and overflowed the column on a narrow phone. */
 .auth-title h1 {
-  font: 50px var(--font-display);
   margin: 0;
 }
 
 .auth-title p:not(.tag) {
-  margin: 8px 0 18px;
-  font: 13px/1.7 var(--font-display);
-  color: var(--ink-3);
-}
-
-@media (max-width: 580px) {
-  .auth-title h1 {
-    font-size: 38px;
-  }
+  margin: 10px 0 22px;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-2);
 }
 </style>

@@ -62,44 +62,49 @@ function onClick(e) {
 
 <style scoped>
 /* ===== Base =====
-   The 2026 redesign's button, so a ButtonMain sitting on a redesigned page
-   and a bare `.btn` next to it are the same object: 46px tall, 10px radius,
-   small letter-spaced caps in the UI face, and a 2px lift on hover. */
+   The 2026 redesign's button, so a ButtonMain sitting on a redesigned page and
+   a bare `.btn` next to it are the same object. That promise broke when the
+   September system landed and this file kept the August one: 46px and a 10px
+   radius beside a 50px pill, 11px letter-spaced caps beside 16px semibold.
+   These are `site.css`'s `.btn` values, restated because this component is
+   also used on screens the design's stylesheet does not reach.
+
+   The hover lift is gone with it. The design moves a button 1px *down* on
+   press and not at all on hover; a 2px rise with a 28px shadow was the older,
+   louder idiom. */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
 
-  min-height: 46px;
+  min-height: 50px;
   padding: 0 24px;
 
-  border-radius: var(--radius-control);
+  border-radius: var(--radius-button);
   font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
   text-decoration: none;
   cursor: pointer;
   user-select: none;
 
   transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    background 0.3s ease,
-    border-color 0.3s ease,
-    color 0.3s ease;
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease;
 }
 
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(23, 55, 43, 0.18);
+.btn:active {
+  transform: translateY(1px);
 }
 
 /* focus */
 .btn:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(23, 55, 43, 0.2);
+  outline: 3px solid var(--moss);
+  outline-offset: 3px;
 }
 
 /* ===== Disabled / loading ===== */
@@ -131,8 +136,8 @@ function onClick(e) {
 /* Solid brand main */
 .btn--main {
   background: var(--brand-main);
-  color: var(--bg-white);
-  border: 1px solid var(--brand-main);
+  color: var(--on-ivy);
+  border: 1.5px solid var(--brand-main);
 }
 
 .btn--main:hover {
@@ -148,20 +153,20 @@ function onClick(e) {
 
 .btn--outline:hover {
   background: var(--brand-main);
-  color: white;
-  transform: translateY(-2px);
+  color: var(--on-ivy);
 }
 
 /* Solid gold */
 .btn--gold {
   background: var(--gold);
-  color: var(--bg-white);
-  border: 1px solid var(--gold);
+  color: var(--on-gold);
+  border: 1.5px solid var(--gold);
 }
 
 .btn--gold:hover {
-  background: var(--gold-text);
-  border-color: var(--gold-text);
+  background: var(--gold-deep);
+  border-color: var(--gold-deep);
+  color: #fff;
 }
 
 /* Secondary */
@@ -173,8 +178,6 @@ function onClick(e) {
 
 .btn--secondary:hover {
   background: var(--brand-main);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(147, 162, 154, 0.3);
 }
 
 /* Ghost – subtle, white bg */

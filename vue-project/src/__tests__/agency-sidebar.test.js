@@ -19,6 +19,12 @@ vi.mock('@/services/auth.service', () => ({
   logout: vi.fn(),
 }))
 
+// The context card asks for the plan on mount. Not what this file is about,
+// and an unmocked call would reach the network from a unit test.
+vi.mock('@/services/crm.service', () => ({
+  crmService: { plan: () => Promise.resolve({ tier: 'PRO', activeEventCount: 3 }) },
+}))
+
 const i18n = createI18n({ legacy: false, locale: 'en', messages: { en } })
 
 const render = (path = '/en/org/dashboard') =>
@@ -28,9 +34,13 @@ const render = (path = '/en/org/dashboard') =>
       mocks: { $route: { params: { lang: 'en' }, path } },
       stubs: {
         RouterLink: { props: ['to'], template: '<a :href="to"><slot /></a>' },
-        SidebarBrand: true,
         SidebarAccount: true,
-        SidebarNavItem: {
+        // The shell renders the dark chrome around the rows; what this file
+        // guards is the rows, so the shell is a passthrough for its slots.
+        DashSide: {
+          template: '<div><slot name="context" /><slot name="nav" /><slot name="promo" /><slot name="account" /></div>',
+        },
+        DashNavItem: {
           props: ['to', 'label', 'icon', 'active'],
           template: '<a class="nav-item" :href="to" :data-active="active">{{ label }}</a>',
         },

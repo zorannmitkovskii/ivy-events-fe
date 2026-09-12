@@ -1,200 +1,228 @@
 <template>
-  <aside class="sidebar">
-    <div class="sidebar-head">
-      <SidebarBrand />
-      <button class="close-btn" @click="$emit('close')" aria-label="Close menu">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18" />
-          <line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
-      </button>
-    </div>
+  <DashSide
+    :context-label="t('sidebar.eventContext')"
+    :context-name="contextName"
+    :plan="planLabel"
+    :name="userName"
+    :role="userRole"
+    @close="$emit('close')"
+  >
+    <!-- The switcher lives inside the context card, which is what that card is
+         about: it names the event, so the way to another one belongs on it. -->
+    <template #context>
+      <div v-if="hasMultipleEvents" class="ctx-switch">
+        <button type="button" :aria-expanded="switcherOpen" @click="switcherOpen = !switcherOpen">
+          {{ t('sidebar.switchEvent') }}
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <path d="m4 6 4 4 4-4" stroke-linecap="round" />
+          </svg>
+        </button>
 
-    <nav class="nav">
-      <SidebarNavItem
-        v-for="it in navItems"
-        :key="it.key"
-        :to="link(it.path)"
-        :label="t(it.labelKey)"
-        :icon="it.icon"
-        :badge="it.badge ? t(it.badge) : null"
-        :active="isActive(it.path)"
-      />
-    </nav>
+        <div v-if="switcherOpen" class="switch-menu">
+          <template v-if="pinnedEvents.length">
+            <p class="switch-group">{{ t('sidebar.pinnedGroup') }}</p>
+            <button
+              v-for="ev in pinnedEvents"
+              :key="ev.id"
+              type="button"
+              class="switch-item"
+              :class="{ current: ev.id === onboardingStore.eventId }"
+              @click="switchTo(ev)"
+            >{{ ev.name || t('organizerOverview.untitled') }}</button>
+          </template>
 
-    <div v-if="hasMultipleEvents" class="sidebar-switch">
-      <button class="switch-btn" :aria-expanded="switcherOpen" @click="switcherOpen = !switcherOpen">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
-        {{ t('sidebar.switchEvent') }}
-      </button>
+          <template v-if="recentEvents.length">
+            <p v-if="pinnedEvents.length" class="switch-group">{{ t('sidebar.otherGroup') }}</p>
+            <button
+              v-for="ev in recentEvents"
+              :key="ev.id"
+              type="button"
+              class="switch-item"
+              :class="{ current: ev.id === onboardingStore.eventId }"
+              @click="switchTo(ev)"
+            >{{ ev.name || t('organizerOverview.untitled') }}</button>
+          </template>
 
-      <div v-if="switcherOpen" class="switch-menu">
-        <template v-if="pinnedEvents.length">
-          <p class="switch-group">{{ t('sidebar.pinnedGroup') }}</p>
-          <button
-            v-for="ev in pinnedEvents"
-            :key="ev.id"
-            class="switch-item"
-            :class="{ 'switch-item--current': ev.id === onboardingStore.eventId }"
-            @click="switchTo(ev)"
-          >{{ ev.name || t('organizerOverview.untitled') }}</button>
-        </template>
-
-        <template v-if="recentEvents.length">
-          <p v-if="pinnedEvents.length" class="switch-group">{{ t('sidebar.otherGroup') }}</p>
-          <button
-            v-for="ev in recentEvents"
-            :key="ev.id"
-            class="switch-item"
-            :class="{ 'switch-item--current': ev.id === onboardingStore.eventId }"
-            @click="switchTo(ev)"
-          >{{ ev.name || t('organizerOverview.untitled') }}</button>
-        </template>
-
-        <!-- The menu shows a short head of the list; this is the way to the rest. -->
-        <button class="switch-all" @click="goToMyEvents">{{ t('sidebar.allEvents') }}</button>
+          <!-- The menu shows a short head of the list; this is the way to the rest. -->
+          <button type="button" class="switch-all" @click="goToMyEvents">{{ t('sidebar.allEvents') }}</button>
+        </div>
       </div>
-    </div>
+    </template>
 
-    <div v-if="!isGallery" class="sidebar-ctas">
-      <button class="cta-btn cta-primary" @click="goToGuests">+ {{ t("sidebar.addGuest") }}</button>
-      <button v-if="showUpgrade" class="cta-btn cta-upgrade" @click="goToPackages">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        {{ t("sidebar.upgrade") }}
-      </button>
-      <button v-else class="cta-btn cta-outline" @click="goToTasks">+ {{ t("sidebar.addTask") }}</button>
-    </div>
+    <template #nav>
+      <DashNavItem
+        v-for="item in navItems"
+        :key="item.key"
+        :to="link(item.path)"
+        :label="t(item.labelKey)"
+        :icon="item.icon"
+        :count="counts[item.key] || 0"
+        :active="isActive(item.path)"
+      />
+    </template>
 
-    <SidebarAccount
-      :name="userName"
-      :role="userRole"
-      :avatarUrl="avatarUrl"
-      @settings="goToSettings"
-      @invitation-links="goToInvitationLinks"
-      @packages="goToPackages"
-      @support="goToSupport"
-      @sign-out="signOut"
-    />
-  </aside>
+    <template #promo>
+      <div v-if="showUpgrade" class="upgrade">
+        <b>{{ t('sidebar.upgradeTitle') }}</b>
+        <span>{{ t('sidebar.upgradeBody') }}</span>
+        <router-link class="btn btn-gold" :to="{ name: 'dashboard.packages', params: { lang } }">
+          {{ t('sidebar.upgradeCta') }}
+        </router-link>
+      </div>
+    </template>
+
+    <template #account>
+      <SidebarAccount
+        @settings="goToSettings"
+        @invitation-links="goToInvitationLinks"
+        @packages="goToPackages"
+        @support="goToSupport"
+        @sign-out="signOut"
+      />
+    </template>
+  </DashSide>
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useI18n } from "vue-i18n";
-import SidebarBrand from "@/components/sidebar/SidebarBrand.vue";
-import SidebarNavItem from "@/components/sidebar/SidebarNavItem.vue";
-import SidebarAccount from "@/components/sidebar/SidebarAccount.vue";
-import { Icons } from "@/utils/icons.js";
-import { getFullName, logout, getPackages } from "@/services/auth.service";
-import { onboardingStore, clearOnboarding } from "@/store/onboarding.store";
-import { EventCategoryEnum } from "@/enums/EventCategory.js";
-import { eventsService } from "@/services/events.service";
-import { selectEvent } from "@/services/eventSelection.service";
-import useWorkspaceEvents from "@/composables/useWorkspaceEvents";
+import { computed, ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import DashSide from '@/components/dashboard/shell/DashSide.vue'
+import DashNavItem from '@/components/dashboard/shell/DashNavItem.vue'
+import SidebarAccount from '@/components/sidebar/SidebarAccount.vue'
+import { DashIcons } from '@/utils/dashIcons.js'
+import { getFullName, logout, getPackages } from '@/services/auth.service'
+import { onboardingStore, clearOnboarding } from '@/store/onboarding.store'
+import { EventCategoryEnum } from '@/enums/EventCategory.js'
+import { eventsService } from '@/services/events.service'
+import { guestsService } from '@/services/guests.service'
+import { selectEvent } from '@/services/eventSelection.service'
+import useWorkspaceEvents from '@/composables/useWorkspaceEvents'
 
-defineEmits(["close", "navigate"]);
+/** The switcher shows a short head of the list; the rest is one click away. */
+const MAX_UNPINNED_IN_SWITCHER = 6
 
-const { t, locale } = useI18n();
-const route = useRoute();
-const router = useRouter();
+defineEmits(['close', 'navigate'])
 
-const lang = computed(() => route.params.lang || "mk");
+const { t, locale } = useI18n()
+const route = useRoute()
+const router = useRouter()
 
-const link = (section) => `/${lang.value}/dashboard/events/${section}`;
+const lang = computed(() => route.params.lang || 'mk')
 
-const isActive = (section) => {
-  const p = `/dashboard/events/${section}`;
-  return String(route.path || "").includes(p);
-};
+const link = (section) => `/${lang.value}/dashboard/events/${section}`
 
-const isGallery = computed(() => onboardingStore.selectedCategory === EventCategoryEnum.GALLERY);
+const isActive = (section) => String(route.path || '').includes(`/dashboard/events/${section}`)
 
-const userPackages = computed(() => getPackages() || []);
+const isGallery = computed(() => onboardingStore.selectedCategory === EventCategoryEnum.GALLERY)
 
-const hasGalleryPackage = computed(() => userPackages.value.some(p => p.startsWith("GALLERY_")));
-const hasInvPremium = computed(() => userPackages.value.includes("INV_PREMIUM"));
-const hasInvPro = computed(() => userPackages.value.includes("INV_PRO"));
-const showUpgrade = computed(() => !hasInvPremium.value);
+const userPackages = computed(() => getPackages() || [])
+const hasGalleryPackage = computed(() => userPackages.value.some((p) => p.startsWith('GALLERY_')))
+const hasInvPremium = computed(() => userPackages.value.includes('INV_PREMIUM'))
+const showUpgrade = computed(() => !hasInvPremium.value)
+
+/** The plan on the context card — the highest one bought, or nothing. */
+const planLabel = computed(() => {
+  if (hasInvPremium.value) return 'Premium'
+  if (userPackages.value.includes('INV_PRO')) return 'Pro'
+  return ''
+})
 
 const allNavItems = [
-  { key: "overview", path: "overview", labelKey: "sidebar.overview", icon: Icons.grid },
-  { key: "guests", path: "guests", labelKey: "sidebar.guests", icon: Icons.users },
-  { key: "tasks", path: "tasks", labelKey: "sidebar.tasks", icon: Icons.check },
-  { key: "budget", path: "budget", labelKey: "sidebar.budget", icon: Icons.card },
-  { key: "tables", path: "tables", labelKey: "sidebar.seating", icon: Icons.grid2 },
-  { key: "catering", path: "catering", labelKey: "sidebar.catering", icon: Icons.package },
-  { key: "check-in", path: "check-in", labelKey: "sidebar.checkIn", icon: Icons.check },
-  { key: "announcements", path: "announcements", labelKey: "sidebar.announcements", icon: Icons.mail },
-  { key: "contributions", path: "contributions", labelKey: "sidebar.contributions", icon: Icons.image },
+  { key: 'overview', path: 'overview', labelKey: 'sidebar.overview', icon: DashIcons.overview },
+  { key: 'guests', path: 'guests', labelKey: 'sidebar.guests', icon: DashIcons.guests },
+  { key: 'tasks', path: 'tasks', labelKey: 'sidebar.tasks', icon: DashIcons.tasks },
+  { key: 'budget', path: 'budget', labelKey: 'sidebar.budget', icon: DashIcons.budget },
+  { key: 'tables', path: 'tables', labelKey: 'sidebar.seating', icon: DashIcons.seating },
+  { key: 'quotes', path: 'quotes', labelKey: 'sidebar.vendors', icon: DashIcons.vendors },
+  { key: 'agenda', path: 'agenda', labelKey: 'sidebar.agenda', icon: DashIcons.agenda },
+  { key: 'catering', path: 'catering', labelKey: 'sidebar.catering', icon: DashIcons.catering },
+  { key: 'check-in', path: 'check-in', labelKey: 'sidebar.checkIn', icon: DashIcons.checkIn },
+  { key: 'announcements', path: 'announcements', labelKey: 'sidebar.announcements', icon: DashIcons.messages },
+  { key: 'contributions', path: 'contributions', labelKey: 'sidebar.contributions', icon: DashIcons.gallery },
   // Per-event, unlike the pipeline and the agency settings: an approval belongs
   // to one wedding, so it belongs in the sidebar that is already scoped to one.
-  { key: "approvals", path: "approvals", labelKey: "sidebar.approvals", icon: Icons.check },
-  { key: "quotes", path: "quotes", labelKey: "sidebar.quotes", icon: Icons.card },
-  { key: "post-event", path: "post-event", labelKey: "sidebar.postEvent", icon: Icons.mail },
-  { key: "gallery", path: "gallery", labelKey: "sidebar.gallery", icon: Icons.image },
-  { key: "links", path: "invitation-links", labelKey: "sidebar.invitationLinks", icon: Icons.mail }
-];
+  { key: 'approvals', path: 'approvals', labelKey: 'sidebar.approvals', icon: DashIcons.tasks },
+  { key: 'post-event', path: 'post-event', labelKey: 'sidebar.postEvent', icon: DashIcons.postEvent },
+  { key: 'gallery', path: 'gallery', labelKey: 'sidebar.gallery', icon: DashIcons.gallery },
+  { key: 'links', path: 'invitation-links', labelKey: 'sidebar.invitationLinks', icon: DashIcons.link },
+]
 
-const GALLERY_NAV_KEYS = ['gallery', 'links'];
+const GALLERY_NAV_KEYS = ['gallery', 'links']
 
 const navItems = computed(() => {
   if (isGallery.value) {
-    return allNavItems.filter(it => GALLERY_NAV_KEYS.includes(it.key));
+    return allNavItems.filter((it) => GALLERY_NAV_KEYS.includes(it.key))
   }
-  // Hide gallery if user has no GALLERY_ package
-  return allNavItems.filter(it => {
-    if (it.key === 'gallery' && !hasGalleryPackage.value) return false;
-    if (GALLERY_NAV_KEYS.includes(it.key) && it.key !== 'gallery') return false;
-    return true;
-  });
-});
+  return allNavItems.filter((it) => {
+    if (it.key === 'gallery' && !hasGalleryPackage.value) return false
+    if (GALLERY_NAV_KEYS.includes(it.key) && it.key !== 'gallery') return false
+    return true
+  })
+})
 
-const userName = computed(() => getFullName() || "User");
-const userRole = computed(() => t("sidebar.eventPlanner"));
-const avatarUrl = computed(() => "");
+const userName = computed(() => getFullName() || t('sidebar.defaultUser'))
+const userRole = computed(() => t('sidebar.eventPlanner'))
 
-// Event info
-const eventName = ref("");
-const eventDate = ref("");
+/*
+  The gold counter the design puts on a row.
 
-// The switcher: same list the workspace page shows, so pinned events lead here
-// too. Capped at a short head — the full list is one click away rather than an
-// unbounded menu inside a sidebar.
-const MAX_UNPINNED_IN_SWITCHER = 6;
+  Only one number is worth carrying: how many invited guests have not answered.
+  It is the thing the row is for — the design's own example is "Гости и
+  одговори · 9" — and it is the only count on this sidebar that means something
+  is waiting on the person rather than simply existing.
+*/
+const counts = ref({})
 
-const { rows, pinnedEvents, load: loadWorkspace } = useWorkspaceEvents();
-const switcherOpen = ref(false);
-const hasMultipleEvents = computed(() => rows.value.length > 1);
+const eventName = ref('')
+const eventDate = ref('')
+
+/** The line the design puts on the context card: the event and its date. */
+const contextName = computed(() => {
+  if (!eventName.value) return ''
+  return eventDate.value ? `${eventName.value} · ${eventDate.value}` : eventName.value
+})
+
+const { rows, pinnedEvents, load: loadWorkspace } = useWorkspaceEvents()
+const switcherOpen = ref(false)
+const hasMultipleEvents = computed(() => rows.value.length > 1)
 const recentEvents = computed(() =>
-  rows.value.filter(r => !r.pinned).slice(0, MAX_UNPINNED_IN_SWITCHER).map(r => r.event)
-);
-
-const eventStatusLabel = computed(() => {
-  const s = onboardingStore.eventStatus;
-  if (!s || s === "ACTIVE") return "";
-  return s === "DRAFT" ? "Draft" : s;
-});
+  rows.value
+    .filter((r) => !r.pinned)
+    .slice(0, MAX_UNPINNED_IN_SWITCHER)
+    .map((r) => r.event),
+)
 
 onMounted(async () => {
-  await loadWorkspace();
+  await loadWorkspace()
+
+  const id = onboardingStore.eventId
+  if (!id || id === 'demo') return
 
   try {
-    const id = onboardingStore.eventId;
-    if (!id || id === "demo") return;
-
-    const ev = await eventsService.getById(id);
-    eventName.value = ev.name || ev.title || "";
+    const ev = await eventsService.getById(id)
+    eventName.value = ev.name || ev.title || ''
     if (ev.date || ev.eventDate) {
-      const d = new Date(ev.date || ev.eventDate);
-      eventDate.value = d.toLocaleDateString(locale.value === "mk" ? "mk-MK" : "en-US", {
-        day: "numeric", month: "short", year: "numeric"
-      });
+      const d = new Date(ev.date || ev.eventDate)
+      eventDate.value = d.toLocaleDateString(locale.value === 'mk' ? 'mk-MK' : 'en-US', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      })
     }
   } catch {
-    // keep empty
+    // The sidebar renders without the context card rather than not at all.
   }
-});
+
+  try {
+    // The counts endpoint, not the guest list: the sidebar needs one number,
+    // and pulling three hundred rows to compute it is three hundred rows.
+    const status = await guestsService.getStatusCounts(id)
+    counts.value = { guests: status?.awaitingReply || 0 }
+  } catch {
+    // A counter is an extra, never a reason for the navigation to fail.
+  }
+})
 
 /**
  * Switching stays on the current section — someone looking at the guest list of
@@ -202,291 +230,108 @@ onMounted(async () => {
  * overview. The layout is keyed by the event, so the page under us reloads.
  */
 function switchTo(event) {
-  switcherOpen.value = false;
-  selectEvent(event);
+  switcherOpen.value = false
+  selectEvent(event)
 }
 
 function goToMyEvents() {
-  switcherOpen.value = false;
-  router.push({ name: 'dashboard.organizer', params: { lang: lang.value } });
+  switcherOpen.value = false
+  router.push({ name: 'dashboard.organizer', params: { lang: lang.value } })
 }
-function goToSettings() { router.push(`/${lang.value}/dashboard/events/settings`); }
-function goToInvitationLinks() { router.push(`/${lang.value}/dashboard/events/invitation-links`); }
-function goToPackages() { router.push({ name: "dashboard.packages", params: { lang: lang.value } }); }
-function goToSupport() { router.push(`/${lang.value}/dashboard/events/support`); }
-function goToGuests() { router.push(`/${lang.value}/dashboard/events/guests?action=add`); }
-function goToTasks() { router.push(`/${lang.value}/dashboard/events/tasks?action=add`); }
-function signOut() { logout(); clearOnboarding(); router.push(`/${lang.value}/auth/login`); }
+function goToSettings() {
+  router.push(`/${lang.value}/dashboard/events/settings`)
+}
+function goToInvitationLinks() {
+  router.push(`/${lang.value}/dashboard/events/invitation-links`)
+}
+function goToPackages() {
+  router.push({ name: 'dashboard.packages', params: { lang: lang.value } })
+}
+function goToSupport() {
+  router.push(`/${lang.value}/dashboard/events/support`)
+}
+function signOut() {
+  logout()
+  clearOnboarding()
+  router.push(`/${lang.value}/auth/login`)
+}
 </script>
 
 <style scoped>
-/*
-  The redesign's sidebar: a flatter, darker green than the old charcoal, and
-  no decoration on it at all. The radial glow that used to sit in the bottom
-  corner is gone — the design keeps the panel plain so the gold marker on the
-  active row is the only bright thing in the column.
-*/
-.sidebar {
-  height: 100vh;
-  padding: 8px 6px;
-  background: var(--d-side);
-  display: flex;
-  flex-direction: column;
+/* The sidebar's own shell is `DashSide`; everything here is the event switcher,
+   which the mockup does not draw because it only ever has one event. */
+.ctx-switch {
   position: relative;
-  overflow-y: auto;
-  overflow-x: hidden;
+  margin-top: 10px;
 }
 
-.sidebar-head {
+.ctx-switch > button {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-}
-
-.close-btn {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.5);
-  cursor: pointer;
+  gap: 6px;
   padding: 0;
-  margin-right: 14px;
+  font-size: 13px;
+  color: #8fa398;
 }
 
-.close-btn:hover { background: rgba(255, 255, 255, 0.08); }
-
-@media (max-width: 1024px) {
-  .close-btn { display: inline-flex; }
-}
-
-/* Event info card */
-.event-info {
-  margin: 16px 14px 0;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 10px;
-  padding: 14px 16px;
-  position: relative;
-  overflow: hidden;
-}
-
-.event-info::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: linear-gradient(180deg, var(--dash-gold), var(--dash-gold-light));
-  border-radius: 0 2px 2px 0;
-}
-
-.ei-names {
-  font-family: var(--font-display);
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.92);
-  font-style: italic;
-}
-
-.ei-date {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.38);
-  margin-top: 4px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.pill-draft {
-  background: rgba(184, 149, 78, 0.2);
-  border: 1px solid rgba(184, 149, 78, 0.35);
-  color: var(--dash-gold-light);
-  font-size: 8.5px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 2px 8px;
-  border-radius: 20px;
-}
-
-/* Nav */
-.nav {
-  display: flex;
-  flex-direction: column;
-  /*
-    Bootstrap's own `.nav` sets `flex-wrap: wrap`, and this rule is more
-    specific for everything it declares but not for what it leaves out. With a
-    column direction and a bounded height that wrap turns the overflow into a
-    SECOND COLUMN of links, half of it clipped by the sidebar's edge. It showed
-    up the moment the redesign made each row taller.
-  */
-  flex-wrap: nowrap;
-  padding: 12px 0;
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-}
-
-.nav-label {
-  font-size: 8.5px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.22);
-  padding: 0 24px;
-  margin-bottom: 4px;
-  font-weight: 600;
-}
-
-/* Switch event */
-.sidebar-switch {
-  padding: 6px 14px;
-}
-
-.switch-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  padding: 9px;
-  border-radius: 9px;
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.18s;
-  border: 1px dashed rgba(255, 255, 255, 0.15);
-  background: transparent;
-  color: #91a49b;
-  letter-spacing: 0.02em;
-}
-
-.switch-btn:hover {
-  border-color: rgba(255, 255, 255, 0.3);
+.ctx-switch > button:hover {
   color: #fff;
-  background: var(--d-side-hover);
+}
+
+.ctx-switch svg {
+  width: 14px;
+  height: 14px;
 }
 
 .switch-menu {
-  margin-top: 6px;
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 8px);
+  left: -6px;
+  right: -6px;
+  max-height: 320px;
+  overflow-y: auto;
   padding: 6px;
-  border-radius: 9px;
-  background: rgba(255, 255, 255, 0.06);
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  box-shadow: var(--shadow);
 }
 
 .switch-group {
-  margin: 6px 8px 2px;
-  font-size: 10px;
+  padding: 8px 10px 4px;
+  font-size: 11.5px;
   font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--ink-3);
 }
 
 .switch-item,
 .switch-all {
+  display: block;
   width: 100%;
-  padding: 8px;
-  border: none;
-  border-radius: 7px;
-  background: transparent;
-  color: #b3c2ba;
-  font-family: var(--font-ui);
-  font-size: 11px;
+  padding: 9px 10px;
+  border-radius: 8px;
   text-align: left;
-  cursor: pointer;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 14px;
+  color: var(--ink);
 }
 
 .switch-item:hover,
 .switch-all:hover {
-  background: var(--d-side-hover);
-  color: #fff;
+  background: var(--mist-2);
 }
 
-.switch-item--current {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.1);
+.switch-item.current {
+  font-weight: 600;
+  color: var(--ivy);
 }
 
 .switch-all {
   margin-top: 4px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0 0 6px 6px;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 12px;
-}
-
-/* Sidebar CTAs */
-.sidebar-ctas {
-  padding: 10px 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.cta-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  width: 100%;
-  padding: 11px;
-  border-radius: 9px;
-  font-family: var(--font-ui);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: all 0.18s;
-  border: none;
-}
-
-/* On the dark panel the primary action is the pale one — an ink button on an
-   ink sidebar is invisible, which is what the old --dash-sage fill became once
-   the sidebar itself moved to the same green. */
-.cta-primary {
-  background: #eef2ea;
-  color: var(--ink);
-}
-
-.cta-primary:hover {
-  background: #fff;
-}
-
-.cta-outline {
-  background: transparent;
-  color: #91a49b;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-}
-
-.cta-outline:hover {
-  border-color: rgba(255, 255, 255, 0.28);
-  background: var(--d-side-hover);
-  color: #fff;
-}
-
-.cta-upgrade {
-  background: var(--d-gold);
-  color: #17372b;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
-
-.cta-upgrade:hover {
-  filter: brightness(1.08);
+  border-top: 1px solid var(--line);
+  border-radius: 0 0 8px 8px;
+  color: var(--ink-2);
 }
 </style>

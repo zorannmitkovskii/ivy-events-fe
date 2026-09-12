@@ -8,7 +8,7 @@
 
     <AuthDivider :label="t('register.divider')" />
 
-    <form class="form" @submit.prevent="onRegister">
+    <form class="signup-form" @submit.prevent="onRegister">
       <!--
         Asked first, because it changes what the rest of the form means and
         what the account can do afterwards. Left to be inferred, everyone
@@ -525,26 +525,29 @@ function onGoogle() {
    from the component. Signup keeps its own because its title and subtitle
    come from a local translation table rather than the app bundle. */
 .title {
-  font: 50px var(--font-display);
   margin: 0;
+  font-size: clamp(32px, 3.4vw, 44px);
+  letter-spacing: -0.02em;
 }
 
 .subtitle {
-  margin: 0 0 18px;
-  font: 13px/1.7 var(--font-display);
-  color: var(--ink-3);
+  margin: 10px 0 22px;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-2);
 }
 
-.form {
+/*
+  Not `.form`. That name belongs to the contact page in `site.css`, where it
+  is a two-column grid with its own field styling — and at the 420px this
+  column gets, two columns put "Потврди лозинка" on two lines over a 130px
+  box. This form is one column and builds its fields from `AuthInput`.
+*/
+.signup-form {
   display: grid;
   gap: 14px;
   margin-top: 4px;
-}
-
-@media (max-width: 580px) {
-  .title {
-    font-size: 38px;
-  }
 }
 
 .cta {
@@ -552,39 +555,41 @@ function onGoogle() {
   justify-content: center;
 }
 
+/* Status colours come from the tokens, so they follow the theme. The literals
+   these replace were fixed light-mode values. */
 .error {
   margin: 4px 0 0;
-  font-size: 13px;
-  color: #b42318;
-  background: rgba(180, 35, 24, 0.08);
-  border: 1px solid rgba(180, 35, 24, 0.18);
-  padding: 10px 12px;
-  border-radius: 12px;
+  padding: 11px 14px;
+  border: 1px solid var(--error);
+  border-radius: var(--radius-control);
+  background: var(--error-pale);
+  font-size: 14.5px;
+  color: var(--error);
 }
 
 .warning {
   margin: -8px 0 0;
-  font-size: 12px;
-  color: #dc6803;
-  background: rgba(220, 104, 3, 0.08);
-  border: 1px solid rgba(220, 104, 3, 0.18);
-  padding: 8px 10px;
-  border-radius: 8px;
+  padding: 9px 12px;
+  border: 1px solid var(--warning);
+  border-radius: var(--radius-control);
+  background: var(--warning-pale);
+  font-size: 14px;
+  color: var(--warning);
 }
 
 .password-hints {
   margin: -8px 0 0;
-  font-size: 12px;
-  background: rgba(147, 162, 154, 0.06);
-  border: 1px solid rgba(147, 162, 154, 0.15);
-  padding: 10px 12px;
-  border-radius: 8px;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  background: var(--mist-2);
+  font-size: 14px;
 }
 
 .hints-title {
   margin: 0 0 6px;
   font-weight: 600;
-  color: var(--brand-dark);
+  color: var(--ink);
 }
 
 .hints-list {
@@ -596,37 +601,37 @@ function onGoogle() {
 .hints-list li {
   position: relative;
   margin: 4px 0;
-  color: var(--brand-dark);
+  color: var(--ink-2);
 }
 
 .hints-list li::before {
   content: "✗";
   position: absolute;
   left: -18px;
-  color: #dc6803;
+  color: var(--warning);
   font-weight: bold;
 }
 
 .hints-list li.valid {
-  color: #027a48;
+  color: var(--success);
 }
 
 .hints-list li.valid::before {
   content: "✓";
-  color: #027a48;
+  color: var(--success);
 }
 
 .signin {
-  font: 13px/1.7 var(--font-display);
   margin: 6px 0 0;
-  font-size: 12px;
-  color: rgba(51, 67, 56, 0.7);
+  font-family: var(--font-ui);
+  font-size: 14.5px;
+  color: var(--ink-3);
   text-align: center;
 }
 
 .signin a {
-  color: var(--neutral-900);
-  font-weight: 700;
+  color: var(--ink);
+  font-weight: 600;
   text-decoration: none;
 }
 
@@ -638,13 +643,13 @@ function onGoogle() {
   margin-top: 10px;
   display: flex;
   justify-content: center;
-  gap: 12px;
-  font-size: 12px;
-  color: rgba(51, 67, 56, 0.55);
+  gap: 14px;
+  font-size: 14px;
+  color: var(--ink-3);
 }
 
 .bottom-links a {
-  color: rgba(51, 67, 56, 0.75);
+  color: var(--ink-3);
   text-decoration: none;
 }
 
@@ -665,10 +670,10 @@ function onGoogle() {
 
 .account-type legend {
   padding: 0;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
   font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: 700;
+  font-size: 14.5px;
+  font-weight: 600;
   color: var(--ink-2);
 }
 

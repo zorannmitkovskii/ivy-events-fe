@@ -115,6 +115,12 @@ const routes = [
       { path: "vendors/:category", name: "VendorCategory", component: () => import("@/pages/VendorDirectoryPage.vue") },
       { path: "vendors/:category/:slug", name: "VendorProfile", component: () => import("@/pages/VendorProfilePage.vue") },
 
+      // THE PUBLIC DESIGN CATALOGUE (the redesign's "Покани")
+      // Not to be confused with `event-invitations` above, which looks like the
+      // same page and is step two of creating an event. This one is marketing:
+      // it lists every active template and links into the previews.
+      { path: "designs", name: "designs", component: () => import("@/pages/InvitationDesignsPage.vue") },
+
       // BLOG AND INSPIRATION HUBS (IVY-901, IVY-904)
       // Under the language prefix like every other public page: an article has
       // one address per language, and that address is what the canonical tag
@@ -178,6 +184,15 @@ const routes = [
           // The agency's team (IVY-1203). requiresAgency and not requiresAdmin:
           // the screen is the admin panel's, the scope is one organization's.
           { path: "users", name: "org.users", component: () => import("@/pages/dashboard/AgencyTeamPage.vue"), meta: { requiresAgency: true } },
+
+          // The four the 2026 design adds to the agency sidebar. Each answers a
+          // question that spans events, which is why none of them belongs in
+          // the per-event shell: what is on this week, what the whole team owes,
+          // who we book, and what we make.
+          { path: "calendar", name: "org.calendar", component: () => import("@/pages/dashboard/AgencyCalendarPage.vue") },
+          { path: "tasks", name: "org.tasks", component: () => import("@/pages/dashboard/AgencyTasksPage.vue") },
+          { path: "vendors", name: "org.vendors", component: () => import("@/pages/dashboard/AgencyVendorsPage.vue") },
+          { path: "reports", name: "org.reports", component: () => import("@/pages/dashboard/AgencyReportsPage.vue"), meta: { requiresAgency: true } },
         ],
       },
 
@@ -264,6 +279,10 @@ const routes = [
           { path: "dashboard", name: "admin.dashboard", component: () => import("@/pages/adminDashboard/AdminOverviewPage.vue") },
           { path: "events", name: "admin.events", component: AdminEventPage },
           { path: "packages", name: "admin.packages", component: AdminPackagesPage },
+          // Payments (the 2026 design's "Плаќања"). The data was already there
+          // — cPay writes a status per attempt — with no screen over it, so the
+          // only way to answer "did that order go through" was the database.
+          { path: "payments", name: "admin.payments", component: () => import("@/pages/adminDashboard/AdminPaymentsPage.vue") },
           { path: "users", name: "admin.users", component: AdminUsersPage },
           // The organizer directory (IVY-1102). Separate from users: that one
           // is every account on the platform, this one is the people running

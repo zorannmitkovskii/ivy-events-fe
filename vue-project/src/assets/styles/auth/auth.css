@@ -11,34 +11,39 @@
 }
 
 .auth-link {
-  color: var(--neutral-500);
+  color: var(--ink-3);
   text-decoration: none;
-  font-size: 12px;
+  font-size: 14px;
   transition: color 0.2s ease;
 }
 .auth-link:hover {
-  color: var(--brand-gold);
+  color: var(--ivy);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* ===== Error ===== */
 .auth-error {
   margin: 0;
-  font-size: 13px;
-  color: #b42318;
-  background: rgba(180, 35, 24, 0.06);
-  border: 1px solid rgba(180, 35, 24, 0.15);
-  padding: 10px 14px;
-  border-radius: 10px;
+  padding: 11px 14px;
+  border: 1px solid var(--error);
+  border-radius: var(--radius-control);
+  background: var(--error-pale);
+  font-size: 14.5px;
+  color: var(--error);
 }
 
 /* ===== Remove Chrome autofill blue background ===== */
+/* Chrome paints an autofilled field its own pale blue, which in dark mode is a
+   white box in the middle of a dark form. `--card` and `--ink` follow the
+   theme; the old `--bg-white` did not. */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 textarea:-webkit-autofill,
 select:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0px 1000px var(--bg-white) inset !important;
-  box-shadow: 0 0 0px 1000px var(--bg-white) inset !important;
-  -webkit-text-fill-color: var(--neutral-900) !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--card) inset !important;
+  box-shadow: 0 0 0 1000px var(--card) inset !important;
+  -webkit-text-fill-color: var(--ink) !important;
   transition: background-color 9999s ease-in-out 0s;
 }

@@ -1,16 +1,17 @@
 <template>
   <li class="feature" :class="{ 'feature--disabled': !isIncluded }">
-    <span class="feature__icon" aria-hidden="true">
-      {{ isIncluded ? "✓" : "✕" }}
-    </span>
-    <span class="feature__text">
-      <slot />
-    </span>
+    <svg v-if="isIncluded" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+      <path d="m5 12.5 4.5 4.5L19 7.5" />
+    </svg>
+    <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+      <path d="m6 6 12 12M18 6 6 18" />
+    </svg>
+    <span class="feature__text"><slot /></span>
   </li>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed } from 'vue'
 
 const props = defineProps({
   /**
@@ -23,44 +24,26 @@ const props = defineProps({
    * what the page showed. Crossing something out is a claim; it should take
    * somebody actually saying so.
    */
-  included: { type: [Boolean, Object], default: true }
-});
+  included: { type: [Boolean, Object], default: true },
+})
 
-const isIncluded = computed(() => props.included !== false);
+const isIncluded = computed(() => props.included !== false)
 </script>
 
 <style scoped>
 /*
-  The redesign lists features flush left with a bare tick — no pill behind it,
-  nothing centred. Centring is what made the old list read as a poster rather
-  than something to scan down; the design's price cards are read line by line.
+  `.plan li` in `ivy/site.css` already sets the row: the flex, the gap, the
+  18px moss tick. What stays here is only the excluded state, which the design
+  has no version of — its plans list what you get and say nothing about what
+  you do not.
 */
-.feature {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  margin: 0;
-  padding: 9px 0;
-  border-bottom: 1px solid #edf0ed;
-  font-family: var(--font-ui);
-  font-size: 10px;
-  line-height: 1.7;
-  color: var(--ink);
-}
-
-.feature__icon {
-  flex: none;
-  color: #78966d;
-  font-weight: 700;
+.feature--disabled svg {
+  color: var(--ink-3);
 }
 
 .feature--disabled .feature__text {
-  color: var(--ink-4);
+  color: var(--ink-3);
   text-decoration: line-through;
   text-decoration-color: var(--line-2);
-}
-
-.feature--disabled .feature__icon {
-  color: var(--ink-4);
 }
 </style>

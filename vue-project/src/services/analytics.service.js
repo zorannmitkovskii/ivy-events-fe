@@ -52,6 +52,13 @@ export const analyticsService = {
     return api.get("/analytics/agency", { params: adminParams({ status, categoryType, from, to }) });
   },
 
+  /** The agency's attention list alone, for its own refresh. */
+  agencyAttention({ status, categoryType, from, to } = {}) {
+    return api.get("/analytics/agency/attention", {
+      params: adminParams({ status, categoryType, from, to })
+    });
+  },
+
   /** The caller's own organization's at-risk window. No id, by design. */
   agencyRiskWindow() {
     return api.get("/crm/agency/risk-window");

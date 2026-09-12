@@ -42,6 +42,10 @@
     "signup": {
       "title": "Krijo Llogari",
       "description": "Krijoni llogarinë falas në Ivy Events dhe filloni planifikimin e eventit tuaj perfekt sot."
+    },
+    "designs": {
+      "title": "Një dizajn për çdo rast",
+      "description": "Çdo dizajn është një ftesë e plotë interaktive: detajet, harta, programi dhe përgjigjet e mysafirëve. Zgjidhni një, pastaj ndryshoni emrat, datën dhe ngjyrën."
     }
   },
   "comingSoon": {
@@ -164,13 +168,15 @@
   "footer": {
     "brand": {
       "logo": "IvyEvents",
-      "tagline": "Krijoni ftesa të bukura. Planifikoni ngjarje të paharrueshme."
+      "tagline": "Ftesa dixhitale dhe planifikim ngjarjesh, të bëra në Shkup për mysafirë kudo."
     },
     "columns": {
       "product": "Produkti",
       "company": "Kompania",
       "support": "Mbështetja",
-      "connect": "Lidhuni"
+      "connect": "Lidhuni",
+      "resources": "Burime",
+      "contact": "Kontakt"
     },
     "links": {
       "templates": "Shabllone",
@@ -189,14 +195,19 @@
       "feedback": "Reagime",
       "vendors": "Profesionistët"
     },
-    "copyright": "Të gjitha të drejtat e rezervuara."
+    "copyright": "Të gjitha të drejtat e rezervuara.",
+    "contact": {
+      "city": "Shkup, Maqedoni e Veriut",
+      "hours": "Hën–Pre, 9:00–17:00"
+    }
   },
   "header": {
     "logo": "IvyEvents",
     "actions": {
       "signIn": "Hyr",
       "getStartedFree": "Fillo falas",
-      "myDashboard": "Paneli im"
+      "myDashboard": "Paneli im",
+      "createInvitation": "Krijo ftesë"
     },
     "menu": {
       "templates": "Shabllone",
@@ -221,7 +232,17 @@
       "terms": "Kushtet dhe Rregullat",
       "contact": "Kontakti",
       "vendors": "Profesionistët",
-      "gallery": "Galeria e fotove"
+      "gallery": "Galeria e fotove",
+      "primary": "Navigimi kryesor",
+      "home": "Ballina",
+      "invitations": "Ftesa",
+      "blog": "Blogu",
+      "language": "Gjuha",
+      "closeMenu": "Mbyll menynë"
+    },
+    "theme": {
+      "toDark": "Tema e errët",
+      "toLight": "Tema e ndritshme"
     }
   },
   "nav": {
@@ -236,8 +257,8 @@
   },
   "eventCategories": {
     "section": {
-      "title": "Perfekte për Çdo Festim",
-      "subtitle": "Ftesa të bukura për të gjitha momentet tuaja të veçanta",
+      "title": "Një dizajn për çdo rast",
+      "subtitle": "Hapni një shembull, pastaj ndryshoni emrat, datën dhe ngjyrën për disa minuta.",
       "continue": "Vazhdo",
       "description": "Mund ta ndryshoni më vonë në cilësimet",
       "eyebrow": "Kategoritë",
@@ -247,15 +268,18 @@
     "items": {
       "weddings": {
         "title": "Dasma",
-        "description": "Ftesa elegante për ditën tuaj të veçantë"
+        "description": "Ftesa elegante për ditën tuaj të veçantë",
+        "sample": "Elena & Nikolla"
       },
       "birthdaysParties": {
         "title": "Ditëlindje dhe Festa",
-        "description": "Festoni momentet e rêndësishme me stil"
+        "description": "Festoni momentet e rêndësishme me stil",
+        "sample": "Mia mbush 8"
       },
       "corporate": {
         "title": "Ngjarje Korporative",
-        "description": "Ftesa profesionale për biznes"
+        "description": "Ftesa profesionale për biznes",
+        "sample": "Gala vjetore"
       },
       "conferences": {
         "title": "Konferenca",
@@ -267,11 +291,13 @@
       },
       "babyShowers": {
         "title": "Baby Shower",
-        "description": "Mirësevini anëtarin e ri"
+        "description": "Mirësevini anëtarin e ri",
+        "sample": "Mirë se erdhe, Luka"
       },
       "graduations": {
         "title": "Diplomime",
-        "description": "Festoni arritjet"
+        "description": "Festoni arritjet",
+        "sample": "Gjenerata 2026"
       },
       "anniversaries": {
         "title": "Përvjetore",
@@ -282,7 +308,10 @@
         "description": "Ndani fotot e ngjarjes me mysafirët"
       }
     },
-    "comingSoon": "Së shpejti"
+    "comingSoon": "Së shpejti",
+    "allDesigns": "Të gjitha dizajnet",
+    "openExample": "Hap shembullin",
+    "mostPopular": "Më i kërkuari"
   },
   "weddingsPage": {
     "templates": {
@@ -437,7 +466,7 @@
     "payment": {
       "title": "Informacionet e Pagesës",
       "email": "Adresa e Email-it",
-      "emailPh": "emri@shembull.mk",
+      "emailPh": "emri{'@'}shembull.mk",
       "cardNumber": "Numri i Kartës",
       "expiry": "Data e Skadimit",
       "cvc": "CVC",
@@ -490,33 +519,78 @@
   },
   "home": {
     "hero": {
-      "titleLine1": "Krijoni ftesa",
-      "titleLine2": "Planifikoni ngjarje",
-      "titleLine3": ".",
-      "subtitle": "Platformë gjithëpërfshirëse për ftesa digjitale elegante, ndjekje të lehtë të përgjigjeve dhe menaxhim pa stres të ngjarjeve.",
-      "primaryCta": "Fillo",
-      "secondaryCta": "Shiko Shabllonet",
-      "pill": "Ftesa digjitale",
-      "titleAccent1": "të bukura.",
-      "titleAccent2": "të paharrueshme",
-      "statTemplates": "Shabllone",
-      "statSent": "Ftesa të dërguara",
-      "statSatisfied": "Përdorues të kënaqur",
-      "chipConfirm": "Konfirmim i ri!",
-      "chipConfirmSub": "Maria konfirmoi pjesëmarrjen",
-      "chipGuests": "47 / 80 mysafirë",
-      "chipGuestsSub": "nga 80 mysafirë konfirmuan",
-      "cardLabel": "Jeni të ftuar në",
       "cardNames": "Ana & Marko",
-      "cardDate": "15 qershor 2025 · 18:00",
-      "cardLocation": "Ohër, Maqedoni",
-      "ratingScore": "4.9",
-      "ratingSource": "nga përdoruesit tanë",
-      "cardCta": "KONFIRMO PJESËMARRJEN",
-      "chipGuestsCount": "47"
+      "trustLabel": "Kushtet",
+      "trustFree": "Falas deri në publikim",
+      "carouselLabel": "Kategoritë e ftesave",
+      "openInvitation": "Hap ftesën",
+      "seeCategory": "Shiko kategorinë",
+      "seeDemo": "Shiko demon",
+      "openCategory": "Hap {name}",
+      "previous": "Kategoria e mëparshme",
+      "next": "Kategoria tjetër",
+      "trustNoApp": "Pa aplikacion",
+      "trustBilingual": "Maqedonisht dhe anglisht",
+      "slides": {
+        "wedding": {
+          "tag": "Ftesa dasme",
+          "short": "Dasmë",
+          "title": "Historia juaj fillon këtu.",
+          "lead": "Ftesë dixhitale elegante me konfirmim pjesëmarrjeje, hartë deri te vendi, menu dhe shoqërues, në maqedonisht dhe anglisht.",
+          "cardLead": "Elena",
+          "cardAccent": "&",
+          "cardTrail": "Nikolla",
+          "date": "24 · 08 · 2026",
+          "place": "Ohër · Maqedoni"
+        },
+        "birthday": {
+          "tag": "Ftesa ditëlindjeje",
+          "short": "Ditëlindje",
+          "title": "Festë me ritmin e vet.",
+          "lead": "Ftesë e gjallë për ditëlindje me konfirmim të shpejtë nga prindërit, vendin dhe të gjitha detajet e festës.",
+          "cardLead": "Mia mbush",
+          "cardAccent": "8",
+          "cardTrail": "",
+          "date": "12 · 10 · 2026",
+          "place": "Shkup · Maqedoni"
+        },
+        "corporate": {
+          "tag": "Ngjarje korporative",
+          "short": "Korporative",
+          "title": "Profesionale. Por e paharrueshme.",
+          "lead": "Ftesë e brenduar për konferenca, promovime dhe mbrëmje gala, me regjistrim, agjendë dhe check-in me kod QR.",
+          "cardLead": "Ideas in",
+          "cardAccent": "motion",
+          "cardTrail": "",
+          "date": "06 · 11 · 2026",
+          "place": "Shkup · Maqedoni"
+        },
+        "graduation": {
+          "tag": "Ftesa mature",
+          "short": "Maturë",
+          "title": "Kapitulli tjetër fillon.",
+          "lead": "Dizajn bashkëkohor për festat e maturës, me programin, vendin dhe galerinë në një vend.",
+          "cardLead": "Gjenerata",
+          "cardAccent": "2026",
+          "cardTrail": "",
+          "date": "18 · 06 · 2026",
+          "place": "Shkup · Maqedoni"
+        },
+        "baby": {
+          "tag": "Ftesa për bebe",
+          "short": "Pagëzim",
+          "title": "Një çast i vogël. Një gëzim i madh.",
+          "lead": "Ftesë e butë për pagëzim ose festën e parë të anëtarit të ri, me konfirmim dhe fotografi nga mysafirët.",
+          "cardLead": "Mirë se erdhe,",
+          "cardAccent": "Luka",
+          "cardTrail": "",
+          "date": "20 · 09 · 2026",
+          "place": "Veles · Maqedoni"
+        }
+      }
     },
     "howItWorks": {
-      "title": "Si Funksionon",
+      "title": "Nga ideja te ftesa e dërguar brenda një pasditeje",
       "subtitle": "Katër hapa të thjeshtë për ngjarjen tuaj të përsosur",
       "steps": {
         "chooseTemplate": {
@@ -534,34 +608,27 @@
         "trackRsvps": {
           "title": "Gjurmo RSVP",
           "description": "Monitoroni përgjigjet dhe menaxhoni listën e mysafirëve në kohë reale"
+        },
+        "chooseDesign": {
+          "title": "Zgjidhni një dizajn",
+          "description": "Zgjidhni rastin dhe dizajnin. Çdo ndryshim e shihni menjëherë, ashtu si do ta shohin mysafirët në telefon.",
+          "time": "rreth 5 minuta"
+        },
+        "addDetails": {
+          "title": "Shtoni detajet dhe mysafirët",
+          "description": "Data, vendi me hartë, programi dhe pyetjet për mysafirët: shoqërues, menu, fëmijë. Listën e mysafirëve e shkruani ose e importoni.",
+          "time": "10–15 minuta"
+        },
+        "shareLink": {
+          "title": "Ndani linkun",
+          "description": "Çdo mysafir merr një link personal përmes Viber, WhatsApp ose email. Përgjigjet ju vijnë vetvetiu, pa asnjë telefonatë.",
+          "time": "paketën e zgjidhni vetëm para publikimit"
         }
       },
       "eyebrow": "Si funksionon",
       "titleBefore": "Nuk është vetëm një ftesë.",
       "titleAccent": "Është fillimi i përjetimit.",
       "explore": "EKSPLORO"
-    },
-    "whyChoose": {
-      "title": "Pse të Zgjidhni IvyEvents?",
-      "subtitle": "Zgjidhja e plotë për planifikimin modern të ngjarjeve",
-      "items": {
-        "allInOne": {
-          "title": "Platformë Gjëthpërfshirëse",
-          "description": "Ftesa, RSVP, menaxhim mysafirësh dhe më shumë në një vend"
-        },
-        "noAds": {
-          "title": "Pa Reklama në Ftesa",
-          "description": "Mbani ftesat tuaja të pastra dhe profesionale pa shpërqendrime"
-        },
-        "unlimitedGuests": {
-          "title": "Mysafirë pa Kufij",
-          "description": "Ftoni aq njerëz sa ju duhen pa kufizime"
-        },
-        "designedForEvents": {
-          "title": "Dizajnuar për Dasma dhe Ngjarje",
-          "description": "Veçori të ndërtuara enkas për çdo lloj festimi"
-        }
-      }
     },
     "templates": {
       "title": "Shabllone Mahnitëse për Çdo Rast",
@@ -599,64 +666,6 @@
       "cardCaption": "Ftesë interaktive dasme",
       "empty": "Ende nuk ka dizajne të disponueshme."
     },
-    "features": {
-      "title": "Veçori për Çdo Fazë të Menaxhimit të Ngjarjeve",
-      "subtitle": "Gjithçka që ju nevojitet për të planifikuar, menaxhuar dhe festuar",
-      "items": {
-        "beautifulDesigns": {
-          "title": "Dizajne të Bukura Ftesash",
-          "description": "Zgjidhni nga qindra shabllone të dizajnuara profesionalisht ose krijoni dizajnin tuaj"
-        },
-        "rsvpManagement": {
-          "title": "RSVP dhe Menaxhim Mysafirësh",
-          "description": "Gjurmoni përgjigjet, menaxhoni listat e mysafirëve dhe dërgoni kujtesa automatikisht"
-        },
-        "automatedReminders": {
-          "title": "Kujtesa Automatike",
-          "description": "Dërgoni kujtesa në kohë automatikisht që të mos humbni asnjë RSVP"
-        },
-        "mobileFriendly": {
-          "title": "Përshtatur për Celular",
-          "description": "Shfaqje perfekte në çdo pajisje - mysafirët mund të përgjigjen nga kudo"
-        },
-        "eventDetails": {
-          "title": "Detajet dhe Orari i Ngjarjes",
-          "description": "Ndani informacionin e vendit, udhëzimet, orarin dhe detaje të rêndësishme në një vend"
-        },
-        "analytics": {
-          "title": "Analitikë në Kohë Reale",
-          "description": "Merrni njohuri mbi përgjigjet e mysafirëve, normat e pjesëmarrjes dhe metrikat e angazhimit"
-        }
-      },
-      "eyebrow": "Veçoritë",
-      "titleBefore": "Gjithçka nën kontroll.",
-      "titleAccent": "Ju jeni thjesht të pranishëm.",
-      "rsvpLabel": "Pasqyrë e drejtpërdrejtë e përgjigjeve",
-      "rsvpTitle": "Shiko kush po vjen — në kohë reale",
-      "rsvpConfirmed": "Konfirmuar",
-      "rsvpGuest1": "Ana Stojanovska",
-      "rsvpTime1": "para 2 minutash",
-      "rsvpYes": "Konfirmoi ✓",
-      "rsvpGuest2": "Marko Petrovski",
-      "rsvpTime2": "para 15 minutash",
-      "rsvpNo": "Nuk mund të vijë ✕",
-      "rsvpGuest3": "Ivana Nikolovska",
-      "rsvpTime3": "para 1 ore",
-      "rsvpMaybe": "Ndoshta ?",
-      "rsvpGuest4": "Boban Risteski",
-      "rsvpTime4": "para 2 orësh",
-      "rsvpYes2": "Konfirmoi ✓",
-      "cta": "Zbulo planifikuesin",
-      "dashGreeting": "MIRËMËNGJES, ANA",
-      "dashHeadline": "Dita juaj po afrohet.",
-      "dashConfirmed": "Të konfirmuar",
-      "dashTasks": "Detyra",
-      "dashBudget": "Buxheti",
-      "dashItem1": "Degustim menuje",
-      "dashItem1When": "Sot · 18:30",
-      "dashItem2": "Konfirmo dekorin",
-      "dashItem2When": "Nesër · 10:00"
-    },
     "faq": {
       "title": "Pyetjet më të Shpeshta",
       "subtitle": "Gjithçka që duhet të dini për IvyEvents",
@@ -689,51 +698,215 @@
           "question": "Çfarë nëse kam nevojë për ndihmë?",
           "answer": "Ofrojmë qendrë ndihme dhe mbështetje me email. Përdoruesit Pro dhe Premium kanë mbështetje prioritare me përgjigje më të shpejta."
         }
-      }
-    },
-    "socialProof": {
-      "rating": "4.9/5 Vlerësim",
-      "eventsCreated": "50,000+ Ngjarje të Krijuara",
-      "trustedBy": "Besuar nga 25,000+ Çifte",
-      "satisfaction": "98% Kënaqësi e Klientëve"
-    },
-    "testimonials": {
-      "title": "Dashuruar nga Mijëra Çifte të Lumtura",
-      "subtitle": "Histori reale nga festime reale",
-      "eyebrow": "Dëshmi",
-      "titleBefore": "Çfarë thonë",
-      "titleAccent": "përdoruesit tanë",
-      "items": {
-        "first": {
-          "text": "Ivy Events e bëri gjithë procesin jashtëzakonisht të thjeshtë. Ftesat ishin të bukura dhe ndjekja e përgjigjeve na kurseu shumë kohë.",
-          "name": "Ana & Marko",
-          "event": "Dasmë · Ohër 2024"
-        },
-        "second": {
-          "text": "Platformë e përsosur për ndjekjen e përgjigjeve. E dinim saktësisht kush po vinte — pa stres dhe pa telefonata.",
-          "name": "Sara Risteska",
-          "event": "Ditëlindje · Shkup 2024"
-        },
-        "third": {
-          "text": "E përdorëm për një darkë gala korporative. E thjeshtë, elegante dhe profesionale. E rekomandoj pa hezitim.",
-          "name": "Ivan Nikoloski",
-          "event": "Gala korporative · 2024"
-        }
-      }
+      },
+      "seeAll": "Të gjitha pyetjet dhe përgjigjet"
     },
     "finalCta": {
-      "title": "Gati për të Krijuar Ngjarjen Tuaj të Përsosur?",
-      "subtitle": "Bashkohuni me mijëra çifte dhe organizatorë që i besojnë IvyEvents. Filloni planifikimin e festimit tuaj të paharrueshëm sot – është falas për të filluar!",
-      "primaryCta": "Fillo Planifikimin e Ngjarjes",
+      "title": "Bëni ftesën tuaj të parë sot",
+      "subtitle": "Falas, pa kartë. Nëse ju pëlqen, zgjidhni një paketë kur të jeni gati ta dërgoni.",
+      "primaryCta": "Krijo ftesë falas",
       "secondaryCta": "Shiko Shabllonet",
       "eyebrow": "Gati?",
       "titleLine1": "Krijo ngjarjen tënde",
       "titleAccent": "të përsosur",
       "titleLine2": "sot"
     },
-    "quote": {
-      "text": "Për herë të parë planifikimi nuk na u duk si detyrim. Gjithçka ishte e qartë, e bukur dhe vërtet e jona.",
-      "attribution": "ANA & MARKO, OHËR"
+    "demo": {
+      "stageLabel": "Shembull interaktiv: provoni si mysafir",
+      "phoneLabel": "Pamje e ftesës dixhitale",
+      "tryIt": "Provoni si mysafir",
+      "tryItSub": "përgjigjuni ftesës dhe shikoni çfarë sheh organizatori",
+      "inviteLanguage": "Gjuha e ftesës",
+      "fewer": "Më pak",
+      "more": "Më shumë",
+      "organiser": "Organizatori",
+      "organiserView": "Çfarë sheh organizatori",
+      "confirmedOf": "konfirmuar nga {total}",
+      "waiting": "në pritje të përgjigjes",
+      "declined": "përgjigja: nuk vjen",
+      "justConfirmed": "sapo konfirmoi",
+      "justConfirmedWith": "sapo konfirmoi · +{n}"
+    },
+    "planner": {
+      "title": "Ftesa është vetëm fillimi. Ivy është aty edhe për pjesën tjetër.",
+      "subtitle": "Përgjigjet e mysafirëve bëhen vetvetiu listë, plan tavolinash dhe buxhet. Asgjë nuk shkruhet dy herë.",
+      "tablistLabel": "Mjetet e organizatorit",
+      "tabs": {
+        "guests": {
+          "title": "Mysafirët dhe përgjigjet",
+          "hint": "Kush konfirmoi, kush heziton, kush ka alergji"
+        },
+        "tables": {
+          "title": "Plani i tavolinave",
+          "hint": "Tërhiqni një mysafir te tavolina; ai mëson ku ulet"
+        },
+        "budget": {
+          "title": "Buxheti dhe pagesat",
+          "hint": "Planifikuar përballë shpenzuar, zë për zë"
+        },
+        "gallery": {
+          "title": "Galeria nga mysafirët",
+          "hint": "Mysafirët ngarkojnë fotografi përmes një kodi QR"
+        }
+      },
+      "guests": {
+        "summary": "{invited} të ftuar · {confirmed} të konfirmuar · {awaitingReply} në pritje",
+        "rows": {
+          "vegetarian": "+1 · menu vegjetariane",
+          "airport": "Cyrih · kërkon transport nga aeroporti",
+          "withChild": "+2 · fëmijë 4 vjeç",
+          "watchingOnline": "Melburn · do ta ndjekë online",
+          "nutAllergy": "alergji ndaj arrave"
+        },
+        "names": {
+          "vegetarian": "Ana Petrovska",
+          "airport": "Darko Stojanov",
+          "withChild": "Marija Nikolovska",
+          "watchingOnline": "Goran Ilievski",
+          "nutAllergy": "Elena Trajkovska"
+        }
+      },
+      "tables": {
+        "summary": "12 tavolina · 3 vende të lira",
+        "one": "Tavolina 1",
+        "two": "Tavolina 2",
+        "three": "Tavolina 3",
+        "family": "familja",
+        "friends": "miqtë",
+        "colleagues": "kolegët",
+        "legend": "Pika e gjelbër është vend i zënë, ajo me vija është e lirë. Pasi ta ruani, çdo mysafir sheh „Tavolina juaj: 2“ në ftesën e vet."
+      },
+      "budget": {
+        "summary": "shpenzuar {percent} % e planit",
+        "note": "Çdo zë ka afat dhe përgjegjës, kështu që njoftimi vjen para se të jetë vonë.",
+        "rows": {
+          "venue": "Restoranti dhe menuja",
+          "photographer": "Fotografi",
+          "music": "Muzika",
+          "decor": "Dekorimi"
+        },
+        "state": {
+          "deposit": "paguar · kapar",
+          "agreed": "dakorduar",
+          "awaitingQuote": "në pritje të ofertës",
+          "open": "e hapur"
+        }
+      },
+      "gallery": {
+        "summary": "214 fotografi · 11 video",
+        "privateLink": "Link privat dhe kod QR në tavolina",
+        "youApprove": "Ju vendosni çfarë është e dukshme",
+        "photoAlt": "Fotografi nga ngjarja, ngarkuar nga një mysafir"
+      }
+    },
+    "blog": {
+      "title": "Këshilla për planifikim",
+      "subtitle": "Tekste të shkurtra e praktike nga njerëz që kanë organizuar qindra ngjarje në Maqedoni.",
+      "all": "Të gjitha artikujt",
+      "featured": "E veçuar",
+      "minutes": "{n} min lexim",
+      "minutesShort": "{n} min",
+      "readArticle": "Lexo artikullin",
+      "read": "Lexo",
+      "newsletterPromise": "Një artikull në muaj, pa spam. Çregjistrim me një klikim.",
+      "emailLabel": "Email",
+      "subscribe": "Regjistrohu",
+      "subscribing": "Po dërgohet…",
+      "subscribed": "U regjistruat"
+    },
+    "demos": {
+      "title": "Si mund të duket ftesa juaj",
+      "subtitle": "Ftesa të përfunduara nga klientët tanë. E juaja bëhet në ngjyrat tuaja, me seksionet dhe funksionet që zgjidhni. Më shumë shembuj me kërkesë.",
+      "watch": "Shiko demon",
+      "rsvp": "Konfirmim pjesëmarrjeje",
+      "yes": "Po, vij",
+      "no": "Nuk mundem",
+      "modalTitle": "Demo · {name}",
+      "modalNote": "Demoja është pamje e shkurtuar; ftesa e vërtetë është interaktive.",
+      "makeOne": "Bëj një të tillë",
+      "noRecordingTitle": "Regjistrimi i demos",
+      "noRecordingBody": "Regjistrimi ende nuk është vendosur. Vendosni një .mp4 në public/demo dhe shtojeni në listën e demove.",
+      "cards": {
+        "wedding": {
+          "line": "Programi i ditës",
+          "name": "Marina & Viktor",
+          "when": "12 · 09 · 2026 · Shkup",
+          "about": "E personalizuar me inicialet në vulë, ngjyrat, lulet dhe seksionet sipas zgjedhjes suaj."
+        },
+        "birthday": {
+          "line": "Ditëlindja e parë",
+          "name": "Luka mbush 1",
+          "when": "15 · 08 · 2026 · Veles",
+          "about": "E personalizuar me muzikë, informacione dhe ngjyra sipas zgjedhjes suaj."
+        },
+        "corporate": {
+          "line": "Agjenda · 14:00–17:00",
+          "name": "Hapja solemne",
+          "when": "30 · 09 · 2026 · Kavadar",
+          "about": "E personalizuar me logon në vulë, ngjyrat dhe kornizat e markës suaj."
+        }
+      }
+    },
+    "guest": {
+      "title": "Çfarë përjeton mysafiri",
+      "subtitle": "Ftesa hapet pa aplikacion, në çdo telefon. Prekni vulën për ta parë.",
+      "back": "Prapa",
+      "openInvitation": "Hap ftesën",
+      "tapToOpen": "Prek për ta hapur",
+      "upload": {
+        "title": "Ngarko fotografi",
+        "subtitle": "Ndani momentet tuaja me ne",
+        "nameLabel": "Emri juaj (opsional)",
+        "namePlaceholder": "Shkruani emrin tuaj…",
+        "drop": "Zgjidhni ose tërhiqni fotografi",
+        "formats": "JPG, PNG, HEIC · deri në 10 njëherësh",
+        "cta": "Ngarko fotografi",
+        "privacy": "Fotografitë ruhen privatisht dhe janë të dukshme vetëm për mikpritësit."
+      },
+      "invite": {
+        "kicker": "Së bashku me familjet tona",
+        "days": "ditë",
+        "hours": "orë",
+        "minutes": "min",
+        "rsvp": "Konfirmo pjesëmarrjen",
+        "close": "Mbyll",
+        "whenDate": "E shtunë, 24 gusht 2026, 18:00",
+        "whenPlace": "Hotel Inex Gorica, Ohër"
+      },
+      "seat": {
+        "title": "Gjeni vendin tuaj",
+        "subtitle": "Shkruani emrin tuaj për të gjetur tavolinën",
+        "table": "tavolina",
+        "where": "Tavolina 4 · pranë dritares",
+        "onMap": "Shiko në hartë",
+        "mapLabel": "Plani i sallës",
+        "stage": "Skena"
+      },
+      "couple": "Elena & Nikolla",
+      "coupleLead": "Elena",
+      "coupleTrail": "Nikolla",
+      "seal": "E",
+      "sealTrail": "N",
+      "guestName": "Adrijana Cepevska",
+      "guestQuery": "Adrijana C",
+      "sampleDate": "24.08.2026"
+    },
+    "statement": {
+      "title": "Ftesë dixhitale me të gjitha detajet e ditës, hartë deri te vendi, planin e uljes, galerinë nga mysafirët dhe konfirmim automatik të pjesëmarrjes.",
+      "stats": {
+        "cost": {
+          "label": "kosto më e ulët",
+          "note": "pa shtypje, pa rishtypje"
+        },
+        "planning": {
+          "label": "planifikim më i lehtë",
+          "note": "përgjigjet bëhen listë vetvetiu"
+        },
+        "hours": {
+          "label": "orë të kursyera",
+          "note": "pa telefonata dhe mesazhe „a do të vini?“"
+        }
+      }
     }
   },
   "guests": {
@@ -1013,7 +1186,14 @@
     "content": "Përmbajtja",
     "contentAnalytics": "Analitika e përmbajtjes",
     "packages": "Paketat",
-    "upgrade": "Përmirëso"
+    "upgrade": "Përmirëso",
+    "eventContext": "Ngjarja",
+    "vendors": "Furnitorë",
+    "defaultUser": "Përdorues",
+    "accountMenu": "Llogaria ime",
+    "upgradeTitle": "Kalo në Premium",
+    "upgradeBody": "Detyra me afate, njoftime SMS dhe dizajn me porosi.",
+    "upgradeCta": "Shiko çfarë përfshin"
   },
   "admin": {
     "sidebar": {
@@ -1032,7 +1212,10 @@
       "organizers": "Organizatorët",
       "vendors": "Profesionistët",
       "vendorQueue": "Radha e miratimit",
-      "settings": "Cilësimet"
+      "settings": "Cilësimet",
+      "contextLabel": "Platforma",
+      "contextName": "Ivy Events",
+      "payments": "Pagesat"
     },
     "reviews": {
       "title": "Vlerësimet",
@@ -1282,7 +1465,7 @@
       "phone": "Telefoni",
       "phonePh": "+355…",
       "email": "Email",
-      "emailPh": "emri@email.com",
+      "emailPh": "emri{'@'}email.com",
       "status": "Statusi"
     },
     "errors": {
@@ -1495,8 +1678,8 @@
     "unknownTitle": "Status i Panjohur"
   },
   "packages": {
-    "title": "Paketat Tona",
-    "subtitle": "Zgjidhni paketin e duhur për eventin tuaj",
+    "title": "Çmime të qarta, një herë, për një ngjarje",
+    "subtitle": "Krijimi dhe redaktimi i ftesës është falas. Paketën e paguani vetëm para se ta publikoni dhe ta dërgoni.",
     "tabs": {
       "invitation": "Ftesë (Planifikues)",
       "organizer": "Organizator",
@@ -1518,49 +1701,77 @@
     "cartTotal": "Totali",
     "checkout": "Vazhdo te pagesa",
     "removeFromCart": "Hiq",
-    "heroEyebrow": "PAKETA PËR FTESA DIGJITALE",
-    "heroTitle": "Nga ftesa te",
-    "heroAccent": "një ngjarje e organizuar.",
-    "heroLead": "Një pagesë e vetme për ngjarje. Filloni falas dhe zgjidhni paketën para publikimit.",
+    "heroTitle": "Çmime të qarta, një herë, për një ngjarje",
+    "heroLead": "Krijimi dhe redaktimi i ftesës është falas. Paketën e paguani vetëm para se ta publikoni dhe ta dërgoni. Pa abonim mujor.",
     "gallery": {
-      "eyebrow": "GALERIA E FOTOVE",
-      "title": "Kujtimet kanë paketën e tyre.",
-      "text": "Galeria është e pavarur nga ftesa. Mysafirët ngarkojnë foto dhe video përmes një lidhjeje private ose kodi QR.",
+      "title": "Galeria e fotove ka paketën e vet",
+      "text": "E pavarur nga ftesa. Mysafirët ngarkojnë fotografi dhe video përmes një linku privat ose një kodi QR në tavolina, dhe ju vendosni çfarë është e dukshme. Kombinohet me çdo paketë ftese.",
       "cta": "Krijo galeri",
-      "tierSmall": "Për një ngjarje më të vogël",
-      "tierMedium": "Për të gjithë festën",
-      "tierLarge": "Foto dhe video"
+      "tierSmall": "Për një ngjarje më të vogël, rreth 400 fotografi.",
+      "tierMedium": "Për një festë të tërë, fotografi dhe video të shkurtra.",
+      "tierLarge": "Fotografi dhe video të gjata, pa kompresim.",
+      "jump": "Paketat e galerisë",
+      "mostChosen": "Më e zgjedhura",
+      "choose": "Zgjidh"
     },
     "compare": {
-      "eyebrow": "KRAHASIM I SHPEJTË",
       "title": "Cila paketë është për ju?",
-      "feature": "Funksioni",
-      "invitation": "Ftesë digjitale + RSVP",
+      "feature": "Funksionaliteti",
+      "invitation": "Ftesë dixhitale dhe përgjigje",
       "allDesigns": "Të gjitha dizajnet",
-      "seating": "Plani i tavolinave",
-      "advancedTasks": "Detyra të avancuara",
-      "notifications": "Njoftime me email dhe SMS"
-    }
+      "seating": "Mysafirët sipas tavolinave",
+      "advancedTasks": "Detyra, afate dhe kujtesa",
+      "notifications": "Njoftime me email dhe SMS",
+      "jump": "Krahasim",
+      "lead": "Pro është zgjedhja e duhur për pothuajse çdo dasmë ose festë më të madhe. Basic mjafton për një ditëlindje ose një tubim më të vogël. Premium kur doni gjithçka të planifikuar deri te detaji i fundit.",
+      "included": "e përfshirë",
+      "notIncluded": "nuk përfshihet",
+      "guestList": "Lista dhe pamja e mysafirëve",
+      "menu": "Zgjedhje menuje dhe personalizim",
+      "printed": "Ftesa të shtypura",
+      "prioritySupport": "Mbështetje me përparësi"
+    },
+    "noteGallery": "Galeria e fotove është paketë e veçantë: 1 GB, 3 GB ose 10 GB.",
+    "notePayment": "Pagesë me kartë (cPay) ose me faturë.",
+    "fullComparison": "Krahasimi i plotë i paketave",
+    "finalTitle": "Filloni falas, paguani kur të jeni të sigurt",
+    "finalBody": "E gjithë ftesa mund të jetë gati para se të vendosni për paketën.",
+    "faq": {
+      "title": "Pyetje për pagesën",
+      "upgradeQ": "A mund ta ndryshoj paketën pasi kam paguar?",
+      "upgradeA": "Po. Mund të kaloni në një paketë më të lartë në çdo kohë dhe paguani vetëm diferencën.",
+      "twoEventsQ": "Po nëse kam dy ngjarje?",
+      "twoEventsA": "Çdo ngjarje është paketë më vete. Për disa ngjarje në vit — agjenci, restorante — na shkruani për çmim organizatori.",
+      "printedQ": "A përfshihen ftesat e shtypura në çmim?",
+      "printedA": "Po, në Pro dhe Premium. Dizajni është i njëjtë si ftesa dixhitale, me një kod QR drejt saj.",
+      "invoiceQ": "A marr faturë?",
+      "invoiceA": "Po, automatikisht pas pagesës, në emrin tuaj ose të kompanisë."
+    },
+    "startWith": "Fillo me {plan}"
   },
   "about": {
     "title": "Rreth Nesh",
-    "heroSubtitle": "Po ndërtojmë të ardhmen e planifikimit të ngjarjeve — e bukur, e thjeshtë dhe e aksesueshme për të gjithë.",
+    "heroSubtitle": "Ivy Events ekziston që organizimi të jetë i qetë, i qartë dhe i bukur, nga ideja e parë deri në ditën e ngjarjes.",
     "missionTitle": "Misioni Ynë",
-    "missionText": "Të fuqizojmë individët dhe profesionistët për të krijuar ngjarje të paharrueshme me mjete dixhitale elegante që kursejnë kohë dhe kënaqin mysafirët.",
+    "missionText": "Ivy Events i bashkon në një vend ftesën, mysafirët, përgjigjet, tavolinat, detyrat, buxhetin dhe fotografitë. Produkti është ndërtuar për tregun maqedonas — për festat tona, diasporën tonë dhe mysafirët tanë — me idenë që më vonë të dalë edhe jashtë.",
     "visionTitle": "Vizioni Ynë",
     "visionText": "Një botë ku çdo festim planifikohet pa mundim, paraqitet bukur dhe është thellësisht personal.",
-    "valuesTitle": "Vlerat Tona",
-    "valueSimplicity": "Thjeshtësia",
-    "valueSimplicityDesc": "Besojmë se mjetet e shkëlqyera duhet të jenë intuitive dhe të këndshme për t'u përdorur.",
-    "valueElegance": "Eleganca",
-    "valueEleganceDesc": "Çdo detaj ka rëndësi — nga ftesat deri te valli i fundit.",
-    "valueInclusion": "Përfshirja",
-    "valueInclusionDesc": "Ngjarje të bukura për çdo kulturë, buxhet dhe festim.",
-    "heroEyebrow": "PSE IVY EVENTS",
-    "heroTitle": "Teknologji që lë",
-    "heroAccent": "hapësirë për emocionin.",
-    "storyEyebrow": "IDEJA JONË",
-    "storyTitle": "Momentet më të rëndësishme nuk duhet të nisin me kaos në një tabelë."
+    "valuesTitle": "Tri gjëra për të cilat nuk bëjmë lëshime",
+    "valueSimplicity": "E thjeshtë",
+    "valueSimplicityDesc": "Çdo hap duhet të kuptohet pa udhëzues. Nëse ju duhet një video për të kuptuar një buton, butoni është i gabuar.",
+    "valueElegance": "Personale",
+    "valueEleganceDesc": "Dizajni i përshtatet ngjarjes, jo e kundërta. Një pagëzim nuk duhet të duket si konferencë korporative.",
+    "valueInclusion": "E sigurt",
+    "valueInclusionDesc": "Mysafirët dhe kujtimet tuaja mbeten nën kontrollin tuaj. Linqe private, pa lista publike, pa shitje të dhënash.",
+    "heroTitle": "Teknologji që lë hapësirë për emocionin",
+    "storyTitle": "Momentet më të rëndësishme nuk duhet të nisin me një tabelë Excel",
+    "storyOrigin": "Nisëm nga dasma jonë dhe një dokument Excel: 140 rreshta, 3 versione dhe asnjë numër i saktë. Mysafirët përgjigjeshin me telefon, me mesazh, përmes prindërve. Tavolinat viheshin në letër. Buxheti dihej „përafërsisht“.",
+    "statFirstInvitation": "ftesa e parë e dërguar",
+    "statBilingual": "dygjuhësh që nga dita e parë",
+    "statTeam": "ekip dhe mbështetje, lokale",
+    "talkTitle": "Flisni me ne",
+    "talkBody": "Jeni agjenci, restorant ose organizoni disa ngjarje në vit? Kemi kushte për ju.",
+    "talkCta": "Na kontaktoni"
   },
   "terms": {
     "title": "Kushtet dhe Rregullat",
@@ -1597,7 +1808,7 @@
       },
       "contact": {
         "title": "8. Kontakti",
-        "text": "Për pyetje rreth këtyre kushteve, na kontaktoni në support@ivyevents.com."
+        "text": "Për pyetje rreth këtyre kushteve, na kontaktoni në support{'@'}ivyevents.com."
       }
     },
     "eyebrow": "Ligjore",
@@ -1606,11 +1817,11 @@
   },
   "contact": {
     "title": "Na Kontaktoni",
-    "subtitle": "Keni pyetje ose keni nevojë për ndihmë? Na shkruani me kënaqësi.",
+    "subtitle": "Përgjigjemi të njëjtën ditë pune. Për gjëra urgjente në ditët para ngjarjes, përdoruesit Premium kanë linjë me përparësi.",
     "name": "Emri i plotë",
     "namePh": "p.sh. Ana Krasniqi",
     "email": "Adresa Email",
-    "emailPh": "email@juaj.com",
+    "emailPh": "email{'@'}juaj.com",
     "phone": "Telefoni",
     "phonePh": "+383...",
     "subject": "Tema",
@@ -1627,15 +1838,24 @@
       "location": "Adresa",
       "city": "Shkup, Maqedoni"
     },
-    "heroEyebrow": "KONTAKT",
-    "heroTitle": "Na tregoni si mund",
-    "heroAccent": "t'ju ndihmojmë.",
-    "leadTitle": "Le të flasim.",
+    "heroTitle": "Jemi këtu për çdo pyetje",
+    "leadTitle": "Na shkruani",
     "leadText": "Për mbështetje, shkruani email-in me të cilin jeni regjistruar dhe emrin e ngjarjes.",
     "hoursLabel": "Orari",
-    "hoursValue": "Hën–Pre · 09:00–17:00",
+    "hoursValue": "E hënë–e premte, 9:00–17:00 (CET)",
     "replyLabel": "Përgjigje",
-    "replyValue": "Brenda një dite pune"
+    "replyValue": "Brenda një dite pune",
+    "partnersLabel": "Për agjenci dhe restorante",
+    "partnersValue": "Organizoni disa ngjarje në vit? Zgjidhni „Partneritet“ në formular.",
+    "eventDate": "Data e ngjarjes (opsionale)",
+    "sendAnother": "Dërgo një mesazh tjetër",
+    "subjects": {
+      "invitation": "Pyetje për ftesën",
+      "billing": "Paketat dhe pagesa",
+      "customDesign": "Dizajn me porosi",
+      "partnership": "Partneritet (agjenci, restorant)",
+      "other": "Tjetër"
+    }
   },
   "feedback": {
     "title": "Ndani Mendimin Tuaj",
@@ -1662,7 +1882,7 @@
     "name": "Emri i plotë",
     "namePh": "p.sh. Ana Krasniqi",
     "email": "Email",
-    "emailPh": "email@juaj.com",
+    "emailPh": "email{'@'}juaj.com",
     "phone": "Telefoni",
     "phonePh": "+383...",
     "subject": "Tema",
@@ -2083,7 +2303,10 @@
       "confirm": "Konfirmo",
       "release": "Liro"
     },
-    "inbox": "Kërkesat"
+    "inbox": "Kërkesat",
+    "contextLabel": "Furnitor",
+    "role": "Portali i furnitorëve",
+    "approved": "I miratuar"
   },
   "catering": {
     "title": "Menuja e restorantit",
@@ -2212,62 +2435,77 @@
   ],
   "faqPageFaqs": [
     {
+      "group": "invitations",
       "question": "Çfarë është një ftesë digjitale dhe pse ta përdor në vend të letrës?",
       "answer": "Ftesa digjitale është ftesë online që e dizajnoni, e personalizoni dhe ua dërgoni mysafirëve në mënyrë elektronike. Ndryshe nga ftesat e shtypura, ajo mbërrin menjëherë, nuk shpenzon letër dhe kushton më pak. Te Ivy Events ftesa përmban edhe konfirmim pjesëmarrjeje të integruar, dizajn të animuar dhe ndjekje të mysafirëve në kohë reale. Ju kurseni kohën e shtypjes dhe të postës, ndërsa mysafirët marrin një përvojë moderne që e hapin nga çdo pajisje."
     },
     {
+      "group": "invitations",
       "question": "Si krijoj një ftesë digjitale dasme në Ivy Events?",
       "answer": "Është e thjeshtë. Hapni një llogari falas, zgjidhni kategorinë „Dasmë“ dhe shfletoni shabllonet e ftesave. Zgjidhni dizajnin që ju pëlqen dhe përshtatni tekstin, ngjyrat dhe detajet — sallën, datën dhe orën. Shtoni formularin e konfirmimit, shikoni parapamjen dhe ndani lidhjen me mysafirët. I gjithë procesi zgjat vetëm disa minuta."
     },
     {
+      "group": "invitations",
       "question": "A mund të krijoj ftesa ditëlindjeje për fëmijë dhe për të rritur?",
       "answer": "Sigurisht. Ivy Events ka shabllone ditëlindjeje për të gjitha moshat — nga dizajne të gëzuara e me ngjyra për festat e fëmijëve, deri te shabllone elegante e moderne për ditëlindje të rëndësishme dhe festa të të rriturve. Çdo shabllon është plotësisht i personalizueshëm: ngjyrat, shkronjat, teksti dhe fotot përshtaten me temën e festës."
     },
     {
+      "group": "guests",
       "question": "Si funksionon ndjekja e përgjigjeve në Ivy Events?",
       "answer": "Kur e ndani ftesën, mysafiri konfirmon pjesëmarrjen drejtpërdrejt nga faqja e ftesës, me një klikim. Të gjitha përgjigjet mblidhen automatikisht dhe shfaqen në panelin e ngjarjes në kohë reale. Shihni kush ka konfirmuar, kush ka refuzuar, sa shoqërues ka dhe çdo shënim të veçantë, si kërkesat për ushqim. Mund t’u dërgoni edhe kujtesë atyre që ende nuk janë përgjigjur."
     },
     {
+      "group": "guests",
       "question": "A mund ta përdor Ivy Events si planifikues digjital dasme?",
       "answer": "Po. Ivy Events shkon përtej ftesave — është planifikues i plotë. Menaxhoni listën e mysafirëve, ndiqni përgjigjet, bëni planin e tavolinave, hartoni programin e ditës, vendosni buxhetin, ndërtoni faqen e historisë suaj dhe punoni bashkë me ekipin. Gjithçka është në një panel të vetëm, pa nevojë për disa aplikacione ose tabela."
     },
     {
+      "group": "invitations",
       "question": "Si ua ndaj ftesën digjitale mysafirëve?",
       "answer": "Ivy Events krijon një lidhje unike që mund ta ndani kudo — WhatsApp, Viber, email, Facebook, Instagram, SMS ose çdo aplikacion tjetër. Mund të ndani një lidhje të përbashkët për të gjithë ose lidhje personale për secilin mysafir, që ndjekja e përgjigjeve të jetë e saktë. Mysafirët nuk kanë nevojë të shkarkojnë asnjë aplikacion."
     },
     {
+      "group": "guests",
       "question": "Çfarë e dallon Ivy Events nga mjetet e tjera për ftesa?",
       "answer": "Ivy Events nuk është vetëm krijues ftesash — është platformë e plotë për planifikimin e ngjarjeve. Shumica e mjeteve ju lejojnë vetëm të dizajnoni dhe të dërgoni një ftesë; Ivy Events i bashkon shabllonet e bukura me mjete të vërteta planifikimi: ndjekje përgjigjesh, listë mysafirësh, plan tavolinash, buxhet, program të ditës, punë ekipore dhe galeri fotosh."
     },
     {
+      "group": "invitations",
       "question": "A mund të krijoj ftesa dhe njoftime për diplomim?",
       "answer": "Po. Ivy Events ka shabllone të posaçme për diplomime — të shkollës së mesme, të universitetit dhe për festat e diplomës. Dizajnin e përshtatni me ngjyrat e shkollës, shtoni detajet e ngjarjes dhe një mesazh personal, dhe e ndani ftesën me shokë e familje. Ndjekja e përgjigjeve është e përfshirë, kështu që e dini saktë kush po vjen."
     },
     {
+      "group": "guests",
       "question": "A janë të dhënat e listës sime të mysafirëve private dhe të sigurta?",
       "answer": "Absolutisht. Ivy Events e merr seriozisht privatësinë. Lista e mysafirëve, përgjigjet dhe detajet personale të ngjarjes ruhen në mënyrë të sigurt dhe nuk u jepen kurrë palëve të treta. Vetëm ju dhe anëtarët e ekipit të cilëve u jepni akses shprehimisht mund t’i shihni të dhënat e ngjarjes. Përdorim enkriptim sipas standardeve të industrisë për të gjitha të dhënat në platformë."
     },
     {
+      "group": "invitations",
       "question": "A mund ta ndryshoj ftesën pasi e kam dërguar?",
       "answer": "Po. Kjo është një nga përparësitë më të mëdha të ftesave digjitale. Me Ivy Events e ndryshoni ftesën në çdo kohë — datën, sallën, tekstin ose dizajnin — edhe pasi ta keni ndarë lidhjen. Ndryshimet duken menjëherë, kështu që mysafirët shohin gjithmonë versionin e fundit. Nuk keni nevojë ta dërgoni lidhjen përsëri."
     },
     {
+      "group": "guests",
       "question": "A funksionon Ivy Events si aplikacion planifikimi në celular?",
       "answer": "Po. Ivy Events përshtatet plotësisht me ekranin dhe punon njësoj në telefon, tablet dhe kompjuter. Krijoni ftesa, menaxhoni listën e mysafirëve, kontrolloni përgjigjet dhe përditësoni detajet e ngjarjes nga çdo pajisje me shfletues. Nuk kërkohet shkarkim aplikacioni — gjithçka punon në shfletues."
     },
     {
+      "group": "pricing",
       "question": "Sa kushton krijimi i një ftese digjitale?",
       "answer": "Mund të krijoni një ftesë digjitale falas me planin Falas, i cili përfshin deri në 50 mysafirë, shabllonet bazë dhe ndjekjen e përgjigjeve. Për ngjarje më të mëdha ose veçori shtesë, plani Pro ofron deri në 300 mysafirë, shabllone premium dhe ftesa me SMS. Detajet e plota për secilin plan i gjeni te faqja e çmimeve."
     },
     {
+      "group": "invitations",
       "question": "A mund të krijoj faqe interneti ose faqe ftese për ngjarjen time?",
       "answer": "Po. Çdo ftesë që krijoni në Ivy Events funksionon si faqe e veçantë e ngjarjes, si një mini-faqe interneti. Aty janë detajet, dizajni dhe formulari i konfirmimit — të gjitha në një faqe të vetme që ndahet lehtë. Mysafiri hap lidhjen dhe sheh gjithçka që i duhet: datën, orën, sallën, hartën, mesazhin tuaj personal dhe butonin për të konfirmuar."
     },
     {
+      "group": "guests",
       "question": "Çfarë lloj ngjarjesh mund të planifikoj përveç dasmave?",
       "answer": "Përveç dasmave, Ivy Events mbështet ditëlindje dhe festa, diplomime, festa për foshnjat, përvjetorë, ngjarje korporative, konferenca dhe darka private. Çdo lloj ngjarjeje ka shabllonet e veta të ftesave dhe mjetet përkatëse të planifikimit. Kategori dhe dizajne të reja shtohen vazhdimisht."
     },
     {
+      "group": "invitations",
       "question": "Si filloj me Ivy Events?",
       "answer": "Fillimi është i shpejtë dhe falas. Hyni në ivyevents.mk, hapni llogarinë dhe zgjidhni llojin e ngjarjes. Shfletoni shabllonet, zgjidhni një dizajn dhe përshtatni detajet. Shtoni formularin e konfirmimit, shikoni parapamjen dhe ndani lidhjen unike me mysafirët. I gjithë procesi, nga regjistrimi te ftesa e parë, zgjat vetëm pak minuta."
     }
@@ -2690,7 +2928,7 @@
   },
   "blog": {
     "title": "Blogu",
-    "subtitle": "Ide dhe këshilla për evente.",
+    "subtitle": "Tekste të shkurtra e praktike nga njerëz që kanë organizuar qindra ngjarje në Maqedoni. Pa filozofi, vetëm ajo që funksionon.",
     "all": "Të gjitha",
     "categoryWEDDING": "Dasma",
     "categoryBIRTHDAY": "Ditëlindje",
@@ -2701,7 +2939,12 @@
     "empty": "Ende asgjë e publikuar në këtë gjuhë.",
     "notFound": "Ky artikull nuk gjendet në këtë gjuhë.",
     "alsoIn": "Edhe në:",
-    "related": "Të lidhura"
+    "related": "Të lidhura",
+    "filterLabel": "Filtro sipas temës",
+    "loading": "Po ngarkohen artikujt…",
+    "byAuthor": "Nga {name}",
+    "authorRole": "ekipi i Ivy Events",
+    "ctaText": "Bëni ftesën tuaj falas dhe ndajeni me një link të vetëm."
   },
   "inspiration": {
     "subtitle": "{count} profesionistë",
@@ -3087,7 +3330,15 @@
     "team": "Ekipi",
     "settings": "Cilësimet",
     "role": "Agjenci",
-    "closeMenu": "Mbyll menynë"
+    "closeMenu": "Mbyll menynë",
+    "contextLabel": "Agjencia",
+    "activeEvents": "{n} ngjarje aktive",
+    "planBadge": "Paketa {tier}",
+    "clients": "Klientët",
+    "tasks": "Detyrat",
+    "calendar": "Kalendari",
+    "vendors": "Furnitorë",
+    "reports": "Raporte"
   },
   "rsvpSuccess": {
     "title": "Përgjigjja u pranua",
@@ -3101,9 +3352,168 @@
     "title": "Redakto zërin"
   },
   "faq": {
-    "heroEyebrow": "PYETJE TË SHPESHTA",
-    "heroTitle": "Gjithçka që duhet të dini",
-    "heroAccent": "para se të filloni.",
-    "heroLead": "Përgjigje të shkurtra për ftesat, RSVP, paketat dhe galerinë."
+    "heroTitle": "Gjithçka që duhet ta dini para se të filloni",
+    "heroLead": "Përgjigje të shkurtra e të drejtpërdrejta për ftesat, përgjigjet e mysafirëve, paketat dhe galerinë.",
+    "title": "Pyetje të shpeshta",
+    "groups": {
+      "invitations": "Ftesat",
+      "pricing": "Paketat dhe pagesa",
+      "guests": "Mysafirët, tavolinat dhe galeria"
+    },
+    "noAnswerTitle": "Nuk e gjetët përgjigjen?",
+    "noAnswerBody": "Përgjigjemi të njëjtën ditë pune.",
+    "noAnswerCta": "Na shkruani"
+  },
+  "a11y": {
+    "skipToContent": "Kalo te përmbajtja",
+    "breadcrumb": "Shtegu"
+  },
+  "designs": {
+    "title": "Një dizajn për çdo rast",
+    "lead": "Çdo dizajn është një ftesë e plotë interaktive: detajet, harta, programi dhe përgjigjet e mysafirëve. Zgjidhni një, pastaj ndryshoni emrat, datën dhe ngjyrën.",
+    "filterLabel": "Filtro sipas rastit",
+    "all": "Të gjitha",
+    "loading": "Po ngarkohen dizajnet…",
+    "empty": "Ende nuk ka dizajne në këtë kategori. Na shkruani çfarë ju duhet.",
+    "interactiveInvitation": "Ftesë dixhitale interaktive",
+    "customTitle": "Nuk e gjetët stilin tuaj?",
+    "customBody": "Në paketën Premium e dizajnojmë sipas kërkesës suaj, bashkë me ju.",
+    "customCta": "Kërko dizajn me porosi"
+  },
+  "dash": {
+    "roleSwitchLabel": "Hapësira e punës",
+    "sectionsLabel": "Seksionet",
+    "searchHint": "Kërko…",
+    "searchEvent": "Kërko mysafirë, detyra, furnitorë…",
+    "searchAgency": "Kërko ngjarje, klientë, ekip…",
+    "searchVendor": "Kërko kërkesa, oferta, mesazhe…",
+    "searchAdmin": "Kërko përdorues, ngjarje, pagesa…",
+    "notifications": "Njoftime",
+    "newEvent": "Ngjarje e re",
+    "workspaces": {
+      "event": "Ngjarja ime",
+      "organizer": "Organizator",
+      "vendor": "Furnitor",
+      "admin": "Admin"
+    }
+  },
+  "agencyCalendar": {
+    "title": "Kalendari",
+    "subtitle": "Të gjitha ngjarjet e agjencisë, muaj pas muaji.",
+    "previous": "I mëparshmi",
+    "next": "Tjetri",
+    "today": "Sot",
+    "inMonth": "{n} ngjarje këtë muaj"
+  },
+  "agencyTasks": {
+    "title": "Detyrat",
+    "subtitle": "Gjithçka e hapur nëpër të gjitha ngjarjet, në një vend.",
+    "filterLabel": "Filtro sipas ngjarjes",
+    "allEvents": "Të gjitha ngjarjet",
+    "count": "{n} detyra",
+    "none": "Asgjë këtu.",
+    "status": {
+      "PENDING": "Për të bërë",
+      "IN_PROGRESS": "Në proces",
+      "DONE": "Përfunduar"
+    }
+  },
+  "agencyVendors": {
+    "title": "Furnitorë",
+    "subtitle": "Furnitorë të miratuar që mund t’i rezervoni për ngjarjet tuaja.",
+    "filterLabel": "Filtro sipas llojit",
+    "allTypes": "Të gjithë",
+    "searchLabel": "Kërko furnitorë",
+    "searchPlaceholder": "Emri ose qyteti…",
+    "publicDirectory": "Direktoria publike",
+    "open": "Hap",
+    "empty": "Asnjë furnitor nuk përputhet me filtrin."
+  },
+  "agencyReports": {
+    "title": "Raporte",
+    "subtitle": "Përfitueshmëria dhe shëndeti i ngjarjeve.",
+    "financeOnly": "Për të ardhurat dhe marzhin nevojitet qasje financiare. Kërkojeni nga pronari i agjencisë.",
+    "clientSpend": "Buxhetet e klientëve",
+    "agencyRevenue": "Të ardhurat tuaja",
+    "revenueNote": "komision dhe shërbime",
+    "margin": "Marzhi",
+    "wonLeads": "nga {n} oferta të fituara",
+    "atRisk": "Ngjarje në rrezik",
+    "atRiskNote": "mbi buxhet ose me vonesë",
+    "revenueByMonth": "Të ardhurat sipas muajit",
+    "noMonthly": "Ende nuk ka mjaft të dhëna për një grafik mujor.",
+    "health": "Shëndeti i ngjarjeve",
+    "allEvents": "Të gjitha ngjarjet",
+    "allHealthy": "Asnjë ngjarje nuk kërkon vëmendje.",
+    "overdue": "{n} detyra me vonesë",
+    "approaching": "{n} ditë deri te ngjarja",
+    "tone": {
+      "warn": "Kujdes",
+      "risk": "Rrezik"
+    }
+  },
+  "adminPayments": {
+    "title": "Pagesat",
+    "subtitle": "Çdo tentativë pagese dhe çfarë ndodhi me të.",
+    "filterLabel": "Filtro sipas statusit",
+    "allStatuses": "Të gjitha",
+    "count": "{n} pagesa",
+    "reference": "Referenca",
+    "customer": "Klienti",
+    "package": "Paketa",
+    "amount": "Shuma",
+    "when": "Kur",
+    "status": "Statusi",
+    "previous": "E mëparshmja",
+    "next": "Tjetra",
+    "pageOf": "Faqja {page} nga {pages}",
+    "empty": "Asnjë pagesë nuk përputhet me filtrin.",
+    "statuses": {
+      "SUCCESS": "E suksesshme",
+      "PENDING": "Në pritje",
+      "FAILED": "E dështuar",
+      "CANCELED": "E anuluar",
+      "EXPIRED": "E skaduar"
+    }
+  },
+  "tasks": {
+    "assignee": {
+      "COUPLE": "Çifti",
+      "BRIDE": "Nusja",
+      "GROOM": "Dhëndri"
+    }
+  },
+  "vendorType": {
+    "PHOTOGRAPHY": "Fotografi",
+    "BRIDAL_ATTIRE": "Veshje nusërie",
+    "GROOM_ATTIRE": "Veshje dhëndri",
+    "MAKEUP_HAIR": "Grim dhe flokë",
+    "DECORATION": "Dekorim",
+    "FLOWERS": "Lule",
+    "LIGHTING": "Ndriçim",
+    "CAKE": "Tortë",
+    "CATERING": "Katering",
+    "BAR_SERVICE": "Bar dhe pije",
+    "FOOD": "Ushqim",
+    "DJ": "DJ",
+    "BAND": "Bend",
+    "ENTERTAINMENT": "Argëtim",
+    "HOST_EMCEE": "Moderator",
+    "TRAINING_FACILITATOR": "Trajnime dhe ndërtim ekipi",
+    "OUTDOOR_ACTIVITY": "Aktivitete në natyrë",
+    "TRANSPORTATION": "Transport",
+    "EQUIPMENT_RENTAL": "Qira pajisjesh",
+    "VENUE": "Vendi i ngjarjes",
+    "DECOR_RENTAL": "Qira dekori",
+    "PRINTING": "Shtypshkrim",
+    "SECURITY": "Siguri",
+    "CLEANING": "Pastrim",
+    "OTHER": "Tjetër"
+  },
+  "guestStatus": {
+    "CONFIRMED": "Vjen",
+    "INVITED": "Në pritje të përgjigjes",
+    "DECLINED": "Nuk vjen",
+    "PENDING": "Ende i paftuar"
   }
 }
