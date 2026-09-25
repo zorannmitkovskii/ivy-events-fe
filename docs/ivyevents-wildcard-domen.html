@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wildcard домен ivyevents.mk</title>
+<style>
+  :root {
+    --bg: #faf8f3;
+    --card: #ffffff;
+    --ink: #1d2a23;
+    --ink-2: #4b5a51;
+    --line: #e3e0d6;
+    --accent: #1f4a37;
+    --accent-soft: #e6efe9;
+    --warn: #8a5a12;
+    --warn-soft: #fbf1dc;
+    --danger: #8f2a22;
+    --danger-soft: #fbe6e3;
+    --code-bg: #f2f0ea;
+    --mine: #3d4fa0;
+    --mine-soft: #e8ebf8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101713;
+      --card: #17211b;
+      --ink: #e7ece8;
+      --ink-2: #a9b6ae;
+      --line: #2a3830;
+      --accent: #8fd1ae;
+      --accent-soft: #1d3327;
+      --warn: #f0c27a;
+      --warn-soft: #33291a;
+      --danger: #f2a39b;
+      --danger-soft: #3a1f1c;
+      --code-bg: #0c120f;
+      --mine: #aab6f2;
+      --mine-soft: #202640;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #101713; --card: #17211b; --ink: #e7ece8; --ink-2: #a9b6ae; --line: #2a3830;
+    --accent: #8fd1ae; --accent-soft: #1d3327; --warn: #f0c27a; --warn-soft: #33291a;
+    --danger: #f2a39b; --danger-soft: #3a1f1c; --code-bg: #0c120f; --mine: #aab6f2; --mine-soft: #202640;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { font-size: 30px; line-height: 1.2; margin: 0 0 8px; }
+  h2 { font-size: 21px; margin: 0 0 4px; }
+  h3 { font-size: 16px; margin: 22px 0 6px; }
+  p { margin: 8px 0; }
+  .lede { color: var(--ink-2); margin-bottom: 24px; }
+  a { color: var(--accent); }
+
+  section.step {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 22px 18px;
+    margin: 18px 0;
+  }
+  .step-head { display: flex; gap: 12px; align-items: baseline; }
+  .num {
+    flex: 0 0 auto;
+    width: 30px; height: 30px; border-radius: 50%;
+    display: inline-grid; place-items: center;
+    background: var(--accent); color: var(--card);
+    font-weight: 700; font-size: 14px;
+  }
+  .who {
+    display: inline-block; font-size: 12px; font-weight: 600;
+    padding: 2px 8px; border-radius: 999px; margin-left: 6px;
+    background: var(--accent-soft); color: var(--accent);
+  }
+  .who.mine { background: var(--mine-soft); color: var(--mine); }
+
+  pre {
+    position: relative;
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    overflow-x: auto;
+    font: 13px/1.55 ui-monospace, "Cascadia Code", Consolas, monospace;
+    margin: 8px 0 12px;
+    white-space: pre;
+  }
+  code { font: 13px ui-monospace, "Cascadia Code", Consolas, monospace; background: var(--code-bg); padding: 1px 5px; border-radius: 5px; }
+  pre code { background: none; padding: 0; }
+  .copy {
+    position: absolute; top: 8px; right: 8px;
+    font: 12px system-ui, sans-serif;
+    border: 1px solid var(--line); background: var(--card); color: var(--ink-2);
+    border-radius: 6px; padding: 3px 8px; cursor: pointer;
+  }
+  .copy:hover { color: var(--ink); }
+
+  .note, .warn, .danger {
+    border-radius: 10px; padding: 10px 14px; margin: 12px 0;
+    border-left: 4px solid;
+  }
+  .note { background: var(--accent-soft); border-color: var(--accent); }
+  .warn { background: var(--warn-soft); border-color: var(--warn); }
+  .danger { background: var(--danger-soft); border-color: var(--danger); }
+
+  ul.check { list-style: none; padding: 0; margin: 10px 0 0; }
+  ul.check li { padding: 4px 0; }
+  ul.check label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+  ul.check input { margin-top: 5px; width: 16px; height: 16px; accent-color: var(--accent); flex: 0 0 auto; }
+  ul.check input:checked + span { text-decoration: line-through; color: var(--ink-2); }
+
+  .progress { font-size: 13px; color: var(--ink-2); }
+  .bar { height: 6px; background: var(--line); border-radius: 999px; overflow: hidden; margin: 6px 0 0; }
+  .bar > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 10px 0; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-2); }
+  .table-wrap { overflow-x: auto; }
+
+  .tabs { display: flex; gap: 6px; margin: 10px 0 0; flex-wrap: wrap; }
+  .tabs button {
+    border: 1px solid var(--line); background: var(--card); color: var(--ink-2);
+    border-radius: 8px; padding: 5px 10px; font: 13px system-ui, sans-serif; cursor: pointer;
+  }
+  .tabs button[aria-selected="true"] { background: var(--accent); color: var(--card); border-color: var(--accent); }
+  .tab-panel[hidden] { display: none; }
+
+  @media (max-width: 560px) {
+    h1 { font-size: 24px; }
+    section.step { padding: 18px 14px 14px; }
+    pre { padding-top: 38px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Адреси <code>име.ivyevents.mk</code>: сертификати и домен</h1>
+  <p class="lede">
+    Упатство чекор по чекор за да работат адресите на настаните (<code>ana-marko.ivyevents.mk</code>), добавувачите и агенциите.
+    Треба ви пристап до серверот каде работи nginx и до панелот каде се управува DNS-от на <code>ivyevents.mk</code>.
+    Чекорите означени со <span class="who mine">Claude</span> се во кодот и ги правам јас.
+  </p>
+
+  <section class="step" aria-labelledby="s-check">
+    <div class="step-head"><h2 id="s-check">Напредок</h2></div>
+    <p class="progress"><span id="progress-text">0 од 0</span> чекори готови · се чува само во овој прелистувач</p>
+    <div class="bar"><i id="progress-bar"></i></div>
+    <ul class="check" id="checklist">
+      <li><label><input type="checkbox" data-id="certs"><span>1. Проверени постоечките сертификати и нивниот рок</span></label></li>
+      <li><label><input type="checkbox" data-id="renew"><span>2. Проверено автоматското обновување</span></label></li>
+      <li><label><input type="checkbox" data-id="dns-provider"><span>3. Познат DNS провајдерот</span></label></li>
+      <li><label><input type="checkbox" data-id="caa"><span>4. Проверени CAA записите</span></label></li>
+      <li><label><input type="checkbox" data-id="dns-wild"><span>5. Додаден <code>*.ivyevents.mk</code> A запис и проверен</span></label></li>
+      <li><label><input type="checkbox" data-id="cert-wild"><span>6. Издаден wildcard сертификат (DNS-01)</span></label></li>
+      <li><label><input type="checkbox" data-id="nginx"><span>7. Додаден nginx блок, <code>nginx -t</code> поминува, reload</span></label></li>
+      <li><label><input type="checkbox" data-id="code"><span>8. Кодот е готов (Claude)</span></label></li>
+      <li><label><input type="checkbox" data-id="verify"><span>9. Крајна проверка од надвор</span></label></li>
+    </ul>
+  </section>
+
+  <section class="step" aria-labelledby="s1">
+    <div class="step-head"><span class="num">1</span><h2 id="s1">Проверете ги постоечките сертификати <span class="who">вие</span></h2></div>
+    <p>Во <code>nginx.conf</code> се користат <b>два</b> сертификати, во различни папки:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Папка</th><th>Ја користи</th></tr></thead>
+        <tbody>
+          <tr><td><code>/etc/letsencrypt/live/ivyevents.mk/</code></td><td><code>ivyevents.mk</code>, <code>www.</code>, <code>auth.</code></td></tr>
+          <tr><td><code>/etc/letsencrypt/live/ivyevents.mk-0001/</code></td><td><code>api.ivyevents.mk</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><code>-0001</code> значи дека certbot направил втор сертификат со исто име, најчесто затоа што подоцна е додаден домен. Двата мора да бидат важечки.</p>
+
+    <h3>а) На серверот: сите сертификати, домени и рок</h3>
+    <div class="tabs" role="tablist" data-group="certs">
+      <button role="tab" aria-selected="true" data-tab="host">certbot на серверот</button>
+      <button role="tab" aria-selected="false" data-tab="docker">certbot во Docker</button>
+    </div>
+    <div class="tab-panel" data-group="certs" data-panel="host">
+<pre><code>sudo certbot certificates</code></pre>
+    </div>
+    <div class="tab-panel" data-group="certs" data-panel="docker" hidden>
+<pre><code># Името на сервисот/контејнерот го наоѓате со: docker ps
+docker compose run --rm certbot certificates
+# или, без compose:
+docker run --rm -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot certificates</code></pre>
+    </div>
+    <p>За секој сертификат гледајте:</p>
+    <ul>
+      <li><b>Domains:</b> кои имиња ги покрива. Засега <code>*.ivyevents.mk</code> не треба да го има.</li>
+      <li><b>Expiry Date:</b> колку дена важи. Под 30 дена значи дека обновувањето не работи (чекор 2).</li>
+    </ul>
+
+    <h3>б) Од кој било компјутер: што навистина служи серверот</h3>
+    <p>Во Git Bash (на Windows) или терминал:</p>
+<pre><code>for h in ivyevents.mk www.ivyevents.mk api.ivyevents.mk auth.ivyevents.mk; do
+  echo "== $h"
+  echo | openssl s_client -connect $h:443 -servername $h 2&gt;/dev/null \
+    | openssl x509 -noout -subject -issuer -enddate -ext subjectAltName
+done</code></pre>
+    <p><code>notAfter</code> е рокот на важење, а <code>Subject Alternative Name</code> ги покажува имињата што ги покрива сертификатот.</p>
+    <p>Во PowerShell, без openssl, само рокот:</p>
+<pre><code>$req = [Net.HttpWebRequest]::Create("https://ivyevents.mk"); $req.GetResponse().Dispose()
+$req.ServicePoint.Certificate | Format-List Subject, Issuer, GetExpirationDateString</code></pre>
+  </section>
+
+  <section class="step" aria-labelledby="s2">
+    <div class="step-head"><span class="num">2</span><h2 id="s2">Проверете го автоматското обновување <span class="who">вие</span></h2></div>
+<pre><code># Проба на обновување, без вистински промени
+sudo certbot renew --dry-run
+
+# Дали има тајмер/cron што го извршува
+systemctl list-timers | grep -i certbot
+sudo crontab -l | grep -i certbot</code></pre>
+    <p>Ако certbot е во Docker, обновувањето најчесто е cron на хостот што го стартува контејнерот. Проверете го и тој cron.</p>
+    <div class="warn">
+      По обновување nginx мора да се reload-ира, инаку продолжува да го служи стариот сертификат од меморија.
+      Проверете дали во <code>/etc/letsencrypt/renewal/*.conf</code> или во cron-от има <code>--deploy-hook "nginx -s reload"</code>
+      (за Docker: <code>docker exec &lt;nginx-контејнер&gt; nginx -s reload</code>).
+    </div>
+  </section>
+
+  <section class="step" aria-labelledby="s3">
+    <div class="step-head"><span class="num">3</span><h2 id="s3">Кај кого е DNS-от <span class="who">вие</span></h2></div>
+    <p>Најважното прашање за чекор 6: дали провајдерот има API што certbot може да го користи.</p>
+<pre><code># Git Bash / Linux
+dig NS ivyevents.mk +short
+dig A ivyevents.mk +short
+dig A api.ivyevents.mk +short
+
+# PowerShell
+Resolve-DnsName ivyevents.mk -Type NS
+Resolve-DnsName ivyevents.mk -Type A</code></pre>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>NS покажува кон</th><th>Значи</th></tr></thead>
+        <tbody>
+          <tr><td><code>*.ns.cloudflare.com</code></td><td>Cloudflare: plugin <code>certbot-dns-cloudflare</code>, најлесно</td></tr>
+          <tr><td><code>*.digitalocean.com</code>, <code>*.awsdns-*</code>, Hetzner, OVH, Gandi…</td><td>Има certbot plugin (<code>certbot-dns-&lt;провајдер&gt;</code>)</td></tr>
+          <tr><td>македонски регистрар / хостинг без API</td><td>Нема автоматика. Решение: DNS-от да се премести на Cloudflare (бесплатно), или рачен DNS-01 на секои ~60 дена (чекор 6б)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Запишете ја IP адресата од <code>dig A ivyevents.mk</code>. Ви треба во чекор 5.</p>
+  </section>
+
+  <section class="step" aria-labelledby="s4">
+    <div class="step-head"><span class="num">4</span><h2 id="s4">CAA записи <span class="who">вие</span></h2></div>
+<pre><code>dig CAA ivyevents.mk +short</code></pre>
+    <ul>
+      <li><b>Празно:</b> во ред, секој издавач смее.</li>
+      <li><b>Има записи:</b> мора да постои <code>0 issuewild "letsencrypt.org"</code>. Постоечкиот <code>issue</code> ги покрива само обичните сертификати. Без <code>issuewild</code> Let's Encrypt одбива да издаде wildcard.</li>
+    </ul>
+  </section>
+
+  <section class="step" aria-labelledby="s5">
+    <div class="step-head"><span class="num">5</span><h2 id="s5">Додајте wildcard DNS запис <span class="who">вие</span></h2></div>
+    <p>Во DNS панелот додадете:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Тип</th><th>Име</th><th>Вредност</th><th>TTL</th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td><code>*</code> (т.е. <code>*.ivyevents.mk</code>)</td><td>истата IP како <code>ivyevents.mk</code></td><td>Auto / 300</td></tr>
+          <tr><td>AAAA</td><td><code>*</code></td><td>IPv6 адресата, <b>само ако</b> <code>ivyevents.mk</code> веќе има AAAA</td><td>Auto / 300</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Постоечките <code>api</code>, <code>auth</code>, <code>www</code>, <code>test</code> записи остануваат. Точен запис секогаш има предност пред wildcard.</p>
+    <div class="warn">
+      <b>Cloudflare:</b> ставете го записот на <b>DNS only</b> (сив облак), бидејќи сертификатот е на вашиот сервер.
+      Ако сакате proxied (портокалов облак), SSL режимот мора да биде <b>Full (strict)</b>.
+    </div>
+    <p>Проверка, со име што не постои никаде (по неколку минути):</p>
+<pre><code>dig A proba-123.ivyevents.mk +short     # треба да ја врати истата IP
+Resolve-DnsName proba-123.ivyevents.mk   # PowerShell</code></pre>
+  </section>
+
+  <section class="step" aria-labelledby="s6">
+    <div class="step-head"><span class="num">6</span><h2 id="s6">Wildcard сертификат (DNS-01) <span class="who">вие</span></h2></div>
+    <div class="note">
+      Let's Encrypt издава wildcard <b>само</b> преку DNS-01. Сегашниот начин (<code>/.well-known/acme-challenge/</code> во nginx) е HTTP-01 и за ова не работи.
+      Wildcard покрива <b>едно ниво</b>: <code>ana-marko.ivyevents.mk</code> да, <code>a.b.ivyevents.mk</code> не, па и самиот <code>ivyevents.mk</code> се додава посебно.
+    </div>
+    <p>Препорака: нов сертификат со посебно име <code>ivyevents.mk-wildcard</code>. Сегашните два не се допираат, па ништо од постоечкото не може да се скрши.</p>
+
+    <div class="tabs" role="tablist" data-group="dns01">
+      <button role="tab" aria-selected="true" data-tab="cf">6а. Cloudflare (автоматски)</button>
+      <button role="tab" aria-selected="false" data-tab="cfdocker">6а. Cloudflare во Docker</button>
+      <button role="tab" aria-selected="false" data-tab="manual">6б. Рачно (без API)</button>
+    </div>
+
+    <div class="tab-panel" data-group="dns01" data-panel="cf">
+      <p>1. Во Cloudflare: <i>My Profile → API Tokens → Create Token → „Edit zone DNS“</i>, ограничено на зоната <code>ivyevents.mk</code>.</p>
+      <p>2. На серверот:</p>
+<pre><code>sudo apt install -y python3-certbot-dns-cloudflare     # или: pip install certbot-dns-cloudflare
+
+sudo mkdir -p /root/.secrets
+sudo sh -c 'echo "dns_cloudflare_api_token = ОВДЕ_ТОКЕНОТ" &gt; /root/.secrets/cloudflare.ini'
+sudo chmod 600 /root/.secrets/cloudflare.ini
+
+sudo certbot certonly \
+  --dns-cloudflare \
+  --dns-cloudflare-credentials /root/.secrets/cloudflare.ini \
+  --dns-cloudflare-propagation-seconds 30 \
+  --cert-name ivyevents.mk-wildcard \
+  -d ivyevents.mk -d '*.ivyevents.mk'</code></pre>
+      <p>Обновувањето потоа е автоматско, со истиот plugin (проверете повторно со <code>certbot renew --dry-run</code>).</p>
+    </div>
+
+    <div class="tab-panel" data-group="dns01" data-panel="cfdocker" hidden>
+<pre><code>docker run --rm \
+  -v /etc/letsencrypt:/etc/letsencrypt \
+  -v /root/.secrets:/secrets:ro \
+  certbot/dns-cloudflare certonly \
+    --dns-cloudflare \
+    --dns-cloudflare-credentials /secrets/cloudflare.ini \
+    --dns-cloudflare-propagation-seconds 30 \
+    --cert-name ivyevents.mk-wildcard \
+    -d ivyevents.mk -d '*.ivyevents.mk'</code></pre>
+      <p>За обновување, во cron-от за renew користете ја истата слика <code>certbot/dns-cloudflare</code>, не <code>certbot/certbot</code>. Обичната слика го нема plugin-от.</p>
+    </div>
+
+    <div class="tab-panel" data-group="dns01" data-panel="manual" hidden>
+<pre><code>sudo certbot certonly --manual --preferred-challenges dns \
+  --cert-name ivyevents.mk-wildcard \
+  -d ivyevents.mk -d '*.ivyevents.mk'</code></pre>
+      <p>Certbot ќе побара TXT запис <code>_acme-challenge.ivyevents.mk</code> (можно е два, по еден за секое име; тогаш двата стојат истовремено). Додајте го во DNS панелот и <b>пред</b> да притиснете Enter проверете:</p>
+<pre><code>dig TXT _acme-challenge.ivyevents.mk +short</code></pre>
+      <div class="danger">Рачниот сертификат <b>не се обновува сам</b>. На секои ~60 дена ова мора да се повтори, инаку по 90 дена сите поддомени паѓаат со предупредување во прелистувачот. Затоа е подобро DNS-от да оди на провајдер со API.</div>
+    </div>
+
+    <p>Проверка дека е издаден:</p>
+<pre><code>sudo certbot certificates --cert-name ivyevents.mk-wildcard
+# Domains: ivyevents.mk *.ivyevents.mk
+# Certificate Path: /etc/letsencrypt/live/ivyevents.mk-wildcard/fullchain.pem</code></pre>
+  </section>
+
+  <section class="step" aria-labelledby="s7">
+    <div class="step-head"><span class="num">7</span><h2 id="s7">Nginx блок за поддомените <span class="who">вие</span></h2></div>
+    <p>Во <code>ivy-events-fe/vue-project/nginx.conf</code> (продукцискиот) додадете го ова <b>после</b> постоечките <code>server</code> блокови.
+      Nginx секогаш прво бара точно име (<code>api.</code>, <code>auth.</code>, <code>www.</code>, <code>test.</code>) пред regex, па тие не се засегнати.</p>
+<pre><code># ─── Сајтовите на *.ivyevents.mk: настани, добавувачи, агенции ───
+# Истиот SPA. Апликацијата го чита името од hostname-от, па тука нема rewrite.
+# Едно ниво, без точка: a.b.ivyevents.mk не одговара на ништо.
+
+server {
+    listen 80;
+    server_name "~^[a-z0-9][a-z0-9-]{0,62}\.ivyevents\.mk$";
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
+    server_name "~^(?&lt;site_label&gt;[a-z0-9][a-z0-9-]{0,62})\.ivyevents\.mk$";
+
+    ssl_certificate     /etc/letsencrypt/live/ivyevents.mk-wildcard/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/ivyevents.mk-wildcard/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+
+    add_header X-Request-Id $request_id always;
+
+    location = /env.js {
+        proxy_pass http://fe_upstream/env.js;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Request-Id $request_id;
+        add_header Cache-Control "no-store" always;
+        add_header Content-Type "application/javascript; charset=utf-8" always;
+    }
+
+    location / {
+        proxy_pass http://fe_upstream;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Request-Id $request_id;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Port 443;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}</code></pre>
+    <p>Проверка и reload:</p>
+<pre><code># nginx на хостот
+sudo nginx -t &amp;&amp; sudo systemctl reload nginx
+
+# nginx во Docker (името од: docker ps)
+docker exec &lt;nginx-контејнер&gt; nginx -t &amp;&amp; docker exec &lt;nginx-контејнер&gt; nginx -s reload</code></pre>
+    <div class="warn">Ако nginx е во Docker, папката <code>/etc/letsencrypt</code> мора да е mount-ната во контејнерот (веќе е, бидејќи сегашните сертификати работат). Новата <code>ivyevents.mk-wildcard</code> папка ќе се појави таму сама.</div>
+  </section>
+
+  <section class="step" aria-labelledby="s8">
+    <div class="step-head"><span class="num">8</span><h2 id="s8">Кодот <span class="who mine">Claude</span></h2></div>
+    <p>Ова го правам јас, по ваше одобрување. Тука е за да знаете што уште фали:</p>
+    <ul>
+      <li><b>Адреса на API-то од поддомен.</b> Денес <code>baseUrl.js</code> на <code>ana-marko.ivyevents.mk</code> би барал <code>https://ana-marko.ivyevents.mk:8282</code>, што не постои. Треба секој <code>*.ivyevents.mk</code> да оди на <code>https://api.ivyevents.mk</code>. CORS не треба да се менува: јавните endpoints (<code>/v1/api/public/**</code>) веќе примаат барања од секаде.</li>
+      <li><b>Резервирање адреса за настан</b> (BE):
+        <ul>
+          <li>endpoint за организаторот;</li>
+          <li>предлог од името: „Ана &amp; Марко“ → <code>ana-marko</code>;</li>
+          <li>409 ако е зафатено, со предлог;</li>
+          <li>одбивање на резервирани зборови;</li>
+          <li>вклучи/исклучи.</li>
+        </ul>
+      </li>
+      <li><b>Поле „Адреса на поканата“</b> во поставките на настанот (FE), и линковите и QR кодовите да ја користат новата адреса.</li>
+      <li><b>Отворени прашања кон вас:</b> дали е бесплатно или дел од пакет (<code>CUSTOM_DOMAIN</code> / INV_PREMIUM / INV_PRO), и кој смее да ја вклучи.</li>
+    </ul>
+  </section>
+
+  <section class="step" aria-labelledby="s9">
+    <div class="step-head"><span class="num">9</span><h2 id="s9">Крајна проверка <span class="who">вие</span></h2></div>
+<pre><code># 1. DNS
+dig A proba-123.ivyevents.mk +short
+
+# 2. Сертификатот на поддомен ги покрива *.ivyevents.mk
+echo | openssl s_client -connect proba-123.ivyevents.mk:443 -servername proba-123.ivyevents.mk 2&gt;/dev/null \
+  | openssl x509 -noout -enddate -ext subjectAltName
+
+# 3. Nginx го служи SPA-то (треба 200)
+curl -sI https://proba-123.ivyevents.mk | head -1
+
+# 4. Backend-от знае на кого е адресата (404 = слободна, 200 = зафатена и вклучена)
+curl -s "https://api.ivyevents.mk/v1/api/public/site?host=studio-lumiere.ivyevents.mk"
+
+# 5. Постоечките адреси сè уште работат
+for h in ivyevents.mk api.ivyevents.mk auth.ivyevents.mk; do curl -sI https://$h | head -1; done</code></pre>
+    <p>Во прелистувач: <code>https://proba-123.ivyevents.mk</code> треба да се отвори <b>без</b> безбедносно предупредување и да ја прикаже насловната страница (адресата е слободна, па нема сајт).</p>
+  </section>
+
+  <section class="step" aria-labelledby="s10">
+    <div class="step-head"><h2 id="s10">Кога нешто не работи</h2></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Симптом</th><th>Причина</th><th>Решение</th></tr></thead>
+        <tbody>
+          <tr><td><code>NXDOMAIN</code> / „сајтот не може да се најде“</td><td>Нема wildcard DNS запис или уште не се проширил</td><td>Чекор 5; почекајте TTL; <code>dig @1.1.1.1 proba-123.ivyevents.mk</code></td></tr>
+          <tr><td>„Your connection is not private“ / <code>NET::ERR_CERT_COMMON_NAME_INVALID</code></td><td>Поддоменот го добива сертификатот на <code>ivyevents.mk</code>, не wildcard</td><td>Чекор 7: патеката до <code>ivyevents.mk-wildcard</code>; reload на nginx</td></tr>
+          <tr><td>certbot: <code>CAA record … prevents issuance</code></td><td>CAA без <code>issuewild</code></td><td>Чекор 4</td></tr>
+          <tr><td>certbot: <code>Incorrect TXT record</code></td><td>TXT записот уште не се проширил</td><td>Подолго <code>--dns-…-propagation-seconds</code> (60–120); <code>dig TXT _acme-challenge.ivyevents.mk</code></td></tr>
+          <tr><td>certbot: <code>too many certificates already issued</code></td><td>Rate limit на Let's Encrypt (5 исти на недела)</td><td>Пробувајте со <code>--dry-run</code> / <code>--staging</code> додека не успее</td></tr>
+          <tr><td><code>api.</code> или <code>auth.</code> почна да ја враќа насловната</td><td>Wildcard блокот е пред нив или им фали точното <code>server_name</code></td><td>Точните имиња мора да постојат во свои блокови</td></tr>
+          <tr><td>Поддоменот се отвора, ама е празен / грешка во конзола кон <code>:8282</code></td><td>Кодот уште не е поправен (чекор 8)</td><td>Кај мене</td></tr>
+          <tr><td>По 90 дена сите поддомени паднаа</td><td>Рачен сертификат (6б) или renew без DNS plugin</td><td>Чекор 2 и 6а</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script>
+  (function () {
+    // Copy buttons on every code block.
+    document.querySelectorAll('pre').forEach(function (pre) {
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'copy';
+      button.textContent = 'Копирај';
+      button.addEventListener('click', function () {
+        var text = pre.querySelector('code').innerText;
+        var done = function () {
+          button.textContent = 'Копирано';
+          setTimeout(function () { button.textContent = 'Копирај'; }, 1500);
+        };
+        if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () {});
+      });
+      pre.appendChild(button);
+    });
+
+    // Tabs.
+    document.querySelectorAll('.tabs').forEach(function (tabs) {
+      var group = tabs.getAttribute('data-group');
+      tabs.querySelectorAll('button').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          tabs.querySelectorAll('button').forEach(function (other) {
+            other.setAttribute('aria-selected', String(other === tab));
+          });
+          document.querySelectorAll('.tab-panel[data-group="' + group + '"]').forEach(function (panel) {
+            panel.hidden = panel.getAttribute('data-panel') !== tab.getAttribute('data-tab');
+          });
+        });
+      });
+    });
+
+    // Checklist, remembered in this browser only.
+    var KEY = 'ivy-wildcard-checklist';
+    var boxes = Array.prototype.slice.call(document.querySelectorAll('#checklist input'));
+    var saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { saved = {}; }
+
+    function render() {
+      var done = boxes.filter(function (box) { return box.checked; }).length;
+      document.getElementById('progress-text').textContent = done + ' од ' + boxes.length;
+      document.getElementById('progress-bar').style.width = (100 * done / boxes.length) + '%';
+    }
+
+    boxes.forEach(function (box) {
+      box.checked = !!saved[box.getAttribute('data-id')];
+      box.addEventListener('change', function () {
+        saved[box.getAttribute('data-id')] = box.checked;
+        try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) { /* not remembered; still works */ }
+        render();
+      });
+    });
+    render();
+  })();
+</script>
+</body>
+</html>
