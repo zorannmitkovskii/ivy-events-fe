@@ -7,11 +7,12 @@ import en from '@/i18n/locales/en.json'
 /**
  * The admin dashboard (IVY-1101).
  *
- * <p>What is worth pinning here is the reading, not the rendering. Three of
- * these assertions are about a number that must not be shown as something it
- * is not: an unasked RSVP rate is not 0%, an empty attention list is not a
- * missing section, and a capped list must still admit how many there are.
- * All three are ways a dashboard lies while looking like it works.
+ * <p>The numbers that must not be misread — an unasked RSVP rate, an empty or
+ * capped attention list — belong to the shared block and are pinned in
+ * {@code dashboard-overview.test.js}, where the agency screen still shows them.
+ * What is this screen's own: one request, the status breakdown, and what it
+ * leaves out (decided 2026-09-13). Overdue work per event and guest numbers are
+ * an agency's concern; on the platform screen the quick-nav tiles lead instead.
  */
 
 const { adminMock } = vi.hoisted(() => ({ adminMock: vi.fn() }))
@@ -42,7 +43,7 @@ function payload(overrides = {}) {
         overdueTaskCount: 0,
         ...overrides.totals
       },
-      statusBreakdown: overrides.statusBreakdown ?? { DRAFT: 0, PENDING: 0, ACTIVATED: 0 },
+      statusBreakdown: overrides.statusBreakdown ?? { DRAFT: 0, PENDING: 0, ACTIVE: 0 },
       upcoming: overrides.upcoming ?? { next30: 0, next60: 0, next90: 0 },
       attention: overrides.attention ?? { total: 0, limit: 25, items: [] },
       definitions: {}
@@ -68,22 +69,11 @@ describe('the whole page is one request', () => {
   })
 })
 
-describe('numbers that must not be misread', () => {
-  it('shows an em dash, not 0%, when nobody has been invited', async () => {
-    const wrapper = await render({ totals: { responseRate: null } })
-    expect(wrapper.text()).toContain('—')
-    expect(wrapper.text()).not.toContain('0%')
-  })
-
-  it('shows the percentage once there is one', async () => {
-    const wrapper = await render({ totals: { eventCount: 3, guestCount: 40, responseRate: 80 } })
-    expect(wrapper.text()).toContain('80%')
-  })
-
-  it('renders every status in the breakdown, including the zeroes', async () => {
+describe('the status breakdown', () => {
+  it('renders every status, including the zeroes', async () => {
     const wrapper = await render({
       totals: { eventCount: 9 },
-      statusBreakdown: { DRAFT: 0, PENDING: 2, ACTIVATED: 7 }
+      statusBreakdown: { DRAFT: 0, PENDING: 2, ACTIVE: 7 }
     })
     const text = wrapper.text()
     expect(text).toContain('Draft')
@@ -92,47 +82,40 @@ describe('numbers that must not be misread', () => {
   })
 })
 
-describe('the attention section', () => {
-  it('says nothing needs attention rather than disappearing', async () => {
-    // An agency with events and nothing flagged — the all-zero case belongs to
-    // the first-run screen now (IVY-1204).
-    const wrapper = await render({ totals: { eventCount: 4 } })
-    expect(wrapper.text()).toContain('Nothing needs attention')
+describe('what the platform screen leaves out', () => {
+  const busyPlatform = {
+    totals: { eventCount: 4, guestCount: 40, invitedCount: 30, responseRate: 80, overdueTaskCount: 3 },
+    attention: {
+      total: 1,
+      overdueCount: 1,
+      limit: 25,
+      items: [
+        {
+          eventId: 'a', name: 'Ana & Marko', date: '2026-08-22', daysUntil: 14,
+          overdueTaskCount: 3, openTaskCount: 5, riskWindowDays: 30, reason: 'OVERDUE_TASKS'
+        }
+      ]
+    }
+  }
+
+  it('shows no attention list, even when events have overdue work', async () => {
+    const wrapper = await render(busyPlatform)
+    expect(wrapper.find('#attention').exists()).toBe(false)
+    expect(wrapper.text()).not.toContain('Ana & Marko')
   })
 
-  it('labels why each event is listed', async () => {
-    const wrapper = await render({
-      attention: {
-        total: 2,
-        limit: 25,
-        items: [
-          {
-            eventId: 'a', name: 'Ana & Marko', date: '2026-08-22', daysUntil: 14,
-            overdueTaskCount: 5, openTaskCount: 11, riskWindowDays: 30,
-            reason: 'OVERDUE_TASKS'
-          },
-          {
-            eventId: 'b', name: 'Acme Kickoff', date: '2026-08-30', daysUntil: 22,
-            overdueTaskCount: 0, openTaskCount: 4, riskWindowDays: 30,
-            reason: 'AT_RISK'
-          }
-        ]
-      }
-    })
+  it('shows no delayed-tasks card, no guests card and no RSVP chart', async () => {
+    const wrapper = await render(busyPlatform)
     const text = wrapper.text()
-    expect(text).toContain('Ana & Marko')
-    expect(text).toContain('Overdue')
-    expect(text).toContain('At risk')
+    expect(text).not.toContain(en.adminOverview.delayedTasks)
+    expect(text).not.toContain(en.adminOverview.guests)
+    expect(text).not.toContain('80%')
   })
 
-  it('admits the true count when the list is capped', async () => {
-    const items = Array.from({ length: 25 }, (_, i) => ({
-      eventId: `e${i}`, name: `Event ${i}`, date: '2026-08-22', daysUntil: 10,
-      overdueTaskCount: 1, openTaskCount: 1, riskWindowDays: 30, reason: 'OVERDUE_TASKS'
-    }))
-    const wrapper = await render({ attention: { total: 32, limit: 25, items } })
-
-    expect(wrapper.text()).toContain('Showing 25 of 32')
+  it('puts the quick-nav tiles before the cards', async () => {
+    const wrapper = await render(busyPlatform)
+    const tile = wrapper.find('.nav-card').element
+    const cards = wrapper.find('.cards').element
+    expect(tile.compareDocumentPosition(cards) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 })
-

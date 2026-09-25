@@ -35,6 +35,19 @@
       <button class="btn" type="submit">{{ t('directory.search') }}</button>
     </form>
 
+    <!-- The shared tags vendors picked. Only the ones somebody carries: a chip
+         that leads to an empty list is a dead end dressed as a filter. -->
+    <ul v-if="tagChips.length" class="tag-filter" :aria-label="t('tags.filter')">
+      <li v-for="tag in tagChips" :key="tag.slug">
+        <button
+          type="button"
+          :class="{ active: filters.tag === tag.slug }"
+          :aria-pressed="filters.tag === tag.slug"
+          @click="toggleTag(tag.slug)"
+        >#{{ tag.name }}</button>
+      </li>
+    </ul>
+
     <p v-if="loading" class="state">{{ t('directory.loading') }}</p>
     <p v-else-if="!results.length" class="state">{{ t('directory.noResults') }}</p>
 
@@ -76,19 +89,19 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import SitePage from '@/layouts/SitePage.vue'
 import PageHero from '@/components/ui/PageHero.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { vendorDirectoryService } from '@/services/vendorDirectory.service'
+import { tagsService } from '@/services/tags.service'
 import { baseUrl } from '@/services/baseUrl'
+import { useVendorTypes } from '@/composables/usePublicCatalog'
 
-const TYPES = [
-  'PHOTOGRAPHY', 'VENUE', 'CATERING', 'BAND', 'DJ', 'DECORATION', 'FLOWERS',
-  'CAKE', 'MAKEUP_HAIR', 'BRIDAL_ATTIRE', 'GROOM_ATTIRE', 'TRANSPORTATION',
-  'LIGHTING', 'ENTERTAINMENT', 'PRINTING', 'OTHER',
-]
+/** Every trade the backend lists, so a vendor in any of them can be filtered for. */
+const { codes: TYPES, load: loadVendorTypes } = useVendorTypes()
+loadVendorTypes()
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -99,15 +112,20 @@ const cities = ref([])
 const loading = ref(true)
 const page = ref(0)
 const totalPages = ref(1)
+const tags = ref([])
+
+const tagChips = computed(() => tags.value.filter((tag) => tag.vendorCount > 0))
 
 const filters = reactive({
   q: route.query.q || '',
   type: route.query.type || '',
   city: route.query.city || '',
+  tag: route.query.tag || '',
 })
 
 onMounted(async () => {
   loadCities()
+  loadTags()
   await load()
 })
 
@@ -118,6 +136,7 @@ watch(() => route.query, () => {
   filters.q = route.query.q || ''
   filters.type = route.query.type || ''
   filters.city = route.query.city || ''
+  filters.tag = route.query.tag || ''
   page.value = Number(route.query.page || 0)
   load()
 })
@@ -131,11 +150,20 @@ async function loadCities() {
   }
 }
 
+async function loadTags() {
+  try {
+    const response = await tagsService.catalog(locale.value)
+    tags.value = response?.data ?? response ?? []
+  } catch {
+    tags.value = []
+  }
+}
+
 async function load() {
   loading.value = true
   try {
     const response = await vendorDirectoryService.search({
-      type: filters.type, city: filters.city, q: filters.q, page: page.value,
+      type: filters.type, city: filters.city, q: filters.q, tag: filters.tag, page: page.value,
     })
     const body = response?.data ?? response
     results.value = body?.content ?? []
@@ -152,6 +180,11 @@ function search() {
   pushQuery()
 }
 
+function toggleTag(slug) {
+  filters.tag = filters.tag === slug ? '' : slug
+  search()
+}
+
 function goTo(next) {
   page.value = next
   pushQuery()
@@ -162,6 +195,7 @@ function pushQuery() {
   if (filters.q) query.q = filters.q
   if (filters.type) query.type = filters.type
   if (filters.city) query.city = filters.city
+  if (filters.tag) query.tag = filters.tag
   if (page.value > 0) query.page = page.value
   router.push({ query })
 }
@@ -196,6 +230,11 @@ function readable(type) {
   padding: 10px 12px; border: 1px solid var(--line-2); border-radius: 10px; font-size: 15px;
 }
 .search { flex: 1 1 240px; }
+
+.tag-filter { list-style: none; margin: -12px 0 24px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.tag-filter button { padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line-2);
+  background: var(--surface); color: var(--ink-2); font-size: 13px; cursor: pointer; }
+.tag-filter button.active { background: var(--brand); border-color: var(--brand); color: var(--surface); }
 
 .cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }

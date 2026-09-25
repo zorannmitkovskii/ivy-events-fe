@@ -136,7 +136,7 @@ import Toolbar from '@/components/ui/Toolbar.vue'
 import StatusPill from '@/components/ui/StatusPill.vue'
 import DataTable from '@/components/ui/DataTable.vue'
 
-const ROLE_OPTIONS = ['ORG_ADMIN', 'ORGANIZER', 'USER']
+const ROLE_OPTIONS = ['AGENCY', 'AGENCY_MEMBER', 'USER']
 const POPULATION_LIMIT = 500
 const SEARCH_DEBOUNCE_MS = 300
 
@@ -230,7 +230,7 @@ function prev() {
 
 /** The organization seat this person holds; the select never offers ADMIN. */
 function organizationRole(row) {
-  return ROLE_OPTIONS.find((role) => (row.roles || []).includes(role)) || 'ORGANIZER'
+  return ROLE_OPTIONS.find((role) => (row.roles || []).includes(role)) || 'AGENCY_MEMBER'
 }
 
 async function changeRole(row, role) {
@@ -285,7 +285,6 @@ function closeWorkload() {
 </script>
 
 <style scoped>
-.admin-page { max-width: 1200px; }
 
 .load-error {
   padding: 12px 16px; background: #fef2f2; border: 1px solid #fecaca;

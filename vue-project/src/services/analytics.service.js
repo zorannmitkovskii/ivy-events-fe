@@ -34,6 +34,17 @@ export const analyticsService = {
     return api.get("/analytics/admin", { params: adminParams({ status, categoryType, from, to }) });
   },
 
+  /**
+   * What the platform earned (IVY-1104): successful payments less refunds, in
+   * the dashboard's range, optionally for one package. Its own request, so
+   * picking a package does not recount the whole dashboard.
+   */
+  adminRevenue({ from, to, packageType } = {}) {
+    const params = adminParams({ from, to });
+    if (packageType) params.packageType = packageType;
+    return api.get("/analytics/admin/revenue", { params });
+  },
+
   /** The attention banner alone, for its own refresh. */
   adminAttention({ status, categoryType, from, to } = {}) {
     return api.get("/analytics/admin/attention", {

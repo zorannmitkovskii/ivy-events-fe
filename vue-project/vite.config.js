@@ -59,6 +59,14 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  // The sitemap is the backend's, built from what is actually published
+  // (IVY-907). In production nginx sends these paths to the API; in development
+  // this does, so localhost:5173/sitemap.xml is the real one.
+  server: {
+    proxy: {
+      '^/sitemap(-\\d+)?\\.xml$': { target: 'http://localhost:8081', changeOrigin: true },
+    },
+  },
   build: {
     rollupOptions: {
       output: {

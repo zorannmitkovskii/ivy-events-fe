@@ -1,66 +1,73 @@
 <template>
-  <main class="category-page">
-    <!-- Fixed header -->
-    <header class="sticky-header">
-      <div class="header-inner">
-        <button class="back-btn" @click="onBack" aria-label="Back">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-
-        <div class="header-center">
-          <h1 class="header-title">{{ $t('onboarding.category.title') }}</h1>
-          <p class="header-subtitle">{{ $t('onboarding.category.subtitle') }}</p>
+  <div class="ivy-site">
+    <!--
+      The category cards are the landing page's, and their styles live in
+      `ivy/site.css` under `.ivy-site` — outside that wrapper they render as raw
+      text and full-size SVGs. The wrapper sets nothing on itself; it only scopes.
+    -->
+    <main class="category-page">
+      <!-- Fixed header -->
+      <header class="sticky-header">
+        <div class="header-inner">
+          <button class="back-btn" @click="onBack" aria-label="Back">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+  
+          <div class="header-center">
+            <h1 class="header-title">{{ $t('onboarding.category.title') }}</h1>
+            <p class="header-subtitle">{{ $t('onboarding.category.subtitle') }}</p>
+          </div>
+  
+          <div></div>
         </div>
-
-        <div></div>
+      </header>
+  
+      <!-- Scrollable content -->
+      <div class="content">
+        <EventCategories
+          v-model="selectedCategoryId"
+          bg-class="bg-transparent"
+          :show-header="false"
+          :disable-navigation="true"
+        />
       </div>
-    </header>
-
-    <!-- Scrollable content -->
-    <div class="content">
-      <EventCategories
-        v-model="selectedCategoryId"
-        bg-class="bg-transparent"
-        :show-header="false"
-        :disable-navigation="true"
-      />
-    </div>
-
-    <!-- A birthday is either an adult's or a child's. They share a category
-         and share almost nothing else: one has a budget, the other collects
-         allergies and a guardian's phone number. -->
-    <div v-if="needsTypeChoice" class="type-choice">
-      <p class="type-choice-title">{{ $t('onboarding.category.birthdayWho') }}</p>
-      <div class="type-options">
-        <button
-          v-for="option in birthdayTypes"
-          :key="option.code"
-          class="type-option"
-          :class="{ 'type-option--on': selectedTypeCode === option.code }"
-          :aria-pressed="selectedTypeCode === option.code"
-          @click="chooseType(option.code)"
-        >{{ $t(option.labelKey) }}</button>
+  
+      <!-- A birthday is either an adult's or a child's. They share a category
+           and share almost nothing else: one has a budget, the other collects
+           allergies and a guardian's phone number. -->
+      <div v-if="needsTypeChoice" class="type-choice">
+        <p class="type-choice-title">{{ $t('onboarding.category.birthdayWho') }}</p>
+        <div class="type-options">
+          <button
+            v-for="option in birthdayTypes"
+            :key="option.code"
+            class="type-option"
+            :class="{ 'type-option--on': selectedTypeCode === option.code }"
+            :aria-pressed="selectedTypeCode === option.code"
+            @click="chooseType(option.code)"
+          >{{ option.label }}</button>
+        </div>
       </div>
-    </div>
-
-    <!-- Sticky footer with action button -->
-    <div v-if="selectedEnum && loggedIn && !awaitingTypeChoice" class="sticky-footer">
-      <div class="footer-inner">
-        <button
-          class="action-btn"
-          :disabled="creatingEvent"
-          @click="onAction"
-        >
-          <span v-if="creatingEvent" class="btn-spinner"></span>
-          {{ actionLabel }}
-        </button>
+  
+      <!-- Sticky footer with action button -->
+      <div v-if="selectedEnum && loggedIn && !awaitingTypeChoice" class="sticky-footer">
+        <div class="footer-inner">
+          <button
+            class="action-btn"
+            :disabled="creatingEvent"
+            @click="onAction"
+          >
+            <span v-if="creatingEvent" class="btn-spinner"></span>
+            {{ actionLabel }}
+          </button>
+        </div>
       </div>
-    </div>
-
-    <OnboardingFooterLinks />
-  </main>
+  
+      <OnboardingFooterLinks />
+    </main>
+  </div>
 </template>
 
 <script setup>
@@ -72,8 +79,9 @@ import { setSelectedCategory, setSelectedTypeCode, setEventId, onboardingStore }
 import { eventsService } from '@/services/events.service';
 import { isAuthenticated, getUsername } from '@/services/auth.service';
 import EventCategories from "@/components/landingPage/EventCategories.vue";
-import { categoryIdToEnum, enumToCategoryId } from "@/helper/CategoryMapping.helper.js";
+import { categoryIdToEnum, categoryLabelKey, enumToCategoryId } from "@/helper/CategoryMapping.helper.js";
 import { EventCategoryEnum } from '@/enums/EventCategory';
+import { useEventCategories } from '@/composables/usePublicCatalog';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -95,20 +103,31 @@ const selectedEnum = computed(() =>
 
 const isGallery = computed(() => selectedEnum.value === EventCategoryEnum.GALLERY);
 
+/*
+  The same cards the category grid draws, from the shared catalogue — here for
+  the event types under each category, which the server lists per card.
+*/
+const { categories, load: loadCategories } = useEventCategories();
+loadCategories();
+
+const selectedCard = computed(() => categories.value.find((card) => card.category === selectedEnum.value) ?? null);
+
 /**
- * Categories that do not say enough on their own (IVY-204).
+ * The types of the chosen category, when there is more than one (IVY-204).
  *
- * <p>Only birthdays today. Everything else maps to exactly one type, so asking
- * would be a question with one answer.
+ * <p>Only birthdays today — adult or child — but that is the server's to say:
+ * a category with exactly one type needs no question, since it would have one
+ * answer.
  */
-const birthdayTypes = [
-  { code: 'BIRTHDAY_ADULT', labelKey: 'onboarding.category.birthdayAdult' },
-  { code: 'BIRTHDAY_CHILD', labelKey: 'onboarding.category.birthdayChild' },
-];
+const birthdayTypes = computed(() => {
+  const types = selectedCard.value?.types ?? [];
+  if (types.length < 2) return [];
+  return types.map((code) => ({ code, label: t(`onboarding.category.types.${code}`, code) }));
+});
 
 const selectedTypeCode = computed(() => onboardingStore.selectedTypeCode);
 
-const needsTypeChoice = computed(() => selectedEnum.value === EventCategoryEnum.BIRTHDAY);
+const needsTypeChoice = computed(() => birthdayTypes.value.length > 0);
 
 /** Blocks the footer until the follow-up is answered — continuing without it
  *  would silently pick one, and the wrong one asks the wrong questions later. */
@@ -135,7 +154,9 @@ watch(selectedCategoryId, (newId) => {
   // A type chosen for the previous category does not carry over — picking
   // "child birthday" and then switching to a wedding must not leave the
   // wedding claiming to be a child's party.
-  if (enumValue !== EventCategoryEnum.BIRTHDAY) setSelectedTypeCode("");
+  if (!selectedTypeCode.value) return;
+  const card = categories.value.find((entry) => entry.category === enumValue);
+  if (!card?.types?.includes(selectedTypeCode.value)) setSelectedTypeCode("");
 });
 
 async function onAction() {
@@ -153,7 +174,7 @@ async function createGalleryEvent() {
   creatingEvent.value = true;
   try {
     const payload = {
-      name: 'Gallery',
+      name: t(categoryLabelKey(EventCategoryEnum.GALLERY)),
       categoryType: EventCategoryEnum.GALLERY,
       status: 'DRAFT',
       username: getUsername(),

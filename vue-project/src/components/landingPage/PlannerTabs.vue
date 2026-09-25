@@ -276,3 +276,11 @@ function onTabKeydown(event) {
   document.getElementById(`t-${active.value}`)?.focus()
 }
 </script>
+
+<style scoped>
+/* The guest section above already ends in a full section's padding; a second
+   one here doubled the gap. */
+.ivy-site .planner {
+  padding-top: clamp(24px, 3vw, 48px);
+}
+</style>

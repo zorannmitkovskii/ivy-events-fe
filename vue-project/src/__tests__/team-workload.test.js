@@ -79,7 +79,7 @@ describe('what it shows', () => {
     const wrapper = await render()
 
     expect(wrapper.text()).toContain('Nobody on the team yet')
-    expect(wrapper.find('a[href="/en/org/users"]').exists()).toBe(true)
+    expect(wrapper.find('a[href="/en/agency/users"]').exists()).toBe(true)
   })
 
   it('says how many it is showing when the roster is longer', async () => {

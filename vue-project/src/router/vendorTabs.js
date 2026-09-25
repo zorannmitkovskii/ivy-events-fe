@@ -5,32 +5,47 @@
  * route guard turns away a direct URL to one they do not. Two lists would
  * drift, and the drift would look like a bug in whichever half was newer.
  *
- * <p>Order is the tab order. Calendar sits last because it is the only one
- * every vendor has, and putting the trade-specific work first is what makes
- * the portal look built for them.
+ * <p>Two independent gates sit on these rows and both must pass. The
+ * <b>capability</b> says the tab exists for this trade at all — a
+ * photographer has no room to lay out. The <b>privilege</b> says this
+ * particular member of the business may open it, which is the owner's
+ * decision about their own staff.
+ *
+ * <p>Grouped as the 2026 vendor design groups them — work, presentation,
+ * management — and in that order. The home comes first for everybody: it is
+ * where the new inquiries are, which is the thing a vendor opens the portal
+ * for. Rows with {@code nav: false} are real screens reached from inside
+ * another one (the approval application from the profile, per-member
+ * privileges from the team), so the guard still needs an opinion on them.
  */
+export const VENDOR_GROUPS = ["work", "presentation", "management"];
+
 export const VENDOR_TABS = [
-  { name: "vendor.packages", label: "vendorPortal.packages", capability: "PACKAGES" },
-  { name: "vendor.floorPlans", label: "vendorPortal.floorPlans", capability: "FLOOR_PLANS" },
-  { name: "vendor.portfolio", label: "vendorPortal.portfolio", capability: "GALLERY" },
-  { name: "vendor.calendar", label: "vendorPortal.calendar", capability: "CALENDAR" },
+  { name: "vendor.home", group: "work", privilege: "vendor:overview", label: "vendorWork.nav.home", capability: null },
+  // Ungated: an inquiry can reach any approved vendor whatever they do, so an
+  // inbox is not something a capability should be able to hide.
+  { name: "vendor.inbox", group: "work", privilege: "vendor:inquiries", label: "vendorWork.nav.inbox", capability: null },
+  { name: "vendor.calendar", group: "work", privilege: "vendor:calendar", label: "vendorWork.nav.calendar", capability: "CALENDAR" },
 
-  // Ungated as well: an inquiry can reach any approved vendor whatever they
-  // do, so an inbox is not something a capability should be able to hide.
-  { name: "vendor.inbox", label: "vendorPortal.inbox", capability: null },
+  { name: "vendor.portfolio", group: "presentation", privilege: "vendor:portfolio", label: "vendorWork.nav.portfolio", capability: "GALLERY" },
+  { name: "vendor.packages", group: "presentation", privilege: "vendor:packages", label: "vendorPortal.packages", capability: "PACKAGES" },
+  { name: "vendor.profile", group: "presentation", privilege: "vendor:profile", label: "vendorWork.nav.profile", capability: null },
+  { name: "vendor.microsite", group: "presentation", privilege: "vendor:profile", label: "vendorWork.nav.microsite", capability: null },
 
-  // No capability: every vendor has an application, and any approved vendor may
-  // have a microsite, whatever trade they are in. Placed after the
-  // capability-gated ones so firstTabFor still lands somebody on their work
-  // rather than on a form.
-  { name: "vendor.application", label: "vendorPortal.application", capability: null },
-  { name: "vendor.microsite", label: "vendorPortal.microsite", capability: null }
+  { name: "vendor.team", group: "management", privilege: "vendor:team", label: "vendorWork.nav.team", capability: null },
+  { name: "vendor.insights", group: "management", privilege: "vendor:overview", label: "vendorWork.nav.insights", capability: null },
+
+  // Reached from the profile ("submit for approval") and from the team page.
+  { name: "vendor.application", group: "presentation", privilege: "vendor:settings", label: "vendorPortal.application", capability: null, nav: false },
+  { name: "vendor.privileges", group: "management", privilege: "vendor:team", label: "privileges.title", capability: null, nav: false },
 ];
 
-/** Where a vendor lands when they open the portal: their first available tab. */
+/** Where a vendor lands when they open the portal: the first tab their trade has. */
 export function firstTabFor(capabilities = []) {
-  const tab = VENDOR_TABS.find((candidate) => capabilities.includes(candidate.capability));
-  return tab ? tab.name : "vendor.calendar";
+  const tab = VENDOR_TABS.find(
+    (candidate) => candidate.nav !== false && (candidate.capability === null || capabilities.includes(candidate.capability)),
+  );
+  return tab ? tab.name : "vendor.home";
 }
 
 export function capabilityForRoute(routeName) {

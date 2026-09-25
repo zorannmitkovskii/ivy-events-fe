@@ -86,8 +86,9 @@ test('the board groups leads by stage and names what nobody is chasing', async (
   await stubApi(page)
   await page.goto('/mk/dashboard/pipeline')
 
-  await expect(page.getByText('Свадба Ристески')).toBeVisible()
-  await expect(page.getByText('Роденден Петрова')).toBeVisible()
+  // On the board; the follow-up panel below names the same lead again.
+  await expect(page.locator('.lane').getByText('Свадба Ристески')).toBeVisible()
+  await expect(page.locator('.lane').getByText('Роденден Петрова')).toBeVisible()
 
   // The two lines that make the page worth opening in the morning.
   await expect(page.getByText(/Следен чекор задоцнет кај 1/)).toBeVisible()

@@ -141,7 +141,7 @@ async function decide(item, decision) {
 </script>
 
 <style scoped>
-.approvals-page { padding: 1.5rem; max-width: 800px; }
+.approvals-page { padding: 1.5rem; }
 .page-head h1 { margin: 0; font-size: 1.5rem; }
 .sub { color: #666; margin: 0.25rem 0 1rem; }
 .error { color: #b3261e; }

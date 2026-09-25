@@ -1,6 +1,9 @@
 <template>
   <div>
-    <PageHead :title="t('agencyVendors.title')" :subtitle="t('agencyVendors.subtitle')">
+    <PageHead
+      :title="isOwner ? t('agencyScreens.vendors.ownerTitle') : t('agencyScreens.vendors.memberTitle')"
+      :subtitle="isOwner ? t('agencyScreens.vendors.ownerSubtitle') : t('agencyScreens.vendors.memberSubtitle')"
+    >
       <template #actions>
         <router-link class="btn btn-ghost btn-sm" :to="{ name: 'VendorDirectory', params: { lang } }">
           {{ t('agencyVendors.publicDirectory') }}
@@ -8,23 +11,53 @@
       </template>
     </PageHead>
 
-    <div class="toolbar">
-      <div class="filters-row" role="group" :aria-label="t('agencyVendors.filterLabel')">
-        <button
-          v-for="option in typeFilters"
-          :key="option.value"
-          type="button"
-          :aria-pressed="type === option.value"
-          @click="type = option.value"
-        >{{ option.label }}</button>
+    <!--
+      The owner's half of the design: which vendors the agency's events are
+      waiting on. Drawn from the held bookings the agency home already reads;
+      a member is not shown engagements at all — contracts and prices are the
+      agency's, and the member's screen is the directory alone.
+    -->
+    <section v-if="isOwner" class="card engagements" aria-labelledby="vendor-engagements">
+      <div class="engagements-head">
+        <div>
+          <h2 id="vendor-engagements">{{ t('agencyScreens.vendors.engagements') }}</h2>
+          <p class="lede">{{ t('agencyScreens.vendors.engagementsHint') }}</p>
+        </div>
+        <div class="status-filter" role="group" :aria-label="t('agencyScreens.vendors.statusLabel')">
+          <button
+            v-for="option in STATUS_FILTERS"
+            :key="option"
+            type="button"
+            :class="{ on: statusFilter === option }"
+            :aria-pressed="statusFilter === option"
+            @click="statusFilter = option"
+          >{{ t(`agencyScreens.vendors.status.${option}`) }} <b>{{ countOf(option) }}</b></button>
+        </div>
       </div>
+      <ul v-if="shownEngagements.length" class="lines">
+        <li v-for="engagement in shownEngagements" :key="engagement.bookingId" class="line">
+          <div>
+            <b>{{ engagement.vendorName }}</b>
+            <small>{{ engagementLine(engagement) }}</small>
+          </div>
+          <span :class="['pill', STATUS_TONE[engagement.status]]">{{ t(`agencyScreens.vendors.status.${engagement.status}`) }}</span>
+        </li>
+      </ul>
+      <p v-else class="lane-empty">{{ t('agencyScreens.vendors.noEngagements') }}</p>
+    </section>
 
-      <label class="search-field">
-        <span class="sr-only">{{ t('agencyVendors.searchLabel') }}</span>
+    <div class="toolbar vendor-filters">
+      <label class="filter-field wide">
+        <span>{{ t('agencyScreens.vendors.search') }}</span>
         <input v-model="query" type="search" :placeholder="t('agencyVendors.searchPlaceholder')" />
       </label>
+      <label class="filter-field">
+        <span>{{ t('agencyScreens.vendors.category') }}</span>
+        <select v-model="type" :aria-label="t('agencyVendors.filterLabel')">
+          <option v-for="option in typeFilters" :key="option.value" :value="option.value">{{ option.label }}</option>
+        </select>
+      </label>
     </div>
-
     <p v-if="loading" class="empty">{{ t('common.loading') }}</p>
 
     <p v-else-if="error" class="empty" role="alert">{{ error }}</p>
@@ -56,9 +89,13 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import PageHead from '@/components/dashboard/shell/PageHead.vue'
-import { VENDOR_TYPES, readableVendorType } from '@/enums/VendorType.js'
+import { readableVendorType } from '@/enums/VendorType.js'
+import { useVendorTypes } from '@/composables/usePublicCatalog'
 import { vendorDirectoryService } from '@/services/vendorDirectory.service'
 import { getErrorMessage } from '@/services/apiError'
+import { agencyWorkspaceService } from '@/services/agencyWorkspace.service'
+import { useAgencyRole } from '@/composables/useAgencyRole'
+import { formatDay } from '@/utils/agencyFormat.js'
 
 /*
   The suppliers an agency books from, inside the console rather than out on the
@@ -73,9 +110,50 @@ import { getErrorMessage } from '@/services/apiError'
 const SEARCH_DEBOUNCE_MS = 300
 const ALL = ''
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+
+/** Every trade the backend lists, for the filter row. */
+const { codes: vendorTypeCodes, load: loadVendorTypes } = useVendorTypes()
+loadVendorTypes()
 const route = useRoute()
 const lang = computed(() => route.params.lang || 'mk')
+const { isOwner } = useAgencyRole()
+
+const STATUS_FILTERS = ['ALL', 'HELD', 'CONFIRMED', 'CANCELLED']
+const STATUS_TONE = { HELD: 'amber', CONFIRMED: 'green', CANCELLED: 'slate' }
+
+/**
+ * Every booking on the agency's events — held, confirmed and cancelled — for
+ * the owner's engagements panel. Held ones are what needs a decision, so the
+ * panel opens on them; the others answer "who do we work with".
+ */
+const engagements = ref([])
+const statusFilter = ref('HELD')
+
+async function loadEngagements() {
+  if (!isOwner.value) return
+  try {
+    const response = await agencyWorkspaceService.vendors()
+    engagements.value = (response?.data?.data ?? response?.data)?.engagements ?? []
+  } catch {
+    // The directory below is the page's job; a missing panel is not an error.
+    engagements.value = []
+  }
+}
+
+const shownEngagements = computed(() =>
+  statusFilter.value === 'ALL'
+    ? engagements.value
+    : engagements.value.filter((engagement) => engagement.status === statusFilter.value),
+)
+
+const countOf = (status) =>
+  status === 'ALL' ? engagements.value.length : engagements.value.filter((e) => e.status === status).length
+
+function engagementLine(engagement) {
+  const date = engagement.eventDate ? formatDay(engagement.eventDate, locale.value) : ''
+  return [engagement.title, engagement.eventName, date].filter(Boolean).join(' · ')
+}
 
 const vendors = ref([])
 const type = ref(ALL)
@@ -90,7 +168,7 @@ const error = ref('')
 */
 const typeFilters = computed(() => [
   { value: ALL, label: t('agencyVendors.allTypes') },
-  ...VENDOR_TYPES.map((value) => ({ value, label: typeLabel(value) })),
+  ...vendorTypeCodes.value.map((value) => ({ value, label: typeLabel(value) })),
 ])
 
 /** A trade with no translation yet reads as words, not as an enum name. */
@@ -116,7 +194,10 @@ function vendorTo(vendor) {
 
 let debounce = null
 
-onMounted(load)
+onMounted(() => {
+  load()
+  loadEngagements()
+})
 
 watch(type, load)
 watch(query, () => {
@@ -142,44 +223,95 @@ async function load() {
 }
 </script>
 
+<style scoped src="../../components/agency/agency-panels.css"></style>
+
 <style scoped>
 /* `.toolbar`, `.vcards`, `.vcard`, `.av` and `.chip` are the design's, in
-   `ivy/dash.css`. Local: the filter pills and the search field. */
-/* Twenty-five trades do not wrap into a readable block, so the row scrolls —
-   the same answer the design gives the category strip on a phone. */
-.filters-row {
+   `ivy/dash.css`. Local: the owner's engagements panel and the two filters —
+   a search and a category select, as the 2026 agency design has them. */
+.engagements {
+  margin-bottom: 16px;
+}
+
+.engagements-head {
   display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-  scrollbar-width: thin;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-.filters-row button {
-  flex: none;
-  padding: 7px 14px;
+.status-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.status-filter button {
+  padding: 6px 11px;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 8px;
   background: var(--card);
-  font-size: 14px;
-  white-space: nowrap;
   color: var(--ink-2);
+  font-size: 13px;
 }
 
-.filters-row button[aria-pressed='true'] {
-  border-color: var(--ivy);
-  background: var(--ivy);
-  color: var(--on-ivy);
+.status-filter button.on {
+  background: var(--mist);
+  border-color: var(--moss);
+  color: var(--ivy);
+  font-weight: 700;
 }
 
-.search-field input {
+.status-filter b {
+  margin-left: 4px;
+  font-weight: 700;
+}
+
+.engagements h2 {
+  margin: 0;
+  font-size: 19px;
+}
+
+.lane-empty {
+  margin: 8px 0 0;
+  color: var(--ink-3);
+  font-size: 13px;
+}
+
+.vendor-filters {
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.filter-field {
+  flex: 1;
+  min-width: 170px;
+}
+
+.filter-field.wide {
+  flex: 2;
   min-width: 220px;
+}
+
+.filter-field span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--ink-3);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.filter-field input,
+.filter-field select {
+  width: 100%;
   height: 40px;
-  padding: 0 14px;
+  padding: 0 12px;
   border: 1px solid var(--line);
   border-radius: 10px;
   background: var(--card);
-  font-size: 14.5px;
+  font: inherit;
+  font-size: 14px;
 }
 
 /* `.vcard .btn { margin-top: auto }` is what pins the action to the bottom of
@@ -193,12 +325,4 @@ async function load() {
   padding-top: 6px;
 }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
 </style>

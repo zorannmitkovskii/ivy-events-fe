@@ -25,6 +25,12 @@
           <input v-model.number="draft.pricePerPerson" type="number" min="0" step="10" />
         </label>
         <label class="field">
+          {{ t('vendorPortal.currency') }}
+          <select v-model="draft.currency">
+            <option v-for="code in CURRENCIES" :key="code" :value="code">{{ code }}</option>
+          </select>
+        </label>
+        <label class="field">
           {{ t('vendorPortal.minGuests') }}
           <input v-model.number="draft.minGuests" type="number" min="1" />
         </label>
@@ -82,10 +88,14 @@ import PageHeader from '@/components/ui/PageHeader.vue'
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { vendorPortalService } from "@/services/vendorPortal.service";
+import { DEFAULT_CURRENCY } from "@/utils/agencyFormat.js";
 
 const { t } = useI18n();
 
 const COURSES = ["WELCOME", "APPETIZER", "SOUP", "MAIN", "SIDE", "DESSERT", "DRINK", "OTHER"];
+
+/** The currencies a vendor prices in: the denar, and the euro many venues quote in. */
+const CURRENCIES = [DEFAULT_CURRENCY, "EUR"];
 
 const packages = ref([]);
 const draft = ref(null);
@@ -93,13 +103,33 @@ const editingId = ref(null);
 const error = ref(null);
 const saving = ref(false);
 
+/**
+ * One layer, not a destructure.
+ *
+ * <p>The vendor-portal endpoints answer with a bare list while the rest of the
+ * API wraps everything in {@code ApiResponse}. `const { data } = …` reads
+ * `undefined` off an array, and the list then stays empty however many
+ * packages the vendor has.
+ */
+function unwrap(response) {
+  return response?.data ?? response ?? null;
+}
+
 async function load() {
   try {
-    const { data } = await vendorPortalService.listPackages();
-    packages.value = data;
+    packages.value = unwrap(await vendorPortalService.listPackages()) ?? [];
   } catch (e) {
     error.value = e?.response?.data?.message ?? e.message;
   }
+}
+
+/**
+ * A vendor has no currency setting of its own; the currency it prices in is
+ * the one on its packages. A new package starts in that one, and in the denar
+ * only for a vendor with nothing priced yet.
+ */
+function ownCurrency() {
+  return packages.value.find((pkg) => pkg.currency)?.currency ?? DEFAULT_CURRENCY;
 }
 
 function startNew() {
@@ -108,7 +138,7 @@ function startNew() {
     name: "",
     description: "",
     pricePerPerson: null,
-    currency: "MKD",
+    currency: ownCurrency(),
     minGuests: null,
     active: true,
     items: []
@@ -123,7 +153,7 @@ function startEdit(pkg) {
     name: pkg.name,
     description: pkg.description,
     pricePerPerson: pkg.pricePerPerson,
-    currency: pkg.currency,
+    currency: pkg.currency || DEFAULT_CURRENCY,
     minGuests: pkg.minGuests,
     active: pkg.active,
     items: pkg.items.map((item) => ({

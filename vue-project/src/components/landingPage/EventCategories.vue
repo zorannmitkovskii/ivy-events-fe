@@ -17,14 +17,14 @@
           click handler, which no keyboard can reach. One that cannot be chosen
           is not a control at all, so it stays a span and says so.
 
-          The mockup draws all five as live links because it has no back end to
-          disagree with. Here four of the five categories are not built yet, and
-          a card promising "open the example" for a category that does not exist
-          is worse than a card that says "coming soon".
+          The mockup draws every card as a live link because it has no back end
+          to disagree with. Which categories are open is the server's to say
+          (`available` on the card), and a card promising "open the example"
+          for a category that is not built yet is worse than "coming soon".
         -->
         <component
           :is="cat.disabled ? 'span' : 'button'"
-          v-for="cat in categories"
+          v-for="cat in cards"
           :key="cat.id"
           :type="cat.disabled ? null : 'button'"
           class="cat"
@@ -32,14 +32,14 @@
           :aria-disabled="cat.disabled ? 'true' : null"
           @click="!cat.disabled && onSelect(cat.id)"
         >
-          <span v-if="cat.badgeKey" class="badge-gold">
+          <span v-if="cat.featured" class="badge-gold">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="m12 2 2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3l-6.1 3.3 1.4-6.8L2.2 9.1l6.9-.8Z" />
-            </svg>{{ $t(cat.badgeKey) }}
+            </svg>{{ $t('eventCategories.mostPopular') }}
           </span>
 
-          <span class="type">{{ $t(cat.titleKey) }}</span>
-          <span class="title">{{ $t(cat.sampleKey) }}</span>
+          <span class="type">{{ cat.title }}</span>
+          <span class="title">{{ cat.sample }}</span>
           <span class="open">{{ cat.disabled ? $t('eventCategories.comingSoon') : $t('eventCategories.openExample') }}</span>
 
           <svg class="leaf" viewBox="0 0 32 32" aria-hidden="true">
@@ -57,6 +57,9 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { useEventCategories } from '@/composables/usePublicCatalog'
+import { ENUM_TO_CATEGORY_ID, categoryLabelKey } from '@/helper/CategoryMapping.helper.js'
 
 const props = defineProps({
   modelValue: { type: [String, Number, null], default: null },
@@ -65,6 +68,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
+const { t, locale } = useI18n()
 const route = useRoute()
 const lang = computed(() => route.params.lang || 'mk')
 const allDesignsTo = computed(() => ({ name: 'designs', params: { lang: lang.value } }))
@@ -76,54 +80,46 @@ function onSelect(id) {
 }
 
 /*
-  Five cards, each a tint from the redesign's category palette. The gold badge
-  sits on the wedding card rather than on the birthday one the mockup marks:
-  weddings are the category that actually ships, and "most popular" on a
-  coming-soon card is an odd thing to claim.
+  The cards come from the server (`GET /public/event-categories`): their order,
+  tint, which one carries the "most popular" badge, whether the category is
+  open yet, and the sample event name in each language. Only the category's
+  own name is the front end's, from the same translation every other screen
+  uses for it.
 */
-const categories = [
-  {
-    id: 'weddings',
-    tint: '',
-    titleKey: 'eventCategories.items.weddings.title',
-    sampleKey: 'eventCategories.items.weddings.sample',
-    badgeKey: 'eventCategories.mostPopular',
-  },
-  {
-    id: 'birthdays',
-    tint: 'rose',
-    titleKey: 'eventCategories.items.birthdaysParties.title',
-    sampleKey: 'eventCategories.items.birthdaysParties.sample',
-    disabled: true,
-  },
-  {
-    id: 'corporate',
-    tint: 'night',
-    titleKey: 'eventCategories.items.corporate.title',
-    sampleKey: 'eventCategories.items.corporate.sample',
-    disabled: true,
-  },
-  {
-    id: 'graduations',
-    tint: 'lav',
-    titleKey: 'eventCategories.items.graduations.title',
-    sampleKey: 'eventCategories.items.graduations.sample',
-    disabled: true,
-  },
-  {
-    id: 'baby',
-    tint: 'sky',
-    titleKey: 'eventCategories.items.babyShowers.title',
-    sampleKey: 'eventCategories.items.babyShowers.sample',
-    disabled: true,
-  },
-]
+const { categories, load } = useEventCategories()
+load()
+
+/** The sample in the page's language; Macedonian when that one is missing. */
+function sampleFor(sample) {
+  return sample?.[locale.value] || sample?.mk || ''
+}
+
+const cards = computed(() =>
+  categories.value.map((card) => {
+    const labelKey = categoryLabelKey(card.category)
+    return {
+      id: ENUM_TO_CATEGORY_ID[card.category] ?? card.category,
+      tint: card.tint || '',
+      title: labelKey ? t(labelKey) : card.category,
+      sample: sampleFor(card.sample),
+      featured: card.featured,
+      disabled: !card.available,
+    }
+  }),
+)
 </script>
 
 <style scoped>
 /* `.cats`, `.cat` and the four tints are the design's, in `ivy/site.css`.
    What is here is only what the mockup had no need for: a card can be a
-   button, and four of the five are not clickable yet. */
+   button, and one the server has not opened yet is not clickable. */
+/* The design starts the categories flush under the hero carousel and ends
+   them with a full section's padding on top of the next section's own. */
+.ivy-site .cats {
+  padding-top: clamp(56px, 7vw, 96px);
+  padding-bottom: clamp(32px, 4vw, 56px);
+}
+
 .cat {
   border: 0;
   font: inherit;

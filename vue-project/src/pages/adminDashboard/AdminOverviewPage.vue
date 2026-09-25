@@ -6,7 +6,14 @@
     :event-link="eventLink"
     :events-link="eventsLink"
     :nav-items="navItems"
-  />
+    :show-task-health="false"
+    :show-guests="false"
+    nav-first
+  >
+    <template #cards="{ filters }">
+      <RevenueCard :from="filters.from" :to="filters.to" />
+    </template>
+  </DashboardOverview>
 </template>
 
 <script setup>
@@ -17,6 +24,10 @@
  * endpoint fills it and where its links go. The screen it replaced rendered
  * four hardcoded numbers and was reachable by no route.
  *
+ * <p><b>No task health and no guest numbers here</b> (decided 2026-09-13).
+ * Overdue work per event and RSVP breakdowns are an agency's concern, not the
+ * platform's; the agency screen keeps them. The quick-nav tiles lead instead.
+ *
  * <p><b>The quick-nav grid lists only routes that exist today.</b> Reports and
  * system settings are absent rather than present-and-broken — a tile leading
  * nowhere teaches the reader to distrust the whole grid. They arrive with
@@ -26,6 +37,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import DashboardOverview from '@/components/dashboard/DashboardOverview.vue'
+import RevenueCard from '@/components/dashboard/RevenueCard.vue'
 import { analyticsService } from '@/services/analytics.service'
 import { Icons } from '@/utils/icons.js'
 
@@ -47,7 +59,7 @@ const navItems = computed(() => [
     icon: Icons.calendar,
     label: t('adminOverview.nav.events'),
     to: `/${lang.value}/admin/events`,
-    badgeFrom: (data) => data?.statusBreakdown?.ACTIVATED ?? 0,
+    badgeFrom: (data) => data?.statusBreakdown?.ACTIVE ?? 0,
     badgeLabel: t('adminOverview.nav.activeEvents'),
   },
   // Organizers, not Users: the directory answers "who is running what", which

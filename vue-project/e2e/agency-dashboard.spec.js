@@ -2,177 +2,122 @@ import { test, expect } from '@playwright/test'
 import { signIn } from './support/session.js'
 
 /**
- * IVY-1202 — the agency dashboard, keyboard-first.
+ * The agency workspace for its two people (2026 design, "agency dashboard" and
+ * "events by role").
  *
- * <p>The nav grid and the KPI cards are the two things a reader navigates with,
- * and both are links. Whether a link is reachable, focusable and activatable by
- * keyboard is not something jsdom can answer.
+ * <p>The owner and a member sign in to the same routes and must see two
+ * different workspaces: the owner the agency with its team and money, the
+ * member their own events and work. The API is stubbed per role exactly as the
+ * server answers — a member's response has no team or budget — so what these
+ * specs guard is that the browser draws each answer for the right person, and
+ * that the sidebar, the rows and the filters work by keyboard and click.
  */
 
 const OWNER = '11111111-1111-1111-1111-111111111111'
+const IVANA = '22222222-2222-2222-2222-222222222222'
 
-const ANALYTICS = {
-  totals: {
-    eventCount: 23, guestCount: 1840, childCount: 40, invitedCount: 1500,
-    confirmedCount: 900, respondedCount: 1140, responseRate: 76, overdueTaskCount: 9,
-  },
-  statusBreakdown: { DRAFT: 4, PENDING: 2, ACTIVATED: 17 },
-  upcoming: { next30: 5, next60: 11, next90: 16 },
-  monthly: [{ month: '2026-08', count: 3 }],
-  attention: { total: 0, overdueCount: 0, atRiskCount: 0, riskWindowDays: 30, limit: 25, items: [] },
-  definitions: {},
+const row = (overrides = {}) => ({
+  eventId: 'e-1', name: 'Марија & Филип', categoryType: 'WEDDING', status: 'ACTIVE', date: '2026-10-03',
+  daysUntil: 9, location: 'Скопје', client: 'Марија & Филип', lead: { id: IVANA, name: 'Ивана' }, myRole: null,
+  tasksTotal: 11, tasksDone: 3, overdueTasks: 8, myOverdueTasks: null, guestCount: 30, confirmedCount: 21,
+  declinedCount: 4, awaitingCount: 5, responseRate: 83, plannedBudget: 520000, spentBudget: 375440,
+  vendorsAwaiting: 1, nextStep: { title: 'Потврди го кетерингот', dueAt: '2026-09-21T12:00:00' }, ...overrides,
+})
+
+const ownerHome = {
+  viewer: 'OWNER', today: '2026-09-24', rangeDays: 7, riskWindowDays: 30,
+  kpis: { activeEvents: 1, activeEventsSoon: 1, overdueTasks: 8, myOverdueTasks: null, awaitingRsvp: 5, vendorsAwaiting: 1, vendorsAwaitingEvents: 1, overBudgetEvents: 0 },
+  attention: [{ eventId: 'e-1', eventName: 'Марија & Филип', kind: 'TASKS', count: 8, daysUntil: 9, lead: { id: IVANA, name: 'Ивана' }, subjects: [] }],
+  deadlines: [{ date: '2026-10-03', kind: 'EVENT_DAY', title: 'Марија & Филип', eventId: 'e-1', eventName: 'Марија & Филип', assignee: null }],
+  events: [row()],
+  vendorDecisions: [{ bookingId: 'b-1', vendorName: 'Кетеринг Вардар', title: 'Вечера', stage: 'TENTATIVE', eventId: 'e-1', eventName: 'Марија & Филип', eventDate: '2026-10-03' }],
+  team: { members: [{ id: IVANA, name: 'Ивана', activeEvents: 2, tasksThisWeek: 0, overdueTasks: 6 }], unassignedOverdue: 2 },
+  budget: { planned: 520000, spent: 375440, overBudgetEvents: 0, events: [{ eventId: 'e-1', name: 'Марија & Филип', planned: 520000, spent: 375440 }] },
 }
 
-const TEAM = {
-  rows: [
-    { id: 'u-1', firstName: 'Ana', lastName: 'Ivanova', activeEvents: 4, overdueTasks: 9 },
-    { id: 'u-2', firstName: 'Boris', lastName: 'Petrov', activeEvents: 2, overdueTasks: 0 },
-  ],
-  total: 2, first: 0, max: 5, truncated: false, definitions: {},
+const memberHome = {
+  ...ownerHome,
+  viewer: 'MEMBER',
+  kpis: { ...ownerHome.kpis, myOverdueTasks: 3, overBudgetEvents: null },
+  events: [row({ myRole: 'LEAD', myOverdueTasks: 3, plannedBudget: null, spentBudget: null })],
+  team: null,
+  budget: null,
 }
 
-let teamCalls = []
+let eventCalls = []
 
-async function stubApi(page, { teamFails = false } = {}) {
-  teamCalls = []
+/** What `/me/privileges` answers: an owner holds every agency screen, a member none by default. */
+const OWNER_PRIVILEGES = [{ type: 'AGENCY', owner: true, privileges: [
+  'agency:dashboard', 'agency:events', 'agency:crm', 'agency:calendar', 'agency:tasks',
+  'agency:team', 'agency:vendors', 'agency:reports', 'agency:settings',
+] }]
+
+async function stubApi(page, { home, events, privileges = [] }) {
+  eventCalls = []
   await page.route('**/v1/api/**', async (route) => {
     const url = new URL(route.request().url())
     const path = url.pathname.replace('/v1/api', '')
-
     const wrapped = (data) => route.fulfill({
       status: 200, contentType: 'application/json',
       body: JSON.stringify({ success: true, message: null, data }),
     })
 
-    if (path === '/analytics/agency') return wrapped(ANALYTICS)
-    if (path === '/agency/organizers') {
-      teamCalls.push(Object.fromEntries(url.searchParams))
-      if (teamFails) {
-        return route.fulfill({
-          status: 503, contentType: 'application/json',
-          body: JSON.stringify({
-            success: false, message: 'unavailable',
-            data: {
-              status: 503, errorCode: 'INTERNAL_SERVER_ERROR', type: 'internal',
-              detail: 'Keycloak не е достапен',
-            },
-          }),
-        })
-      }
-      return wrapped(TEAM)
+    if (path === '/analytics/agency/home') return wrapped(home)
+    if (path === '/analytics/agency/events') {
+      eventCalls.push(Object.fromEntries(url.searchParams))
+      return wrapped(events)
     }
-    if (path === '/admin/users') {
-      return route.fulfill({ status: 200, contentType: 'application/json', body: '[]' })
-    }
+    if (path === '/me/privileges') return wrapped(privileges)
     return wrapped(null)
   })
 }
 
-async function openDashboard(page) {
-  await signIn(page, { userId: OWNER, eventId: 'none', lang: 'en', roles: ['ORG_ADMIN', 'USER'] })
-  await page.goto('/en/org/dashboard')
-  await expect(page.getByRole('heading', { name: 'Agency dashboard' })).toBeVisible()
-}
+test('the owner sees the agency: its team, its budget and who leads each event', async ({ page }) => {
+  await stubApi(page, { home: ownerHome, privileges: OWNER_PRIVILEGES })
+  await signIn(page, { userId: OWNER, eventId: 'none', lang: 'en', roles: ['AGENCY', 'USER'] })
+  await page.goto('/en/agency/dashboard')
 
-test('the team panel names who is carrying the late work, and never sends an organization id', async ({ page }) => {
-  await stubApi(page)
-  await openDashboard(page)
-
-  const panel = page.locator('.workload')
-  await expect(panel).toContainText('Ana Ivanova')
-  await expect(panel).toContainText('9 overdue')
-  await expect(panel.locator('.late').first()).toBeVisible()
-
-  expect(teamCalls).toHaveLength(1)
-  expect(teamCalls[0]).not.toHaveProperty('orgId')
+  await expect(page.getByRole('heading', { name: 'Team workload' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Event budgets' })).toBeVisible()
+  await expect(page.locator('.agency-events thead')).toContainText('Lead organizer')
+  await expect(page.locator('.snav')).toContainText('Team permissions')
 })
 
-test('a team that cannot be read says so instead of looking empty', async ({ page }) => {
-  await stubApi(page, { teamFails: true })
-  await openDashboard(page)
+test('a member lands in their own workspace, with none of the owner\'s panels', async ({ page }) => {
+  await stubApi(page, { home: memberHome })
+  await signIn(page, { userId: IVANA, eventId: 'none', lang: 'en', roles: ['AGENCY_MEMBER', 'USER'] })
+  await page.goto('/en/agency/dashboard')
 
-  await expect(page.locator('.workload [role="alert"]')).toContainText('could not be loaded')
+  await expect(page.getByRole('heading', { name: 'My next step' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Team workload' })).toHaveCount(0)
+  await expect(page.getByRole('heading', { name: 'Event budgets' })).toHaveCount(0)
+  await expect(page.locator('.snav')).toContainText('My tasks')
+  await expect(page.locator('.snav')).not.toContainText('Team permissions')
+  await expect(page.getByRole('link', { name: '+ New task' })).toBeVisible()
 })
 
-test('the panel leads to the roster', async ({ page }) => {
-  await stubApi(page)
-  await openDashboard(page)
+test('an event row opens by keyboard', async ({ page }) => {
+  await stubApi(page, { home: ownerHome, privileges: OWNER_PRIVILEGES })
+  await signIn(page, { userId: OWNER, eventId: 'none', lang: 'en', roles: ['AGENCY', 'USER'] })
+  await page.goto('/en/agency/dashboard')
 
-  await page.locator('.workload a').first().click()
-  await expect(page).toHaveURL(/\/en\/org\/users$/)
+  await page.getByRole('row', { name: 'Open Марија & Филип' }).focus()
+  await page.keyboard.press('Enter')
+
+  await expect(page).toHaveURL(/\/en\/dashboard\/events\/overview$/)
 })
 
-test('widening the at-risk window brings an event into the attention list', async ({ page }) => {
-  // The window the agency has saved, and an event 45 days out with open work.
-  // Which is exactly the case the window decides: inside 60, outside 30.
-  let savedWindow = 30
-  const nearlyDue = {
-    eventId: 'a', name: 'Elena & Stefan', date: '2026-09-26', daysUntil: 45,
-    overdueTaskCount: 0, openTaskCount: 6, riskWindowDays: 60, reason: 'AT_RISK',
-  }
-
-  await page.route('**/v1/api/**', async (route) => {
-    const path = new URL(route.request().url()).pathname.replace('/v1/api', '')
-    const method = route.request().method()
-    const wrapped = (data) => route.fulfill({
-      status: 200, contentType: 'application/json',
-      body: JSON.stringify({ success: true, message: null, data }),
-    })
-
-    if (path === '/crm/agency/risk-window' && method === 'PUT') {
-      savedWindow = JSON.parse(route.request().postData() || '{}').riskWindowDays
-      return wrapped({ riskWindowDays: savedWindow, isDefault: false })
-    }
-    if (path === '/crm/agency/risk-window') return wrapped({ riskWindowDays: savedWindow, isDefault: savedWindow === 30 })
-    if (path === '/analytics/agency') {
-      const items = savedWindow >= 45 ? [nearlyDue] : []
-      return wrapped({
-        ...ANALYTICS,
-        attention: {
-          total: items.length, overdueCount: 0, atRiskCount: items.length,
-          riskWindowDays: savedWindow, limit: 25, items,
-        },
-      })
-    }
-    if (path === '/agency/organizers') return wrapped(TEAM)
-    return wrapped(null)
+test('a member filters their events by their own role, and the server is asked', async ({ page }) => {
+  await stubApi(page, {
+    home: memberHome,
+    events: { viewer: 'MEMBER', available: 1, rows: memberHome.events, organizers: null },
   })
+  await signIn(page, { userId: IVANA, eventId: 'none', lang: 'en', roles: ['AGENCY_MEMBER', 'USER'] })
+  await page.goto('/en/agency/events')
 
-  await openDashboard(page)
-  await expect(page.locator('#attention')).not.toContainText('Elena & Stefan')
+  await expect(page.getByRole('heading', { name: 'My events' })).toBeVisible()
+  await page.getByLabel('My role').selectOption('ASSISTANT')
 
-  await page.goto('/en/org/settings')
-  await page.locator('input[type="number"]').fill('60')
-  await page.getByRole('button').filter({ hasText: /Save|Зачувај/ }).first().click()
-  await expect(page.getByRole('status')).toBeVisible()
-
-  await page.goto('/en/org/dashboard')
-  await expect(page.locator('#attention')).toContainText('Elena & Stefan')
-})
-
-test('the nav grid and the KPI cards are reachable and activatable by keyboard', async ({ page }) => {
-  await stubApi(page)
-  await openDashboard(page)
-
-  // The grid: focus the first tile, walk it, and activate the last one reached.
-  await page.locator('.nav-card').first().focus()
-  const gridOrder = []
-  for (let i = 0; i < 3; i++) {
-    gridOrder.push(await page.evaluate(() => document.activeElement.getAttribute('href')))
-    await page.keyboard.press('Tab')
-  }
-  expect(gridOrder).toEqual(['/en/organizer', '/en/org/users', '/en/org/settings'])
-
-  await page.locator('.nav-card').nth(2).focus()
-  await page.keyboard.press('Enter')
-  await expect(page).toHaveURL(/\/en\/org\/settings$/)
-
-  // A KPI card is a link too, so the same is true of it.
-  await openDashboard(page)
-  const card = page.locator('a.stat-card, .stat-card a').first()
-  await card.focus()
-  const outline = await card.evaluate((el) => getComputedStyle(el).outlineStyle)
-  expect(outline).not.toBe('none')
-  await page.keyboard.press('Enter')
-  await expect(page).not.toHaveURL(/\/org\/dashboard$/)
+  await expect.poll(() => eventCalls.at(-1)).toMatchObject({ myRole: 'ASSISTANT' })
+  expect(eventCalls.every((call) => !('leadId' in call))).toBe(true)
 })

@@ -35,9 +35,22 @@
       :to="createEventAction"
     />
 
+    <!--
+      Above everything but the heading, on every dashboard (2026-09-23).
+      It used to fold away under the data on all but the platform screen, on
+      the reasoning that most visits never touch a filter. That reasoning held
+      for one screen and not for the rest: on a dashboard whose whole job is a
+      range of dates, a reader who wants a different range should not have to
+      scroll past the answer to the wrong question to find the control.
+    -->
+    <DashboardFilters v-if="showFilters" v-bind="filterBindings" />
+
+    <!-- The platform screen reads the tiles as its way in, so they lead there. -->
+    <QuickNavGrid v-if="navFirst && showNavGrid" :items="navItemsWithBadges" />
+
     <!-- The answer first. Everything below it is context. -->
     <section
-      v-if="data && !isBrandNew"
+      v-if="showTaskHealth && data && !isBrandNew"
       id="attention"
       class="attention"
       :class="{ quiet: !attentionItems.length }"
@@ -106,12 +119,14 @@
       />
 
       <StatCard
+        v-if="showGuests"
         :label="t('adminOverview.guests')"
         :value="data.totals.guestCount"
         :rows="guestRows"
       />
 
       <StatCard
+        v-if="showTaskHealth"
         :label="t('adminOverview.delayedTasks')"
         :value="data.totals.overdueTaskCount"
         :rows="delayedRows"
@@ -120,14 +135,19 @@
         :hint-label="t('adminOverview.delayedTasks')"
         :to="{ hash: '#attention' }"
       />
+
+      <!-- Cards only one screen has, for the range the figures were loaded for.
+           The platform adds its revenue here (IVY-1104). -->
+      <slot name="cards" :filters="appliedFilters" />
     </section>
 
     <!-- Who is carrying the numbers above (IVY-1202). -->
     <slot :data="data" :reload="load" />
 
-    <section v-if="data && !isBrandNew" id="charts" class="charts">
+    <section v-if="data && !isBrandNew" id="charts" class="charts" :class="{ single: !showGuests }">
       <EventsByMonthChart :points="data.monthly || []" />
       <RsvpDonut
+        v-if="showGuests"
         :confirmed="data.totals.confirmedCount"
         :responded="data.totals.respondedCount"
         :invited="data.totals.invitedCount"
@@ -135,41 +155,8 @@
       />
     </section>
 
-    <QuickNavGrid v-if="navItems.length && data && !isBrandNew" :items="navItemsWithBadges" />
+    <QuickNavGrid v-if="!navFirst && showNavGrid" :items="navItemsWithBadges" />
 
-    <!--
-      Folded away, and under the data rather than over it. Most visits never
-      touch a filter, and a form that greets the reader is furniture in front
-      of the answer.
-    -->
-    <details v-if="data && !isBrandNew" class="filters-fold">
-      <summary>{{ t('adminOverview.filters') }}</summary>
-      <form class="filters" @submit.prevent="load">
-        <label>
-          <span>{{ t('adminOverview.from') }}</span>
-          <input v-model="filters.from" type="date" />
-        </label>
-        <label>
-          <span>{{ t('adminOverview.to') }}</span>
-          <input v-model="filters.to" type="date" />
-        </label>
-        <label>
-          <span>{{ t('adminOverview.eventType') }}</span>
-          <select v-model="filters.categoryType">
-            <option value="">{{ t('adminOverview.allTypes') }}</option>
-            <!-- The value stays the enum the API expects; only the label is
-                 translated. Before IVY-1204 the reader was shown BABY_SHOWER. -->
-            <option v-for="type in EVENT_TYPES" :key="type" :value="type">
-              {{ t(`eventTypes.${type}`) }}
-            </option>
-          </select>
-        </label>
-        <button type="submit" class="apply" :disabled="loading">{{ t('adminOverview.apply') }}</button>
-        <button v-if="hasFilters" type="button" class="clear" @click="clearFilters">
-          {{ t('adminOverview.clear') }}
-        </button>
-      </form>
-    </details>
   </div>
 </template>
 
@@ -189,6 +176,7 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import QuickNavGrid from '@/components/dashboard/QuickNavGrid.vue'
+import DashboardFilters from '@/components/dashboard/DashboardFilters.vue'
 import StatCard from '@/components/dashboard/StatCard.vue'
 import EventsByMonthChart from '@/components/dashboard/EventsByMonthChart.vue'
 import EmptyDashboard from '@/components/dashboard/EmptyDashboard.vue'
@@ -211,6 +199,13 @@ const props = defineProps({
   /** `[{ key, icon, label, to, badgeFrom }]` — badgeFrom reads off the payload. */
   /** Where the first event is created, when this viewer may create one. */
   createEventAction: { type: [String, Object], default: null },
+  /** Overdue work: the attention list and the delayed-tasks card. */
+  showTaskHealth: { type: Boolean, default: true },
+  /** Guest numbers: the guests card and the RSVP donut. */
+  showGuests: { type: Boolean, default: true },
+  /** The quick-nav tiles above everything else instead of under the charts. */
+  navFirst: { type: Boolean, default: false },
+  /** The filters above everything else instead of folded under the data. */
 })
 
 const EVENT_TYPES = Object.values(EventCategoryEnum)
@@ -227,6 +222,9 @@ const loading = ref(false)
 const error = ref('')
 const lastUpdated = ref(null)
 
+/** The range the figures on screen were loaded for — not the one still being typed. */
+const appliedFilters = ref({ from: '', to: '', categoryType: '' })
+
 // Seeded from the URL so a filtered dashboard survives a reload and can be
 // pasted to somebody else.
 const filters = reactive({
@@ -237,10 +235,28 @@ const filters = reactive({
 
 const hasFilters = computed(() => Boolean(filters.from || filters.to || filters.categoryType))
 
+const showFilters = computed(() => Boolean(data.value && !isBrandNew.value))
+
+/** Everything the filters form needs, bound in one place wherever it is shown. */
+const filterBindings = computed(() => ({
+  from: filters.from,
+  to: filters.to,
+  categoryType: filters.categoryType,
+  eventTypes: EVENT_TYPES,
+  loading: loading.value,
+  hasFilters: hasFilters.value,
+  'onUpdate:from': (value) => { filters.from = value },
+  'onUpdate:to': (value) => { filters.to = value },
+  'onUpdate:categoryType': (value) => { filters.categoryType = value },
+  onApply: load,
+  onClear: clearFilters,
+}))
+
 /**
  * The tiles carry live counts, so they are not only navigation — that is why
  * they stayed. What changed is where: under the answer and the numbers, not
- * in front of them (IVY-1401).
+ * in front of them (IVY-1401) — unless the screen asks for them first with
+ * `navFirst`, as the platform one does.
  */
 const navItemsWithBadges = computed(() =>
   props.navItems.map((item) => ({
@@ -317,6 +333,8 @@ const isBrandNew = computed(() => {
     && (data.value.attention?.total ?? 0) === 0
 })
 
+const showNavGrid = computed(() => Boolean(props.navItems.length && data.value && !isBrandNew.value))
+
 /**
  * The one card that used to end under its number, while its three
  * neighbours each carried three rows (IVY-1204).
@@ -355,6 +373,7 @@ async function load() {
   if (loading.value) return
   loading.value = true
   error.value = ''
+  appliedFilters.value = { from: filters.from, to: filters.to, categoryType: filters.categoryType }
   try {
     const response = await props.loader({
       from: filters.from || undefined,
@@ -443,9 +462,7 @@ defineExpose({ reload: load })
   gap: 10px;
 }
 
-.refresh-btn,
-.apply,
-.clear {
+.refresh-btn {
   border: 1px solid var(--border-color, #cbd0d6);
   background: var(--cards-color, #fff);
   color: var(--text-color, #0b0b0b);
@@ -454,8 +471,7 @@ defineExpose({ reload: load })
   cursor: pointer;
 }
 
-.refresh-btn:disabled,
-.apply:disabled {
+.refresh-btn:disabled {
   opacity: 0.6;
   cursor: progress;
 }
@@ -464,31 +480,6 @@ defineExpose({ reload: load })
   font-family: var(--font-ui);
   color: var(--text-muted, #52514e);
   font-size: 0.85rem;
-}
-
-.filters {
-  display: flex;
-  gap: 12px;
-  align-items: flex-end;
-  flex-wrap: wrap;
-}
-
-.filters label {
-  font-family: var(--font-ui);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 0.85rem;
-  color: var(--text-muted, #52514e);
-}
-
-.filters input,
-.filters select {
-  border: 1px solid var(--border-color, #cbd0d6);
-  border-radius: 8px;
-  padding: 7px 10px;
-  background: var(--cards-color, #fff);
-  color: var(--text-color, #0b0b0b);
 }
 
 .error {
@@ -510,6 +501,10 @@ defineExpose({ reload: load })
   grid-template-columns: 2fr 1fr;
   gap: 16px;
   align-items: stretch;
+}
+
+.charts.single {
+  grid-template-columns: 1fr;
 }
 
 @media (max-width: 900px) {

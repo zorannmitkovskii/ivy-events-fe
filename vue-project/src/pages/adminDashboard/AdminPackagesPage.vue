@@ -458,7 +458,6 @@ async function remove(pkg) {
 </script>
 
 <style scoped>
-.admin-page { max-width: 1200px; }
 
 .btn-create {
   display: inline-flex; align-items: center; gap: 6px;

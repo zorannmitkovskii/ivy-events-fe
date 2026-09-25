@@ -17,7 +17,7 @@
       offering a couple planning their wedding a link to the admin console
       would be a 403 dressed as navigation.
     -->
-    <nav v-if="workspaces.length > 1" class="roles" :aria-label="$t('dash.roleSwitchLabel')">
+    <nav v-if="showSwitch" class="roles" :aria-label="$t('dash.roleSwitchLabel')">
       <router-link
         v-for="space in workspaces"
         :key="space.key"
@@ -39,7 +39,10 @@
 
       <ThemeToggle variant="icon" />
 
-      <NotificationBell v-if="showNotifications" />
+      <template v-if="showNotifications">
+        <WorkspaceNotificationBell v-if="workspaceNotifications" />
+        <NotificationBell v-else />
+      </template>
 
       <slot name="action" />
     </div>
@@ -51,19 +54,24 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import ThemeToggle from '@/components/layout/ThemeToggle.vue'
 import NotificationBell from '@/components/dashboard/shell/NotificationBell.vue'
+import WorkspaceNotificationBell from '@/components/dashboard/shell/WorkspaceNotificationBell.vue'
 import { hasRole } from '@/services/auth.service'
+import { ADMIN_SECTIONS } from '@/components/layout/adminSections.js'
 
 /**
- * The dashboard's top bar, shared by all four workspaces.
+ * The dashboard's top bar, shared by every workspace.
  *
  * @param current which workspace is showing, so the switch can mark it
  */
-defineProps({
+const props = defineProps({
   current: { type: String, required: true },
   searchHint: { type: String, default: '' },
   /* The store behind the bell is per-event, so it has nothing to say on the
      admin console. Off there rather than showing a permanently empty one. */
   showNotifications: { type: Boolean, default: true },
+  /* The agency and vendor consoles have no selected event; their bell reads
+     what was addressed to the person, their agency or their vendor instead. */
+  workspaceNotifications: { type: Boolean, default: false },
 })
 
 defineEmits(['toggle'])
@@ -72,21 +80,57 @@ const route = useRoute()
 const lang = computed(() => route.params.lang || 'mk')
 
 /*
-  The four workspaces, filtered by role. `event` is everybody's — every account
-  carries USER — so it is always in the list; the rest appear only when the
-  person can actually open them. One entry left means no switch at all, which
-  is the common case and the design's row of four would be misleading there.
+  The workspaces a person has, by role (IVY-908).
+
+  An administrator's are the tabs of the admin console (IVY-912), and nothing else:
+  their account also carries USER, and "My event" on the platform console is a
+  door into somebody's wedding through a shell never meant for the platform.
+
+  An agency owner's is the agency. They do edit their clients' events in the
+  event screens, but they get there from the agency panel, not from a tab that
+  suggests a second, personal workspace.
+
+  "My event" belongs to the couple alone. Every account on the platform also
+  carries USER — that is what the event routes check — so the role cannot be
+  what decides this: asking for USER would show the tab to everybody. What
+  separates the couple is that they hold no working role, so the absence of one
+  is the test.
+
+  Note this hides the tab, not the screens. An organiser opening a client's
+  event still lands in exactly these routes; they simply arrive from their own
+  panel rather than through a door labelled as if the wedding were theirs.
 */
+
+/** Holding any of these means the event screens are somebody else's work. */
+const WORKING_ROLES = ['ADMIN', 'AGENCY', 'AGENCY_MEMBER', 'VENDOR', 'VENDOR_MEMBER']
 const workspaces = computed(() => {
   const l = lang.value
-  const all = [
-    { key: 'event', to: `/${l}/dashboard/events/overview`, show: true },
-    { key: 'organizer', to: `/${l}/organizer`, show: hasRole('ORGANIZER') || hasRole('ORG_ADMIN') },
-    { key: 'vendor', to: `/${l}/vendor/calendar`, show: hasRole('VENDOR') },
-    { key: 'admin', to: `/${l}/admin/dashboard`, show: hasRole('ADMIN') },
-  ]
-  return all.filter((space) => space.show)
+
+  if (hasRole('ADMIN')) {
+    return ADMIN_SECTIONS.map((section) => ({ key: section.key, to: `/${l}/admin/${section.items[0].path}` }))
+  }
+
+  const vendor = { key: 'vendor', to: `/${l}/vendor/home`, show: hasRole('VENDOR') || hasRole('VENDOR_MEMBER') }
+
+  // Owners and members share the agency workspace since 2026-09, each drawn
+  // their own version of it — so one entry serves both.
+  if (hasRole('AGENCY') || hasRole('AGENCY_MEMBER')) {
+    return [{ key: 'agency', to: `/${l}/agency/dashboard`, show: true }, vendor].filter((space) => space.show)
+  }
+
+  return [
+    { key: 'event', to: `/${l}/dashboard/events/overview`, show: !WORKING_ROLES.some((role) => hasRole(role)) },
+    vendor,
+  ].filter((space) => space.show)
 })
+
+/*
+  One workspace is not a choice, so there is usually no switch. The exception
+  is somebody standing in a screen that is not one of their workspaces — an
+  agency owner inside a client's event — who needs the way back.
+*/
+const showSwitch = computed(() =>
+  workspaces.value.length > 1 || !workspaces.value.some((space) => space.key === props.current))
 </script>
 
 <style scoped>

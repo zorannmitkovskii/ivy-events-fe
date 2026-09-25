@@ -29,12 +29,12 @@ describe("decodeJwtPayload", () => {
 
   it("reads Cyrillic claims, which are UTF-8 and not one byte per character", () => {
     const claims = decodeJwtPayload(
-      token({ given_name: "Филип", family_name: "Фотограф", realm_access: { roles: ["VENDOR", "USER"] } })
+      token({ given_name: "Филип", family_name: "Фотограф", realm_access: { roles: ["VENDOR_MEMBER", "USER"] } })
     );
 
     expect(claims.given_name).toBe("Филип");
     expect(claims.family_name).toBe("Фотограф");
-    expect(claims.realm_access.roles).toContain("VENDOR");
+    expect(claims.realm_access.roles).toContain("VENDOR_MEMBER");
   });
 
   it("reads a payload whose base64url form uses - and _", () => {

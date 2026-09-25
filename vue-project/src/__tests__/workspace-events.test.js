@@ -30,12 +30,12 @@ describe('useWorkspaceEvents', () => {
     workspace.mockResolvedValue({ data: [] })
     const ws = useWorkspaceEvents()
 
-    ws.filters.status = 'ACTIVATED'
+    ws.filters.status = 'ACTIVE'
     ws.filters.from = '2026-06-01'
     await ws.load()
 
     expect(workspace).toHaveBeenCalledWith(
-      expect.objectContaining({ status: 'ACTIVATED', from: '2026-06-01', categoryType: '', to: '' })
+      expect.objectContaining({ status: 'ACTIVE', from: '2026-06-01', categoryType: '', to: '' })
     )
   })
 
@@ -112,7 +112,7 @@ describe('useWorkspaceEvents', () => {
 
 describe('resolveCurrentEvent', () => {
   it('selects the only event there is', async () => {
-    getAll.mockResolvedValue({ data: [{ id: 'only', categoryType: 'WEDDING', status: 'ACTIVATED' }] })
+    getAll.mockResolvedValue({ data: [{ id: 'only', categoryType: 'WEDDING', status: 'ACTIVE' }] })
 
     const result = await resolveCurrentEvent()
 

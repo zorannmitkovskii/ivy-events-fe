@@ -6,14 +6,26 @@
     role="Admin"
     @close="$emit('close')"
   >
+    <!-- On a phone the top bar hides its tabs, so the menu carries them. -->
+    <template #context>
+      <nav class="side-tabs" :aria-label="t('dash.roleSwitchLabel')">
+        <router-link
+          v-for="tab in ADMIN_SECTIONS"
+          :key="tab.key"
+          :to="link(tab.items[0].path)"
+          :aria-current="tab.key === section.key ? 'page' : null"
+        >{{ t(`dash.workspaces.${tab.key}`) }}</router-link>
+      </nav>
+    </template>
+
     <template #nav>
       <DashNavItem
-        v-for="item in navItems"
+        v-for="item in visibleItems"
         :key="item.key"
         :to="link(item.path)"
         :label="t(item.labelKey)"
         :icon="item.icon"
-        :active="isActive(item.path)"
+        :active="isActive(item)"
       />
     </template>
 
@@ -24,13 +36,14 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import DashSide from '@/components/dashboard/shell/DashSide.vue'
 import DashNavItem from '@/components/dashboard/shell/DashNavItem.vue'
-import { DashIcons } from '@/utils/dashIcons.js'
+import { ADMIN_SECTIONS, adminSectionFor, adminSegment } from '@/components/layout/adminSections.js'
 import { getFullName, logout } from '@/services/auth.service'
+import { usePrivileges } from '@/composables/usePrivileges'
 
 defineEmits(['close'])
 
@@ -42,30 +55,17 @@ const lang = computed(() => route.params.lang || 'mk')
 
 const link = (section) => `/${lang.value}/admin/${section}`
 
-const isActive = (section) => String(route.path || '').includes(`/admin/${section}`)
+/** Only the screens of the tab being looked at (IVY-912). */
+const { filterNav, load: loadPrivileges } = usePrivileges()
+onMounted(loadPrivileges)
 
-const navItems = [
-  { key: 'dashboard', path: 'dashboard', labelKey: 'admin.sidebar.dashboard', icon: DashIcons.overview },
-  { key: 'events', path: 'events', labelKey: 'admin.sidebar.events', icon: DashIcons.calendar },
-  { key: 'users', path: 'users', labelKey: 'admin.sidebar.users', icon: DashIcons.guests },
-  { key: 'organizers', path: 'organizers', labelKey: 'admin.sidebar.organizers', icon: DashIcons.team },
-  // The queue was routed but missing from the sidebar, so the only admin
-  // vendor screen was reachable by typing the URL (IVY-1103).
-  { key: 'vendorQueue', path: 'vendor-queue', labelKey: 'admin.sidebar.vendorQueue', icon: DashIcons.vendors },
-  { key: 'packages', path: 'packages', labelKey: 'admin.sidebar.packages', icon: DashIcons.packages },
-  { key: 'payments', path: 'payments', labelKey: 'admin.sidebar.payments', icon: DashIcons.payments },
-  { key: 'reviews', path: 'reviews', labelKey: 'admin.sidebar.reviews', icon: DashIcons.reviews },
-  { key: 'contacts', path: 'contacts', labelKey: 'admin.sidebar.contacts', icon: DashIcons.messages },
-  { key: 'faq', path: 'faq', labelKey: 'admin.sidebar.faq', icon: DashIcons.support },
-  { key: 'invitationTemplates', path: 'invitation-templates', labelKey: 'admin.sidebar.invitationTemplates', icon: DashIcons.gallery },
-  { key: 'emailTemplates', path: 'email-templates', labelKey: 'admin.sidebar.emailTemplates', icon: DashIcons.postEvent },
-  { key: 'emailSend', path: 'email-send', labelKey: 'admin.sidebar.emailSend', icon: DashIcons.messages },
-  // The editorial desk (EPIC-09). Content sits with admin rather than with an
-  // event because an article belongs to the site, not to somebody's wedding.
-  { key: 'content', path: 'content', labelKey: 'admin.sidebar.content', icon: DashIcons.quotes },
-  { key: 'contentAnalytics', path: 'content-analytics', labelKey: 'admin.sidebar.contentAnalytics', icon: DashIcons.reports },
-  { key: 'settings', path: 'settings', labelKey: 'admin.sidebar.settings', icon: DashIcons.settings },
-]
+const section = computed(() => adminSectionFor(route.path))
+
+/* Drawn from what this administrator may open, not from the role alone. */
+const visibleItems = computed(() => filterNav(section.value.items))
+
+// Exact segment, not a substring: `email-templates` must not light up on `email-send`.
+const isActive = (item) => adminSegment(route.path) === item.path
 
 const userName = computed(() => getFullName() || 'Admin')
 
@@ -76,6 +76,39 @@ function signOut() {
 </script>
 
 <style scoped>
+.side-tabs {
+  display: none;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.side-tabs a {
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+  font-size: 12.5px;
+  color: #c9d6ce;
+}
+
+.side-tabs a:hover {
+  text-decoration: none;
+  color: #fff;
+}
+
+.side-tabs a[aria-current='page'] {
+  border-color: #fff;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* The breakpoint at which `ivy/dash.css` hides the top bar's tabs. */
+@media (max-width: 860px) {
+  .side-tabs {
+    display: flex;
+  }
+}
+
 /* The admin sidebar's account row is a sign-out rather than a menu: every
    setting behind that menu is a row in the navigation above it. */
 .side-signout {

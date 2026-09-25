@@ -1,0 +1,102 @@
+/* Shared by the agency dashboard's small panels: a list of lines, each a
+   person or a decision with a pill on the right. `.card`, `.card-head` and
+   `.av` are the design's, in `ivy/dash.css`. */
+
+.lede {
+  margin-top: 4px;
+  color: var(--ink-3);
+  font-size: 13px;
+}
+
+.lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 0;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.line b {
+  font-weight: 600;
+}
+
+.line small {
+  display: block;
+  margin-top: 2px;
+  color: var(--ink-3);
+  font-size: 12.5px;
+}
+
+.line .warn {
+  color: var(--rose-ink);
+}
+
+.person {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.person .av {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  font-size: 12px;
+}
+
+.pill {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pill.red {
+  background: var(--rose);
+  color: var(--rose-ink);
+}
+
+.pill.amber {
+  background: var(--gold-soft);
+  color: var(--gold-deep);
+}
+
+.pill.green {
+  background: var(--mist);
+  color: var(--ivy);
+}
+
+.pill.slate {
+  background: var(--mist-2);
+  color: var(--ink-2);
+}
+
+.text-link {
+  border: 0;
+  background: none;
+  color: var(--ivy);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.text-link:hover {
+  text-decoration: underline;
+}
+
+.empty {
+  padding: 14px 0 4px;
+  color: var(--ink-3);
+  font-size: 14px;
+}

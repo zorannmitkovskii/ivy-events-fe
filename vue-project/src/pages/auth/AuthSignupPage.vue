@@ -48,7 +48,7 @@
            verification, and one with no name is a row nobody can identify
            in a registry other products read. -->
       <AuthInput
-        v-if="accountType === 'ORGANIZER'"
+        v-if="accountType === 'AGENCY_MEMBER'"
         v-model="organizationName"
         :label="t('register.organizationName')"
         required
@@ -212,7 +212,7 @@ onMounted(() => {
 // Personal by default. The safe reading of "they did not choose": an account
 // that should have been an agency is a support ticket; an agency created by
 // accident is a tenant in the registry nobody asked for.
-const ACCOUNT_TYPES = ["PERSONAL", "ORGANIZER"];
+const ACCOUNT_TYPES = ["PERSONAL", "AGENCY_MEMBER"];
 
 const accountType = ref("PERSONAL");
 const organizationName = ref("");
@@ -377,7 +377,7 @@ const canSubmit = computed(() => {
   // An agency without a name cannot be created, and the server refuses it. The
   // button says so first rather than letting somebody fill in a whole form to
   // be told at the end.
-  const organizationNamed = accountType.value !== "ORGANIZER"
+  const organizationNamed = accountType.value !== "AGENCY_MEMBER"
     || organizationName.value.trim().length > 0;
 
   return (
@@ -436,7 +436,7 @@ async function onRegister() {
       accountType: accountType.value,
       // Sent only when it means something. An organization name on a personal
       // signup is a field the server would have to decide to ignore.
-      organizationName: accountType.value === "ORGANIZER"
+      organizationName: accountType.value === "AGENCY_MEMBER"
         ? organizationName.value.trim()
         : null
     });
@@ -704,7 +704,7 @@ function onGoogle() {
   transition: transform 0.2s ease;
 }
 
-.segmented[data-picked='ORGANIZER']::before {
+.segmented[data-picked='AGENCY_MEMBER']::before {
   transform: translateX(100%);
 }
 

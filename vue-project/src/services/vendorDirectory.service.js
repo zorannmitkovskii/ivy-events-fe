@@ -7,11 +7,12 @@ import { api } from "@/services/api";
  * them create one to look is how a marketplace stays empty.
  */
 export const vendorDirectoryService = {
-  search({ type, city, q, page = 0, size = 24 } = {}) {
+  search({ type, city, q, tag, page = 0, size = 24 } = {}) {
     const params = { page, size };
     if (type) params.type = type;
     if (city) params.city = city;
     if (q) params.q = q;
+    if (tag) params.tag = tag;
     return api.get("/public/vendors", { params });
   },
 
@@ -19,9 +20,11 @@ export const vendorDirectoryService = {
     return api.get("/public/vendors/cities");
   },
 
-  /** 301 for an address a vendor used to live at; 404 for suspended. */
-  bySlug(slug) {
-    return api.get(`/public/vendors/${encodeURIComponent(slug)}`);
+  /** 301 for an address a vendor used to live at; 404 for suspended. `locale`
+   *  names the vendor's tags and picks the articles filed under them. */
+  bySlug(slug, locale) {
+    const params = locale ? { locale } : {};
+    return api.get(`/public/vendors/${encodeURIComponent(slug)}`, { params });
   },
 
   /** Title, description, canonical and JSON-LD — the same thing the build-time

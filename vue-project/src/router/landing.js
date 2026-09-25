@@ -11,38 +11,23 @@ import { resolveCurrentEvent } from "@/services/eventSelection.service";
 export function homeForCurrentUser(langParam) {
   const lang = langParam || "mk";
   if (hasRole("ADMIN")) return `/${lang}/admin/dashboard`;
-  if (hasRole("VENDOR")) return `/${lang}/vendor/calendar`;
-  if (runsAnAgency()) return `/${lang}/org/dashboard`;
-  if (runsEvents()) return `/${lang}/organizer`;
+  if ((hasRole("VENDOR") || hasRole("VENDOR_MEMBER"))) return `/${lang}/vendor/home`;
+  if (worksInAnAgency()) return `/${lang}/agency/dashboard`;
   return `/${lang}/dashboard/events/overview`;
 }
 
 /**
- * An agency owner, who gets the agency dashboard (IVY-1201).
+ * Somebody who works in an agency, owner or member, who gets the agency
+ * workspace (IVY-1201; members since 2026-09).
  *
- * <p>Split out of {@link runsEvents} on 2026-08-08. Until then both roles
- * landed on the same overview and differed only in what the backend let them
- * see — an ORG_ADMIN every event the organization owns, an ORGANIZER the ones
- * they are assigned. That difference is still the backend's to make (see
- * {@code EventAccessService.accessibleEventIds}); what changed is that the
- * agency owner now gets a screen built for the question they are asking.
+ * <p>Members used to land on the standalone organiser overview, which has no
+ * sidebar — so a member had no way to their calendar, their tasks or the
+ * vendor directory. They now share the agency shell and get their own version
+ * of it: the backend answers the same routes for them with their own events
+ * only (see {@code AgencyWorkspaceReader}), and the sidebar draws their work.
  */
-function runsAnAgency() {
-  return hasRole("ORG_ADMIN");
-}
-
-/**
- * Whether this person's work spans events rather than being one event.
- *
- * <p>ORG_ADMIN was missing here originally, which was the whole bug: signing up
- * as an agency grants ORG_ADMIN and USER but <em>not</em> ORGANIZER, so an
- * agency owner fell through to the single-event dashboard and saw one event —
- * the page for somebody planning their own wedding, handed to somebody running
- * twenty. They are now caught earlier by {@link runsAnAgency}, and this stays
- * for the individual organizer.
- */
-function runsEvents() {
-  return hasRole("ORG_ADMIN") || hasRole("ORGANIZER");
+function worksInAnAgency() {
+  return hasRole("AGENCY") || hasRole("AGENCY_MEMBER");
 }
 
 /**
@@ -58,17 +43,28 @@ export async function landingAfterAuth(langParam, redirect) {
   const lang = langParam || "mk";
 
   if (hasRole("ADMIN")) return `/${lang}/admin/dashboard`;
-  if (hasRole("VENDOR")) return `/${lang}/vendor/calendar`;
-  if (runsAnAgency()) return `/${lang}/org/dashboard`;
-
+  if ((hasRole("VENDOR") || hasRole("VENDOR_MEMBER"))) return `/${lang}/vendor/home`;
   // Asked before the event lookup, and before honouring `redirect`. Somebody
-  // who runs events belongs on the overview even with one event or none: a
+  // in an agency belongs on its overview even with one event or none: a
   // brand-new agency has zero, and sending them to an event-scoped page means
   // a blank screen on the first thing they ever see.
-  if (runsEvents()) return `/${lang}/organizer`;
+  if (worksInAnAgency()) return `/${lang}/agency/dashboard`;
 
-  const { eventId, eventCount } = await resolveCurrentEvent();
+  const { eventId, eventCount, failed } = await resolveCurrentEvent();
   if (!eventId && eventCount > 1) return `/${lang}/organizer`;
+
+  /*
+    Nobody's first screen should be a dashboard for an event that does not
+    exist. Somebody who has just verified their email has zero events, and the
+    overview then draws empty guest, task and budget panels for nothing —
+    the blueprint calls for onboarding at zero (§5), and this is that.
+
+    `failed` is deliberately excluded. A lookup that did not answer is not an
+    answer of zero, and telling somebody with three weddings to create their
+    first one is worse than showing them an empty dashboard for a moment.
+  */
+  if (!eventId && eventCount === 0 && !failed) return `/${lang}/event-category`;
+
   if (redirect) return redirect;
 
   return `/${lang}/dashboard/events/overview`;

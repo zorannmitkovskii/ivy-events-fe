@@ -4,8 +4,12 @@
 
     <p v-if="error" class="error">{{ error }}</p>
 
+    <VendorCalendarOverview v-model:view="view" />
+
     <MonthCalendar
+      v-show="view === 'month'"
       :bookings="bookings"
+      :markers="markers"
       :selected-key="selectedKey"
       @select="onSelectDay"
       @range-change="onRangeChange"
@@ -38,20 +42,48 @@
         </li>
       </ul>
 
+      <!--
+        Two states, not three. "Available" was in this list as if a vendor
+        marked a day free the way they mark it taken — but free is the absence
+        of a row, not a row of its own, and choosing it wrote one that said
+        nothing. A day already blocked is freed by releasing the block above,
+        which is the only way that leaves the calendar with one truth.
+      -->
       <form class="block-form" @submit.prevent="blockDay">
-        <select v-model="blockDraft.status" :aria-label="t('vendorPortal.availability.status')">
+        <select
+          v-model="blockDraft.status"
+          class="field"
+          :aria-label="t('vendorPortal.availability.status')"
+        >
           <option value="UNAVAILABLE">{{ t('vendorPortal.availability.UNAVAILABLE') }}</option>
           <option value="HOLD">{{ t('vendorPortal.availability.HOLD') }}</option>
-          <option value="AVAILABLE">{{ t('vendorPortal.availability.AVAILABLE') }}</option>
         </select>
+
+        <!--
+          A holiday is a week, not a day. The start is the day already
+          selected in the calendar; this is the last day it covers, left
+          empty for the single-day case so the common one stays one click.
+        -->
+        <label class="until">
+          <span class="until-label">{{ t('vendorPortal.availability.until') }}</span>
+          <input
+            v-model="blockDraft.until"
+            type="date"
+            class="field"
+            :min="selectedKey"
+            :aria-label="t('vendorPortal.availability.until')"
+          />
+        </label>
+
         <input
           v-model="blockDraft.reason"
           type="text"
+          class="field reason"
           :placeholder="t('vendorPortal.availability.reasonPlaceholder')"
           :aria-label="t('vendorPortal.availability.reasonPlaceholder')"
         />
         <button class="btn-secondary" type="submit">
-          {{ t('vendorPortal.availability.blockDay') }}
+          {{ blockDraft.until ? t('vendorPortal.availability.blockRange') : t('vendorPortal.availability.blockDay') }}
         </button>
       </form>
 
@@ -137,17 +169,24 @@ import PageHeader from '@/components/ui/PageHeader.vue'
 import { computed, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import MonthCalendar from "@/components/vendor/MonthCalendar.vue";
+import VendorCalendarOverview from "@/components/vendor/VendorCalendarOverview.vue";
 import { vendorPortalService, vendorAvailabilityService } from "@/services/vendorPortal.service";
+import { unwrap as unwrapFeed, vendorWorkspaceService } from "@/services/vendorWorkspace.service";
 
 const { t, locale } = useI18n();
 
+/** Kinds from the calendar feed drawn as markers; bookings have their own pills. */
+const MARKER_KINDS = new Set(["INQUIRY", "HOLD", "BLOCKED"]);
+
+const view = ref("month");
 const bookings = ref([]);
+const markers = ref([]);
 
 // The rest of the calendar: weeks away, days kept clear, dates pencilled in.
 // Loaded with the bookings and for the same window, so one range change fetches
 // both and they cannot show different months.
 const blocks = ref([]);
-const blockDraft = reactive({ status: "UNAVAILABLE", reason: "" });
+const blockDraft = reactive({ status: "UNAVAILABLE", reason: "", until: "" });
 const summaries = reactive({});
 const error = ref(null);
 const saving = ref(false);
@@ -175,6 +214,18 @@ function dayKey(date) {
 }
 
 /**
+ * One layer, not a destructure.
+ *
+ * <p>The vendor-portal endpoints answer with a bare list while the rest of the
+ * API wraps everything in {@code ApiResponse}. `response.data` reads
+ * `undefined` off an array, and the calendar then draws an empty month over a
+ * fully booked one.
+ */
+function unwrap(response) {
+  return response?.data ?? response ?? null;
+}
+
+/**
  * Sent with the browser's own offset rather than as bare local time: the
  * backend stores an instant, and a wedding booked at 18:00 in Skopje must not
  * become 16:00 because the server runs in UTC.
@@ -191,6 +242,20 @@ function formatHours(booking) {
 }
 
 /** The calendar tells us which window it is showing; we fetch exactly that. */
+/**
+ * Inquiries, holds and blocks for the same window, as markers on the grid.
+ * Separate from the bookings call so a feed that fails to load leaves the
+ * bookings — the part that is actual work — on screen.
+ */
+async function loadMarkers(fromKey, toKey) {
+  try {
+    const feed = unwrapFeed(await vendorWorkspaceService.calendar(fromKey, toKey)) ?? [];
+    markers.value = feed.filter((entry) => MARKER_KINDS.has(entry.kind));
+  } catch {
+    markers.value = [];
+  }
+}
+
 async function onRangeChange(fromKey, toKey) {
   error.value = null;
   currentWindow = { from: fromKey, to: toKey };
@@ -205,9 +270,10 @@ async function onRangeChange(fromKey, toKey) {
       vendorAvailabilityService.calendar(windowStart, windowEnd),
     ]);
 
-    bookings.value = bookingResponse.data;
+    bookings.value = unwrap(bookingResponse) ?? [];
     blocks.value = calendarResponse?.data?.blocks ?? calendarResponse?.data?.data?.blocks ?? [];
     refreshSelection();
+    loadMarkers(fromKey, toKey);
   } catch (e) {
     error.value = e?.response?.data?.message ?? e.message;
   }
@@ -240,14 +306,24 @@ const selectedBlocks = computed(() => {
  */
 async function blockDay() {
   error.value = null;
+
+  // `date` for one day, `from`/`to` for a stretch — the endpoint takes either,
+  // and the server builds the boundaries in the vendor's own zone. Sending a
+  // range of one day instead would work, but it loses the distinction the API
+  // makes, and with it the server's "whole day" handling.
+  const span = blockDraft.until && blockDraft.until !== selectedKey.value
+    ? { from: selectedKey.value, to: blockDraft.until }
+    : { date: selectedKey.value };
+
   try {
     await vendorAvailabilityService.block({
-      date: selectedKey.value,
+      ...span,
       status: blockDraft.status,
       reason: blockDraft.reason || null,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
     blockDraft.reason = "";
+    blockDraft.until = "";
     await reloadCurrentWindow();
   } catch (e) {
     error.value = e?.detail ?? e?.response?.data?.message ?? e.message;
@@ -344,8 +420,7 @@ async function setStatus(booking, status) {
       title: booking.title,
       note: booking.note,
       eventId: booking.eventId,
-      packageId: booking.packageId,
-      floorPlanId: booking.floorPlanId
+      packageId: booking.packageId
     });
     await reload();
   } catch (e) {
@@ -355,8 +430,7 @@ async function setStatus(booking, status) {
 
 async function loadSummary(booking) {
   try {
-    const { data } = await vendorPortalService.guestSummary(booking.id);
-    summaries[booking.id] = data;
+    summaries[booking.id] = unwrap(await vendorPortalService.guestSummary(booking.id));
   } catch (e) {
     error.value = e?.response?.data?.message ?? e.message;
   }
@@ -490,6 +564,67 @@ h1 {
   display: flex;
   gap: 0.5rem;
   margin-top: 0.625rem;
+}
+
+/*
+  The block form's own row.
+
+  The select used to have no rule at all, so it kept the browser's default
+  height and sat some twenty pixels shorter than the inputs and the button
+  beside it. `.field` is what every control in this row now shares, height
+  included — `appearance: none` is needed because a native select ignores
+  padding on Windows and would go back to its own size.
+*/
+.block-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
+.block-form .field {
+  min-height: 44px;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid #e8e4dc;
+  border-radius: 8px;
+  font: inherit;
+  background: #fff;
+  color: inherit;
+  box-sizing: border-box;
+}
+
+select.field {
+  appearance: none;
+  padding-right: 2rem;
+  cursor: pointer;
+  /* The chevron, drawn rather than fetched, so nothing can block it. */
+  background-image: linear-gradient(45deg, transparent 50%, #6b665e 50%),
+                    linear-gradient(135deg, #6b665e 50%, transparent 50%);
+  background-position: calc(100% - 1.05rem) 1.2rem, calc(100% - 0.8rem) 1.2rem;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+.block-form .reason {
+  flex: 1;
+  min-width: 10rem;
+}
+
+.until {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.until-label {
+  font-size: 0.8rem;
+  color: #6b665e;
+  white-space: nowrap;
+}
+
+.block-form .btn-secondary {
+  min-height: 44px;
 }
 
 .new-booking {

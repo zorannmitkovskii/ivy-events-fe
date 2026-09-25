@@ -79,7 +79,7 @@
       <template #cell-actions="{ row }">
         <div class="actions">
         <button
-        v-if="row.status !== 'ACTIVATED'"
+        v-if="row.status !== 'ACTIVE'"
         class="action-btn action-btn--activate"
         @click="openActivate(row)"
         :title="$t('adminEvents.activateAssign')"
@@ -198,7 +198,7 @@
 
         <div class="dialog-body">
           <p class="activate-info">
-            Activating <strong>{{ activateTarget?.name }}</strong> will set its status to ACTIVATED
+            Activating <strong>{{ activateTarget?.name }}</strong> will set its status to ACTIVE
             and assign a package to the user in Keycloak.
           </p>
 
@@ -664,7 +664,7 @@ async function remove(ev) {
 }
 
 function statusClass(status) {
-  if (status === "ACTIVATED") return "status--green";
+  if (status === "ACTIVE") return "status--green";
   if (status === "DRAFT") return "status--yellow";
   if (status === "PENDING") return "status--blue";
   return "status--red";
@@ -725,7 +725,6 @@ function formatDate(d) {
 .th-check input, .td-check input { width: 16px; height: 16px; cursor: pointer; accent-color: var(--brand-main); }
 .row-selected { background: #f0f4ff !important; }
 
-.admin-page { max-width: 1200px; }
 
 .btn-create {
   display: inline-flex; align-items: center; gap: 6px;

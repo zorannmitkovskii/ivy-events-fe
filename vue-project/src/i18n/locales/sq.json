@@ -46,6 +46,42 @@
     "designs": {
       "title": "Një dizajn për çdo rast",
       "description": "Çdo dizajn është një ftesë e plotë interaktive: detajet, harta, programi dhe përgjigjet e mysafirëve. Zgjidhni një, pastaj ndryshoni emrat, datën dhe ngjyrën."
+    },
+    "packages": {
+      "title": "Paketat dhe çmimet",
+      "description": "Zgjidhni një paketë për eventin tuaj — ftesa dixhitale, RSVP, lista e të ftuarve dhe vendosja në tavolina në një vend."
+    },
+    "terms": {
+      "title": "Kushtet e përdorimit",
+      "description": "Kushtet sipas të cilave përdorni platformën Ivy Events."
+    },
+    "feedback": {
+      "title": "Mendimi juaj",
+      "description": "Na tregoni çfarë të përmirësojmë — e lexojmë çdo sugjerim."
+    },
+    "VendorDirectory": {
+      "title": "Furnitorë për evente",
+      "description": "Fotografë, salla, muzikë, dekor dhe katering për dasma dhe festime — krahasoni ofertat dhe pyesni drejtpërdrejt."
+    },
+    "VendorCategory": {
+      "title": "Furnitorë sipas kategorisë",
+      "description": "Gjeni furnitorë të verifikuar për eventin tuaj, krahasoni ofertat dhe pyesini drejtpërdrejt."
+    },
+    "Blog": {
+      "title": "Blogu",
+      "description": "Këshilla, ide dhe frymëzim për planifikimin e dasmave, pagëzimeve, ditëlindjeve dhe festimeve të tjera."
+    },
+    "EventInvitationsPage": {
+      "title": "Ftesa dixhitale",
+      "description": "Zgjidhni një dizajn ftese dixhitale për eventin tuaj dhe dërgojeni te të ftuarit për pak minuta."
+    },
+    "weddingInvitation": {
+      "title": "Parapamje e ftesës",
+      "description": "Shikoni si duket ftesa dixhitale — me RSVP, hartë dhe numërim mbrapsht deri te eventi."
+    },
+    "TagPage": {
+      "title": "Temë",
+      "description": "Artikuj dhe furnitorë për një temë."
     }
   },
   "comingSoon": {
@@ -268,18 +304,15 @@
     "items": {
       "weddings": {
         "title": "Dasma",
-        "description": "Ftesa elegante për ditën tuaj të veçantë",
-        "sample": "Elena & Nikolla"
+        "description": "Ftesa elegante për ditën tuaj të veçantë"
       },
       "birthdaysParties": {
         "title": "Ditëlindje dhe Festa",
-        "description": "Festoni momentet e rêndësishme me stil",
-        "sample": "Mia mbush 8"
+        "description": "Festoni momentet e rêndësishme me stil"
       },
       "corporate": {
         "title": "Ngjarje Korporative",
-        "description": "Ftesa profesionale për biznes",
-        "sample": "Gala vjetore"
+        "description": "Ftesa profesionale për biznes"
       },
       "conferences": {
         "title": "Konferenca",
@@ -291,13 +324,11 @@
       },
       "babyShowers": {
         "title": "Baby Shower",
-        "description": "Mirësevini anëtarin e ri",
-        "sample": "Mirë se erdhe, Luka"
+        "description": "Mirësevini anëtarin e ri"
       },
       "graduations": {
         "title": "Diplomime",
-        "description": "Festoni arritjet",
-        "sample": "Gjenerata 2026"
+        "description": "Festoni arritjet"
       },
       "anniversaries": {
         "title": "Përvjetore",
@@ -439,13 +470,15 @@
     },
     "category": {
       "birthdayWho": "Ditëlindja e kujt është?",
-      "birthdayAdult": "E një të rrituri",
-      "birthdayChild": "E një fëmije",
       "title": "Zgjidh kategorinë e ngjarjes",
       "subtitle": "Zgjidh llojin e ngjarjes që po planifikon. Mund ta ndryshosh më vonë.",
       "continue": "Vazhdo",
       "next": "Tjetra",
-      "create": "Krijo"
+      "create": "Krijo",
+      "types": {
+        "BIRTHDAY_ADULT": "E një të rrituri",
+        "BIRTHDAY_CHILD": "E një fëmije"
+      }
     },
     "builder": {
       "title": "Ndërtuesi i ftesave",
@@ -1207,15 +1240,17 @@
       "invitationTemplates": "Ftesat",
       "emailTemplates": "Shabllonet Email",
       "emailSend": "Dërgo Email",
-      "content": "Përmbajtja",
       "contentAnalytics": "Konvertimet",
+      "siteAnalytics": "Trafiku",
       "organizers": "Organizatorët",
       "vendors": "Profesionistët",
       "vendorQueue": "Radha e miratimit",
       "settings": "Cilësimet",
       "contextLabel": "Platforma",
       "contextName": "Ivy Events",
-      "payments": "Pagesat"
+      "payments": "Pagesat",
+      "blog": "Blogu",
+      "tags": "Etiketat"
     },
     "reviews": {
       "title": "Vlerësimet",
@@ -1512,6 +1547,15 @@
         "status": "Statusi",
         "priority": "Prioriteti",
         "titleRequired": "Emri i detyrës është i detyrueshëm"
+      },
+      "board": {
+        "empty": "Nothing here",
+        "view": "View",
+        "asTable": "Table",
+        "asBoard": "Board",
+        "hint": "Drag a task to another column for status, or up and down to reorder.",
+        "assignee": "Assigned to",
+        "unassigned": "Unassigned"
       }
     },
     "listView": "Listë",
@@ -2278,6 +2322,7 @@
     "portfolio": "Portofoli",
     "portfolioSubtitle": "Foto nga ngjarjet e kaluara, dhe lidhje me incizime ose showreel.",
     "portfolioEmpty": "Ende nuk keni shtuar asgjë.",
+    "followOnInstagram": "Ndiqni në Instagram",
     "addPhotos": "Shto foto",
     "uploading": "Duke ngarkuar…",
     "addLink": "Shto lidhje",
@@ -2300,13 +2345,16 @@
       "noReason": "Pa arsye",
       "reasonPlaceholder": "Pse? (opsionale)",
       "blockDay": "Shëno ditën",
+      "blockRange": "Shëno ditët",
+      "until": "deri",
       "confirm": "Konfirmo",
       "release": "Liro"
     },
     "inbox": "Kërkesat",
     "contextLabel": "Furnitor",
     "role": "Portali i furnitorëve",
-    "approved": "I miratuar"
+    "approved": "I miratuar",
+    "currency": "Monedha"
   },
   "catering": {
     "title": "Menuja e restorantit",
@@ -2396,8 +2444,8 @@
     "statuses": {
       "DRAFT": "Skicë",
       "PENDING": "Në pritje",
-      "ACTIVATED": "Aktive",
-      "ACHIVED": "E arkivuar"
+      "ACTIVE": "Aktive",
+      "ARCHIVED": "E arkivuar"
     },
     "needsAttention": "Kërkon vëmendje",
     "pinnedSection": "Të fiksuara",
@@ -2409,7 +2457,13 @@
     "daysLeft": "edhe {count} ditë",
     "daysAgo": "para {count} ditësh",
     "overdueTasks": "{count} detyra të vonuara",
-    "noneMatch": "Asnjë event nuk përputhet me kërkimin."
+    "noneMatch": "Asnjë event nuk përputhet me kërkimin.",
+    "colPlace": "Vendndodhja",
+    "colOverdue": "Të vonuara",
+    "colOrganizer": "Organizatori",
+    "viewTable": "Tabelë",
+    "viewCards": "Karta",
+    "viewLabel": "Pamja"
   },
   "homepageFaqs": [
     {
@@ -2774,6 +2828,21 @@
       "VERIFIED": "I verifikuar. Në pritje të certifikatës.",
       "ACTIVE": "Aktiv përmes HTTPS.",
       "FAILED": "Dështoi."
+    },
+    "previewBack": "Kthehu te cilësimet",
+    "previewNote": "Kështu e shohin vizitorët. Zgjedhja ruhet te cilësimet.",
+    "site": {
+      "enquire": "Kërko ofertë",
+      "work": "Punët",
+      "listen": "Dëgjo dhe shiko",
+      "packages": "Paketat",
+      "perPerson": "për person",
+      "minGuests": "Së paku {n} mysafirë",
+      "website": "Faqja e internetit",
+      "poweredBy": "Bërë me Ivy Events",
+      "notFound": "Ky profil nuk është këtu.",
+      "notFoundHint": "Adresa mund të ketë ndryshuar, ose profili ende nuk është publikuar.",
+      "browseAll": "Shiko të gjithë profesionistët"
     }
   },
   "inbox": {
@@ -2944,7 +3013,58 @@
     "loading": "Po ngarkohen artikujt…",
     "byAuthor": "Nga {name}",
     "authorRole": "ekipi i Ivy Events",
-    "ctaText": "Bëni ftesën tuaj falas dhe ndajeni me një link të vetëm."
+    "ctaText": "Bëni ftesën tuaj falas dhe ndajeni me një link të vetëm.",
+    "tagsLabel": "Etiketat:",
+    "clearTag": "Të gjitha temat",
+    "featured": "E veçuar",
+    "readFeatured": "Lexo artikullin",
+    "eyebrow": "Nga blogu",
+    "heading": "Ide që mund t’i zbatosh.",
+    "searchPlaceholder": "Kërko artikuj…",
+    "searchLabel": "Kërko artikuj",
+    "noResults": "Asnjë artikull nuk përputhet me këtë kërkim.",
+    "newsletterEyebrow": "Mbaje planin në rregull",
+    "newsletterTitle": "Një ide e re për eventin e ardhshëm.",
+    "read": "Lexo",
+    "minutes": "{n} min lexim",
+    "layout": {
+      "GUIDE": "Udhëzues",
+      "INSPIRATION": "Frymëzim",
+      "PRODUCT": "Ivy Events"
+    },
+    "toc": {
+      "GUIDE": "Në këtë udhëzues",
+      "INSPIRATION": "Në këtë faqe",
+      "PRODUCT": "Në këtë artikull"
+    },
+    "relatedEyebrow": {
+      "GUIDE": "Vazhdo leximin",
+      "INSPIRATION": "Të lidhura"
+    },
+    "relatedTitle": {
+      "GUIDE": "Artikuj të lidhur",
+      "INSPIRATION": "Planifiko më tej.",
+      "PRODUCT": "Lexo edhe"
+    },
+    "openArticle": "Hap artikullin",
+    "vendorsEyebrow": "Furnitorë për të njëjtën temë",
+    "vendorsTitle": "Kush mund të ndihmojë",
+    "viewVendor": "Shiko profilin",
+    "mock": {
+      "label": "Ilustrim i pasqyrës së përgjigjeve, jo të dhëna reale",
+      "section": "Të ftuarit dhe përgjigjet",
+      "illustration": "Ilustrim",
+      "overview": "Pasqyra",
+      "guests": "Të ftuarit",
+      "invitations": "Ftesat",
+      "events": "Eventet",
+      "title": "Pasqyra e përgjigjeve",
+      "guest": "I ftuari {letter}",
+      "confirmed": "Konfirmuar",
+      "pending": "Pret përgjigje",
+      "declined": "Refuzuar",
+      "foot": "Ndërfaqe ilustruese dhe emra shembull — nuk është e lidhur me të dhëna."
+    }
   },
   "inspiration": {
     "subtitle": "{count} profesionistë",
@@ -2953,39 +3073,6 @@
     "thin": "Kjo faqe nuk indeksohet — më pak se {minimum} listime.",
     "empty": "Ende asgjë këtu.",
     "notFound": "Kjo faqe nuk ekziston."
-  },
-  "contentEditor": {
-    "title": "Përmbajtja",
-    "subtitle": "Artikuj, përkthime dhe SEO.",
-    "newTitle": "Titulli",
-    "category": "Kategoria",
-    "create": "Krijo",
-    "variantTitle": "Titulli",
-    "excerpt": "Fragment",
-    "body": "Teksti",
-    "seo": "SEO",
-    "seoTitle": "Titulli SEO",
-    "seoDescription": "Përshkrimi SEO",
-    "canonical": "Adresa kanonike",
-    "socialImage": "Imazhi për ndarje",
-    "searchPreview": "Si duket në kërkim",
-    "noindex": "Ky version nuk do të indeksohet.",
-    "noWarnings": "Asnjë paralajmërim.",
-    "status": "Statusi",
-    "stateDRAFT": "Skicë",
-    "stateREVIEW": "Në shqyrtim",
-    "stateSCHEDULED": "E planifikuar",
-    "statePUBLISHED": "E publikuar",
-    "stateARCHIVED": "E arkivuar",
-    "moveREVIEW": "Dërgo për shqyrtim",
-    "moveSCHEDULED": "Planifiko",
-    "movePUBLISHED": "Publiko",
-    "moveARCHIVED": "Arkivo",
-    "publishAt": "Publiko në",
-    "publishHint": "Planifikimi kërkon një kohë; publikimi hyn në fuqi menjëherë.",
-    "links": "Të lidhura",
-    "unusable": "Jo e publikueshme",
-    "noLinks": "Asnjë e lidhur."
   },
   "contentAnalytics": {
     "title": "Përmbajtja dhe konvertimet",
@@ -3031,8 +3118,8 @@
     "status": {
       "DRAFT": "Skicë",
       "PENDING": "Në pritje",
-      "ACTIVATED": "Aktive",
-      "ACHIVED": "Arkivuar"
+      "ACTIVE": "Aktive",
+      "ARCHIVED": "Arkivuar"
     },
     "reason": {
       "OVERDUE_TASKS": "E vonuar",
@@ -3125,7 +3212,12 @@
     "emailRequired": "Email-i është i detyrueshëm",
     "roleRequired": "Kërkohet të paktën një rol",
     "confirmDelete": "Të fshihet përdoruesi \"{name}\"?",
-    "loadFailedTitle": "Direktoria nuk mund të ngarkohej"
+    "loadFailedTitle": "Direktoria nuk mund të ngarkohej",
+    "placeholders": {
+      "firstName": "Arta",
+      "lastName": "Krasniqi",
+      "email": "arta{'@'}shembull.com"
+    }
   },
   "adminUsers": {
     "title": "Përdoruesit",
@@ -3338,7 +3430,30 @@
     "tasks": "Detyrat",
     "calendar": "Kalendari",
     "vendors": "Furnitorë",
-    "reports": "Raporte"
+    "reports": "Raporte",
+    "ownerRole": "Administrator i agjencisë",
+    "memberRole": "Anëtar i ekipit",
+    "groups": {
+      "main": "Kryesore",
+      "operations": "Operacione",
+      "management": "Menaxhim",
+      "myWork": "Puna ime",
+      "resources": "Burime"
+    },
+    "allEvents": "Të gjitha ngjarjet",
+    "centralCalendar": "Kalendari qendror",
+    "myOverview": "Pasqyra ime",
+    "myCalendar": "Kalendari im",
+    "myTasks": "Detyrat e mia",
+    "vendorDirectory": "Furnitorët · katalogu",
+    "teamPermissions": "Lejet e ekipit",
+    "tiers": {
+      "FREE": "Falas",
+      "PERSONAL": "Personale",
+      "ORGANIZER": "Organizator",
+      "AGENCY": "Agjenci"
+    },
+    "site": "Faqja publike"
   },
   "rsvpSuccess": {
     "title": "Përgjigjja u pranua",
@@ -3394,7 +3509,12 @@
       "event": "Ngjarja ime",
       "organizer": "Organizator",
       "vendor": "Furnitor",
-      "admin": "Admin"
+      "admin": "Admin",
+      "agency": "Agjencia",
+      "users": "Përdoruesit",
+      "events": "Ngjarjet",
+      "content": "Përmbajtja",
+      "messages": "Mesazhet"
     }
   },
   "agencyCalendar": {
@@ -3403,20 +3523,92 @@
     "previous": "I mëparshmi",
     "next": "Tjetri",
     "today": "Sot",
-    "inMonth": "{n} ngjarje këtë muaj"
+    "inMonth": "{n} ngjarje këtë muaj",
+    "createOn": "Create an event on {day}",
+    "myTitle": "Kalendari im",
+    "schedule": "Orari",
+    "scheduleHint": "Ngjarjet dhe afatet në të njëjtin kalendar.",
+    "viewLabel": "Pamja",
+    "month": "Muaji",
+    "thisWeek": "Këtë javë",
+    "weekEmpty": "Asnjë ngjarje apo afat në 7 ditët e ardhshme.",
+    "kind": {
+      "event": "Ngjarje",
+      "task": "Afat"
+    },
+    "kpi": {
+      "events": "Ngjarje në kalendar",
+      "eventsNote": "E kufizuar sipas rolit",
+      "soon": "{days} ditët e ardhshme",
+      "soonNote": "Nga sot",
+      "deadlines": "Afatet këtë javë",
+      "deadlinesNote": "Nga ngjarjet e dukshme",
+      "month": "Muaji",
+      "monthNote": "Shigjetat e ndryshojnë muajin"
+    }
   },
   "agencyTasks": {
     "title": "Detyrat",
-    "subtitle": "Gjithçka e hapur nëpër të gjitha ngjarjet, në një vend.",
+    "subtitle": "Puna sipas ngjarjes, përgjegjësit dhe afatit.",
     "filterLabel": "Filtro sipas ngjarjes",
     "allEvents": "Të gjitha ngjarjet",
     "count": "{n} detyra",
     "none": "Asgjë këtu.",
     "status": {
-      "PENDING": "Për të bërë",
-      "IN_PROGRESS": "Në proces",
-      "DONE": "Përfunduar"
-    }
+      "PENDING": "Për t’u bërë",
+      "IN_PROGRESS": "Në vazhdim",
+      "DONE": "E kryer"
+    },
+    "myTitle": "Detyrat e mia",
+    "mySubtitle": "Detyrat në ngjarjet ku punon.",
+    "scopeLabel": "Detyrat e kujt",
+    "kpi": {
+      "inView": "Detyra në pamje",
+      "inViewNote": "Sipas filtrave të zgjedhur",
+      "overdue": "Me vonesë",
+      "overdueNote": "Afati ka kaluar, të pakryera",
+      "week": "Këtë javë",
+      "weekNote": "Me afat në 7 ditët e ardhshme",
+      "unassigned": "Pa përgjegjës",
+      "unassignedNote": "Detyra të hapura që askush nuk i ka marrë",
+      "unassignedMemberNote": "Detyra të hapura pa përgjegjës"
+    },
+    "ownerSection": "Detyrat e agjencisë",
+    "memberSection": "Detyra të caktuara për {name}",
+    "sectionHint": "Çdo detyrë lidhet me një ngjarje, afat dhe person përgjegjës.",
+    "viewLabel": "Pamja e detyrave",
+    "view": {
+      "list": "Lista",
+      "board": "Tabela"
+    },
+    "filter": {
+      "status": "Statusi",
+      "statusAll": "Të gjitha detyrat",
+      "statusOverdue": "Me vonesë",
+      "statusWeek": "Këtë javë",
+      "event": "Ngjarja",
+      "assignee": "Përgjegjësi",
+      "assigneeAll": "Të gjithë anëtarët"
+    },
+    "table": {
+      "task": "Detyra",
+      "event": "Ngjarja",
+      "due": "Afati",
+      "assignee": "Përgjegjësi",
+      "status": "Statusi",
+      "open": "Hap"
+    },
+    "overdueTag": "Me vonesë",
+    "noDate": "Pa afat",
+    "unassignedName": "Pa përgjegjës",
+    "assignLabel": "Përgjegjësi për {title}",
+    "cardLabel": "{title}, përgjegjës: {assignee}",
+    "keyboardHint": "Tërhiq kartën në një kolonë tjetër, ose përdor shigjetat majtas dhe djathtas.",
+    "moveFailed": "Detyra nuk u zhvendos: {reason}",
+    "assignFailed": "Përgjegjësi nuk u ndryshua: {reason}",
+    "empty": "Asnjë detyrë për filtrat e zgjedhur.",
+    "scopeMine": "Të miat",
+    "scopeAll": "Të gjitha"
   },
   "agencyVendors": {
     "title": "Furnitorë",
@@ -3515,5 +3707,1534 @@
     "INVITED": "Në pritje të përgjigjes",
     "DECLINED": "Nuk vjen",
     "PENDING": "Ende i paftuar"
+  },
+  "adminBlog": {
+    "title": "Blogu",
+    "subtitle": "Postime sipas gjuhës, etiketa, imazhe kryesore dhe publikim.",
+    "newPost": "Postim i ri",
+    "list": {
+      "search": "Kërko sipas titullit",
+      "allCategories": "Të gjitha kategoritë",
+      "allStatuses": "Të gjitha statuset",
+      "allLocales": "Të gjitha gjuhët",
+      "tag": "Etiketë",
+      "clear": "Pastro filtrat",
+      "count": "{n} postime",
+      "loading": "Po ngarkohen postimet…",
+      "empty": "Asnjë postim nuk përputhet me filtrat.",
+      "emptyAll": "Ende nuk ka postime. Filloni me Postim i ri.",
+      "untitled": "(pa titull)",
+      "archived": "Arkivuar",
+      "previous": "Para",
+      "next": "Pas",
+      "pageOf": "Faqja {page} nga {pages}",
+      "columns": {
+        "title": "Titulli",
+        "category": "Kategoria",
+        "tags": "Etiketat",
+        "languages": "Gjuhët",
+        "status": "Statusi",
+        "updated": "Ndryshuar",
+        "author": "Autori",
+        "seo": "SEO"
+      },
+      "allSeo": "Të gjitha gjendjet SEO",
+      "seoERRORS": "Me gabime SEO",
+      "seoCLEAN": "Pa vërejtje",
+      "seoErrors": "{n} gabime",
+      "seoWarnings": "{n} këshilla",
+      "seoClean": "Në rregull"
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "IN_REVIEW": "Në shqyrtim",
+      "SCHEDULED": "I planifikuar",
+      "PUBLISHED": "Publikuar",
+      "ARCHIVED": "Tërhequr"
+    },
+    "locales": {
+      "mk": "Maqedonisht",
+      "en": "Anglisht",
+      "sq": "Shqip"
+    },
+    "editor": {
+      "toolbar": "Formatimi",
+      "h2": "Titull",
+      "h3": "Nëntitull",
+      "bold": "I trashë",
+      "italic": "I pjerrët",
+      "bulletList": "Listë",
+      "orderedList": "Listë e numëruar",
+      "blockquote": "Citat",
+      "link": "Lidhje",
+      "linkUrl": "Adresa e lidhjes",
+      "linkApply": "Vendos",
+      "linkRemove": "Hiq lidhjen",
+      "callout": "Këshillë",
+      "checklist": "Listë kontrolli",
+      "pullquote": "Citat i theksuar",
+      "figure": "Foto me përshkrim",
+      "gallery": "Shirit fotosh",
+      "calloutTitle": "Këshillë praktike",
+      "calloutText": "Shkruaj këshillën këtu.",
+      "checklistItem": "Pika e parë",
+      "pullquoteText": "Fjalia që lexuesi duhet ta mbajë mend.",
+      "mediaFiles": "Zgjidh fotot",
+      "mediaAlt": "Përshkrimi i fotos (alt)",
+      "mediaCaption": "Përshkrimi",
+      "mediaInsert": "Fut",
+      "mediaUploading": "Po ngarkohet…",
+      "mediaCancel": "Anulo"
+    },
+    "tags": {
+      "placeholder": "Shkruani një etiketë dhe shtypni Enter",
+      "hint": "Deri në {max} etiketa. Enter ose presja shton etiketë.",
+      "remove": "Hiq etiketën {tag}",
+      "tooLong": "Etiketa mund të ketë së shumti {max} karaktere.",
+      "tooMany": "Së shumti {max} etiketa për postim."
+    },
+    "cover": {
+      "empty": "Pa imazh kryesor",
+      "upload": "Ngarko imazh",
+      "replace": "Zëvendëso",
+      "remove": "Hiq",
+      "uploading": "Po ngarkohet…",
+      "hint": "JPG, PNG ose WebP, deri në 5 MB.",
+      "wrongType": "Lejohen vetëm imazhe JPG, PNG dhe WebP.",
+      "tooLarge": "Imazhi është më i madh se 5 MB.",
+      "previewAlt": "Parapamje e imazhit kryesor"
+    },
+    "editorPage": {
+      "newTitle": "Postim i ri",
+      "subtitle": "Teksti sipas gjuhës, etiketat, imazhi dhe publikimi.",
+      "back": "Të gjitha postimet",
+      "viewLive": "Shiko në faqe",
+      "save": "Ruaj",
+      "saving": "Po ruhet…",
+      "saved": "U ruajt.",
+      "loading": "Po ngarkohet postimi…",
+      "languages": "Gjuhët",
+      "notWritten": "Pa shkruar",
+      "unsaved": "pa ruajtur",
+      "archivedNotice": "Ky postim është arkivuar dhe nuk shfaqet në faqe."
+    },
+    "fields": {
+      "title": "Titulli",
+      "excerpt": "Përmbledhje",
+      "body": "Teksti",
+      "bodyCount": "{n} fjalë",
+      "category": "Kategoria",
+      "slug": "Adresa",
+      "tags": "Etiketat",
+      "cover": "Imazhi kryesor",
+      "layout": "Pamja e artikullit",
+      "featured": "I veçuar në blog",
+      "featuredHint": "Lista e blogut fillon me këtë artikull. Mund të ketë vetëm një — i mëparshmi hiqet.",
+      "heroCaption": "Përshkrimi nën foto"
+    },
+    "seo": {
+      "title": "SEO dhe shpërndarja",
+      "seoTitle": "Titulli SEO",
+      "seoDescription": "Përshkrimi SEO",
+      "canonical": "Adresa kanonike",
+      "preview": "Parapamje në Google",
+      "noWarnings": "Asnjë vërejtje.",
+      "afterSave": "Parapamja dhe vërejtjet janë nga ruajtja e fundit.",
+      "issuesTitle": "Gjetjet SEO",
+      "summary": "{errors} gabime · {warnings} këshilla",
+      "keyword": "Fjala kyçe",
+      "keywordHint": "Fraza me të cilën dëshironi që kjo gjuhë e postimit të gjendet në Google.",
+      "severity": {
+        "ERROR": "Gabim",
+        "WARNING": "Këshillë"
+      }
+    },
+    "publish": {
+      "title": "Publikimi",
+      "saveFirst": "Ruajeni tekstin në këtë gjuhë që të mund të publikohet.",
+      "needsTitle": "Nevojitet titull.",
+      "tooShort": "Teksti ka {n} karaktere; për publikim nevojiten së paku {min}.",
+      "scheduleAt": "Data dhe ora e publikimit",
+      "scheduledFor": "Planifikuar për {date}",
+      "publishedAt": "Publikuar më {date}",
+      "move": {
+        "IN_REVIEW": "Dërgo në shqyrtim",
+        "DRAFT": "Kthe në draft",
+        "SCHEDULED": "Planifiko",
+        "PUBLISHED": "Publiko",
+        "ARCHIVED": "Tërhiq këtë gjuhë"
+      },
+      "done": {
+        "IN_REVIEW": "U dërgua në shqyrtim.",
+        "DRAFT": "U kthye në draft.",
+        "SCHEDULED": "U planifikua.",
+        "PUBLISHED": "U publikua.",
+        "ARCHIVED": "Kjo gjuhë u tërhoq."
+      },
+      "fixErrors": "Rregulloni gabimet SEO ({n}) dhe ruani — pastaj mund të publikohet."
+    },
+    "post": {
+      "title": "Postimi"
+    },
+    "links": {
+      "title": "Të lidhura",
+      "empty": "Asnjë profesionist apo shabllon i lidhur.",
+      "unusable": "nuk shfaqet"
+    },
+    "takeDown": {
+      "title": "Tërheqja",
+      "archive": "Arkivo postimin",
+      "confirmArchive": "Konfirmo arkivimin",
+      "delete": "Fshi postimin",
+      "confirmDelete": "Konfirmo fshirjen",
+      "deleteBlocked": "Një postim i publikuar nuk fshihet, vetëm arkivohet.",
+      "archived": "Postimi u arkivua.",
+      "cancel": "Anulo"
+    },
+    "issues": {
+      "TITLE_MISSING": "Nuk ka titull.",
+      "TITLE_TOO_LONG": "Titulli ka {length} karaktere — Google shfaq rreth {max}, pjesa tjetër fshihet.",
+      "TITLE_TOO_SHORT": "Titulli ka {length} karaktere — nën {min} rrallë thotë mjaftueshëm për tekstin.",
+      "TITLE_DUPLICATE": "Një postim tjetër i publikuar në këtë gjuhë ka të njëjtin titull.",
+      "DESCRIPTION_MISSING": "Nuk ka as përshkrim SEO as përmbledhje — Google do të zgjedhë vetë një fjali.",
+      "DESCRIPTION_TOO_SHORT": "Përshkrimi ka {length} karaktere; nën {min} Google shpesh shkruan të vetin.",
+      "DESCRIPTION_TOO_LONG": "Përshkrimi ka {length} karaktere — Google shfaq rreth {max}.",
+      "DESCRIPTION_DUPLICATE": "Një postim tjetër i publikuar në këtë gjuhë ka të njëjtin përshkrim.",
+      "CONTENT_TOO_THIN": "Teksti ka {words} fjalë — nën {min} faqja është e hollë dhe rrallë renditet.",
+      "NO_SUBHEADINGS": "Një tekst i gjatë pa nëntituj (H2) lexohet me vështirësi.",
+      "HEADING_SKIPPED": "Një H3 vjen para H2 së parë — një nivel titujsh është anashkaluar.",
+      "PARAGRAPH_TOO_LONG": "{count} paragraf(ë) janë më të gjatë se {max} fjalë — ndajini.",
+      "NO_INTERNAL_LINK": "Nuk ka lidhje drejt një faqeje tjetër të Ivy Events.",
+      "LINK_TEXT_GENERIC": "Lidhja „{text}“ nuk tregon ku të çon.",
+      "COVER_MISSING": "Nuk ka imazh kryesor — një lidhje e ndarë pa të kalon pa u vënë re.",
+      "NO_TAGS": "Nuk ka etiketa.",
+      "SLUG_TOO_LONG": "Adresa ka {length} karaktere — një më e shkurtër lexohet dhe ndahet më lehtë.",
+      "KEYWORD_MISSING": "Nuk ka fjalë kyçe.",
+      "KEYWORD_NOT_IN_TITLE": "Fjala kyçe „{keyword}“ nuk është në titull.",
+      "KEYWORD_NOT_IN_SLUG": "Fjala kyçe „{keyword}“ nuk është në adresë.",
+      "KEYWORD_NOT_IN_INTRO": "Fjala kyçe „{keyword}“ nuk është në paragrafin e parë.",
+      "KEYWORD_NOT_IN_DESCRIPTION": "Fjala kyçe „{keyword}“ nuk është në përshkrim.",
+      "KEYWORD_NOT_IN_SUBHEADING": "Fjala kyçe „{keyword}“ nuk është në asnjë nëntitull (H2)."
+    },
+    "layoutHint": {
+      "GUIDE": "Seksione të numëruara, përmbajtje, këshilla dhe listë kontrolli.",
+      "INSPIRATION": "Foto e madhe, shirit fotosh dhe citat i theksuar.",
+      "PRODUCT": "Artikull për Ivy Events: ilustrim i aplikacionit në vend të fotos."
+    }
+  },
+  "adminTags": {
+    "title": "Etiketat",
+    "subtitle": "Emri i çdo etikete në çdo gjuhë. Një ndryshim këtu vlen për të gjitha postimet.",
+    "search": "Kërko etiketa",
+    "onlyMissing": "Pa përkthim",
+    "count": "{n} etiketa",
+    "loading": "Po ngarkohen etiketat…",
+    "empty": "Asnjë etiketë nuk përputhet.",
+    "emptyAll": "Ende nuk ka etiketa. Krijohen kur i shtoni një etiketë një postimi.",
+    "columns": {
+      "tag": "Etiketa",
+      "posts": "Postimet"
+    },
+    "nameLabel": "Emri në {language} për „{tag}“",
+    "missing": "Pa përkthim",
+    "postCount": "{n} postime",
+    "save": "Ruaj",
+    "saved": "U ruajt „{tag}“.",
+    "remove": "Fshi",
+    "confirmRemove": "Fshi nga {n} postime",
+    "confirmRemoveUnused": "Konfirmo fshirjen",
+    "cancel": "Anulo",
+    "removed": "U fshi „{tag}“."
+  },
+  "adminRevenue": {
+    "title": "Të ardhurat",
+    "hint": "Pagesat e suksesshme minus rimbursimet, në MKD, sipas datës së pagesës në periudhën e zgjedhur.",
+    "package": "Paketa",
+    "allPackages": "Të gjitha paketat",
+    "payments": "{n} pagesa",
+    "refunded": "{amount} të rimbursuara",
+    "error": "Të ardhurat nuk u ngarkuan.",
+    "packages": {
+      "INV_BASIC": "Ftesë Basic",
+      "INV_PRO": "Ftesë Pro",
+      "INV_PREMIUM": "Ftesë Premium",
+      "GALLERY_BASIC": "Galeri Basic",
+      "GALLERY_PREMIUM": "Galeri Premium"
+    }
+  },
+  "cookieConsent": {
+    "title": "Cookie për statistika",
+    "text": "Numërojmë vizitat dhe klikimet për të kuptuar çfarë është e dobishme në faqe. Pa emër, pa email, asgjë e ndarë me palë të treta.",
+    "accept": "Pranoj",
+    "decline": "Refuzoj"
+  },
+  "siteAnalytics": {
+    "title": "Trafiku i faqes",
+    "subtitle": "Vizitorë, klikime, kohë në faqe dhe blerje.",
+    "periodLabel": "Periudha",
+    "groups": {
+      "day": "Ditë",
+      "week": "Javë",
+      "month": "Muaj",
+      "year": "Vit"
+    },
+    "periods": {
+      "TODAY": "Sot",
+      "YESTERDAY": "Dje",
+      "THIS_WEEK": "Këtë javë",
+      "LAST_WEEK": "Javën e kaluar",
+      "THIS_MONTH": "Këtë muaj",
+      "LAST_MONTH": "Muajin e kaluar",
+      "THIS_YEAR": "Këtë vit",
+      "LAST_YEAR": "Vitin e kaluar",
+      "LAST_5_YEARS": "5 vjet"
+    },
+    "visitors": "Vizitorë",
+    "pageViews": "Shikime",
+    "clicks": "Klikime",
+    "purchases": "Blerje",
+    "revenue": "Të ardhura",
+    "conversion": "Konvertim",
+    "timeOnSite": "Koha në faqe",
+    "median": "mesatarja e mesme",
+    "average": "mesatare",
+    "topPages": "Faqet më të vizituara",
+    "topClicks": "Më të klikuarat",
+    "topReferrers": "Nga vijnë",
+    "noReferrers": "Të gjitha vizitat ishin direkte.",
+    "noData": "Pa të dhëna",
+    "loading": "Po ngarkohet…",
+    "privacy": "Numërohen vetëm vizitorët që pranuan cookie. Pa emra, pa email, pa adresa IP. Të ardhurat lexohen nga pagesat, jo nga numëruesi."
+  },
+  "eventSite": {
+    "notFound": "Kjo ftesë nuk është këtu.",
+    "notFoundHint": "Adresa mund të ketë ndryshuar, ose ftesa ende nuk është publikuar."
+  },
+  "privileges": {
+    "title": "Team permissions",
+    "subtitle": "Which of your team may open which screen.",
+    "ownersOnly": "Only an owner may change permissions.",
+    "loading": "Loading…",
+    "noMembers": "Nobody has been added to this workspace yet.",
+    "heldCount": "{held} of {all}",
+    "save": "Save",
+    "saving": "Saving…",
+    "remove": "Remove",
+    "failed": "The change did not go through.",
+    "ownerNote": "Owners are not on this list. They hold everything by being owners — there is nothing to untick, and so no way to lock the business out of this screen.",
+    "names": {
+      "agency:dashboard": "Overview",
+      "agency:events": "Events",
+      "agency:crm": "Clients / CRM",
+      "agency:calendar": "Calendar",
+      "agency:tasks": "Tasks",
+      "agency:team": "Team",
+      "agency:vendors": "Vendors",
+      "agency:services": "Services and packages",
+      "agency:documents": "Documents",
+      "agency:reports": "Reports",
+      "agency:finance": "Finance and margin",
+      "agency:settings": "Settings",
+      "vendor:overview": "Overview",
+      "vendor:inquiries": "Enquiries",
+      "vendor:quotes": "Quotes",
+      "vendor:bookings": "Bookings",
+      "vendor:calendar": "Calendar",
+      "vendor:events": "Events",
+      "vendor:packages": "Packages",
+      "vendor:portfolio": "Portfolio",
+      "vendor:team": "Team",
+      "vendor:messages": "Messages",
+      "vendor:profile": "Profile",
+      "vendor:settings": "Settings"
+    }
+  },
+  "createEventDay": {
+    "title": "New event",
+    "name": "Event name",
+    "namePh": "e.g. Ana and Marko",
+    "category": "Event type",
+    "whichBirthday": "Whose birthday?",
+    "create": "Create",
+    "cancel": "Cancel",
+    "saving": "Creating…",
+    "categories": {
+      "WEDDING": "Wedding",
+      "ENGAGEMENT": "Engagement",
+      "BIRTHDAY": "Birthday",
+      "CORPORATE": "Corporate",
+      "BABY_SHOWER": "Baby shower",
+      "GALLERY": "Gallery",
+      "OTHER": "Other"
+    },
+    "types": {
+      "BIRTHDAY_ADULT": "Adult",
+      "BIRTHDAY_CHILD": "Child"
+    }
+  },
+  "agencyWork": {
+    "newTask": "+ Detyrë e re",
+    "open": "Hap",
+    "view": "Shiko",
+    "unassigned": "Pa përgjegjës",
+    "today": "sot",
+    "inDays": "për {n} ditë",
+    "daysAgo": "para {n} ditësh",
+    "overdue": "{n} me vonesë",
+    "myOverdue": "{n} të miat me vonesë",
+    "noOverdue": "Asgjë me vonesë",
+    "myRole": {
+      "LEAD": "Organizator kryesor",
+      "ASSISTANT": "Asistent"
+    },
+    "status": {
+      "ACTIVE": "Në përgatitje",
+      "DRAFT": "Draft",
+      "PENDING": "Në pritje të pagesës",
+      "COMPLETED": "Përfunduar",
+      "SUSPENDED": "Pezulluar"
+    },
+    "table": {
+      "event": "Ngjarja / klienti",
+      "date": "Data",
+      "lead": "Organizator kryesor",
+      "myRole": "Roli im",
+      "tasks": "Detyrat",
+      "myTasks": "Detyrat e mia",
+      "rsvp": "RSVP",
+      "budget": "Buxheti",
+      "nextStep": "Hapi i radhës",
+      "actions": "Veprime të shpejta",
+      "open": "Hap {name}",
+      "donePercent": "{n}% të kryera",
+      "answered": "{n}% u përgjigjën",
+      "awaiting": "{n} pa përgjigje",
+      "empty": "Nuk ka ngjarje aktive."
+    },
+    "actions": {
+      "tasks": "Detyrat",
+      "guests": "Mysafirët",
+      "timeline": "Axhenda"
+    },
+    "budget": {
+      "title": "Buxhetet e ngjarjeve",
+      "subtitle": "I planifikuar kundrejt shpenzimeve të regjistruara.",
+      "none": "I pacaktuar",
+      "over": "Mbi buxhet me {amount}",
+      "used": "{n}% i përdorur",
+      "overCount": "{n} mbi buxhet",
+      "usedOf": "{name} · buxheti i përdorur",
+      "remaining": "{amount} mbeten",
+      "empty": "Asnjë ngjarje aktive nuk ka buxhet ende.",
+      "note": "Ky është buxheti i ngjarjes, jo të ardhurat ose fitimi i agjencisë."
+    },
+    "attention": {
+      "title": "Veprimet e radhës",
+      "subtitle": "Hap ngjarjen ose detyrën direkt nga lista.",
+      "events": "{n} ngjarje",
+      "filterLabel": "Filtro paralajmërimet",
+      "segment": {
+        "ALL": "Të gjitha",
+        "TASKS": "Detyrat",
+        "GUESTS": "Mysafirët",
+        "VENDORS": "Furnitorët"
+      },
+      "kind": {
+        "TASKS": "Detyrat",
+        "GUESTS": "Mysafirët",
+        "VENDORS": "Furnitor"
+      },
+      "tasks": "{n} detyra me vonesë · ngjarja është {when} · përgjegjës: {lead}",
+      "guests": "{n} mysafirë pa përgjigje · ngjarja është {when} · dërgo një kujtesë",
+      "vendors": "Në pritje të konfirmimit ({n}): {names}",
+      "empty": "Asgjë nuk kërkon vëmendje urgjente."
+    },
+    "deadlines": {
+      "title": "Këtë javë",
+      "window": "{from} – {to}",
+      "rangeLabel": "Periudha",
+      "nextDays": "{n} ditët e ardhshme",
+      "eventDay": "Dita e ngjarjes: {name}",
+      "rsvpDeadline": "Afati i RSVP",
+      "assignee": "përgjegjës: {name}",
+      "kind": {
+        "TASK": "Detyrë",
+        "EVENT_DAY": "Ngjarje",
+        "RSVP_DEADLINE": "Mysafirët"
+      },
+      "empty": "Nuk ka afate në këtë periudhë."
+    },
+    "team": {
+      "title": "Ngarkesa e ekipit",
+      "subtitle": "Detyrat e caktuara në të gjitha ngjarjet aktive.",
+      "members": "{n} anëtarë",
+      "unknown": "Anëtar i panjohur",
+      "load": "{events} ngjarje · {tasks} detyra këtë javë",
+      "unassigned": "Pa përgjegjës",
+      "unassignedHint": "Detyra me vonesë që askush nuk i ka marrë."
+    },
+    "vendors": {
+      "title": "Vendime dhe furnitorë",
+      "subtitle": "Gjëra që presin konfirmim nga jashtë.",
+      "confirm": "Konfirmim nga {vendor}",
+      "empty": "Asnjë furnitor nuk pret konfirmim.",
+      "waiting": "Në pritje",
+      "stage": {
+        "TENTATIVE": "Në pritje",
+        "DEPOSIT_REQUIRED": "Pret kaparin"
+      }
+    },
+    "nextSteps": {
+      "title": "Hapi im i radhës",
+      "subtitle": "Detyra e radhës në çdo ngjarje ku punon.",
+      "empty": "Nuk ka detyra të hapura.",
+      "due": "afati {date}"
+    },
+    "awaiting": {
+      "title": "Mysafirë që presin përgjigje",
+      "subtitle": "Vetëm për ngjarjet në këtë pamje.",
+      "empty": "Asnjë mysafir nuk pret përgjigje."
+    },
+    "cards": {
+      "overdue": "Detyra me vonesë",
+      "myOverdue": "Detyrat e mia me vonesë"
+    },
+    "kpi": {
+      "activeEvents": "Ngjarje aktive",
+      "myEvents": "Ngjarjet e mia",
+      "soon": "{days} ditët e ardhshme",
+      "overdue": "Detyra me vonesë",
+      "myOverdue": "Detyrat e mia me vonesë",
+      "myOverdueNote": "nga {n} në ngjarjet e mia",
+      "unassignedCount": "{n} pa përgjegjës",
+      "awaitingRsvp": "Presim RSVP",
+      "awaitingMost": "{n} për {name}",
+      "vendorsAwaiting": "Furnitorë për konfirmim",
+      "vendorsAcross": "në {n} ngjarje",
+      "inProgress": "Ngjarje në punë",
+      "leadOrAssistant": "Kryesor ose asistent",
+      "overBudget": "Mbi buxhet",
+      "overBudgetNote": "Sipas shpenzimeve të regjistruara",
+      "noRsvp": "Pa përgjigje RSVP",
+      "nothingSoon": "Asnjë ngjarje në 30 ditët e ardhshme",
+      "nextDays": "{n} në {days} ditët e ardhshme"
+    },
+    "home": {
+      "memberEmptyTitle": "Ende nuk je në asnjë ngjarje",
+      "memberEmptyBody": "Kur pronari i agjencisë të shton në një ngjarje, ajo do të shfaqet këtu.",
+      "ownerTitle": "Paneli i agjencisë",
+      "memberTitle": "Pasqyra ime",
+      "ownerSubtitle": "Të gjitha ngjarjet, rreziqet dhe afatet në një vend.",
+      "memberSubtitle": "Ngjarjet, detyrat dhe afatet e mia në një vend.",
+      "attentionTitle": "Kërkon vëmendje",
+      "priorityTitle": "Prioriteti im",
+      "attentionLine": "Çdo afat lidhet me një ngjarje dhe një person përgjegjës.",
+      "allTasks": "Të gjitha detyrat",
+      "upcomingEvents": "Ngjarjet e ardhshme",
+      "upcomingEventsHint": "Së pari datat më të afërta.",
+      "openEvents": "Hap ngjarjet"
+    },
+    "events": {
+      "ownerTitle": "Të gjitha ngjarjet",
+      "memberTitle": "Ngjarjet e mia",
+      "ownerSubtitle": "Planifikim, alarme dhe përgjegjës në të gjithë agjencinë.",
+      "memberSubtitle": "Ngjarje ku je caktuar si organizator kryesor ose asistent.",
+      "ownerHint": "Shifrat llogariten nga të gjitha ngjarjet e shfaqura dhe ndryshojnë me filtrat.",
+      "memberHint": "Sheh vetëm ngjarjet ku je caktuar. Detyrat janë vetëm të tuat.",
+      "ownerList": "Ngjarjet e agjencisë",
+      "memberList": "Ngjarjet ku punoj",
+      "ownerListHint": "Me organizatorin kryesor, rreziqet dhe buxhetin.",
+      "memberListHint": "E kufizuar në ngjarjet ku je caktuar.",
+      "viewLabel": "Pamja e ngjarjeve",
+      "viewTable": "Tabelë",
+      "viewCards": "Karta",
+      "search": "Kërko",
+      "searchPlaceholder": "Ngjarje, klient ose vendndodhje…",
+      "status": "Statusi",
+      "allStatuses": "Të gjitha statuset",
+      "period": "Data",
+      "allDates": "Të gjitha datat",
+      "allLeads": "Të gjithë organizatorët",
+      "allAssigned": "Të gjitha të caktuarat",
+      "iLead": "Unë jam kryesori",
+      "iAssist": "Unë jam asistent",
+      "clear": "Pastro",
+      "shown": "Shfaqen {shown} nga {total} ngjarje të disponueshme",
+      "ownerFoot": "Filtri sipas organizatorit vlen për organizatorin kryesor.",
+      "memberFoot": "Ngjarjet e tjera të agjencisë nuk janë të disponueshme në këtë rol.",
+      "noMatch": "Asnjë ngjarje nuk përputhet me filtrat.",
+      "needAttention": "Ngjarje që kërkojnë vëmendje",
+      "needAttentionHint": "Kontrolloni së pari ngjarjet më të afërta me detyra me vonesë.",
+      "noLate": "Nuk ka detyra me vonesë në këtë pamje.",
+      "distribution": "Shpërndarja e agjencisë",
+      "distributionHint": "Organizatorët kryesorë të ngjarjeve të shfaqura.",
+      "eventCount": "{n} ngjarje",
+      "ownerFootnote": "Treguesi financiar përdor vetëm buxhetin dhe shpenzimet e regjistruara. Faturimi, faturat dhe marzhi nuk janë pjesë e kësaj pamjeje.",
+      "memberFootnote": "Veprimet e shpejta janë të disponueshme vetëm për ngjarjet ku je caktuar.",
+      "kpiShown": "Ngjarje në pamje",
+      "kpiShownNote": "Përfshihen edhe draftet",
+      "kpiSoonNote": "Ngjarje në përgatitje",
+      "kpiLateNote": "Në ngjarjet e shfaqura",
+      "kpiOverBudget": "Mbi buxhet",
+      "kpiOverBudgetNote": "Ngjarje me shpenzime të regjistruara",
+      "kpiMyLateNote": "Vetëm detyrat e caktuara për ty",
+      "kpiRsvpNote": "Në ngjarjet e mia të shfaqura"
+    }
+  },
+  "vendorWork": {
+    "openMicrosite": "Hap mikro-faqen ↗",
+    "nav": {
+      "home": "Paneli",
+      "inbox": "Kërkesat",
+      "calendar": "Kalendari",
+      "portfolio": "Portofoli",
+      "profile": "Profili im",
+      "microsite": "Mikro-faqja",
+      "team": "Ekipi dhe lejet",
+      "insights": "Analiza",
+      "groups": {
+        "work": "Puna",
+        "presentation": "Prezantimi",
+        "management": "Menaxhimi"
+      }
+    },
+    "home": {
+      "title": "Paneli",
+      "subtitle": "Kërkesat, terminet dhe gjendja e faqes publike.",
+      "seeInquiries": "Shiko kërkesat",
+      "attention": "Kërkon vëmendje",
+      "attentionHint": "Pasqyrë e shkurtër e punës që çon në rezervim.",
+      "openInquiries": "Hap kërkesat",
+      "activities": "Aktivitetet e radhës",
+      "activitiesHint": "Kërkesat me datën më të afërt janë të parat.",
+      "noActivities": "Asgjë nuk të pret.",
+      "upcoming": "Terminet e ardhshme",
+      "upcomingHint": "Data të konfirmuara dhe të mbajtura.",
+      "seeCalendar": "Shiko kalendarin",
+      "noUpcoming": "Asgjë e rezervuar në 60 ditët e ardhshme."
+    },
+    "kpi": {
+      "newInquiries": "Kërkesa të reja",
+      "newInquiriesNote": "Nga mikro-faqja dhe Ivy Events",
+      "awaitingReply": "Presin përgjigje",
+      "awaitingReplyNote": "Kontrollo dhe cakto statusin",
+      "upcoming": "Angazhimet e ardhshme",
+      "upcomingNote": "Në 60 ditët e ardhshme",
+      "microsite": "Mikro-faqja",
+      "micrositeLiveNote": "Shiko pamjen",
+      "micrositeDraftNote": "Përgatite dhe publikoje"
+    },
+    "activity": {
+      "title": {
+        "INQUIRY_NEW": "Përgjigju {name}",
+        "INQUIRY_IN_CONVERSATION": "Vazhdo me {name}",
+        "BOOKING_HELD": "Konfirmo datën për {name}",
+        "PROFILE_INCOMPLETE": "Plotëso profilin",
+        "MICROSITE_DRAFT": "Publiko faqen publike",
+        "PORTFOLIO_EMPTY": "Shto foto në portofol"
+      },
+      "sub": {
+        "INQUIRY_NEW": "Kërkesë për {date}",
+        "INQUIRY_IN_CONVERSATION": "Ngjarje më {date}",
+        "BOOKING_HELD": "{date} · datë e mbajtur",
+        "PROFILE_INCOMPLETE": "Një profil i qartë sjell kërkesa më të mira",
+        "MICROSITE_DRAFT": "Zgjidh pamjen dhe kontrollo formularin",
+        "PORTFOLIO_EMPTY": "Klientët shohin së pari punën tënde më të mirë"
+      },
+      "tag": {
+        "INQUIRY_NEW": "E re",
+        "INQUIRY_IN_CONVERSATION": "Në bisedë",
+        "BOOKING_HELD": "Në pritje",
+        "PROFILE_INCOMPLETE": "Profili",
+        "MICROSITE_DRAFT": "Mikro-faqja",
+        "PORTFOLIO_EMPTY": "Portofoli"
+      }
+    },
+    "readiness": {
+      "title": "Gatishmëria e profilit",
+      "hint": "Një profil i qartë sjell kërkesa më të mira.",
+      "continue": "Vazhdo me profilin",
+      "step": {
+        "BASICS": "Të dhënat bazë",
+        "PORTFOLIO": "Portofoli",
+        "CONTACT": "Kontakti",
+        "MICROSITE": "Mikro-faqja"
+      },
+      "done": {
+        "BASICS": "Emri, përshkrimi, qyteti, shërbimet",
+        "PORTFOLIO": "Ka foto dhe kopertinë",
+        "CONTACT": "Email dhe telefon",
+        "MICROSITE": "Faqja publike është aktive"
+      },
+      "todo": {
+        "BASICS": "Shto emrin, përshkrimin, qytetin dhe shërbimet",
+        "PORTFOLIO": "Shto foto reale dhe zgjidh kopertinën",
+        "CONTACT": "Shto një email ose telefon publik",
+        "MICROSITE": "Kontrollo fushat publike dhe publiko"
+      }
+    },
+    "approval": {
+      "DRAFT": "Draft",
+      "SUBMITTED": "Në pritje të miratimit",
+      "CHANGES_REQUESTED": "Kërkohen ndryshime",
+      "APPROVED": "Profil i miratuar",
+      "REJECTED": "I refuzuar",
+      "SUSPENDED": "I pezulluar"
+    },
+    "booking": {
+      "HELD": "Në pritje",
+      "CONFIRMED": "E konfirmuar"
+    },
+    "workflow": {
+      "NEW": "E re",
+      "IN_CONVERSATION": "Në bisedë",
+      "ANSWERED": "Përgjigjur",
+      "BOOKED": "E rezervuar",
+      "CLOSED": "E mbyllur"
+    },
+    "source": {
+      "MICROSITE": "Mikro-faqja",
+      "IVY": "Ivy Events"
+    },
+    "inbox": {
+      "title": "Kërkesat",
+      "subtitle": "Të gjitha kontaktet e reja nga mikro-faqja dhe Ivy Events në një vend.",
+      "total": "Gjithsej kërkesa",
+      "newNote": "Duhet përgjigja e parë",
+      "conversationNote": "Hapi i radhës me klientin",
+      "fromMicrosite": "Nga mikro-faqja",
+      "sourceNote": "Burimi i kontaktit",
+      "search": "Kërko",
+      "searchPlaceholder": "Emri, lloji, qyteti…",
+      "status": "Statusi",
+      "allStatuses": "Të gjitha statuset",
+      "source": "Burimi",
+      "allSources": "Të gjitha burimet",
+      "none": "Asnjë kërkesë për filtrat.",
+      "eventType": "Lloji i ngjarjes",
+      "date": "Data",
+      "city": "Qyteti",
+      "guests": "Mysafirë",
+      "notGiven": "Nuk është dhënë",
+      "replyTo": "Përgjigje për {email}",
+      "replyPlaceholder": "Shkruaj një përgjigje të shkurtër…",
+      "markAs": {
+        "IN_CONVERSATION": "Shëno: në bisedë",
+        "BOOKED": "Shëno: e rezervuar",
+        "CLOSED": "Mbyll"
+      },
+      "send": "Dërgo përgjigjen",
+      "replyNote": "Përgjigja e shënon kërkesën si të përgjigjur.",
+      "pick": "Zgjidh një kërkesë për detajet.",
+      "noMedian": "Ende pa përgjigje",
+      "median": "Përgjigje tipike për {time}",
+      "minutes": "{n} min",
+      "hours": "{n} orë",
+      "days": "{n} ditë"
+    },
+    "calendar": {
+      "kind": {
+        "BOOKING_CONFIRMED": "E konfirmuar",
+        "BOOKING_HELD": "Datë e mbajtur",
+        "HOLD": "Datë e mbajtur",
+        "BLOCKED": "E bllokuar",
+        "INQUIRY": "Kërkesë"
+      },
+      "kindNote": {
+        "BOOKING_CONFIRMED": "Angazhim i konfirmuar",
+        "BOOKING_HELD": "Pret konfirmim",
+        "HOLD": "E mbajtur përkohësisht",
+        "BLOCKED": "Ditë e padisponueshme",
+        "INQUIRY": "Ka kërkesë, ende pa rezervim"
+      },
+      "confirmed": "Data të konfirmuara",
+      "nextDays": "Në {n} ditët e ardhshme",
+      "held": "Data të mbajtura",
+      "heldNote": "Pret konfirmim",
+      "inquiries": "Kërkesa për datë",
+      "inquiriesNote": "Pa rezervim të konfirmuar",
+      "blocked": "Ditë të bllokuara",
+      "blockedNote": "Mosdisponueshmëri",
+      "legend": "Legjenda",
+      "viewLabel": "Pamja",
+      "month": "Muaji",
+      "list": "Lista",
+      "upcoming": "Të ardhshmet",
+      "nothing": "Asgjë në 60 ditët e ardhshme."
+    },
+    "portfolio": {
+      "cover": "Kopertina",
+      "makeCover": "Bëje kopertinë",
+      "moveEarlier": "Lëviz më herët: {title}",
+      "moveLater": "Lëviz më vonë: {title}"
+    },
+    "profile": {
+      "title": "Profili im",
+      "subtitle": "Ndrysho të dhënat që e prezantojnë studion tënde.",
+      "tab": {
+        "basic": "Bazë",
+        "services": "Shërbimet",
+        "contact": "Kontakti",
+        "faq": "FAQ"
+      },
+      "name": "Emri i studios",
+      "tagline": "Slogan i shkurtër",
+      "description": "Përshkrimi",
+      "descriptionHelp": "Fol për shërbimin dhe mënyrën e punës, jo për platformën.",
+      "city": "Qyteti",
+      "serviceArea": "Zona e shërbimit",
+      "services": "Shërbimet",
+      "servicesHelp": "P.sh. dasma, ngjarje korporative, festa private.",
+      "delivery": "Koha e dorëzimit",
+      "availability": "Disponueshmëria",
+      "availabilityMode": {
+        "ON_REQUEST": "Sipas kërkesës",
+        "FREE_DATES": "Shfaq vetëm datat e lira"
+      },
+      "included": "Çfarë përfshin shërbimi",
+      "includedPlaceholder": "Fotografim, përpunim, galeri…",
+      "email": "Email publik",
+      "phone": "Telefoni",
+      "website": "Faqja e internetit",
+      "contactHelp": "Formulari i mikro-faqes mund të mbetet mënyra kryesore e kontaktit.",
+      "faqHelp": "Shto përgjigje për rezervimin, dorëzimin dhe shtrirjen e shërbimit.",
+      "faqItem": "Pyetja {n}",
+      "question": "Pyetja",
+      "answer": "Përgjigja",
+      "removeQuestion": "Hiq",
+      "addQuestion": "Shto pyetje",
+      "saved": "U ruajt — ndryshimet janë publike.",
+      "save": "Ruaj",
+      "preview": "Shiko pamjen publike",
+      "statusTitle": "Statusi i profilit",
+      "statusHint": "Ndryshimet në një profil të miratuar shihen sapo ruhen.",
+      "toApplication": "Aplikimi për miratim"
+    },
+    "microsite": {
+      "title": "Mikro-faqja",
+      "subtitle": "Nga profili te faqja jote publike që sjell kërkesa.",
+      "preview": "Pamja publike",
+      "live": "Publike",
+      "draft": "Draft",
+      "draftLong": "Draft — nuk është publikuar",
+      "tab": {
+        "design": "Pamja",
+        "content": "Përmbajtja",
+        "sections": "Seksionet",
+        "seo": "Lidhja dhe SEO"
+      },
+      "theme": {
+        "CLASSIC": {
+          "name": "Klasike",
+          "hint": "Shërbime + besim"
+        },
+        "GALLERY": {
+          "name": "Galeri",
+          "hint": "Portofoli në plan të parë"
+        },
+        "STAGE": {
+          "name": "Skenë",
+          "hint": "Histori vizuale"
+        },
+        "EDITORIAL": {
+          "name": "Tekstuale",
+          "hint": "Stil editorial"
+        }
+      },
+      "themeHelp": "Pamja ndryshon faqosjen dhe tipografinë; të njëjtat të dhëna ushqejnë faqen publike.",
+      "section": {
+        "gallery": {
+          "name": "Galeria",
+          "hint": "Foto të zgjedhura nga portofoli"
+        },
+        "services": {
+          "name": "Shërbimet",
+          "hint": "Çfarë ofron dhe ku punon"
+        },
+        "faq": {
+          "name": "Pyetje të shpeshta",
+          "hint": "Përgjigje të qarta para se të shkruajë klienti"
+        },
+        "form": {
+          "name": "Formulari i kërkesës",
+          "hint": "Kontaktet vijnë te „Kërkesat“"
+        }
+      },
+      "link": "Lidhja publike",
+      "slug": "Adresa",
+      "seoTitle": "Titulli për kërkim",
+      "seoDescription": "Përshkrim i shkurtër",
+      "saveSeo": "Ruaj",
+      "saved": "U ruajt.",
+      "visibility": "Dukshmëria publike",
+      "visibilityHint": "Kontrollo çfarë sheh vizitori.",
+      "check": {
+        "profile": "Profili",
+        "profileTodo": "Në pritje të miratimit",
+        "gallery": "Galeria",
+        "galleryOn": "Shfaqet në faqe",
+        "galleryOff": "E fshehur",
+        "inquiries": "Kërkesat",
+        "inquiriesHint": "Formulari shkruan te „Kërkesat“"
+      },
+      "publish": "Publiko",
+      "unpublish": "Kthe në draft"
+    },
+    "team": {
+      "title": "Ekipi dhe lejet",
+      "subtitle": "Anëtarët e ekipit dhe të drejtat në portal.",
+      "members": "Anëtarët e ekipit",
+      "membersHint": "Pronari mund të ftojë kolegë me qasje të kufizuar.",
+      "invite": "Fto anëtar",
+      "email": "Email",
+      "firstName": "Emri",
+      "lastName": "Mbiemri",
+      "role": "Roli",
+      "roles": {
+        "OWNER": {
+          "name": "Pronari",
+          "scope": "Profili, publikimi, kërkesat dhe lejet"
+        },
+        "EDITOR": {
+          "name": "Redaktor",
+          "scope": "Portofoli dhe profili",
+          "tag": "I kufizuar"
+        },
+        "ASSISTANT": {
+          "name": "Asistent",
+          "scope": "Kërkesat dhe kalendari",
+          "tag": "Operativ"
+        }
+      },
+      "inviteNote": "Anëtari nuk mund të publikojë mikro-faqen ose të menaxhojë lejet.",
+      "cancel": "Anulo",
+      "send": "Dërgo ftesën",
+      "customRole": "Leje të veçanta",
+      "remove": "Hiq",
+      "none": "Nuk ka anëtarë të tjerë",
+      "noneHint": "Fto dikë kur duhet të merret me kërkesat ose portofolin.",
+      "byRole": "Lejet sipas rolit",
+      "byRoleHint": "Kufij të qartë për faqen publike dhe komunikimin.",
+      "full": "I plotë",
+      "finePermissions": "Leje të detajuara për anëtar"
+    },
+    "insights": {
+      "title": "Analiza",
+      "subtitle": "Çfarë funksionon për kërkesat dhe faqen publike.",
+      "window": "Periudha",
+      "lastDays": "{n} ditët e fundit",
+      "views": "Shikime të profilit",
+      "viewsNote": "Vizita në profilin publik",
+      "inquiries": "Kërkesat",
+      "inquiriesNote": "Nga të dy burimet",
+      "bookings": "Rezervime të konfirmuara",
+      "bookingsNote": "Statusi i kërkesës nuk është shitje",
+      "bySource": "Kërkesat sipas burimit",
+      "bySourceHint": "Nga vijnë kontaktet.",
+      "sourceNote": {
+        "MICROSITE": "Formulari në faqen publike",
+        "IVY": "Kërkesë përmes platformës"
+      },
+      "pipeline": "Ku janë kërkesat",
+      "pipelineHint": "Statusi që mban ekipi yt.",
+      "median": "Koha tipike deri në përgjigjen e parë",
+      "noData": "Pa të dhëna",
+      "note": "Shfaqen vetëm metrikat me burim real."
+    },
+    "site": {
+      "services": "Çfarë ofrojmë",
+      "faq": "Para se të pyesësh",
+      "contactTitle": "Na trego çfarë po planifikon",
+      "contactBody": "Dërgo datën, vendin dhe disa rreshta për ngjarjen — do të përgjigjemi me hapin e radhës."
+    },
+    "publicForm": {
+      "sentBadge": "Kërkesa u pranua",
+      "thanks": "Faleminderit!",
+      "sentBody": "Furnitori e mori kërkesën tënde dhe do të përgjigjet me email.",
+      "title": "Dërgo kërkesë",
+      "intro": "Lër kontaktin dhe disa detaje për një përgjigje konkrete.",
+      "name": "Emri",
+      "email": "Email",
+      "date": "Data e ngjarjes",
+      "type": "Lloji i ngjarjes",
+      "types": {
+        "other": "Tjetër"
+      },
+      "city": "Qyteti",
+      "guests": "Numri i përafërt i mysafirëve",
+      "optional": "Opsionale",
+      "message": "Përshkrim i shkurtër",
+      "messagePlaceholder": "Na trego çfarë të duhet dhe çfarë ka më shumë rëndësi…",
+      "consent": "Pajtohem që kontakti të përdoret për përgjigjen e kësaj kërkese.",
+      "previewNote": "Kjo është pamje paraprake — formulari nuk dërgon nga këtu.",
+      "send": "Dërgo kërkesën",
+      "required": "Plotëso fushat e detyrueshme.",
+      "badEmail": "Shkruaj një email të vlefshëm.",
+      "pastDate": "Data nuk mund të jetë në të kaluarën.",
+      "needConsent": "Duhet pëlqimi yt që të përgjigjemi."
+    }
+  },
+  "agencyScreens": {
+    "clients": {
+      "title": "Klientët",
+      "subtitle": "Nga kërkesa e parë te klienti aktiv.",
+      "newInquiry": "Kërkesë e re",
+      "kpiAll": "Klientë dhe kërkesa",
+      "kpiAllNote": "Të hapura në pipeline",
+      "kpiNew": "Kërkesa të reja",
+      "kpiNewNote": "Për kontaktin e parë",
+      "kpiProposals": "Oferta në pritje",
+      "kpiProposalsNote": "Duhet ndjekje",
+      "kpiWon": "Klientë të fituar",
+      "kpiWonNote": "Me ngjarje të krijuar",
+      "pipeline": "Pipeline i shitjes",
+      "pipelineHint": "Çdo kërkesë sipas fazës, me hapin e radhës.",
+      "followUp": "Duhet ndjekje",
+      "followUpHint": "Kërkesa me hap të vonuar ose pa hap të radhës.",
+      "late": "Me vonesë",
+      "nothingDropped": "Çdo kërkesë e hapur ka hap të radhës në kohë."
+    },
+    "vendors": {
+      "ownerTitle": "Furnitorët",
+      "memberTitle": "Katalogu i furnitorëve",
+      "ownerSubtitle": "Katalogu, dhe cilët furnitorë presin konfirmim për ngjarjet e agjencisë.",
+      "memberSubtitle": "Të dhëna bazë për furnitorët, pa kontrata ose çmime.",
+      "engagements": "Angazhime në pritje të konfirmimit",
+      "engagementsHint": "Furnitorë që e kanë mbajtur datën, por ende pa konfirmuar.",
+      "awaiting": "{n} në pritje",
+      "awaitingConfirmation": "Pritet konfirmimi",
+      "noEngagements": "Asnjë furnitor nuk pret konfirmim.",
+      "search": "Kërko furnitor",
+      "category": "Kategoria",
+      "statusLabel": "Statusi i angazhimit",
+      "status": {
+        "ALL": "Të gjitha",
+        "HELD": "Pret konfirmim",
+        "CONFIRMED": "I konfirmuar",
+        "CANCELLED": "I anuluar"
+      }
+    },
+    "team": {
+      "title": "Ekipi",
+      "subtitle": "Anëtarët, angazhimi dhe shpërndarja e punës.",
+      "invite": "Fto anëtar",
+      "kpiMembers": "Anëtarë",
+      "kpiMembersNote": "Me punë në ngjarje aktive",
+      "kpiEvents": "Ngjarje në punë",
+      "kpiEventsNote": "Ngjarje aktive",
+      "kpiOverdue": "Detyra me vonesë",
+      "kpiOverdueNote": "Të shpërndara në ekip",
+      "kpiUnassigned": "Pa përgjegjës",
+      "kpiUnassignedNote": "Detyra me vonesë që askush nuk i ka marrë",
+      "kpiUnassignedNone": "Nuk ka detyra të pacaktuara",
+      "engagement": "Anëtarët dhe angazhimi",
+      "engagementHint": "Shiko ngarkesën para se të caktosh një ngjarje të re.",
+      "colMember": "Anëtari",
+      "colRole": "Roli",
+      "colEvents": "I përfshirë në",
+      "colOverdue": "Detyra me vonesë",
+      "colActions": "Veprime",
+      "eventsCount": "{n} ngjarje",
+      "permissions": "Lejet",
+      "noWorkload": "Ngarkesa e ekipit nuk është e disponueshme tani.",
+      "accounts": "Llogaritë e ekipit",
+      "leadOf": "Organizator kryesor i {n}",
+      "teamMember": "Anëtar i ekipit"
+    },
+    "permissions": {
+      "modelTitle": "Modeli i qasjes",
+      "modelHint": "Roli përcakton faqet; caktimi përcakton cilat ngjarje dhe detyra shihen.",
+      "owner": "Administrator",
+      "ownerScope": "Të gjitha ngjarjet, klientët, raportet dhe menaxhimi.",
+      "ownerTag": "Agjencia",
+      "member": "Anëtar i ekipit",
+      "memberScope": "Vetëm ngjarjet e caktuara, detyrat e veta dhe katalogu.",
+      "memberTag": "Të caktuara",
+      "checksTitle": "Kontrollet në server",
+      "checksHint": "Një meny e fshehur nuk mjafton — serveri i kontrollon edhe këto.",
+      "check": {
+        "agency": "Agjencia lexohet nga tokeni në çdo kërkesë",
+        "assignment": "Anëtari sheh vetëm ngjarjet ku është caktuar",
+        "finance": "Buxhetet dhe ekipi nuk i dërgohen anëtarit"
+      },
+      "matrixTitle": "Matrica e lejeve",
+      "matrixHint": "Çfarë vlen sot. Lejet për anëtar janë më poshtë.",
+      "action": "Veprimi",
+      "row": {
+        "allEvents": "Shiko të gjitha ngjarjet",
+        "assignedEvents": "Shiko ngjarjet e caktuara",
+        "ownTasks": "Detyrat dhe kalendari im",
+        "pipeline": "Klientët dhe pipeline",
+        "reports": "Raportet dhe buxhetet",
+        "vendors": "Katalogu i furnitorëve",
+        "members": "Menaxho anëtarët",
+        "settings": "Lejet dhe cilësimet"
+      },
+      "byGrant": "Nëse lejohet",
+      "editorTitle": "Lejet për anëtar"
+    },
+    "reports": {
+      "title": "Raportet",
+      "subtitle": "Metrika nga ngjarjet dhe puna operative.",
+      "export": "Eksporto CSV",
+      "kpiActive": "Ngjarje aktive",
+      "kpiActiveNote": "+ {n} draft",
+      "kpiRsvp": "Përgjigje RSVP",
+      "kpiRsvpNote": "{answered} nga {invited} të ftuar",
+      "kpiOverdue": "Detyra me vonesë",
+      "kpiOverdueNote": "Në ngjarjet aktive",
+      "kpiSpent": "Shpenzime të regjistruara",
+      "kpiSpentNote": "Buxheti: {amount}",
+      "byMonth": "Ngjarje sipas muajit",
+      "byMonthHint": "Sa ngjarje bien në çdo muaj.",
+      "noMonths": "Ende nuk ka ngjarje me datë.",
+      "intervention": "Çfarë kërkon ndërhyrje",
+      "interventionHint": "Çdo numër të çon te burimi.",
+      "overdueLine": "{n} detyra me vonesë",
+      "overdueLineNote": "Hap detyrat",
+      "open": "Hap",
+      "rsvpLine": "{n} mysafirë pa RSVP",
+      "rsvpLineNote": "Në ngjarjet aktive",
+      "events": "Ngjarjet",
+      "budgetLine": "{n} ngjarje mbi buxhet",
+      "budgetLineNote": "Sipas shpenzimeve të regjistruara",
+      "review": "Shiko",
+      "note": "Ky raport nuk tregon të ardhura, pagesa të klientëve ose marzh: për to nevojiten të dhëna financiare të veçanta."
+    },
+    "settings": {
+      "tab": {
+        "general": "Të përgjithshme",
+        "brand": "Marka",
+        "notifications": "Njoftimet",
+        "plan": "Paketa"
+      },
+      "timezone": "Zona kohore",
+      "currency": "Monedha e buxhetit",
+      "language": "Gjuha",
+      "languages": {
+        "mk": "Maqedonisht",
+        "en": "Anglisht",
+        "sq": "Shqip"
+      },
+      "senderName": "Emri i dërguesit",
+      "replyTo": "Email për përgjigje",
+      "primaryColor": "Ngjyra kryesore",
+      "surfaceColor": "Ngjyra e sfondit",
+      "textColor": "Ngjyra e tekstit",
+      "brandSaved": "Marka u ruajt.",
+      "notify": {
+        "overdue": {
+          "name": "Detyra me vonesë",
+          "who": "Te personi përgjegjës"
+        },
+        "deadlines": {
+          "name": "Afatet e ngjarjes",
+          "who": "Te ekipi i ngjarjes"
+        },
+        "rsvp": {
+          "name": "Kujtesa RSVP",
+          "who": "Kur i dërgon organizatori"
+        },
+        "vendors": {
+          "name": "Konfirmime nga furnitorët",
+          "who": "Te organizatori i ngjarjes"
+        }
+      },
+      "planTier": "Paketa aktuale",
+      "planStatus": "Statusi",
+      "planActive": "Aktive",
+      "planInactive": "Joaktive",
+      "planEvents": "Ngjarje aktive",
+      "planExpires": "E vlefshme deri",
+      "noPlan": "Nuk ka të dhëna për paketën.",
+      "planNote": "Ndryshimi i paketës bëhet përmes një procesi të veçantë faturimi.",
+      "workingTitle": "Parametrat e punës",
+      "ownerOnly": "Vetëm pronari i agjencisë mund t’i ndryshojë këto cilësime.",
+      "prefsSaved": "Cilësimet u ruajtën."
+    }
+  },
+  "workspaceSearch": {
+    "label": "Kërko",
+    "results": "Rezultatet e kërkimit",
+    "noResults": "Nuk u gjet asgjë",
+    "kinds": {
+      "EVENT": "Ngjarje",
+      "TASK": "Detyra",
+      "LEAD": "Klientë",
+      "INQUIRY": "Kërkesa",
+      "BOOKING": "Rezervime",
+      "PACKAGE": "Paketa"
+    }
+  },
+  "workspaceInbox": {
+    "fallback": "Njoftim i ri",
+    "templates": {
+      "VENDOR_INQUIRY_RECEIVED": "Kërkesë e re nga {organizerName}",
+      "BOOKING_CONFIRMED_VENDOR": "Rezervim i konfirmuar: {title}",
+      "BOOKING_CONFIRMED_CLIENT": "{vendorName} e konfirmoi rezervimin tuaj",
+      "BOOKING_CONFIRMED_ORGANIZER": "{vendorName} e konfirmoi rezervimin: {title}",
+      "BOOKING_CANCELLED_CRITICAL_ADMIN": "{vendorName} anuloi një rezervim {noticeDays} ditë para ngjarjes",
+      "BOOKING_CANCELLED_CRITICAL_COUPLE": "{vendorName} anuloi rezervimin tuaj — {noticeDays} ditë para ngjarjes",
+      "BOOKING_CANCELLED_CRITICAL_ORGANIZER": "{vendorName} anuloi një rezervim {noticeDays} ditë para ngjarjes",
+      "BOOKING_CANCELLED_CRITICAL_AGENCY": "{vendorName} anuloi një rezervim {noticeDays} ditë para ngjarjes",
+      "AGENCY_TASKS_OVERDUE": "Detyra me afat të kaluar: {count}",
+      "AGENCY_EVENT_DEADLINE": "{eventName} po afrohet — {date}",
+      "EVENT_TRANSFERRED_CLIENT": "{eventName} ju është dorëzuar",
+      "EVENT_TRANSFERRED_AGENCY": "{eventName} iu dorëzua klientit",
+      "AGENCY_SITE_INQUIRY": "Kërkesë e re nga faqja juaj: {name} ({eventType})"
+    }
+  },
+  "tags": {
+    "label": "Etiketa",
+    "filter": "Filtro sipas etiketës",
+    "relatedPosts": "Artikuj për të njëjtën temë",
+    "admin": {
+      "newTitle": "Etiketë e re",
+      "newName": "Emri i etiketës ({language})",
+      "create": "Shto etiketë",
+      "created": "Etiketa „{tag}“ u shtua.",
+      "vendors": "Furnitorë"
+    },
+    "picker": {
+      "tab": "Etiketa",
+      "help": "Zgjidhni deri në {max} etiketa që përshkruajnë punën tuaj. Lexuesit e artikujve të blogut dhe faqeve tematike ju gjejnë përmes tyre.",
+      "none": "Ende nuk ka etiketa për të zgjedhur.",
+      "count": "Zgjedhur {n} nga {max}"
+    },
+    "page": {
+      "eyebrow": "Temë",
+      "subtitle": "Artikuj, furnitorë dhe agjenci për këtë temë.",
+      "posts": "Artikuj",
+      "vendors": "Furnitorë",
+      "empty": "Ende nuk ka asgjë nën këtë etiketë.",
+      "notFound": "Kjo etiketë nuk ekziston.",
+      "loading": "Po ngarkohet…",
+      "description": "Artikuj, furnitorë dhe agjenci për {tag} në Ivy Events.",
+      "agencies": "Agjenci"
+    }
+  },
+  "vendorMicrosite": {
+    "common": {
+      "navigation": "Navigimi",
+      "workingIn": "Punojmë në",
+      "email": "Email",
+      "backToTop": "Lart ↑",
+      "topics": "Tema",
+      "related": "Nga blogu",
+      "zoom": "Zmadho: {caption}",
+      "photo": "Parapamje e fotos",
+      "close": "Mbyll",
+      "heroEyebrow": "{kind} · {place}",
+      "heroCta": "Kontrollo disponueshmërinë",
+      "heroSecondary": "Shiko portofolin",
+      "servicesEyebrow": "Çfarë ofrojmë",
+      "servicesTitle": "Shërbime sipas eventit tuaj.",
+      "workEyebrow": "Punë të zgjedhura",
+      "workTitle": "Një vështrim nga afër.",
+      "aboutEyebrow": "Rreth {name}",
+      "contactEyebrow": "Kontakt",
+      "contactTitle": "Le ta planifikojmë eventin tuaj.",
+      "contactText": "Dërgoni datën dhe detajet kryesore. Do t’ju përgjigjemi me disponueshmërinë dhe një propozim.",
+      "footer": "© {name} · Mikrofaqe në Ivy Events",
+      "introEyebrow": "Si punojmë",
+      "approachEyebrow": "Qasja jonë",
+      "processEyebrow": "Procesi",
+      "processTitle": "Si bashkëpunojmë.",
+      "chapterCta": "Kontrollo disponueshmërinë",
+      "faqEyebrow": "Para se të na shkruani",
+      "faqTitle": "Pyetje të shpeshta.",
+      "steps": {
+        "request": {
+          "title": "Kërkesa",
+          "description": "Na dërgoni datën, vendin dhe një përshkrim të shkurtër të eventit."
+        },
+        "offer": {
+          "title": "Propozimi",
+          "description": "Konfirmojmë disponueshmërinë dhe përgatisim një ofertë sipas nevojave."
+        },
+        "agreement": {
+          "title": "Marrëveshja",
+          "description": "Rregullojmë detajet, kohëzgjatjen dhe afatet."
+        }
+      }
+    },
+    "gallery": {
+      "heroEyebrow": "{name} — {kind}",
+      "heroCta": "Eksploro punët",
+      "workEyebrow": "Portofoli",
+      "workTitle": "Kuadro të zgjedhura.",
+      "servicesEyebrow": "Puna jonë",
+      "servicesTitle": "Të pranishëm në moment.",
+      "contactEyebrow": "Keni një datë?",
+      "contactTitle": "Le të shohim nëse jemi të lirë.",
+      "contactText": "Na tregoni ku dhe kur mbahet eventi. Përgjigjja është personale, pa premtime automatike për çmim ose datë."
+    },
+    "scene": {
+      "heroCta": "Shiko historinë",
+      "introEyebrow": "Pas kuadrit",
+      "chapter": "Kapitulli {n}",
+      "contactEyebrow": "Kapitulli tjetër",
+      "contactTitle": "Na tregoni çfarë planifikoni.",
+      "contactText": "Na shkruani për eventin tuaj dhe do t’ju kthehemi me disponueshmërinë dhe hapat e ardhshëm."
+    },
+    "textual": {
+      "heroCta": "Kontrolloni disponueshmërinë",
+      "servicesEyebrow": "Shërbimet",
+      "servicesTitle": "Çfarë ofrojmë.",
+      "contactEyebrow": "Kontakt / kërkesë e re",
+      "contactTitle": "Fillojmë me datën dhe detajet.",
+      "contactText": "Plotësoni formularin që të kontrollojmë disponueshmërinë."
+    },
+    "nav": {
+      "services": "Shërbimet",
+      "work": "Punët",
+      "about": "Rreth nesh",
+      "requestOffer": "Kërko ofertë",
+      "projects": "Projektet",
+      "contact": "Kontakt",
+      "story": "Historia",
+      "process": "Si punojmë",
+      "sendRequest": "Dërgo kërkesë",
+      "approach": "Qasja",
+      "faq": "Pyetjet"
+    },
+    "models": {
+      "CLASSIC": {
+        "description": "Zgjedhja më e qartë për një furnitor me disa shërbime dhe ofertë të qartë."
+      },
+      "GALLERY": {
+        "description": "Portofoli në plan të parë. Funksionon më mirë me shumë foto të forta e të larmishme."
+      },
+      "STAGE": {
+        "description": "Një histori për mënyrën e punës, atmosferën dhe përvojën e klientit."
+      },
+      "EDITORIAL": {
+        "description": "Ekspertizë e qartë dhe përshkrim, pamje editoriale, pak foto."
+      }
+    },
+    "editor": {
+      "intro": "Fushat që i lini bosh plotësohen nga profili ose me tekst standard.",
+      "section": {
+        "hero": "Pjesa kryesore",
+        "eventTypes": "Shiriti i llojeve të eventeve",
+        "intro": "Hyrje",
+        "approach": "Qasja",
+        "services": "Shërbimet",
+        "gallery": "Galeria",
+        "quote": "Citat",
+        "chapters": "Kapitujt",
+        "steps": "Procesi",
+        "faq": "Pyetjet",
+        "contact": "Kontakti dhe fundi i faqes"
+      },
+      "eyebrow": "Titull i vogël",
+      "title": "Titulli",
+      "heading": "Titulli",
+      "titleAccent": "Theksi (kursiv)",
+      "text": "Teksti",
+      "ctaLabel": "Teksti i butonit",
+      "secondaryLabel": "Lidhja e dytë",
+      "caption": "Mbishkrimi",
+      "captionNote": "Tekst i vogël nën mbishkrim",
+      "heroPicture": "Fotoja kryesore",
+      "coverPicture": "Kopertina e portofolit",
+      "noPicture": "Pa foto",
+      "picture": "Foto",
+      "eventType": "Lloji i eventit",
+      "servicesHint": "Bosh = paketat ose shërbimet nga profili.",
+      "serviceLabel": "Etiketa",
+      "serviceName": "Emri",
+      "galleryHint": "Zgjidhni deri në {n} foto nga portofoli. Bosh = i gjithë portofoli.",
+      "noPortfolio": "Portofoli është bosh — shtoni fillimisht foto.",
+      "attribution": "Autori i citatit",
+      "quote": "Citati",
+      "stepsHint": "Bosh = tre hapat standardë.",
+      "faqHint": "Bosh = pyetjet nga profili.",
+      "question": "Pyetja",
+      "answer": "Përgjigjja",
+      "footer": "Teksti në fund të faqes",
+      "add": "Shto",
+      "up": "Lart",
+      "down": "Poshtë",
+      "remove": "Hiq",
+      "save": "Ruaj përmbajtjen"
+    }
+  },
+  "agencySite": {
+    "loading": "Po ngarkohet…",
+    "tags": "Temat",
+    "footer": "Mikro-faqe në Ivy Events",
+    "toTop": "Lart",
+    "notFound": {
+      "title": "Faqja nuk u gjet",
+      "body": "Kjo agjenci nuk ka faqe të publikuar në këtë adresë.",
+      "back": "Te Ivy Events"
+    },
+    "nav": {
+      "label": "Navigimi",
+      "services": "Shërbimet",
+      "events": "Eventet",
+      "process": "Si punojmë",
+      "sendRequest": "Dërgo kërkesë",
+      "talk": "Bisedo me ne",
+      "projects": "Projektet",
+      "whatWeDo": "Çfarë bëjmë",
+      "newRequest": "Kërkesë e re",
+      "viewProjects": "Shiko projektet",
+      "approach": "Qasja",
+      "processShort": "Procesi",
+      "contact": "Kontakt",
+      "formats": "Formatet",
+      "proposal": "Kërko ofertë",
+      "brief": "Dërgo përmbledhje"
+    },
+    "contact": {
+      "email": "Kontakt",
+      "location": "Vendndodhja",
+      "fallbackTitle": "Na tregoni çfarë planifikoni."
+    },
+    "form": {
+      "title": "Eventi juaj",
+      "help": "Dërgoni informacionet bazë që të shohim mundësinë e bashkëpunimit.",
+      "name": "Emri juaj",
+      "namePlaceholder": "Emri dhe mbiemri",
+      "email": "Email",
+      "type": "Lloji i eventit",
+      "typePick": "Zgjidh llojin",
+      "types": {
+        "corporate": "Event korporativ",
+        "conference": "Konferencë",
+        "private": "Event privat",
+        "other": "Tjetër"
+      },
+      "date": "Data ose periudha",
+      "datePlaceholder": "P.sh. 12 tetor / tetor",
+      "city": "Vendi",
+      "cityPlaceholder": "Qyteti / lokacioni",
+      "guests": "Të ftuar të pritur",
+      "optional": "Opsionale",
+      "message": "Çfarë planifikoni?",
+      "messagePlaceholder": "Disa fjali për qëllimin, formatin dhe nevojat tuaja",
+      "consent": "Pajtohem që agjencia të më kontaktojë për këtë kërkesë.",
+      "send": "Dërgo kërkesën",
+      "sending": "Po dërgohet…",
+      "sentTitle": "Kërkesa u dërgua.",
+      "sentBody": "Agjencia do ta shqyrtojë dhe do t'ju përgjigjet në emailin që dhatë.",
+      "again": "Kërkesë e re",
+      "previewNote": "Parapamje: formulari këtu nuk dërgon asgjë.",
+      "missing": "Plotësoni fushat e detyrueshme dhe konfirmoni pëlqimin.",
+      "failed": "Kërkesa nuk u dërgua. Provoni përsëri."
+    },
+    "models": {
+      "CLASSIC": {
+        "name": "Klasik",
+        "hint": "zgjedhje universale",
+        "description": "Shërbime, evente të realizuara, procesi dhe formulari në një faqe të qartë."
+      },
+      "PORTFOLIO": {
+        "name": "Portofol",
+        "hint": "projekte vizuale",
+        "description": "Fotot nga projektet e vërteta udhëheqin; shërbimet dhe kërkesa mbeten të qarta."
+      },
+      "EDITORIAL": {
+        "name": "Editorial",
+        "hint": "histori dhe stil",
+        "description": "Një histori për qasjen e agjencisë dhe mënyrën e saj të punës."
+      },
+      "CORPORATE": {
+        "name": "Korporativ",
+        "hint": "klientë biznesi",
+        "description": "Shërbime, formate, përgjegjësi dhe një përmbledhje e shkurtër për klientët e biznesit."
+      }
+    },
+    "editor": {
+      "title": "Faqja publike",
+      "subtitle": "Pamja, përmbajtja dhe portofoli që shohin klientët tuaj.",
+      "openSite": "Hap faqen",
+      "tabs": {
+        "model": "Modeli",
+        "content": "Përmbajtja",
+        "projects": "Projektet",
+        "tags": "Etiketat",
+        "publish": "SEO dhe publikimi"
+      },
+      "unsavedNote": "Faqja ende nuk është ruajtur. Filloni nga përmbajtja shembull — ndryshojeni dhe ruajeni.",
+      "contentHint": "Shfaqen pjesët që përdor modeli i zgjedhur. Të tjerat ruhen dhe kthehen nëse ndërroni modelin.",
+      "sections": {
+        "hero": "Pjesa kryesore",
+        "keywords": "Shiriti me fjalë kyçe",
+        "services": "Shërbimet",
+        "projects": "Titulli i projekteve",
+        "statement": "Deklarata",
+        "chapters": "Kapitujt",
+        "process": "Procesi",
+        "formats": "Formatet",
+        "contact": "Kontakt"
+      },
+      "fields": {
+        "eyebrow": "Mbititull",
+        "title": "Titulli",
+        "titleAccent": "Pjesa e theksuar e titullit",
+        "text": "Teksti",
+        "ctaLabel": "Butoni kryesor",
+        "secondaryLabel": "Lidhja e dytë",
+        "caption": "Mbishkrimi i fotos",
+        "captionNote": "Nën-mbishkrim",
+        "image": "Fotoja",
+        "keywords": "Fjalë kyçe",
+        "label": "Etiketa",
+        "symbol": "Simboli",
+        "name": "Emërtimi",
+        "description": "Përshkrimi",
+        "projectTitle": "Titulli i projektit",
+        "eventType": "Lloji i eventit",
+        "city": "Qyteti",
+        "publishedProject": "Shfaq në faqe",
+        "siteName": "Emri i agjencisë",
+        "slug": "Adresa",
+        "email": "Email",
+        "phone": "Telefoni",
+        "seoTitle": "Titulli SEO",
+        "seoDescription": "Përshkrimi SEO"
+      },
+      "keywordsHint": "Të ndara me presje, më së shumti {max}.",
+      "addItem": "Shto",
+      "remove": "Hiq",
+      "saving": "Po ruhet…",
+      "saveContent": "Ruaj përmbajtjen",
+      "noImage": "Pa foto",
+      "upload": "Ngarko",
+      "uploading": "Po ngarkohet…",
+      "projectsHint": "Evente të realizuara që doni t'i tregoni. Nuk merren nga eventet tuaja — klientët nuk i zbuloni pa pëlqimin e tyre.",
+      "hidden": "I fshehur",
+      "moveUp": "Lart",
+      "moveDown": "Poshtë",
+      "close": "Mbyll",
+      "edit": "Ndrysho",
+      "addPhoto": "Shto foto",
+      "deleteProject": "Fshi projektin",
+      "save": "Ruaj",
+      "newProject": "Projekt i ri",
+      "addProject": "Shto projekt",
+      "tagsHint": "Zgjidhni deri në {max} tema. Të njëjtat etiketa e lidhin faqen tuaj me artikujt dhe furnitorët.",
+      "tagsUnavailable": "Lista e etiketave nuk është e disponueshme tani.",
+      "noTags": "Ende nuk ka etiketa.",
+      "saveTags": "Ruaj etiketat",
+      "live": "E publikuar",
+      "draft": "E papublikuar",
+      "draftHint": "Vizitorët nuk e shohin faqen.",
+      "publish": "Publiko",
+      "unpublish": "Hiq nga publikimi",
+      "slugPlaceholder": "p-sh-ivena",
+      "slugHint": "Shkronja të vogla latine, shifra dhe vizë. Bëhet edhe nëndomeni juaj.",
+      "saveSettings": "Ruaj cilësimet",
+      "preview": "Parapamje",
+      "desktop": "Desktop",
+      "phone": "Celular",
+      "namePlaceholder": "Agjencia juaj",
+      "saved": "U ruajt.",
+      "publishedNotice": "Faqja u publikua.",
+      "unpublishedNotice": "Faqja u hoq nga publikimi."
+    }
   }
 }

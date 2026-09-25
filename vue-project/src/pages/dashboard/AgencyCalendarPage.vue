@@ -1,6 +1,9 @@
 <template>
   <div>
-    <PageHead :title="t('agencyCalendar.title')" :subtitle="t('agencyCalendar.subtitle')">
+    <PageHead
+      :title="isOwner ? t('agencyCalendar.title') : t('agencyCalendar.myTitle')"
+      :subtitle="t('agencyCalendar.subtitle')"
+    >
       <template #actions>
         <button class="btn btn-ghost btn-sm" type="button" @click="step(-1)">{{ t('agencyCalendar.previous') }}</button>
         <button class="btn btn-ghost btn-sm" type="button" @click="goToday">{{ t('agencyCalendar.today') }}</button>
@@ -8,7 +11,40 @@
       </template>
     </PageHead>
 
-    <section class="card">
+    <!-- The Agency-Organizer design's four: what is on the calendar, what is
+         close, what is due this week, and which month is showing. -->
+    <div class="kpis">
+      <div class="kpi"><span>{{ t('agencyCalendar.kpi.events') }}</span><strong>{{ dated.length }}</strong><small>{{ t('agencyCalendar.kpi.eventsNote') }}</small></div>
+      <div class="kpi"><span>{{ t('agencyCalendar.kpi.soon', { days: riskWindowDays }) }}</span><strong>{{ soonCount }}</strong><small>{{ t('agencyCalendar.kpi.soonNote') }}</small></div>
+      <div class="kpi"><span>{{ t('agencyCalendar.kpi.deadlines') }}</span><strong>{{ weekItems.filter((item) => item.kind === 'task').length }}</strong><small>{{ t('agencyCalendar.kpi.deadlinesNote') }}</small></div>
+      <div class="kpi"><span>{{ t('agencyCalendar.kpi.month') }}</span><strong class="month-kpi">{{ monthLabel }}</strong><small>{{ t('agencyCalendar.kpi.monthNote') }}</small></div>
+    </div>
+
+    <div class="view-line">
+      <div>
+        <h2>{{ t('agencyCalendar.schedule') }}</h2>
+        <p>{{ t('agencyCalendar.scheduleHint') }}</p>
+      </div>
+      <div class="view-switch" role="group" :aria-label="t('agencyCalendar.viewLabel')">
+        <button type="button" :class="{ on: view === 'month' }" :aria-pressed="view === 'month'" @click="view = 'month'">{{ t('agencyCalendar.month') }}</button>
+        <button type="button" :class="{ on: view === 'week' }" :aria-pressed="view === 'week'" @click="view = 'week'">{{ t('agencyCalendar.thisWeek') }}</button>
+      </div>
+    </div>
+
+    <section v-if="view === 'week'" class="card">
+      <ul v-if="weekItems.length" class="week-list">
+        <li v-for="item in weekItems" :key="item.key" class="week-item">
+          <div>
+            <b>{{ shortDay(item.on) }} · {{ item.title }}</b>
+            <small>{{ item.sub }}</small>
+          </div>
+          <span :class="['week-tag', item.kind]">{{ t(`agencyCalendar.kind.${item.kind}`) }}</span>
+        </li>
+      </ul>
+      <p v-else class="week-empty">{{ t('agencyCalendar.weekEmpty') }}</p>
+    </section>
+
+    <section v-else class="card">
       <div class="card-head">
         <h2>{{ monthLabel }}</h2>
         <span class="muted small">{{ t('agencyCalendar.inMonth', { n: eventsThisMonth.length }) }}</span>
@@ -22,6 +58,11 @@
           :key="cell.key"
           class="cal-day"
           :class="{ out: !cell.inMonth, today: cell.isToday }"
+          role="button"
+          tabindex="0"
+          :aria-label="t('agencyCalendar.createOn', { day: cell.key })"
+          @click="startCreate(cell)"
+          @keydown.enter.prevent="startCreate(cell)"
         >
           <b>{{ cell.day }}</b>
           <button
@@ -30,13 +71,26 @@
             type="button"
             class="cal-event"
             :title="event.name"
-            @click="open(event)"
+            @click.stop="open(event)"
           >{{ event.name || t('organizerOverview.untitled') }}</button>
+          <span
+            v-for="task in cell.tasks"
+            :key="task.id"
+            class="cal-task"
+            :title="`${task.title} · ${task.eventName}`"
+          >{{ task.title }}</span>
         </div>
       </div>
     </section>
 
     <p v-if="error" class="empty" role="alert">{{ getErrorMessage(error) }}</p>
+
+    <CreateEventOnDayModal
+      :open="creating"
+      :day="creatingDay"
+      @close="creating = false"
+      @created="onCreated"
+    />
   </div>
 </template>
 
@@ -48,6 +102,9 @@ import PageHead from '@/components/dashboard/shell/PageHead.vue'
 import useWorkspaceEvents from '@/composables/useWorkspaceEvents'
 import { selectEvent } from '@/services/eventSelection.service'
 import { getErrorMessage } from '@/services/apiError'
+import CreateEventOnDayModal from '@/components/modals/CreateEventOnDayModal.vue'
+import { agencyWorkspaceService } from '@/services/agencyWorkspace.service'
+import { useAgencyRole } from '@/composables/useAgencyRole'
 
 /*
   Every event the agency runs, on one month grid.
@@ -60,6 +117,8 @@ import { getErrorMessage } from '@/services/apiError'
 
 const DAYS_IN_WEEK = 7
 const WEEKS_SHOWN = 6
+/** More than two deadline chips turn a day cell into a list; the week view has the rest. */
+const MAX_TASKS_PER_DAY = 2
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -67,11 +126,76 @@ const router = useRouter()
 const lang = computed(() => route.params.lang || 'mk')
 
 const { rows, error, load } = useWorkspaceEvents()
+const { isOwner } = useAgencyRole()
+
+/** "Soon" on this screen, as on the home: the agency's risk window, sent with the task board. */
+const riskWindowDays = ref(30)
+const WEEK_DAYS = 7
 
 const today = new Date()
 const cursor = ref(new Date(today.getFullYear(), today.getMonth(), 1))
+const view = ref('month')
 
-onMounted(load)
+/*
+  Open tasks with a due date, from the agency task board's endpoint — the same
+  scope as the board (the whole agency for an owner, the member's own events
+  for a member), so a deadline shown here is one the viewer can act on. A
+  calendar that cannot read them still shows the events.
+*/
+const tasks = ref([])
+
+async function loadTasks() {
+  try {
+    const response = await agencyWorkspaceService.tasks()
+    const board = response?.data?.data ?? response?.data ?? {}
+    riskWindowDays.value = board.riskWindowDays ?? riskWindowDays.value
+    tasks.value = (board.tasks ?? []).filter((task) => task.dueAt && task.status !== 'DONE')
+  } catch {
+    tasks.value = []
+  }
+}
+
+onMounted(() => {
+  load()
+  loadTasks()
+})
+
+const soonCount = computed(() =>
+  dated.value.filter((entry) => {
+    const days = daysFromToday(entry.on)
+    return days >= 0 && days <= riskWindowDays.value
+  }).length,
+)
+
+/** The week view: events and deadlines in the next seven days, soonest first. */
+const weekItems = computed(() => {
+  const inWeek = (on) => {
+    const days = daysFromToday(on)
+    return days >= 0 && days <= WEEK_DAYS
+  }
+  const events = dated.value
+    .filter((entry) => inWeek(entry.on))
+    .map((entry) => ({ key: `e-${entry.event.id}`, kind: 'event', on: entry.on, title: entry.event.name, sub: t('agencyCalendar.kind.event') }))
+  const deadlines = tasks.value
+    .map((task) => ({ task, on: new Date(task.dueAt) }))
+    .filter(({ on }) => inWeek(on))
+    .map(({ task, on }) => ({
+      key: `t-${task.id}`,
+      kind: 'task',
+      on,
+      title: task.title,
+      sub: [task.eventName, task.assignee?.name].filter(Boolean).join(' · '),
+    }))
+  return [...events, ...deadlines].sort((a, b) => a.on - b.on)
+})
+
+function daysFromToday(on) {
+  const start = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  const day = new Date(on.getFullYear(), on.getMonth(), on.getDate())
+  return Math.round((day - start) / 86400000)
+}
+
+const shortDay = (on) => on.toLocaleDateString(locale.value, { day: 'numeric', month: 'short' })
 
 const monthLabel = computed(() =>
   cursor.value.toLocaleDateString(locale.value, { month: 'long', year: 'numeric' }),
@@ -119,6 +243,7 @@ const cells = computed(() => {
       inMonth: day.getMonth() === first.getMonth(),
       isToday: sameDay(day, today),
       events: dated.value.filter((entry) => sameDay(entry.on, day)).map((entry) => entry.event),
+      tasks: tasks.value.filter((task) => sameDay(new Date(task.dueAt), day)).slice(0, MAX_TASKS_PER_DAY),
     }
   })
 })
@@ -151,6 +276,27 @@ function goToday() {
  * A button and not a link: choosing the event is a side effect, and a `:to`
  * that had to run it would be running it on every render of the grid.
  */
+const creating = ref(false)
+const creatingDay = ref('')
+
+/*
+  A click on empty space in a day opens the dialog for that day. A click on
+  an event inside it opens the event — that one stops propagation, or the
+  two gestures would both fire and the dialog would appear behind a page
+  that is already navigating away.
+*/
+function startCreate(cell) {
+  creatingDay.value = cell.key
+  creating.value = true
+}
+
+function onCreated() {
+  // Reload rather than splice the new event in: the calendar reads dates
+  // off the same list the month totals do, and two places holding a
+  // half-updated list is how a count stops matching what is drawn.
+  load()
+}
+
 function open(event) {
   selectEvent(event)
   router.push(`/${lang.value}/dashboard/events/overview`)
@@ -164,6 +310,107 @@ function open(event) {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 6px;
+}
+
+.kpi .month-kpi {
+  font-size: 22px;
+  text-transform: capitalize;
+}
+
+.view-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  margin: 22px 0 12px;
+}
+
+.view-line h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.view-line p {
+  margin: 3px 0 0;
+  color: var(--ink-3);
+  font-size: 13px;
+}
+
+.view-switch {
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+.view-switch button {
+  padding: 7px 14px;
+  border: 0;
+  background: var(--card);
+  color: var(--ink-2);
+  font-size: 13px;
+}
+
+.view-switch button.on {
+  background: var(--ivy);
+  color: var(--on-ivy, #fff);
+}
+
+.week-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.week-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+
+.week-item:first-child {
+  border-top: 0;
+}
+
+.week-item small {
+  display: block;
+  margin-top: 3px;
+  color: var(--ink-3);
+  font-size: 12.5px;
+}
+
+.week-tag {
+  padding: 3px 8px;
+  border-radius: 7px;
+  background: var(--mist);
+  color: var(--ivy);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.week-tag.task {
+  background: var(--gold-soft);
+  color: var(--gold-deep);
+}
+
+.week-empty {
+  color: var(--ink-3);
+}
+
+.cal-task {
+  display: block;
+  margin-top: 4px;
+  overflow: hidden;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: var(--gold-soft);
+  color: var(--gold-deep);
+  font-size: 11.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .cal-weekday {

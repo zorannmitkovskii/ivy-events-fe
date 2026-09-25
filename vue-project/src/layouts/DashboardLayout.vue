@@ -32,7 +32,7 @@ import DashShell from '@/components/dashboard/shell/DashShell.vue'
 import DashTopBar from '@/components/dashboard/shell/DashTopBar.vue'
 import SidebarNav from '@/components/layout/SidebarNav.vue'
 import { onboardingStore } from '@/store/onboarding.store'
-import { isAuthenticated } from '@/services/auth.service'
+import { hasRole, isAuthenticated } from '@/services/auth.service'
 import { resolveCurrentEvent } from '@/services/eventSelection.service'
 import { EventCategoryEnum } from '@/enums/EventCategory.js'
 
@@ -61,7 +61,8 @@ onMounted(async () => {
   if (!onboardingStore.eventId && isAuthenticated()) {
     const { eventId, eventCount } = await resolveCurrentEvent()
     if (!eventId && eventCount > 1) {
-      router.replace(`/${lang.value}/organizer`)
+      const agency = hasRole('AGENCY') || hasRole('AGENCY_MEMBER')
+      router.replace(agency ? `/${lang.value}/agency/events` : `/${lang.value}/organizer`)
       return
     }
   }

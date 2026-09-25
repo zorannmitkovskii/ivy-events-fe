@@ -105,7 +105,7 @@ function readable(value) {
 </script>
 
 <style scoped>
-.queue { display: flex; flex-direction: column; gap: 16px; padding: 4px; max-width: 860px; }
+.queue { display: flex; flex-direction: column; gap: 16px; padding: 4px; }
 .head h1 { margin: 0; font-size: 22px; }
 .sub { margin: 4px 0 0; font-size: 13px; color: #6b6b6b; }
 

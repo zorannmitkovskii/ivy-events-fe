@@ -31,11 +31,11 @@ const i18n = createI18n({ legacy: false, locale: 'en', messages: { en } })
 const ROWS = [
   {
     id: 'u-1', firstName: 'Ana', lastName: 'Ivanova', email: 'ana@agency.mk',
-    status: 'ACTIVE', orgId: 'org-1', roles: ['ORGANIZER'], activeEvents: 4, overdueTasks: 9,
+    status: 'ACTIVE', orgId: 'org-1', roles: ['AGENCY_MEMBER'], activeEvents: 4, overdueTasks: 9,
   },
   {
     id: 'u-2', firstName: 'Boris', lastName: 'Petrov', email: 'boris@agency.mk',
-    status: 'DISABLED', orgId: 'org-1', roles: ['ORG_ADMIN'], activeEvents: 1, overdueTasks: 0,
+    status: 'DISABLED', orgId: 'org-1', roles: ['AGENCY'], activeEvents: 1, overdueTasks: 0,
   },
 ]
 
@@ -160,7 +160,7 @@ describe('what it changes', () => {
     const wrapper = await render()
     const options = wrapper.findAll('.role-select option').map((o) => o.text())
 
-    expect(new Set(options)).toEqual(new Set(['ORG_ADMIN', 'ORGANIZER', 'USER']))
+    expect(new Set(options)).toEqual(new Set(['AGENCY', 'AGENCY_MEMBER', 'USER']))
   })
 
   it('disables an organizer and reflects it without a full reload', async () => {
@@ -176,13 +176,13 @@ describe('what it changes', () => {
   })
 
   it('surfaces a refused change instead of leaving the row looking changed', async () => {
-    setStatus.mockRejectedValueOnce(new Error('Организацијата мора да има барем еден ORG_ADMIN'))
+    setStatus.mockRejectedValueOnce(new Error('Организацијата мора да има барем еден AGENCY'))
     const wrapper = await render()
 
     await wrapper.findAll('.action')[0].trigger('click')
     await flushPromises()
 
-    expect(wrapper.find('[role="alert"]').text()).toContain('ORG_ADMIN')
+    expect(wrapper.find('[role="alert"]').text()).toContain('AGENCY')
     expect(wrapper.findAll('tbody tr')[0].text()).toContain('Active')
   })
 

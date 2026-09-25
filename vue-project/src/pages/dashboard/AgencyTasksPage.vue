@@ -1,82 +1,188 @@
 <template>
-  <div>
-    <PageHead :title="t('agencyTasks.title')" :subtitle="t('agencyTasks.subtitle')" />
+  <div class="agency-tasks">
+    <PageHead
+      :title="isOwner ? t('agencyTasks.title') : t('agencyTasks.myTitle')"
+      :subtitle="isOwner ? t('agencyTasks.subtitle') : t('agencyTasks.mySubtitle')"
+    />
 
-    <div class="toolbar">
-      <div class="filters-row" role="group" :aria-label="t('agencyTasks.filterLabel')">
-        <button
-          v-for="option in eventFilters"
-          :key="option.value"
-          type="button"
-          :aria-pressed="eventFilter === option.value"
-          @click="eventFilter = option.value"
-        >{{ option.label }}</button>
+    <div class="kpis">
+      <div class="kpi">
+        <span>{{ t('agencyTasks.kpi.inView') }}</span>
+        <strong>{{ shown.length }}</strong>
+        <small>{{ t('agencyTasks.kpi.inViewNote') }}</small>
       </div>
-      <span class="muted small">{{ t('agencyTasks.count', { n: shown.length }) }}</span>
+      <div :class="['kpi', { danger: overdueCount > 0 }]">
+        <span>{{ t('agencyTasks.kpi.overdue') }}</span>
+        <strong>{{ overdueCount }}</strong>
+        <small>{{ t('agencyTasks.kpi.overdueNote') }}</small>
+      </div>
+      <div class="kpi">
+        <span>{{ t('agencyTasks.kpi.week') }}</span>
+        <strong>{{ weekCount }}</strong>
+        <small>{{ t('agencyTasks.kpi.weekNote') }}</small>
+      </div>
+      <div :class="['kpi', { warn: unassignedCount > 0 }]">
+        <span>{{ t('agencyTasks.kpi.unassigned') }}</span>
+        <strong>{{ unassignedCount }}</strong>
+        <small>{{ isOwner ? t('agencyTasks.kpi.unassignedNote') : t('agencyTasks.kpi.unassignedMemberNote') }}</small>
+      </div>
     </div>
 
-    <p v-if="loading" class="empty">{{ t('common.loading') }}</p>
+    <div class="section-line">
+      <div>
+        <h2>{{ isOwner ? t('agencyTasks.ownerSection') : t('agencyTasks.memberSection', { name: firstName }) }}</h2>
+        <p>{{ t('agencyTasks.sectionHint') }}</p>
+      </div>
+      <div class="view-switch" role="group" :aria-label="t('agencyTasks.viewLabel')">
+        <button type="button" :class="{ on: view === 'list' }" :aria-pressed="view === 'list'" @click="setView('list')">
+          {{ t('agencyTasks.view.list') }}
+        </button>
+        <button type="button" :class="{ on: view === 'board' }" :aria-pressed="view === 'board'" @click="setView('board')">
+          {{ t('agencyTasks.view.board') }}
+        </button>
+      </div>
+    </div>
 
-    <p v-else-if="error" class="empty" role="alert">{{ error }}</p>
-
-    <!-- Three columns, as the design has it. Not drag-and-drop: moving a task
-         between events is not a thing, and within one status the order carries
-         no meaning, so a board that could be rearranged would be promising
-         something the model does not have. -->
-    <div v-else class="kanban">
-      <section v-for="column in columns" :key="column.status" class="kcol">
-        <header>
-          {{ t(`agencyTasks.status.${column.status}`) }}
-          <span>{{ column.items.length }}</span>
-        </header>
-
-        <article v-for="task in column.items" :key="task.id" class="kcard">
-          <b>{{ task.title }}</b>
-          <div class="meta">
-            <span v-if="task.eventName" class="chip">{{ task.eventName }}</span>
-            <span v-if="task.dueDate" :class="{ overdue: isOverdue(task) }">{{ day(task.dueDate) }}</span>
+    <section class="card tasks-card">
+      <div class="task-filters">
+        <label class="task-field">
+          <span>{{ t('agencyTasks.filter.status') }}</span>
+          <select v-model="filters.when">
+            <option value="all">{{ t('agencyTasks.filter.statusAll') }}</option>
+            <option value="overdue">{{ t('agencyTasks.filter.statusOverdue') }}</option>
+            <option value="week">{{ t('agencyTasks.filter.statusWeek') }}</option>
+          </select>
+        </label>
+        <label class="task-field">
+          <span>{{ t('agencyTasks.filter.event') }}</span>
+          <select v-model="filters.eventId">
+            <option value="">{{ t('agencyTasks.allEvents') }}</option>
+            <option v-for="event in board.events" :key="event.eventId" :value="event.eventId">{{ event.name }}</option>
+          </select>
+        </label>
+        <div class="task-field scope" role="group" :aria-label="t('agencyTasks.scopeLabel')">
+          <span>{{ t('agencyTasks.scopeLabel') }}</span>
+          <div class="scope-buttons">
+            <button type="button" :aria-pressed="scope === 'mine'" :class="{ on: scope === 'mine' }" @click="setScope('mine')">{{ t('agencyTasks.scopeMine') }}</button>
+            <button type="button" :aria-pressed="scope === 'all'" :class="{ on: scope === 'all' }" @click="setScope('all')">{{ t('agencyTasks.scopeAll') }}</button>
           </div>
-          <span v-if="task.assignee" class="assignee">{{ assigneeLabel(task.assignee) }}</span>
-        </article>
+        </div>
+        <label v-if="isOwner && scope === 'all'" class="task-field">
+          <span>{{ t('agencyTasks.filter.assignee') }}</span>
+          <select v-model="filters.assignee">
+            <option value="">{{ t('agencyTasks.filter.assigneeAll') }}</option>
+            <option :value="UNASSIGNED">{{ t('agencyTasks.unassignedName') }}</option>
+            <option v-for="person in board.team" :key="person.id" :value="person.id">{{ person.name || '—' }}</option>
+          </select>
+        </label>
+      </div>
 
-        <p v-if="!column.items.length" class="kcol-empty">{{ t('agencyTasks.none') }}</p>
-      </section>
-    </div>
+      <p v-if="error" class="task-error" role="alert">{{ error }}</p>
+      <p v-if="loading" class="task-note">{{ t('common.loading') }}</p>
+
+      <template v-else>
+        <div v-if="view === 'list'" class="tbl-wrap">
+          <table class="tbl task-table">
+            <thead>
+              <tr>
+                <th>{{ t('agencyTasks.table.task') }}</th>
+                <th>{{ t('agencyTasks.table.event') }}</th>
+                <th>{{ t('agencyTasks.table.due') }}</th>
+                <th>{{ t('agencyTasks.table.assignee') }}</th>
+                <th>{{ t('agencyTasks.table.status') }}</th>
+                <th aria-hidden="true"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="task in listRows" :key="task.id" :data-task="task.id">
+                <td><b>{{ task.title }}</b></td>
+                <td>{{ task.eventName }}</td>
+                <td :class="{ late: task.overdue }">{{ task.dueAt ? formatDay(task.dueAt, locale) : t('agencyTasks.noDate') }}</td>
+                <td>
+                  <span class="who">
+                    <span class="initials" :class="{ none: !task.assignee }" aria-hidden="true">{{ task.assignee ? initials(task.assignee.name) || '?' : '—' }}</span>
+                    <select
+                      v-if="isOwner"
+                      :value="task.assignee?.id || ''"
+                      :aria-label="t('agencyTasks.assignLabel', { title: task.title })"
+                      @change="assign(task, $event.target.value || null)"
+                    >
+                      <option value="">{{ t('agencyTasks.unassignedName') }}</option>
+                      <option v-for="person in board.team" :key="person.id" :value="person.id">{{ person.name || '—' }}</option>
+                    </select>
+                    <span v-else>{{ task.assignee?.name || t('agencyTasks.unassignedName') }}</span>
+                  </span>
+                </td>
+                <td>
+                  <span v-if="task.overdue" class="pill red">{{ t('agencyTasks.overdueTag') }}</span>
+                  <span v-else :class="['pill', task.status === 'DONE' ? 'green' : 'slate']">{{ t(`agencyTasks.status.${task.status}`) }}</span>
+                </td>
+                <td class="r">
+                  <button type="button" class="text-link" @click="openEvent({ eventId: task.eventId }, 'tasks')">{{ t('agencyTasks.table.open') }} →</button>
+                </td>
+              </tr>
+              <tr v-if="!shown.length">
+                <td colspan="6" class="task-note">{{ t('agencyTasks.empty') }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <template v-else>
+          <p class="task-note">{{ t('agencyTasks.keyboardHint') }}</p>
+          <AgencyTaskBoard :tasks="shown" :team="board.team" :can-assign="isOwner" @move="move" @assign="assign" />
+        </template>
+      </template>
+    </section>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+/**
+ * The agency's tasks (2026 agency design, "Задачи" / "Мои задачи").
+ *
+ * <p>Every task on the viewer's events with who has it, as a list or as a
+ * board moved by dragging. An owner sees the agency and hands work out; a
+ * member sees their own events, opens on the tasks given to them, and can
+ * widen to everything on those events — but not reassign.
+ *
+ * <p>Moves are applied on screen at once and put back if the server refuses,
+ * so a drag feels like a drag without the board lying about what was saved.
+ */
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import PageHead from '@/components/dashboard/shell/PageHead.vue'
-import { tasksService } from '@/services/tasks.service'
+import AgencyTaskBoard from '@/components/agency/AgencyTaskBoard.vue'
+import { agencyWorkspaceService } from '@/services/agencyWorkspace.service'
+import { taskBoardService } from '@/services/taskBoard.service'
 import { getErrorMessage } from '@/services/apiError'
+import { getFullName, getUserId } from '@/services/auth.service'
+import { useAgencyRole } from '@/composables/useAgencyRole'
+import { useOpenAgencyEvent } from '@/composables/useOpenAgencyEvent'
+import { formatDay, initials } from '@/utils/agencyFormat.js'
 
-/*
-  Every open task across the agency's events, on one board.
-
-  Reads `/tasks/workspace`, which is scoped by the caller's accessible events
-  exactly as `/analytics/workspace` is — the per-event `/tasks` endpoint takes a
-  required `eventId`, so there was no way to ask this question at all.
-*/
-
-/* The three columns the board shows. CANCELED is a fourth TaskStatus and is
-   deliberately not one of them: a cancelled task is not work, and a column of
-   them would be the widest thing on an agency board within a season. */
-const STATUSES = ['PENDING', 'IN_PROGRESS', 'DONE']
-const ALL = 'ALL'
+const UNASSIGNED = '__none__'
+const WEEK_DAYS = 7
+const VIEW_KEY = 'ivy.agencyTasks.view'
+const SCOPE_KEY = 'ivy.agencyTasks.scope'
 
 const { t, locale } = useI18n()
+const { isOwner } = useAgencyRole()
+const { openEvent } = useOpenAgencyEvent()
 
-const tasks = ref([])
-const eventFilter = ref(ALL)
+const board = reactive({ tasks: [], team: [], events: [] })
+const filters = reactive({ when: 'all', eventId: '', assignee: '' })
+const view = ref(readView())
+const scope = ref(readScope())
 const loading = ref(true)
 const error = ref('')
+const myId = getUserId()
+const firstName = (getFullName() || '').split(' ')[0]
 
 onMounted(async () => {
   try {
-    const response = await tasksService.workspace()
-    tasks.value = response?.data ?? response ?? []
+    const response = await agencyWorkspaceService.tasks()
+    Object.assign(board, response?.data?.data ?? response?.data ?? {})
   } catch (failure) {
     error.value = getErrorMessage(failure)
   } finally {
@@ -84,95 +190,275 @@ onMounted(async () => {
   }
 })
 
-/** Only the events that actually have a task on the board. */
-const eventFilters = computed(() => {
-  const seen = new Map()
-  for (const task of tasks.value) {
-    if (task.eventId && !seen.has(task.eventId)) seen.set(task.eventId, task.eventName || task.eventId)
-  }
-  return [
-    { value: ALL, label: t('agencyTasks.allEvents') },
-    ...[...seen].map(([value, label]) => ({ value, label })),
-  ]
-})
-
-const shown = computed(() =>
-  eventFilter.value === ALL ? tasks.value : tasks.value.filter((task) => task.eventId === eventFilter.value),
-)
-
-const columns = computed(() =>
-  STATUSES.map((status) => ({
-    status,
-    items: shown.value.filter((task) => (task.status || 'PENDING') === status),
-  })),
-)
-
-const day = (iso) => new Date(iso).toLocaleDateString(locale.value, { day: 'numeric', month: 'short' })
-
-/** The assignee is a role, not a person: BRIDE, GROOM, PLANNER and so on. An
- *  unknown one prints its own name rather than a missing key. */
-function assigneeLabel(value) {
-  const key = `tasks.assignee.${value}`
-  const label = t(key)
-  return label === key ? value : label
+function dueWithinWeek(task) {
+  if (!task.dueAt || task.overdue) return false
+  const due = new Date(task.dueAt)
+  const limit = new Date()
+  limit.setDate(limit.getDate() + WEEK_DAYS)
+  return due >= new Date(new Date().toDateString()) && due <= limit
 }
 
-/** A done task is never late, however far past its date it is. */
-function isOverdue(task) {
-  return task.status !== 'DONE' && new Date(task.dueDate) < new Date()
+const shown = computed(() =>
+  board.tasks.filter((task) => {
+    // 'Mine' is one's own work — and, for an owner, the work nobody has yet: handing that out is theirs.
+    if (scope.value === 'mine' && task.assignee?.id !== myId && !(isOwner.value && !task.assignee)) return false
+    if (filters.when === 'overdue' && !task.overdue) return false
+    if (filters.when === 'week' && !dueWithinWeek(task)) return false
+    if (filters.eventId && task.eventId !== filters.eventId) return false
+    if (filters.assignee === UNASSIGNED && task.assignee) return false
+    if (filters.assignee && filters.assignee !== UNASSIGNED && task.assignee?.id !== filters.assignee) return false
+    return true
+  }),
+)
+
+/**
+ * The list with finished work at the bottom, the rest in the server's
+ * due-date order. Sort is stable, so only DONE moves; a task ticked off drops
+ * down at once. The board needs none of this — DONE is its own column.
+ */
+const listRows = computed(() =>
+  [...shown.value].sort((a, b) => Number(a.status === 'DONE') - Number(b.status === 'DONE')),
+)
+
+const overdueCount = computed(() => shown.value.filter((task) => task.overdue).length)
+const weekCount = computed(() => shown.value.filter(dueWithinWeek).length)
+const unassignedCount = computed(() => shown.value.filter((task) => !task.assignee && task.status !== 'DONE').length)
+
+/**
+ * A drop or an arrow key. Status only: across events a position means nothing,
+ * so no order is sent and each event keeps its own.
+ */
+async function move(task, status) {
+  if (!status || status === task.status) return
+  const before = { status: task.status, overdue: task.overdue }
+  task.status = status
+  task.overdue = status === 'DONE' ? false : task.overdue
+  error.value = ''
+  try {
+    await taskBoardService.move(task.eventId, task.id, status, null)
+  } catch (failure) {
+    Object.assign(task, before)
+    error.value = t('agencyTasks.moveFailed', { reason: getErrorMessage(failure) })
+  }
+}
+
+async function assign(task, assigneeId) {
+  const before = task.assignee
+  task.assignee = assigneeId ? board.team.find((person) => person.id === assigneeId) ?? { id: assigneeId, name: null } : null
+  error.value = ''
+  try {
+    await taskBoardService.assign(task.eventId, task.id, assigneeId)
+  } catch (failure) {
+    task.assignee = before
+    error.value = t('agencyTasks.assignFailed', { reason: getErrorMessage(failure) })
+  }
+}
+
+function readView() {
+  try {
+    return localStorage.getItem(VIEW_KEY) === 'board' ? 'board' : 'list'
+  } catch {
+    return 'list'
+  }
+}
+
+function readScope() {
+  try {
+    return localStorage.getItem(SCOPE_KEY) === 'all' ? 'all' : 'mine'
+  } catch {
+    return 'mine'
+  }
+}
+
+function setScope(next) {
+  scope.value = next
+  // A filter on somebody who is hidden again would leave the list empty for no visible reason.
+  if (next === 'mine') filters.assignee = ''
+  try {
+    localStorage.setItem(SCOPE_KEY, next)
+  } catch {
+    // Remembering the choice is a convenience; the page works without it.
+  }
+}
+
+function setView(next) {
+  view.value = next
+  try {
+    localStorage.setItem(VIEW_KEY, next)
+  } catch {
+    // Remembering the view is a convenience; the page works without it.
+  }
 }
 </script>
 
+<style scoped src="../../components/agency/agency-panels.css"></style>
+
 <style scoped>
-/* `.kanban`, `.kcol`, `.kcard`, `.chip` and `.toolbar` are the design's, in
-   `ivy/dash.css`. Local: the empty column and the late-date colour. */
-.filters-row {
+/* The labels under the figures read in the UI face, as on the other agency screens. */
+.kpi span,
+.kpi small {
+  font-family: var(--ui);
+}
+
+.kpi.danger strong {
+  color: var(--rose-ink);
+}
+
+.kpi.warn strong {
+  color: var(--gold-deep);
+}
+
+.section-line {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  margin: 24px 0 12px;
 }
 
-.filters-row button {
-  padding: 7px 14px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--card);
-  font-size: 14px;
-  color: var(--ink-2);
+.section-line h2 {
+  margin: 0;
+  font-size: 22px;
 }
 
-.filters-row button[aria-pressed='true'] {
-  border-color: var(--ivy);
-  background: var(--ivy);
-  color: var(--on-ivy);
-}
-
-.kcard .meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-  margin-top: 8px;
-  font-size: 12.5px;
+.section-line p {
+  margin: 3px 0 0;
   color: var(--ink-3);
+  font-size: 13px;
 }
 
-.kcard .overdue {
-  color: var(--error);
+.task-field.scope {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.view-switch,
+.scope-buttons {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+.view-switch button,
+.scope-buttons button {
+  padding: 7px 14px;
+  border: 0;
+  background: var(--card);
+  color: var(--ink-2);
+  font-size: 13px;
+}
+
+.view-switch button.on,
+.scope-buttons button.on {
+  background: var(--ivy);
+  color: var(--on-ivy, #fff);
+}
+
+.tasks-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.task-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-end;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+  background: var(--mist-2);
+}
+
+.task-field {
+  flex: 1;
+  min-width: 160px;
+}
+
+.task-field > span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--ink-3);
+  font-size: 12px;
   font-weight: 600;
 }
 
-.kcard .assignee {
-  display: block;
-  margin-top: 6px;
-  font-size: 12.5px;
+.task-field select {
+  width: 100%;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13.5px;
+}
+
+.tbl-wrap {
+  overflow-x: auto;
+  padding: 0 18px 12px;
+}
+
+.task-table {
+  min-width: 760px;
+}
+
+.task-table td {
+  font-size: 14px;
+}
+
+.task-table td.late {
+  color: var(--rose-ink);
+  font-weight: 700;
+}
+
+.who {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.who select {
+  min-height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--card);
+  font: inherit;
+  font-size: 13px;
+}
+
+.initials {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--mist);
+  color: var(--ivy);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.initials.none {
+  background: var(--mist-2);
   color: var(--ink-3);
 }
 
-.kcol-empty {
-  padding: 18px 6px;
-  text-align: center;
-  font-size: 13.5px;
+.r {
+  text-align: right;
+}
+
+.task-note {
+  padding: 12px 18px 0;
   color: var(--ink-3);
+  font-size: 13px;
+}
+
+.task-error {
+  padding: 12px 18px 0;
+  color: var(--rose-ink);
 }
 </style>

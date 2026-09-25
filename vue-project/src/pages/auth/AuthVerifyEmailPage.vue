@@ -86,7 +86,7 @@ onMounted(async () => {
     try {
       const claims = decodeJwtPayload(localStorage.getItem("access_token"));
       const existingRoles = claims?.realm_access?.roles || [];
-      const hasExistingRole = ["ADMIN", "VENDOR", "ORGANIZER"].some(r => existingRoles.includes(r));
+      const hasExistingRole = ["ADMIN", "VENDOR", "VENDOR_MEMBER", "AGENCY", "AGENCY_MEMBER"].some(r => existingRoles.includes(r));
 
       if (!hasExistingRole) {
         await assignRole(claims.email, "USER");

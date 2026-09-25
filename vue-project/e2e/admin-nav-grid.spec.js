@@ -80,7 +80,10 @@ test('the grid offers five cards and each one lands somewhere real', async ({ pa
   }
 })
 
-test('the dashboard renders the four KPI cards and the attention section from the seeded values', async ({ page }) => {
+// Overdue work per event and guest numbers are an agency's concern, not the
+// platform's (decided 2026-09-13): the payload still carries them, the screen
+// leaves them out, and the tiles lead.
+test('the platform dashboard leads with the tiles and leaves out task health and guest numbers', async ({ page }) => {
   await page.route('**/v1/api/**', (route) => route.fulfill({
     status: 200, contentType: 'application/json',
     body: JSON.stringify({ success: true, message: null, data: {
@@ -96,10 +99,15 @@ test('the dashboard renders the four KPI cards and the attention section from th
   }))
   await openDashboard(page)
 
-  await expect(page.locator('.cards article, .cards a')).toHaveCount(4)
+  await expect(page.locator('.cards article, .cards a')).toHaveCount(2)
   await expect(page.locator('.cards')).toContainText('76')     // total events
-  await expect(page.locator('.cards')).toContainText('78%')    // RSVP rate
-  await expect(page.locator('#attention')).toContainText('Ana & Marko')
+  await expect(page.getByText('78%')).toHaveCount(0)            // no RSVP rate anywhere
+  await expect(page.locator('#attention')).toHaveCount(0)
+  await expect(page.getByText('Ana & Marko')).toHaveCount(0)
+
+  const tiles = await page.locator('.nav-card').first().boundingBox()
+  const cards = await page.locator('.cards').boundingBox()
+  expect(tiles.y).toBeLessThan(cards.y)
 })
 
 test('an agency owner typing the admin URL is sent to their own dashboard', async ({ page }) => {

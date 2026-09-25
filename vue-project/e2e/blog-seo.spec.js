@@ -112,12 +112,13 @@ test('an article writes the canonical and social tags the server computed', asyn
   await expect(page.locator('meta[name="description"]'))
     .toHaveAttribute('content', /што работи и што не/)
 
-  // Selected by the marker attribute, not by type: the app already ships an
-  // organisation block and a breadcrumb block, and the article's has to sit
-  // beside them rather than replace them.
-  const jsonLd = await page.locator('script[data-ivy-seo]').textContent()
-  expect(JSON.parse(jsonLd)['@type']).toBe('Article')
-  await expect(page.locator('#seo-breadcrumb-jsonld')).toHaveCount(1)
+  // Selected by the marker attribute, not by type: the shell ships an
+  // organisation block the article's has to sit beside. The route-level
+  // breadcrumb is the managed block on other pages; here the server's graph
+  // (which carries its own breadcrumb) takes its place, so there is one.
+  const jsonLd = page.locator('script[data-ivy-seo]')
+  await expect(jsonLd).toHaveCount(1)
+  expect(JSON.parse(await jsonLd.textContent())['@type']).toBe('Article')
 })
 
 test('an archived article says noindex rather than quietly staying in search', async ({ page }) => {

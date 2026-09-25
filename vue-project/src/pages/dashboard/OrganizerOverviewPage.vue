@@ -65,6 +65,25 @@
         <button v-if="hasActiveFilters" class="filter-clear" @click="clearFilters">
           {{ t('organizerOverview.resetFilters') }}
         </button>
+
+        <!-- Last in the row and pushed right: it changes how the same events
+             are drawn, not which of them are shown. -->
+        <div class="view-switch" role="group" :aria-label="t('organizerOverview.viewLabel')">
+          <button
+            type="button" :class="{ on: view === 'table' }" :aria-pressed="view === 'table'"
+            @click="setView('table')"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+            {{ t('organizerOverview.viewTable') }}
+          </button>
+          <button
+            type="button" :class="{ on: view === 'cards' }" :aria-pressed="view === 'cards'"
+            @click="setView('cards')"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            {{ t('organizerOverview.viewCards') }}
+          </button>
+        </div>
       </section>
 
       <p v-if="error" class="load-error">{{ t('organizerOverview.loadFailed') }}</p>
@@ -85,11 +104,26 @@
         </div>
 
         <!--
-          Grouped rather than one flat list. An agency's question is never "show
-          me everything" — it is "what needs me today", and a date-sorted table
-          answers that only by making somebody read it. The sections are the
-          answer; the filters below are for when they want the table back.
+          Two readings of the same list, because an agency asks two questions.
+
+          The table is the default: with thirty weddings on the books the daily
+          question is comparative — who is behind, which one has no answers yet,
+          which of my organizers is carrying them. The cards answer the other
+          one, "what needs me today", by grouping instead of sorting. Neither is
+          a subset of the other, so the choice is remembered.
         -->
+        <EventsTable
+          v-if="view === 'table' && visibleCount"
+          :events="searched"
+          :urgent-ids="attentionIds"
+          :organizer-names="organizerNames"
+          :is-done="isDone"
+          :rsvp-percent="rsvpPercent"
+          :invited-count="invitedCount"
+          @open="onManage"
+        />
+
+        <template v-else-if="view === 'cards'">
         <section v-if="needsAttention.length" class="ev-group ev-group--urgent">
           <h2 class="ev-group-title">
             {{ t('organizerOverview.needsAttention') }}
@@ -123,13 +157,6 @@
           </div>
         </section>
 
-        <p v-if=!visibleCount class=empty-state>
-          {{ t('organizerOverview.noneMatch') }}
-          <button class="filter-clear" @click="clearSearchAndFilters">
-            {{ t('organizerOverview.clearFilters') }}
-          </button>
-        </p>
-
         <!-- Compact: a finished event is worth finding, not worth the space of
              one that still needs work. -->
         <section v-if="completedGroup.length" class="ev-group">
@@ -141,6 +168,16 @@
             />
           </div>
         </section>
+        </template>
+
+        <!-- The search box hides events without reloading, so "no results" can
+             happen in either view. The way out is the same in both. -->
+        <p v-if="!visibleCount" class="empty-state">
+          {{ t('organizerOverview.noneMatch') }}
+          <button class="filter-clear" @click="clearSearchAndFilters">
+            {{ t('organizerOverview.resetFilters') }}
+          </button>
+        </p>
       </template>
 
       <!-- Nothing matched the filters — different from having no events at all,
@@ -209,14 +246,16 @@ import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import EventCard from "@/components/dashboard/organizer/EventCard.vue";
+import EventsTable from "@/components/dashboard/EventsTable.vue";
 import { analyticsService } from '@/services/analytics.service';
+import { agencyTeamService } from '@/services/agencyTeam.service';
 import { createAdminUser } from '@/services/userService';
 import { hasRole, logout } from '@/services/auth.service';
 import { selectEvent } from '@/services/eventSelection.service';
 import { clearOnboarding } from '@/store/onboarding.store';
 import useWorkspaceEvents from '@/composables/useWorkspaceEvents';
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const lang = computed(() => route.params.lang || 'mk');
@@ -229,11 +268,65 @@ const { rows, events, filters, loading, error, load, resetFilters, togglePin } =
 // Kept exactly as wide as it was before the page stopped being organizer-only,
 // so nobody who could see this button loses it. It is not a claim that both
 // roles can use it — the endpoint behind it is ADMIN-only.
-const canManageUsers = hasRole('ADMIN') || hasRole('ORGANIZER');
+const canManageUsers = hasRole('ADMIN') || hasRole('AGENCY_MEMBER');
 
 const analytics = ref(null);
 
-const statusOptions =['DRAFT', 'PENDING', 'ACTIVATED', 'ACHIVED'];
+/* ---- Table or cards ---- */
+
+const VIEW_KEY = 'ivy.agencyEvents.view';
+
+/**
+ * Remembered per browser, because it is a working habit rather than a setting:
+ * whoever lives in the table wants the table tomorrow too. A broken or blocked
+ * localStorage falls back to the default rather than failing the page.
+ */
+function storedView() {
+  try {
+    const saved = localStorage.getItem(VIEW_KEY);
+    return saved === 'cards' || saved === 'table' ? saved : 'table';
+  } catch {
+    return 'table';
+  }
+}
+
+const view = ref(storedView());
+
+function setView(next) {
+  view.value = next;
+  try {
+    localStorage.setItem(VIEW_KEY, next);
+  } catch {
+    // A remembered preference is a convenience. Losing it is not worth an error.
+  }
+}
+
+/**
+ * Keycloak user id → display name, for the table's organizer column.
+ *
+ * <p>Loaded once per visit rather than per row: forty events would otherwise be
+ * forty lookups of a team of four. Left empty for anyone the team endpoint
+ * refuses (it is ORG_ADMIN-only), and the table drops the column rather than
+ * printing a dash beside every event.
+ */
+const organizerNames = ref({});
+
+async function loadOrganizers() {
+  if (!hasRole('AGENCY') && !hasRole('ADMIN')) return;
+  try {
+    const response = await agencyTeamService.workload({ sort: 'NAME', direction: 'ASC', max: 200 });
+    const directory = response?.data ?? response ?? {};
+    const named = {};
+    (directory.rows || []).forEach((row) => {
+      named[row.id] = [row.firstName, row.lastName].filter(Boolean).join(' ') || row.email;
+    });
+    organizerNames.value = named;
+  } catch {
+    organizerNames.value = {};
+  }
+}
+
+const statusOptions =['DRAFT', 'PENDING', 'ACTIVE', 'ARCHIVED'];
 const categoryOptions = ['WEDDING', 'BIRTHDAY', 'ENGAGEMENT', 'CORPORATE', 'BABY_SHOWER', 'GALLERY', 'OTHER'];
 
 const hasActiveFilters = computed(() =>
@@ -252,7 +345,11 @@ function statusLabel(status) {
   return label === key ? String(status || '').toLowerCase() : label;
 }
 
-onMounted(reload);
+onMounted(() => {
+  reload();
+  // The team does not change when a filter does, so it is not part of reload().
+  loadOrganizers();
+});
 
 async function reload() {
   await load();
@@ -401,7 +498,7 @@ function onLogout() {
 const userDialogOpen = ref(false);
 const userSaving = ref(false);
 const userFormError = ref('');
-const userRoleOptions = ['USER', 'ORGANIZER'];
+const userRoleOptions = ['USER', 'AGENCY_MEMBER'];
 
 const defaultUserForm = () => ({ firstName: '', lastName: '', email: '', role: 'USER', eventId: '' });
 const userForm = ref(defaultUserForm());
@@ -448,12 +545,6 @@ function formatCategory(cat) {
   return val !== key ? val : cat.charAt(0) + cat.slice(1).toLowerCase();
 }
 
-function formatDate(iso) {
-  if (!iso) return '—';
-  try {
-    return new Date(iso).toLocaleDateString(locale.value === 'mk' ? 'mk-MK' : 'en-US', { day: 'numeric', month: 'short', year: 'numeric' });
-  } catch { return iso; }
-}
 </script>
 
 <style scoped>
@@ -590,6 +681,37 @@ function formatDate(iso) {
 }
 .filter-clear:hover { color: #1a1a1a; }
 .load-error { color: #b91c1c; font-size: 13px; margin: 0 0 16px; }
+
+/* ---- View switch ---- */
+/* `margin-left: auto` inside the wrapping filter row: it sits at the right end
+   of whatever line it lands on, and drops under the filters on a narrow screen
+   instead of squeezing them. */
+.view-switch {
+  display: inline-flex;
+  margin-left: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  height: 38px;
+}
+
+.view-switch button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  border: none;
+  background: none;
+  font-size: 13px;
+  color: var(--ink-3);
+  cursor: pointer;
+}
+
+.view-switch button + button { border-left: 1px solid var(--line); }
+.view-switch button:hover { color: #1a1a1a; }
+.view-switch button.on { background: var(--brand); color: #fff; }
+.view-switch button:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
 
 .sr-only {
   position: absolute;

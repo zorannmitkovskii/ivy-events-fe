@@ -20,21 +20,16 @@
  * to them.
  *
  * Usage:  node scripts/prerender-vendors.mjs [apiBase] [outDir]
- * Failure to reach the API is a warning, not a build failure — a marketing
- * deploy should not be blocked by an unreachable backend.
  */
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
-import { dirname, join, resolve } from 'node:path'
-
-const API_BASE = process.argv[2] || process.env.PRERENDER_API_BASE || 'http://localhost:8282/v1/api'
-const OUT_DIR = resolve(process.argv[3] || process.env.PRERENDER_OUT || 'dist')
-const LANGUAGES = ['mk', 'en', 'sq']
+import { LANGUAGES, getJson, readTemplate, renderHtml, settings, writePage } from './prerender-shared.mjs'
 
 /** How many vendors to fetch per directory page while walking the list. */
 const PAGE_SIZE = 100
 
+const { apiBase, outDir } = settings()
+
 async function main() {
-  const template = await readFile(join(OUT_DIR, 'index.html'), 'utf8')
+  const template = await readTemplate(outDir)
   const vendors = await fetchAllVendors()
 
   if (!vendors.length) {
@@ -56,10 +51,8 @@ async function main() {
       }
 
       const category = (vendor.type || 'OTHER').toLowerCase().replace(/_/g, '-')
-      const path = join(OUT_DIR, lang, 'vendors', category, vendor.slug, 'index.html')
-
-      await mkdir(dirname(path), { recursive: true })
-      await writeFile(path, renderHtml(template, seo), 'utf8')
+      await writePage(outDir, [lang, 'vendors', category, vendor.slug],
+        renderHtml(template, seo, { ogType: 'business.business' }))
       written++
     }
   }
@@ -74,7 +67,7 @@ async function fetchAllVendors() {
   let page = 0
 
   while (true) {
-    const body = await getJson(`${API_BASE}/public/vendors?page=${page}&size=${PAGE_SIZE}`)
+    const body = await getJson(`${apiBase}/public/vendors?page=${page}&size=${PAGE_SIZE}`)
     const content = body?.data?.content ?? []
     all.push(...content)
 
@@ -85,53 +78,8 @@ async function fetchAllVendors() {
 }
 
 async function fetchSeo(slug, lang) {
-  const body = await getJson(`${API_BASE}/public/vendors/${encodeURIComponent(slug)}/seo?lang=${lang}`)
+  const body = await getJson(`${apiBase}/public/vendors/${encodeURIComponent(slug)}/seo?lang=${lang}`)
   return body?.data ?? null
-}
-
-async function getJson(url) {
-  try {
-    const response = await fetch(url)
-    if (!response.ok) return null
-    return await response.json()
-  } catch (error) {
-    console.warn(`[prerender] could not reach ${url}: ${error.message}`)
-    return null
-  }
-}
-
-/**
- * Puts the metadata into the shipped shell.
- *
- * <p>Replaces the existing title rather than appending a second one — two
- * title tags is a page whose title depends on which one the crawler reads
- * first.
- */
-function renderHtml(template, seo) {
-  const tags = [
-    `<title>${escape(seo.title)}</title>`,
-    `<meta name="description" content="${escape(seo.description)}">`,
-    `<link rel="canonical" href="${escape(seo.canonicalUrl)}">`,
-    `<meta property="og:type" content="business.business">`,
-    `<meta property="og:title" content="${escape(seo.title)}">`,
-    `<meta property="og:description" content="${escape(seo.description)}">`,
-    `<meta property="og:url" content="${escape(seo.canonicalUrl)}">`,
-    seo.imageUrl ? `<meta property="og:image" content="${escape(seo.imageUrl)}">` : '',
-    `<meta name="twitter:card" content="summary_large_image">`,
-    `<script type="application/ld+json">${JSON.stringify(seo.structuredData)}</script>`,
-  ].filter(Boolean).join('\n    ')
-
-  return template
-    .replace(/<title>.*?<\/title>/s, '')
-    .replace('</head>', `    ${tags}\n  </head>`)
-}
-
-function escape(value) {
-  return String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
 }
 
 main().catch(error => {

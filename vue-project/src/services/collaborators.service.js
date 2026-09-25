@@ -28,7 +28,7 @@ export const collaboratorsService = {
   },
 
   async revoke(eventId, userId) {
-    const res = await api.delete(
+    const res = await api.del(
       `/events/${encodeURIComponent(eventId)}/collaborators/${encodeURIComponent(userId)}`
     );
     return res?.data ?? res;
@@ -53,6 +53,6 @@ export const workspaceService = {
   },
 
   unpin(eventId) {
-    return api.delete(`/events/${encodeURIComponent(eventId)}/pin`);
+    return api.del(`/events/${encodeURIComponent(eventId)}/pin`);
   },
 };

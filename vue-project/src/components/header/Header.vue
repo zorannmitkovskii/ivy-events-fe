@@ -165,6 +165,30 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
   color: var(--ink);
 }
 
+/* One line under a nav link, never two. `site.css` underlines every hovered
+   link with a rule more specific than its own `.nav a:hover` opt-out, so the
+   active link showed the gold bar plus a text underline beneath it. The hover
+   line is drawn where the gold bar sits instead, and the active link keeps
+   its gold one. The selector repeats the generic rule's `:not()`s to outrank it. */
+.header .nav a {
+  position: relative;
+}
+
+.header .nav a:not(.btn):not(.brand):not(.card-link):hover {
+  text-decoration: none;
+}
+
+.nav a:not([aria-current='page']):hover::after {
+  content: '';
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 5px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ink);
+}
+
 /* Three languages, in the pill idiom the design uses for the invitation's own
    MK/EN switch. Hidden with the rest of the header actions on narrow screens
    — the panel carries the switch there. */

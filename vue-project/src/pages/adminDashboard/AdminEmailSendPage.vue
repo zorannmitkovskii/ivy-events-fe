@@ -250,7 +250,6 @@ async function handleSend() {
 </script>
 
 <style scoped>
-.admin-page { max-width: 1200px; }
 
 .header-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .selected-badge {

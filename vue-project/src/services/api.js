@@ -162,6 +162,52 @@ window.addEventListener("storage", (e) => {
   }
 });
 
+// ── Staying signed in ───────────────────────────────────────────────
+// The timer above is not enough on its own, and the gap is the ordinary
+// case rather than an edge one. A background tab has its timers throttled
+// to once a minute; a sleeping laptop has them stopped entirely. Come back
+// to the app on Monday and the refresh that was due on Friday evening never
+// ran, so the session is gone and the person is looking at a login screen
+// they did not ask for.
+//
+// So the app also refreshes whenever it becomes visible again, and whenever
+// the browser says the network came back. Between the two, "still signed in"
+// stops depending on the tab having stayed awake.
+//
+// None of this can outlive the refresh token itself. How long that lives is
+// a Keycloak realm setting, not something the frontend can decide — see
+// iam-manifest.yml.
+
+/** Leaves a valid token alone; the timer is already handling that one. */
+function refreshIfStale() {
+  const token = getToken();
+  if (!token || !getRefreshToken()) return;
+
+  const exp = getTokenExp(token);
+  // Expired, or close enough that the next request would race the refresh.
+  if (exp && exp - Date.now() > 60_000) return;
+
+  if (isRefreshing) return;
+  refreshAccessToken()
+    .then(scheduleProactiveRefresh)
+    .catch(() => {
+      // Left to the 401 interceptor. Signing somebody out because one
+      // refresh failed while the network was still coming up is the
+      // behaviour this whole block exists to avoid.
+    });
+}
+
+if (typeof document !== "undefined") {
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") refreshIfStale();
+  });
+}
+
+if (typeof window !== "undefined") {
+  window.addEventListener("focus", refreshIfStale);
+  window.addEventListener("online", refreshIfStale);
+}
+
 import { ApiError, extractApiError } from "./apiError";
 
 // Build an ApiError or a plain Error from an axios failure

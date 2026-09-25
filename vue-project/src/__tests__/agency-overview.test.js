@@ -42,7 +42,7 @@ const PAYLOAD = {
       eventCount: 23, guestCount: 1840, childCount: 40, invitedCount: 1500,
       confirmedCount: 900, respondedCount: 1140, responseRate: 76, overdueTaskCount: 9
     },
-    statusBreakdown: { DRAFT: 4, PENDING: 2, ACTIVATED: 17 },
+    statusBreakdown: { DRAFT: 4, PENDING: 2, ACTIVE: 17 },
     upcoming: { next30: 5, next60: 11, next90: 16 },
     monthly: [{ month: '2026-08', count: 3 }, { month: '2026-09', count: 0 }],
     attention: {

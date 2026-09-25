@@ -4,8 +4,8 @@ import { signIn } from './support/session.js'
 /**
  * IVY-1203 — the agency's own team screen.
  *
- * <p>Three things only a browser shows: that the dashboard no longer offers the
- * pipeline and does offer the team, that creating an organizer sends no
+ * <p>Three things only a browser shows: that the sidebar leads to the team
+ * screen, that creating an organizer sends no
  * organization id anywhere (the server reads it from the token, and a body that
  * carried one would be a hole waiting for a server that trusts it), and that a
  * refused list ends up on the screen rather than as an empty table reading "you
@@ -34,6 +34,18 @@ const ANALYTICS = {
   attention: { total: 0, overdueCount: 0, atRiskCount: 0, riskWindowDays: 30, limit: 25, items: [] },
   definitions: {},
 }
+
+const HOME = {
+  viewer: 'OWNER', today: '2026-09-24', rangeDays: 7, riskWindowDays: 30,
+  kpis: { activeEvents: 1, activeEventsSoon: 1, overdueTasks: 0, myOverdueTasks: null, awaitingRsvp: 0, vendorsAwaiting: 0, vendorsAwaitingEvents: 0, overBudgetEvents: 0 },
+  attention: [], deadlines: [], events: [], vendorDecisions: [],
+  team: { members: [], unassignedOverdue: 0 }, budget: { planned: 0, spent: 0, overBudgetEvents: 0, events: [] },
+}
+
+const OWNER_PRIVILEGES = [{ type: 'AGENCY', owner: true, privileges: [
+  'agency:dashboard', 'agency:events', 'agency:crm', 'agency:calendar', 'agency:tasks',
+  'agency:team', 'agency:vendors', 'agency:reports', 'agency:settings',
+] }]
 
 let createCalls = []
 let updateCalls = []
@@ -64,6 +76,9 @@ async function stubApi(page, { listFails = false } = {}) {
     })
 
     if (path === '/analytics/agency') return wrapped(ANALYTICS)
+    if (path === '/analytics/agency/home') return wrapped(HOME)
+    // An owner holds every agency screen, as the server answers for one.
+    if (path === '/me/privileges') return wrapped(OWNER_PRIVILEGES)
     if (path === '/crm/agency/risk-window') return wrapped({ riskWindowDays: 30, isDefault: true })
     if (path === '/events') return bare([{ id: EVENT, name: 'Ana & Marko', categoryType: 'WEDDING' }])
 
@@ -113,36 +128,38 @@ async function stubApi(page, { listFails = false } = {}) {
 }
 
 async function openDashboard(page) {
-  await signIn(page, { userId: OWNER, eventId: EVENT, lang: 'en', roles: ['ORG_ADMIN', 'USER'] })
-  await page.goto('/en/org/dashboard')
-  await expect(page.getByRole('heading', { name: 'Agency dashboard' })).toBeVisible()
+  await signIn(page, { userId: OWNER, eventId: EVENT, lang: 'en', roles: ['AGENCY', 'USER'] })
+  await page.goto('/en/agency/dashboard')
+  await expect(page.locator('.snav')).toBeVisible()
 }
 
-test('the dashboard offers the team and no longer offers the pipeline', async ({ page }) => {
+test('the sidebar leads from the dashboard to the team', async ({ page }) => {
   await stubApi(page)
   await openDashboard(page)
 
-  await expect(page.locator('.nav-card[href="/en/org/users"]')).toBeVisible()
-  await expect(page.locator('.nav-card[href*="pipeline"]')).toHaveCount(0)
+  // The tiles that once did this job are gone (IVY-1401); the sidebar is the way.
+  const teamLink = page.locator('.snav a[href="/en/agency/users"]').first()
+  await expect(teamLink).toBeVisible()
 
-  await page.locator('.nav-card[href="/en/org/users"]').click()
-  await expect(page).toHaveURL(/\/en\/org\/users$/)
+  await teamLink.click()
+  await expect(page).toHaveURL(/\/en\/agency\/users$/)
   await expect(page.getByText('ana@agency.mk')).toBeVisible()
 })
 
 test('creating an organizer sends the roles and no organization id', async ({ page }) => {
   await stubApi(page)
-  await signIn(page, { userId: OWNER, eventId: EVENT, lang: 'en', roles: ['ORG_ADMIN', 'USER'] })
-  await page.goto('/en/org/users')
+  await signIn(page, { userId: OWNER, eventId: EVENT, lang: 'en', roles: ['AGENCY', 'USER'] })
+  await page.goto('/en/agency/users')
 
   await page.getByRole('button', { name: 'Create User' }).click()
-  await page.getByPlaceholder('John', { exact: true }).fill('Nov')
-  await page.getByPlaceholder('Doe', { exact: true }).fill('Organizator')
-  await page.getByPlaceholder('john@example.com').fill('nov@agency.mk')
+  await page.getByPlaceholder('Jane', { exact: true }).fill('Nov')
+  await page.getByPlaceholder('Smith', { exact: true }).fill('Organizator')
+  await page.getByPlaceholder('jane@example.com').fill('nov@agency.mk')
   await page.getByRole('button', { name: 'Create', exact: true }).click()
 
   await expect.poll(() => createCalls.length).toBe(1)
-  expect(createCalls[0].roles).toEqual(['ORGANIZER'])
+  // AGENCY_MEMBER is what an agency hires; ORGANIZER was its name before the role rename.
+  expect(createCalls[0].roles).toEqual(['AGENCY_MEMBER'])
   expect(createCalls[0]).not.toHaveProperty('orgId')
 
   // The row is there without a reload having been asked for.
@@ -151,8 +168,8 @@ test('creating an organizer sends the roles and no organization id', async ({ pa
 
 test('an event granted to an organizer survives a refresh', async ({ page }) => {
   await stubApi(page)
-  await signIn(page, { userId: OWNER, eventId: EVENT, lang: 'en', roles: ['ORG_ADMIN', 'USER'] })
-  await page.goto('/en/org/users')
+  await signIn(page, { userId: OWNER, eventId: EVENT, lang: 'en', roles: ['AGENCY', 'USER'] })
+  await page.goto('/en/agency/users')
 
   await page.locator('tbody tr').first().hover()
   await page.locator('.action-btn--edit').first().click()
@@ -169,26 +186,26 @@ test('an event granted to an organizer survives a refresh', async ({ page }) => 
   await expect(page.locator(`.dialog input[value="${EVENT}"]`)).toBeChecked()
 })
 
-test('an agency owner is offered neither ADMIN nor ORG_ADMIN', async ({ page }) => {
+test('an agency owner is offered neither ADMIN nor a second owner role', async ({ page }) => {
   await stubApi(page)
-  await signIn(page, { userId: OWNER, eventId: EVENT, lang: 'en', roles: ['ORG_ADMIN', 'USER'] })
-  await page.goto('/en/org/users')
+  await signIn(page, { userId: OWNER, eventId: EVENT, lang: 'en', roles: ['AGENCY', 'USER'] })
+  await page.goto('/en/agency/users')
 
   await page.getByRole('button', { name: 'Create User' }).click()
   await expect(page.locator('.dialog')).toBeVisible()
 
   const labels = await page.locator('.dialog .check-label span').allInnerTexts()
 
-  expect(labels).toContain('ORGANIZER')
+  expect(labels).toContain('AGENCY_MEMBER')
   expect(labels).toContain('USER')
   expect(labels).not.toContain('ADMIN')
-  expect(labels).not.toContain('ORG_ADMIN')
+  expect(labels).not.toContain('AGENCY')
 })
 
 test('a refused list is stated, not rendered as an empty team', async ({ page }) => {
   await stubApi(page, { listFails: true })
-  await signIn(page, { userId: OWNER, eventId: EVENT, lang: 'en', roles: ['ORG_ADMIN', 'USER'] })
-  await page.goto('/en/org/users')
+  await signIn(page, { userId: OWNER, eventId: EVENT, lang: 'en', roles: ['AGENCY', 'USER'] })
+  await page.goto('/en/agency/users')
 
   await expect(page.getByRole('alert')).toContainText('could not be loaded')
   await expect(page.locator('table')).toHaveCount(0)
@@ -197,7 +214,7 @@ test('a refused list is stated, not rendered as an empty team', async ({ page })
 test('someone who is not an agency owner never reaches the screen', async ({ page }) => {
   await stubApi(page)
   await signIn(page, { userId: OWNER, eventId: EVENT, lang: 'en', roles: ['ORGANIZER'] })
-  await page.goto('/en/org/users')
+  await page.goto('/en/agency/users')
 
   await expect(page).not.toHaveURL(/\/org\/users$/)
 })

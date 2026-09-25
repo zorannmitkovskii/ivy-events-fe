@@ -100,12 +100,11 @@
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { vendorApplicationService } from '@/services/vendorDirectory.service'
+import { useVendorTypes } from '@/composables/usePublicCatalog'
 
-const TYPES = [
-  'PHOTOGRAPHY', 'VENUE', 'CATERING', 'BAND', 'DJ', 'DECORATION', 'FLOWERS',
-  'CAKE', 'MAKEUP_HAIR', 'BRIDAL_ATTIRE', 'GROOM_ATTIRE', 'TRANSPORTATION',
-  'LIGHTING', 'ENTERTAINMENT', 'PRINTING', 'OTHER',
-]
+/** Every trade the backend lists, not a hand-kept subset of them. */
+const { codes: TYPES, load: loadVendorTypes } = useVendorTypes()
+loadVendorTypes()
 
 const { t } = useI18n()
 

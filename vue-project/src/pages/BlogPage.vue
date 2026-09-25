@@ -1,53 +1,83 @@
 <template>
   <SitePage>
-    <section class="page-hero">
+    <!-- The lead story. Shown while the reader is browsing, not while they
+         are searching or filtering: then the page is their results. -->
+    <section v-if="lead" class="bl-featured">
       <div class="wrap">
-        <Breadcrumb :current="t('blog.title')" />
-        <h1>{{ t('blog.title') }}</h1>
-        <p class="lead">{{ t('blog.subtitle') }}</p>
+        <div class="bl-featured-grid">
+          <div class="bl-featured-copy">
+            <span class="bl-eyebrow">{{ t('blog.featured') }}</span>
+            <h1>{{ lead.title }}</h1>
+            <p v-if="lead.excerpt">{{ lead.excerpt }}</p>
+            <router-link class="bl-read" :to="postLink(lead)" data-track="blog-featured">
+              {{ t('blog.readFeatured') }} ↗
+            </router-link>
+          </div>
+          <div class="bl-featured-photo bl-media" :class="leadTint">
+            <img v-if="lead.coverImage" :src="lead.coverImage" :alt="lead.title" />
+            <PostGlyph v-else :seed="leadSeed" />
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="section" style="padding-top: 0">
+    <section id="blog-posts" class="bl-posts">
       <div class="wrap">
-        <div class="filters" role="group" :aria-label="t('blog.filterLabel')">
-          <button
-            v-for="option in CATEGORIES"
-            :key="option || 'all'"
-            type="button"
-            :aria-pressed="category === option"
-            @click="category = option"
-          >{{ option ? t(`blog.category${option}`) : t('blog.all') }}</button>
+        <div class="bl-posts-head">
+          <div>
+            <span class="bl-eyebrow">{{ t('blog.eyebrow') }}</span>
+            <component :is="lead ? 'h2' : 'h1'">{{ t('blog.heading') }}</component>
+          </div>
+          <p>{{ t('blog.subtitle') }}</p>
         </div>
 
+        <div class="bl-controls">
+          <!-- Only categories that have something in them: a chip that
+               always leads to an empty page teaches readers to ignore chips. -->
+          <div class="filters" role="group" :aria-label="t('blog.filterLabel')">
+            <button type="button" :aria-pressed="!category" @click="category = null">{{ t('blog.all') }}</button>
+            <button
+              v-for="option in categories"
+              :key="option"
+              type="button"
+              :aria-pressed="category === option"
+              @click="category = option"
+            >{{ categoryLabel(option) }}</button>
+          </div>
+
+          <input
+            v-model="search"
+            class="bl-search"
+            type="search"
+            :placeholder="t('blog.searchPlaceholder')"
+            :aria-label="t('blog.searchLabel')"
+          />
+        </div>
+
+        <!-- A tag arrives from an article's link, so it lives in the URL and
+             can be taken off without losing the category. -->
+        <p v-if="tag" class="bl-active-tag">
+          <span class="tag">#{{ tag }}</span>
+          <button type="button" class="bl-clear" @click="clearTag">{{ t('blog.clearTag') }}</button>
+        </p>
+
         <p v-if="error" class="empty" role="alert">{{ error }}</p>
-
         <p v-else-if="loading" class="empty">{{ t('blog.loading') }}</p>
-
-        <template v-else-if="posts.length">
-          <!-- The design's shape: one lead article beside a column of four,
-               then a plain three-up grid for everything after that. -->
-          <div class="blog-grid">
-            <PostCard v-if="lead" :post="lead" :index="0" featured />
-            <div class="post-list">
-              <PostCard v-for="(post, i) in beside" :key="post.slug" :post="post" :index="i + 1" row />
-            </div>
-          </div>
-
-          <div v-if="rest.length" class="blog-grid-3">
-            <PostCard
-              v-for="(post, i) in rest"
-              :key="post.slug"
-              :post="post"
-              :index="i + BESIDE_COUNT + 1"
-            />
-          </div>
-        </template>
-
+        <div v-else-if="shown.length" class="bl-grid">
+          <BlogCard v-for="post in shown" :key="post.slug" :post="post" />
+        </div>
         <!-- Nothing published in this language is a normal state for a young
              blog, and saying so beats an empty page that looks broken. -->
-        <p v-else class="empty">{{ t('blog.empty') }}</p>
+        <p v-else class="empty">{{ filtering ? t('blog.noResults') : t('blog.empty') }}</p>
+      </div>
+    </section>
 
+    <section class="bl-newsletter">
+      <div class="wrap bl-newsletter-grid">
+        <div>
+          <span class="bl-eyebrow">{{ t('blog.newsletterEyebrow') }}</span>
+          <h2>{{ t('blog.newsletterTitle') }}</h2>
+        </div>
         <NewsletterSignup />
       </div>
     </section>
@@ -55,45 +85,120 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
 import SitePage from '@/layouts/SitePage.vue'
-import Breadcrumb from '@/components/ui/Breadcrumb.vue'
-import PostCard from '@/components/landingPage/PostCard.vue'
+import PostGlyph from '@/components/landingPage/PostGlyph.vue'
 import NewsletterSignup from '@/components/landingPage/NewsletterSignup.vue'
+import BlogCard from '@/components/blog/BlogCard.vue'
+import { blogCategoryLabel, blogTint, slugSeed } from '@/components/blog/blogLabels'
 import { contentService } from '@/services/content.service'
 import { getErrorMessage } from '@/services/apiError'
+import '@/assets/styles/ivy/blog.css'
 
-const CATEGORIES = [null, 'WEDDING', 'BIRTHDAY', 'CORPORATE', 'VENUE', 'VENDOR', 'PLANNING']
-const BESIDE_COUNT = 4
+/** The order chips appear in; which of them appear is up to the posts. */
+const CATEGORY_ORDER = ['PLANNING', 'WEDDING', 'BIRTHDAY', 'CORPORATE', 'VENUE', 'VENDOR']
+/** Long enough that a search is sent once the reader pauses, not per letter. */
+const SEARCH_DELAY_MS = 300
 
-const { t, locale } = useI18n()
+const { t, te, locale } = useI18n()
+const route = useRoute()
+const router = useRouter()
 
-const posts = ref([])
+/** Everything published in this language — the lead story and the chips. */
+const all = ref([])
+/** What a category, tag or search narrowed it to. */
+const results = ref([])
 const category = ref(null)
+const search = ref(route.query.q || '')
+const query = ref(search.value.trim())
 const loading = ref(true)
 const error = ref('')
 
-const lead = computed(() => posts.value[0] || null)
-const beside = computed(() => posts.value.slice(1, 1 + BESIDE_COUNT))
-const rest = computed(() => posts.value.slice(1 + BESIDE_COUNT))
+const tag = computed(() => route.query.tag || null)
+const filtering = computed(() => Boolean(category.value || tag.value || query.value))
+
+const lead = computed(() => {
+  if (filtering.value || !all.value.length) return null
+  return all.value.find((post) => post.featured) || all.value[0]
+})
+const leadSeed = computed(() => slugSeed(lead.value?.slug))
+const leadTint = computed(() => blogTint(leadSeed.value))
+
+const shown = computed(() => {
+  if (filtering.value) return results.value
+  return all.value.filter((post) => post !== lead.value)
+})
+
+const categories = computed(() => {
+  const present = new Set(all.value.map((post) => post.category))
+  return CATEGORY_ORDER.filter((option) => present.has(option))
+})
+
+let searchTimer = null
+watch(search, (typed) => {
+  clearTimeout(searchTimer)
+  searchTimer = setTimeout(() => {
+    query.value = typed.trim()
+    const next = { ...route.query }
+    if (query.value) next.q = query.value
+    else delete next.q
+    router.replace({ query: next })
+  }, SEARCH_DELAY_MS)
+})
+onBeforeUnmount(() => clearTimeout(searchTimer))
 
 onMounted(load)
-watch([category, locale], load)
+watch(locale, load)
+watch([category, tag, query], loadResults)
 
 async function load() {
   loading.value = true
   try {
-    const response = await contentService.published({
-      category: category.value || undefined,
+    all.value = unwrap(await contentService.published({ locale: locale.value })) || []
+    error.value = ''
+    if (filtering.value) await loadResults()
+  } catch (failure) {
+    error.value = getErrorMessage(failure)
+  } finally {
+    loading.value = false
+  }
+}
+
+async function loadResults() {
+  if (!filtering.value) return
+  loading.value = true
+  try {
+    results.value = unwrap(await contentService.published({
       locale: locale.value,
-    })
-    posts.value = response?.data ?? response ?? []
+      category: category.value || undefined,
+      tag: tag.value || undefined,
+      q: query.value || undefined,
+    })) || []
     error.value = ''
   } catch (failure) {
     error.value = getErrorMessage(failure)
   } finally {
     loading.value = false
   }
+}
+
+function unwrap(response) {
+  return response?.data ?? response ?? null
+}
+
+function categoryLabel(option) {
+  return blogCategoryLabel(option, t, te)
+}
+
+function postLink(post) {
+  return { name: 'BlogPost', params: { lang: route.params.lang || 'mk', slug: post.slug } }
+}
+
+function clearTag() {
+  const next = { ...route.query }
+  delete next.tag
+  router.replace({ query: next })
 }
 </script>

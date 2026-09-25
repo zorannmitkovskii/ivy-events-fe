@@ -61,6 +61,13 @@ watch(() => route.path, close)
   display: none;
 }
 
+/* Full width on every workspace (2026-09-25). The design caps `.main` at
+   1400px, which left a wide screen with a band of empty paper beside tables
+   and boards that wanted the room. The padding stays; only the cap goes. */
+.main {
+  max-width: none;
+}
+
 @media (max-width: 860px) {
   .side {
     position: fixed;

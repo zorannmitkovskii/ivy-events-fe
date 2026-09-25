@@ -46,7 +46,7 @@ const PAYLOAD = {
       eventCount: 76, guestCount: 100, childCount: 0, invitedCount: 10,
       confirmedCount: 5, respondedCount: 8, responseRate: 80, overdueTaskCount: 0,
     },
-    statusBreakdown: { DRAFT: 2, PENDING: 0, ACTIVATED: 76 },
+    statusBreakdown: { DRAFT: 2, PENDING: 0, ACTIVE: 76 },
     upcoming: { next30: 1, next60: 2, next90: 3 },
     monthly: [{ month: '2026-08', count: 3 }],
     attention: { total: 0, overdueCount: 0, atRiskCount: 0, riskWindowDays: null, limit: 25, items: [] },
@@ -106,7 +106,7 @@ describe('the grid', () => {
 
   it('renders no badge at zero — "Events 0" reads as a problem', async () => {
     adminMock.mockResolvedValueOnce({
-      data: { ...PAYLOAD.data, statusBreakdown: { DRAFT: 2, PENDING: 0, ACTIVATED: 0 } },
+      data: { ...PAYLOAD.data, statusBreakdown: { DRAFT: 2, PENDING: 0, ACTIVE: 0 } },
     })
     const wrapper = await render(AdminOverviewPage)
 

@@ -182,7 +182,6 @@ async function save() {
 </script>
 
 <style scoped>
-.admin-page { max-width: 900px; }
 
 .page-subtitle { font-size: 14px; color: var(--ink-3); margin: 4px 0 0; }
 

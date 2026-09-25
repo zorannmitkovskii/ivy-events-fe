@@ -86,7 +86,6 @@ import SitePage from '@/layouts/SitePage.vue'
 import { invitationTemplateService } from '@/services/invitationTemplate.service'
 import { getErrorMessage } from '@/services/apiError'
 import { categoryLabelKey } from '@/helper/CategoryMapping.helper.js'
-import { useSeo } from '@/composables/useSeo'
 
 /*
   The public catalogue — `pokani.html`.
@@ -124,8 +123,6 @@ const designs = ref([])
 const category = ref(route.query.category || ALL)
 const loading = ref(true)
 const error = ref('')
-
-useSeo()
 
 /** Only the categories that actually have a template behind them. */
 const filters = computed(() => {

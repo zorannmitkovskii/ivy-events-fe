@@ -101,6 +101,16 @@ export const crmService = {
     return api.get("/crm/agency/plan");
   },
 
+  /** The agency's preferences: timezone, currency, language, notifications. */
+  agencySettings() {
+    return api.get("/crm/agency/settings");
+  },
+
+  /** Owner only; the server refuses a member. */
+  saveAgencySettings(settings) {
+    return api.put("/crm/agency/settings", settings);
+  },
+
   profitability() {
     return api.get("/crm/agency/profitability");
   },

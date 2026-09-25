@@ -13,16 +13,32 @@ import en from '@/i18n/locales/en.json'
  * of 30, and saving must stop calling it inherited.
  */
 
-const { windowMock, setWindowMock } = vi.hoisted(() => ({
+const { windowMock, setWindowMock, prefsMock, savePrefsMock } = vi.hoisted(() => ({
   windowMock: vi.fn(),
-  setWindowMock: vi.fn()
+  setWindowMock: vi.fn(),
+  prefsMock: vi.fn(),
+  savePrefsMock: vi.fn()
 }))
+
+const roles = new Set(['AGENCY'])
+
+vi.mock('@/services/auth.service', () => ({ hasRole: (role) => roles.has(role) }))
 
 vi.mock('@/services/analytics.service', () => ({
   analyticsService: {
     agencyRiskWindow: windowMock,
     setAgencyRiskWindow: setWindowMock
   }
+}))
+
+vi.mock('@/services/crm.service', () => ({
+  crmService: {
+    branding: vi.fn().mockResolvedValue({ data: null }),
+    plan: vi.fn().mockResolvedValue({ data: null }),
+    saveBranding: vi.fn(),
+    agencySettings: prefsMock,
+    saveAgencySettings: savePrefsMock,
+  },
 }))
 
 vi.mock('vue-router', () => ({
@@ -32,7 +48,17 @@ vi.mock('vue-router', () => ({
 
 const i18n = createI18n({ legacy: false, locale: 'en', messages: { en } })
 
+const PREFS = {
+  timezone: 'Europe/Skopje', currency: 'MKD', language: 'mk',
+  notifyOverdueTasks: true, notifyEventDeadlines: true, notifyRsvpReminders: false, notifyVendorConfirmations: true,
+  isDefault: false,
+}
+
 beforeEach(() => {
+  roles.clear()
+  roles.add('AGENCY')
+  prefsMock.mockReset().mockResolvedValue({ data: PREFS })
+  savePrefsMock.mockReset()
   windowMock.mockReset().mockResolvedValue({ data: { riskWindowDays: 30, isDefault: true } })
   setWindowMock.mockReset().mockResolvedValue({ data: { riskWindowDays: 60, isDefault: false } })
 })
@@ -77,6 +103,55 @@ describe('the at-risk window', () => {
 
   it('links back to the dashboard it configures', async () => {
     const wrapper = await render()
-    expect(wrapper.find('.back').attributes('href')).toBe('/en/org/dashboard')
+    expect(wrapper.find('.back').attributes('href')).toBe('/en/agency/dashboard')
+  })
+})
+
+describe('the working defaults and notifications', () => {
+  it('loads what the agency saved into both tabs', async () => {
+    const wrapper = await render()
+
+    expect(wrapper.find('.prefs-form input[list]').element.value).toBe('Europe/Skopje')
+    expect(wrapper.findAll('.prefs-form select').at(0).element.value).toBe('MKD')
+    const switches = wrapper.findAll('.switch-row input')
+    expect(switches.map((box) => box.element.checked)).toEqual([true, true, false, true])
+  })
+
+  it('saves the whole record, trimmed, from either tab', async () => {
+    savePrefsMock.mockResolvedValue({ data: { ...PREFS, currency: 'EUR' } })
+    const wrapper = await render()
+
+    await wrapper.find('.prefs-form input[list]').setValue(' Europe/Berlin ')
+    await wrapper.findAll('.prefs-form select').at(0).setValue('EUR')
+    await wrapper.findAll('.switch-row input').at(2).setValue(true)
+    await wrapper.find('.prefs-form').trigger('submit')
+    await flushPromises()
+
+    expect(savePrefsMock).toHaveBeenCalledWith(expect.objectContaining({
+      timezone: 'Europe/Berlin', currency: 'EUR', language: 'mk', notifyRsvpReminders: true,
+    }))
+    expect(wrapper.text()).toContain('Settings saved.')
+  })
+
+  it('shows the server refusal instead of pretending it saved', async () => {
+    savePrefsMock.mockRejectedValue({ detail: 'timezone is not a known time zone: Mars/Olympus' })
+    const wrapper = await render()
+
+    await wrapper.find('.prefs-form').trigger('submit')
+    await flushPromises()
+
+    expect(wrapper.find('.prefs-form + .error, [role="alert"]').exists()).toBe(true)
+    expect(wrapper.text()).not.toContain('Settings saved.')
+  })
+
+  it('lets a member read them but not change them', async () => {
+    roles.clear()
+    roles.add('AGENCY_MEMBER')
+    const wrapper = await render()
+
+    expect(wrapper.find('.prefs-form input[list]').attributes('disabled')).toBeDefined()
+    expect(wrapper.findAll('.switch-row input').every((box) => box.attributes('disabled') !== undefined)).toBe(true)
+    expect(wrapper.text()).toContain('Only the agency owner can change these settings.')
+    expect(wrapper.find('.prefs-form button[type="submit"]').exists()).toBe(false)
   })
 })

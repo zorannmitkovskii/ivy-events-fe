@@ -40,6 +40,12 @@ vi.mock('@/services/events.service', () => ({
 
 vi.mock('@/services/backendApi', () => ({ subscribeToDiscounts: vi.fn() }))
 
+// The workload panel above the accounts reads the agency home; empty here so
+// every row these tests count is the accounts table's.
+vi.mock('@/services/agencyWorkspace.service', () => ({
+  agencyWorkspaceService: { home: vi.fn().mockResolvedValue({ data: { team: { members: [], unassignedOverdue: 0 }, kpis: {}, events: [] } }) },
+}))
+
 vi.mock('vue-router', () => ({
   useRoute: () => ({ params: { lang: 'en' }, query: {} }),
   useRouter: () => ({ replace: vi.fn() }),
@@ -49,8 +55,8 @@ vi.mock('vue-router', () => ({
 const i18n = createI18n({ legacy: false, locale: 'en', messages: { en } })
 
 const TEAM = [
-  { id: '1', firstName: 'Ana', lastName: 'Ivanova', email: 'ana@agency.mk', roles: ['ORGANIZER'], eventIds: [] },
-  { id: '2', firstName: 'Owner', lastName: 'Person', email: 'owner@agency.mk', roles: ['ORG_ADMIN'], eventIds: [] }
+  { id: '1', firstName: 'Ana', lastName: 'Ivanova', email: 'ana@agency.mk', roles: ['AGENCY_MEMBER'], eventIds: [] },
+  { id: '2', firstName: 'Owner', lastName: 'Person', email: 'owner@agency.mk', roles: ['AGENCY'], eventIds: [] }
 ]
 
 beforeEach(() => {
@@ -91,10 +97,10 @@ describe('the roles an agency may hand out', () => {
     const wrapper = await render()
     const options = wrapper.findAll('.filter-select option').map((o) => o.text())
 
-    expect(options).toContain('ORGANIZER')
+    expect(options).toContain('AGENCY_MEMBER')
     expect(options).toContain('USER')
     expect(options).not.toContain('ADMIN')
-    expect(options).not.toContain('ORG_ADMIN')
+    expect(options).not.toContain('AGENCY')
   })
 
   it('starts a new user as an ORGANIZER, since that is what an agency hires', async () => {
@@ -106,7 +112,7 @@ describe('the roles an agency may hand out', () => {
       .filter((input) => input.element.checked)
       .map((input) => input.attributes('value'))
 
-    expect(checked).toEqual(['ORGANIZER'])
+    expect(checked).toEqual(['AGENCY_MEMBER'])
   })
 })
 

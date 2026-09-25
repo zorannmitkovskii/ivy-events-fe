@@ -70,7 +70,7 @@ import { useI18n } from 'vue-i18n'
 import UserDirectory from '@/components/users/UserDirectory.vue'
 import { subscribeToDiscounts } from '@/services/backendApi'
 
-const ROLE_OPTIONS = ['ADMIN', 'ORGANIZER', 'USER']
+const ROLE_OPTIONS = ['ADMIN', 'AGENCY_MEMBER', 'USER']
 const PROTECTED_ROLES = ['ADMIN']
 const DEFAULT_ROLES = ['USER']
 

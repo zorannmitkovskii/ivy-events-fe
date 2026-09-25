@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
-import AdminOverviewPage from '@/pages/adminDashboard/AdminOverviewPage.vue'
+import DashboardOverview from '@/components/dashboard/DashboardOverview.vue'
 import en from '@/i18n/locales/en.json'
 
 /**
@@ -10,13 +10,13 @@ import en from '@/i18n/locales/en.json'
  * <p>One request fills the whole screen, so the property worth pinning is that
  * the cards, the charts and the attention list can never describe different
  * sets of events: they change together because there is only ever one call.
+ *
+ * <p>Mounted on its own, with its defaults: the platform screen no longer shows
+ * the attention list (2026-09-13), and the agency screen that does is this
+ * block with a different loader.
  */
 
 const { adminMock, replace } = vi.hoisted(() => ({ adminMock: vi.fn(), replace: vi.fn() }))
-
-vi.mock('@/services/analytics.service', () => ({
-  analyticsService: { admin: adminMock, agency: vi.fn() },
-}))
 
 vi.mock('vue-router', () => ({
   useRoute: () => ({ params: { lang: 'en' }, query: {} }),
@@ -36,7 +36,7 @@ const payload = (eventCount, attentionItems = []) => ({
       confirmedCount: 25, respondedCount: 40, responseRate: 80,
       overdueTaskCount: attentionItems.length,
     },
-    statusBreakdown: { DRAFT: 0, PENDING: 0, ACTIVATED: eventCount },
+    statusBreakdown: { DRAFT: 0, PENDING: 0, ACTIVE: eventCount },
     upcoming: { next30: 1, next60: 2, next90: 3 },
     monthly: [{ month: '2026-08', count: eventCount }],
     attention: {
@@ -58,7 +58,15 @@ beforeEach(() => {
 })
 
 async function render() {
-  const wrapper = mount(AdminOverviewPage, { global: { plugins: [i18n] } })
+  const wrapper = mount(DashboardOverview, {
+    props: {
+      title: 'Overview',
+      subtitle: 'Numbers',
+      loader: adminMock,
+      eventLink: (eventId) => `/events/${eventId}`,
+    },
+    global: { plugins: [i18n] },
+  })
   await flushPromises()
   return wrapper
 }

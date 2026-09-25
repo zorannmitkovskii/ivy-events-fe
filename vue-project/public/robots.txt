@@ -1,0 +1,18 @@
+# ivyevents.mk — what crawlers may read (IVY-907).
+#
+# The private areas are listed so crawl budget goes to pages people search
+# for. They are not a security boundary: every one of them already requires
+# signing in.
+User-agent: *
+Allow: /
+Disallow: /*/admin
+Disallow: /*/dashboard
+Disallow: /*/organizer
+Disallow: /*/org/
+Disallow: /*/vendor/
+Disallow: /*/auth/
+Disallow: /*/checkout
+Disallow: /*/event-category
+Disallow: /*/event-live
+
+Sitemap: https://ivyevents.mk/sitemap.xml

@@ -1,147 +1,113 @@
-import { watch, computed } from 'vue';
+import { watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { applySeo } from '@/composables/useDocumentSeo';
 
-const SITE_NAME = 'Ivy Events';
-const BASE_URL = 'https://ivyevents.mk';
+export const SITE_NAME = 'Ivy Events';
+const BASE_URL = (import.meta.env.VITE_PUBLIC_BASE_URL || 'https://ivyevents.mk').replace(/\/$/, '');
 const DEFAULT_IMAGE = `${BASE_URL}/logo.svg`;
+const LANGS = ['mk', 'en', 'sq'];
+const DEFAULT_LANG = 'mk';
+const LANG_PREFIX = /^\/(mk|en|sq)(?=\/|$)/;
 
 /**
- * Sets document <title>, meta description, Open Graph, Twitter Card,
- * canonical URL, and hreflang tags reactively based on the current route.
+ * What kind of page a route is, as far as a search engine is concerned.
+ *
+ * - `server`: the page asks the API for its own tags (a blog post, a vendor).
+ *   Only a neutral baseline is written on arrival; the page overwrites it.
+ * - `private`: signed-in screens, auth forms and anything opened with a
+ *   guest's token. Titled, but `noindex` and without hreflang — an address
+ *   nobody can open without an account is not a search result.
+ * - `public`: everything else.
+ *
+ * Read from every matched record, so a child inherits its shell's meta.
+ */
+export function seoModeFor(route) {
+  const metas = (route.matched || []).map((record) => record.meta || {});
+  if (metas.some((meta) => meta.seo === 'server')) return 'server';
+  if (metas.some((meta) => meta.seo === 'private' || meta.requiresAuth || meta.guestOnly)) return 'private';
+  return 'public';
+}
+
+/**
+ * The one writer of the document head for route-level SEO.
+ *
+ * Tags go through `applySeo`, the same code the server-driven pages use, so
+ * both kinds of page set and clear the same tags the same way. Before this,
+ * two implementations wrote the head: this one wiped the blog's hreflang and
+ * replaced its title on every language switch.
  */
 export function useSeo() {
   const route = useRoute();
-  const { t, locale } = useI18n();
+  const { t, te, locale } = useI18n();
 
-  const langs = ['mk', 'en', 'sq'];
+  /*
+    Only public pages carry SEO copy. `te` checks first, quietly, in the page's
+    language and in the English fallback — asking `t` for a missing key made
+    vue-i18n warn on every navigation, and a nameless route asked for
+    `seo.undefined`.
+  */
+  const hasKey = (key) => te(key) || te(key, 'en');
+  const copy = (field) => {
+    const key = `seo.${String(route.name)}.${field}`;
+    return route.name && hasKey(key) ? t(key) : null;
+  };
 
-  const routeMeta = computed(() => {
-    const name = route.name;
-    const titleKey = `seo.${name}.title`;
-    const descKey = `seo.${name}.description`;
+  let lastRouteName;
 
-    const title = t(titleKey) !== titleKey ? t(titleKey) : SITE_NAME;
-    const description = t(descKey) !== descKey ? t(descKey) : t('seo.default.description');
-
-    return { title, description };
-  });
-
-  const pageTitle = computed(() => {
-    const { title } = routeMeta.value;
-    return title === SITE_NAME ? SITE_NAME : `${title} | ${SITE_NAME}`;
-  });
-
-  const canonicalUrl = computed(() => {
-    const path = route.path;
-    return `${BASE_URL}${path}`;
-  });
-
-  function setMeta(name, content) {
-    if (!content) return;
-    const attr = name.startsWith('og:') || name.startsWith('twitter:') ? 'property' : 'name';
-    let el = document.querySelector(`meta[${attr}="${name}"]`);
-    if (!el) {
-      el = document.createElement('meta');
-      el.setAttribute(attr, name);
-      document.head.appendChild(el);
-    }
-    el.setAttribute('content', content);
-  }
-
-  function setLink(rel, href, attrs = {}) {
-    const selector = Object.entries(attrs).reduce(
-      (s, [k, v]) => `${s}[${k}="${v}"]`, `link[rel="${rel}"]`
-    );
-    let el = document.querySelector(selector);
-    if (!el) {
-      el = document.createElement('link');
-      el.setAttribute('rel', rel);
-      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
-      document.head.appendChild(el);
-    }
-    el.setAttribute('href', href);
-  }
-
-  function removeHreflang() {
-    document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => el.remove());
-  }
-
-  function updateHead() {
-    const { description } = routeMeta.value;
-    const title = pageTitle.value;
-    const url = canonicalUrl.value;
-
-    // Title
-    document.title = title;
-
-    // Lang
+  function update() {
+    const mode = seoModeFor(route);
+    const entering = route.name !== lastRouteName;
+    lastRouteName = route.name;
     document.documentElement.lang = locale.value;
 
-    // Basic meta
-    setMeta('description', description);
+    // A server page reused across a language switch keeps what it set.
+    if (mode === 'server' && !entering) return;
 
-    // Open Graph
-    setMeta('og:title', title);
-    setMeta('og:description', description);
-    setMeta('og:url', url);
-    setMeta('og:type', 'website');
-    setMeta('og:site_name', SITE_NAME);
-    setMeta('og:image', DEFAULT_IMAGE);
-    setMeta('og:locale', locale.value);
+    const ownTitle = copy('title');
+    const title = ownTitle ? `${ownTitle} | ${SITE_NAME}` : SITE_NAME;
+    const isPublic = mode === 'public';
 
-    // Twitter Card
-    setMeta('twitter:card', 'summary_large_image');
-    setMeta('twitter:title', title);
-    setMeta('twitter:description', description);
-    setMeta('twitter:image', DEFAULT_IMAGE);
-
-    // Canonical
-    setLink('canonical', url);
-
-    // Hreflang
-    removeHreflang();
-    const pathWithoutLang = route.path.replace(/^\/(mk|en|sq)/, '');
-    langs.forEach(lang => {
-      const href = `${BASE_URL}/${lang}${pathWithoutLang}`;
-      setLink('alternate', href, { hreflang: lang });
-    });
-    setLink('alternate', `${BASE_URL}/mk${pathWithoutLang}`, { hreflang: 'x-default' });
-
-    // BreadcrumbList JSON-LD
-    updateBreadcrumbJsonLd(url, title);
-  }
-
-  function updateBreadcrumbJsonLd(url, title) {
-    const id = 'seo-breadcrumb-jsonld';
-    let el = document.getElementById(id);
-    if (!el) {
-      el = document.createElement('script');
-      el.id = id;
-      el.type = 'application/ld+json';
-      document.head.appendChild(el);
-    }
-
-    const segments = route.path.split('/').filter(Boolean);
-    const items = [{ '@type': 'ListItem', position: 1, name: 'Home', item: `${BASE_URL}/${locale.value}` }];
-
-    let accumulated = `/${segments[0] || locale.value}`;
-    for (let i = 1; i < segments.length; i++) {
-      accumulated += `/${segments[i]}`;
-      items.push({
-        '@type': 'ListItem',
-        position: i + 1,
-        name: i === segments.length - 1 ? title : segments[i].replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
-        item: `${BASE_URL}${accumulated}`,
-      });
-    }
-
-    el.textContent = JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
-      itemListElement: items,
+    applySeo({
+      title,
+      description: copy('description') ?? t('seo.default.description'),
+      canonicalUrl: `${BASE_URL}${route.path}`,
+      imageUrl: DEFAULT_IMAGE,
+      type: 'website',
+      locale: locale.value,
+      noindex: mode === 'private',
+      alternates: isPublic ? alternatesFor(route.path) : [],
+      structuredData: isPublic ? breadcrumbFor(route.path, title, locale.value) : null,
     });
   }
 
-  watch([() => route.fullPath, locale], updateHead, { immediate: true });
+  watch([() => route.fullPath, locale], update, { immediate: true });
+}
+
+/** One address per language, plus the Macedonian one as x-default. */
+function alternatesFor(path) {
+  const rest = path.replace(LANG_PREFIX, '');
+  return [
+    ...LANGS.map((lang) => ({ locale: lang, url: `${BASE_URL}/${lang}${rest}` })),
+    { locale: 'x-default', url: `${BASE_URL}/${DEFAULT_LANG}${rest}` },
+  ];
+}
+
+function breadcrumbFor(path, title, lang) {
+  const segments = path.split('/').filter(Boolean);
+  const items = [{ '@type': 'ListItem', position: 1, name: 'Home', item: `${BASE_URL}/${lang}` }];
+
+  let accumulated = `/${segments[0] || lang}`;
+  for (let i = 1; i < segments.length; i++) {
+    accumulated += `/${segments[i]}`;
+    const isLast = i === segments.length - 1;
+    items.push({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: isLast ? title : segments[i].replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+      item: `${BASE_URL}${accumulated}`,
+    });
+  }
+
+  return { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: items };
 }

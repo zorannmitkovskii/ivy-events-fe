@@ -55,13 +55,23 @@ test('the controls in the header row share a height and a corner', async ({ page
 })
 
 test('an available category can be chosen from the keyboard, an unavailable one cannot', async ({ page }) => {
+  // Which categories are open is the server's to say; pinned here so the test
+  // does not change meaning when a category ships.
+  await page.route('**/v1/api/public/event-categories', (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({ success: true, message: null, data: [
+      { category: 'WEDDING', order: 1, available: true, featured: true, tint: '', sample: { mk: 'Елена & Никола' }, types: ['WEDDING'] },
+      { category: 'GRADUATION', order: 4, available: false, featured: false, tint: 'lav', sample: { mk: 'Генерација 2026' }, types: ['GRADUATION'] },
+    ] }),
+  }))
   await page.goto('/mk')
   const available = page.locator('.cat:not(.disabled)').first()
   const soon = page.locator('.cat.disabled').first()
 
   await expect(available).toHaveJSProperty('tagName', 'BUTTON')
   await expect(soon).toHaveAttribute('aria-disabled', 'true')
-  await expect(soon).toHaveJSProperty('tagName', 'DIV')
+  await expect(soon).toHaveJSProperty('tagName', 'SPAN')
 })
 
 test('the phone mock-up is not clipped by its own notifications', async ({ page }) => {

@@ -68,7 +68,7 @@ const total = ref(0)
 const loading = ref(true)
 const error = ref('')
 
-const teamLink = computed(() => `/${route.params.lang || 'mk'}/org/users`)
+const teamLink = computed(() => `/${route.params.lang || 'mk'}/agency/users`)
 
 onMounted(async () => {
   try {

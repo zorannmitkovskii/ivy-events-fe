@@ -87,8 +87,13 @@ const initials = computed(() =>
 
   `min-height: 0` is the half that is easy to miss. A flex item will not shrink
   below its content without it, so `overflow-y` alone changes nothing.
+
+  The nav also takes the free space. Only `.upgrade` pushed the account footer
+  down, so a sidebar without a promo — the admin console's — left the name and
+  sign-out floating under the last row instead of at the bottom.
 */
 .snav {
+  flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   /* The scrollbar is a light grey line on a very dark ground; toned to the
@@ -108,6 +113,10 @@ const initials = computed(() =>
   pushed the row out of the sidebar. The name column shrinks and ellipsises
   instead; the pill beside it keeps its size.
 */
+.me {
+  flex: none;
+}
+
 .me > div {
   min-width: 0;
 }

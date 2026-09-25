@@ -225,7 +225,6 @@ function truncate(str, len) {
 </script>
 
 <style scoped>
-.admin-page { max-width: 1200px; }
 
 .btn-add {
   padding: 9px 18px; border: none; border-radius: 10px;

@@ -25,24 +25,7 @@ export const vendorPortalService = {
   },
 
   deletePackage(packageId) {
-    return api.delete(`/vendor-portal/packages/${encodeURIComponent(packageId)}`);
-  },
-
-  // ── Floor plans ───────────────────────────────────────────────────
-  listFloorPlans() {
-    return api.get("/vendor-portal/floor-plans");
-  },
-
-  createFloorPlan(payload) {
-    return api.post("/vendor-portal/floor-plans", payload);
-  },
-
-  updateFloorPlan(planId, payload) {
-    return api.put(`/vendor-portal/floor-plans/${encodeURIComponent(planId)}`, payload);
-  },
-
-  deleteFloorPlan(planId) {
-    return api.delete(`/vendor-portal/floor-plans/${encodeURIComponent(planId)}`);
+    return api.del(`/vendor-portal/packages/${encodeURIComponent(packageId)}`);
   },
 
   // ── Calendar ──────────────────────────────────────────────────────
@@ -59,7 +42,7 @@ export const vendorPortalService = {
   },
 
   deleteBooking(bookingId) {
-    return api.delete(`/vendor-portal/bookings/${encodeURIComponent(bookingId)}`);
+    return api.del(`/vendor-portal/bookings/${encodeURIComponent(bookingId)}`);
   },
 
   /** How many are coming and what the kitchen is cooking. */
@@ -86,7 +69,7 @@ export const vendorPortalService = {
   },
 
   deleteMedia(mediaId) {
-    return api.delete(`/vendor-portal/media/${encodeURIComponent(mediaId)}`);
+    return api.del(`/vendor-portal/media/${encodeURIComponent(mediaId)}`);
   }
 };
 

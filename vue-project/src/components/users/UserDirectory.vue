@@ -130,15 +130,15 @@
           <div class="form-grid">
             <div class="form-group">
               <label>{{ t('userDirectory.firstName') }} <span class="req">*</span></label>
-              <input v-model="form.firstName" type="text" placeholder="John" class="form-input" />
+              <input v-model="form.firstName" type="text" :placeholder="t('userDirectory.placeholders.firstName')" class="form-input" />
             </div>
             <div class="form-group">
               <label>{{ t('userDirectory.lastName') }} <span class="req">*</span></label>
-              <input v-model="form.lastName" type="text" placeholder="Doe" class="form-input" />
+              <input v-model="form.lastName" type="text" :placeholder="t('userDirectory.placeholders.lastName')" class="form-input" />
             </div>
             <div class="form-group form-group--full">
               <label>{{ t('userDirectory.email') }} <span class="req">*</span></label>
-              <input v-model="form.email" type="email" placeholder="john@example.com" class="form-input" />
+              <input v-model="form.email" type="email" :placeholder="t('userDirectory.placeholders.email')" class="form-input" />
             </div>
             <div class="form-group">
               <label>{{ t('userDirectory.roles') }} <span class="req">*</span></label>
@@ -222,7 +222,7 @@ const props = defineProps({
   title: { type: String, required: true },
   subtitle: { type: String, default: '' },
   /** Which roles this caller may filter by and hand out. */
-  roleOptions: { type: Array, default: () => ['ADMIN', 'ORGANIZER', 'USER'] },
+  roleOptions: { type: Array, default: () => ['ADMIN', 'AGENCY_MEMBER', 'USER'] },
   /** Commercial packages are a platform concern; an agency has no use for them. */
   showPackages: { type: Boolean, default: false },
   /** Roles whose holders this caller must not delete. */
@@ -403,8 +403,8 @@ function displayRole(user) {
 function getRolePillClass(user) {
   const roles = rolesOf(user)
   if (roles.includes('ADMIN')) return 'pill--purple'
-  if (roles.includes('ORG_ADMIN')) return 'pill--purple'
-  if (roles.includes('ORGANIZER')) return 'pill--teal'
+  if (roles.includes('AGENCY')) return 'pill--purple'
+  if (roles.includes('AGENCY_MEMBER')) return 'pill--teal'
   return 'pill--blue'
 }
 
@@ -514,6 +514,9 @@ async function remove(user) {
     console.error('Failed to delete user:', e)
   }
 }
+
+/** A page that frames the directory may offer "create" from its own header. */
+defineExpose({ openCreate })
 </script>
 
 <style scoped>

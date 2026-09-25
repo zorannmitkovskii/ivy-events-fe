@@ -1,49 +1,10 @@
-/**
- * The trades a vendor can be listed under — `VendorType` on the backend.
- *
- * <p>One list. Three screens had their own partial copy of it before this file
- * existed (the public directory's sixteen, the application form's sixteen, the
- * agency console's six), so a vendor whose trade was missing from the copy you
- * were looking at simply could not be filtered for. The agency console showed
- * "GROOM_ATTIRE" as a raw enum name for exactly that reason.
- *
- * <p>Order is the backend's, which groups them: wedding services, decoration,
- * catering, music, planning, venues, then general. Filter rows read in that
- * order rather than alphabetically, which would interleave the groups.
- */
-export const VENDOR_TYPES = Object.freeze([
-  'PHOTOGRAPHY',
-  'BRIDAL_ATTIRE',
-  'GROOM_ATTIRE',
-  'MAKEUP_HAIR',
-
-  'DECORATION',
-  'FLOWERS',
-  'LIGHTING',
-  'CAKE',
-
-  'CATERING',
-  'BAR_SERVICE',
-  'FOOD',
-
-  'DJ',
-  'BAND',
-  'ENTERTAINMENT',
-  'HOST_EMCEE',
-
-  'TRAINING_FACILITATOR',
-  'OUTDOOR_ACTIVITY',
-  'TRANSPORTATION',
-  'EQUIPMENT_RENTAL',
-
-  'VENUE',
-  'DECOR_RENTAL',
-
-  'PRINTING',
-  'SECURITY',
-  'CLEANING',
-  'OTHER',
-])
+/*
+  The trades a vendor can be listed under are `VendorType` on the backend and
+  come from `GET /public/vendor-types` through `useVendorTypes()` — one list,
+  in the backend's grouped order. The copies that used to live here and on
+  three screens drifted apart, and a trade missing from the copy you were
+  looking at could not be filtered for.
+*/
 
 /**
  * The enum name as something a person can read, for when a translation is

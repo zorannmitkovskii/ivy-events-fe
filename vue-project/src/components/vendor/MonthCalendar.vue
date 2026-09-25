@@ -40,6 +40,16 @@
         <span v-if="cell.bookings.length > MAX_LABELS" class="more">
           +{{ cell.bookings.length - MAX_LABELS }}
         </span>
+
+        <!-- What is not a booking but still decides the day: an inquiry
+             asking for it, a hold, a block. Drawn apart from bookings so a
+             request never reads as work that is already won. -->
+        <span
+          v-for="marker in cell.markers.slice(0, MAX_LABELS)"
+          :key="`${marker.kind}-${marker.refId}`"
+          class="marker"
+          :class="`marker--${marker.kind.toLowerCase()}`"
+        >{{ marker.title || t(`vendorWork.calendar.kind.${marker.kind}`) }}</span>
       </button>
     </div>
   </div>
@@ -51,7 +61,9 @@ import { useI18n } from "vue-i18n";
 
 const props = defineProps({
   bookings: { type: Array, default: () => [] },
-  selectedKey: { type: String, default: null }
+  selectedKey: { type: String, default: null },
+  /** Non-booking entries, one per day: `{ date, kind, title, refId }` — INQUIRY, HOLD or BLOCKED. */
+  markers: { type: Array, default: () => [] }
 });
 
 const emit = defineEmits(["select", "range-change"]);
@@ -89,6 +101,7 @@ const cells = computed(() => {
   start.setDate(first.getDate() - offset);
 
   const byDay = groupByDay(props.bookings);
+  const markersByDay = Map.groupBy(props.markers, (marker) => marker.date);
   const todayKey = dayKey(new Date());
 
   return Array.from({ length: WEEKS_SHOWN * DAYS_IN_WEEK }, (unused, index) => {
@@ -100,7 +113,8 @@ const cells = computed(() => {
       date,
       inMonth: date.getMonth() === first.getMonth(),
       isToday: key === todayKey,
-      bookings: byDay.get(key) ?? []
+      bookings: byDay.get(key) ?? [],
+      markers: markersByDay.get(key) ?? []
     };
   });
 });
@@ -241,6 +255,32 @@ watch(
 .day--taken {
   background: #f2f6f3;
   border-color: #c5d6cb;
+}
+
+.marker {
+  display: block;
+  overflow: hidden;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.marker--inquiry {
+  border: 1px dashed #c9a24d;
+  color: #8a6420;
+}
+
+.marker--hold {
+  background: #fff2e0;
+  color: #9a7131;
+}
+
+.marker--blocked {
+  background: #eef0ec;
+  color: #647565;
 }
 
 .day--selected {

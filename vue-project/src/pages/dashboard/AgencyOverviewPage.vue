@@ -51,7 +51,7 @@ const eventsLink = computed(() => `/${lang.value}/organizer`)
 
 /** Where a brand-new agency starts: the same flow every event begins with. */
 const createEventLink = computed(() => `/${lang.value}/event-category`)
-const settingsLink = computed(() => `/${lang.value}/org/settings`)
+const settingsLink = computed(() => `/${lang.value}/agency/settings`)
 
 /**
  * No tiles here any more (IVY-1401).

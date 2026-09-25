@@ -46,6 +46,42 @@
     "designs": {
       "title": "A design for every occasion",
       "description": "Every design is a complete interactive invitation: the details, a map, the running order and your guests’ replies. Pick one, then change the names, the date and the colour."
+    },
+    "packages": {
+      "title": "Packages & prices",
+      "description": "Choose a package for your event — digital invitations, RSVP, guest list and seating in one place."
+    },
+    "terms": {
+      "title": "Terms of use",
+      "description": "The terms under which you use the Ivy Events platform."
+    },
+    "feedback": {
+      "title": "Feedback",
+      "description": "Tell us what to improve — we read every suggestion."
+    },
+    "VendorDirectory": {
+      "title": "Event vendors",
+      "description": "Photographers, venues, music, decor and catering for weddings and celebrations — compare offers and ask directly."
+    },
+    "VendorCategory": {
+      "title": "Vendors by category",
+      "description": "Find vetted vendors for your event, compare their offers and ask them directly."
+    },
+    "Blog": {
+      "title": "Blog",
+      "description": "Tips, ideas and inspiration for planning weddings, christenings, birthdays and other celebrations."
+    },
+    "EventInvitationsPage": {
+      "title": "Digital invitations",
+      "description": "Pick a digital invitation design for your event and send it to your guests in minutes."
+    },
+    "weddingInvitation": {
+      "title": "Invitation preview",
+      "description": "See what the digital invitation looks like — with RSVP, a map and a countdown to the event."
+    },
+    "TagPage": {
+      "title": "Topic",
+      "description": "Articles and vendors on one topic."
     }
   },
   "homepageFaqs": [
@@ -367,18 +403,15 @@
     "items": {
       "weddings": {
         "title": "Weddings",
-        "description": "Elegant invitations for your special day",
-        "sample": "Elena & Nikola"
+        "description": "Elegant invitations for your special day"
       },
       "birthdaysParties": {
         "title": "Birthdays & Parties",
-        "description": "Celebrate milestones in style",
-        "sample": "Mia turns 8"
+        "description": "Celebrate milestones in style"
       },
       "corporate": {
         "title": "Corporate Events",
-        "description": "Professional invitations for business",
-        "sample": "Annual gala"
+        "description": "Professional invitations for business"
       },
       "conferences": {
         "title": "Conferences",
@@ -390,13 +423,11 @@
       },
       "babyShowers": {
         "title": "Baby Showers",
-        "description": "Welcome the new arrival",
-        "sample": "Welcome, Luka"
+        "description": "Welcome the new arrival"
       },
       "graduations": {
         "title": "Graduations",
-        "description": "Celebrate achievements",
-        "sample": "Class of 2026"
+        "description": "Celebrate achievements"
       },
       "anniversaries": {
         "title": "Anniversaries",
@@ -498,8 +529,10 @@
       "next": "Next",
       "create": "Create",
       "birthdayWho": "Whose birthday is it?",
-      "birthdayAdult": "An adult's",
-      "birthdayChild": "A child's"
+      "types": {
+        "BIRTHDAY_ADULT": "An adult's",
+        "BIRTHDAY_CHILD": "A child's"
+      }
     },
     "eventBasics": {
       "title": "Event Basics",
@@ -1302,15 +1335,17 @@
       "invitationTemplates": "Invitations",
       "emailTemplates": "Email Templates",
       "emailSend": "Send Emails",
-      "content": "Content",
       "contentAnalytics": "Conversions",
+      "siteAnalytics": "Site traffic",
       "organizers": "Organizers",
       "vendors": "Professionals",
       "vendorQueue": "Professional queue",
       "settings": "Settings",
       "contextLabel": "Platform",
       "contextName": "Ivy Events",
-      "payments": "Payments"
+      "payments": "Payments",
+      "blog": "Blog",
+      "tags": "Tags"
     },
     "reviews": {
       "title": "Reviews",
@@ -1607,6 +1642,15 @@
         "status": "Status",
         "priority": "Priority",
         "titleRequired": "Task name is required"
+      },
+      "board": {
+        "empty": "Nothing here",
+        "view": "View",
+        "asTable": "Table",
+        "asBoard": "Board",
+        "hint": "Drag a task to another column for status, or up and down to reorder.",
+        "assignee": "Assigned to",
+        "unassigned": "Unassigned"
       }
     },
     "listView": "List",
@@ -2348,8 +2392,8 @@
     "statuses": {
       "DRAFT": "Draft",
       "PENDING": "Pending",
-      "ACTIVATED": "Active",
-      "ACHIVED": "Archived"
+      "ACTIVE": "Active",
+      "ARCHIVED": "Archived"
     },
     "needsAttention": "Needs attention",
     "pinnedSection": "Pinned",
@@ -2361,7 +2405,13 @@
     "daysLeft": "{count} days left",
     "daysAgo": "{count} days ago",
     "overdueTasks": "{count} overdue tasks",
-    "noneMatch": "No events match your search."
+    "noneMatch": "No events match your search.",
+    "colPlace": "Location",
+    "colOverdue": "Overdue",
+    "colOrganizer": "Organizer",
+    "viewTable": "Table",
+    "viewCards": "Cards",
+    "viewLabel": "View"
   },
   "vendorPortal": {
     "logout": "Sign out",
@@ -2435,6 +2485,7 @@
     "portfolio": "Portfolio",
     "portfolioSubtitle": "Photos from past events, and links to recordings or a showreel.",
     "portfolioEmpty": "Nothing added yet.",
+    "followOnInstagram": "Follow on Instagram",
     "addPhotos": "Add photos",
     "uploading": "Uploading…",
     "addLink": "Add link",
@@ -2457,13 +2508,16 @@
       "noReason": "No reason given",
       "reasonPlaceholder": "Why? (optional)",
       "blockDay": "Mark the day",
+      "blockRange": "Mark the days",
+      "until": "until",
       "confirm": "Confirm",
       "release": "Free up"
     },
     "inbox": "Inquiries",
     "contextLabel": "Supplier",
     "role": "Supplier portal",
-    "approved": "Approved"
+    "approved": "Approved",
+    "currency": "Currency"
   },
   "catering": {
     "title": "The venue’s menu",
@@ -2770,6 +2824,21 @@
       "VERIFIED": "Verified. Waiting for a certificate.",
       "ACTIVE": "Live over HTTPS.",
       "FAILED": "Failed."
+    },
+    "previewBack": "Back to settings",
+    "previewNote": "This is what visitors see. The choice is saved in settings.",
+    "site": {
+      "enquire": "Ask for a quote",
+      "work": "Work",
+      "listen": "Listen and watch",
+      "packages": "Packages",
+      "perPerson": "per person",
+      "minGuests": "From {n} guests",
+      "website": "Website",
+      "poweredBy": "Made with Ivy Events",
+      "notFound": "This profile is not here.",
+      "notFoundHint": "The address may have changed, or the profile is not published yet.",
+      "browseAll": "Browse all suppliers"
     }
   },
   "inbox": {
@@ -2940,7 +3009,58 @@
     "loading": "Loading the articles…",
     "byAuthor": "By {name}",
     "authorRole": "the Ivy Events team",
-    "ctaText": "Make your invitation free and share it with a single link."
+    "ctaText": "Make your invitation free and share it with a single link.",
+    "tagsLabel": "Tags:",
+    "clearTag": "All topics",
+    "featured": "Featured",
+    "readFeatured": "Read the article",
+    "eyebrow": "From the blog",
+    "heading": "Ideas you can put to use.",
+    "searchPlaceholder": "Search articles…",
+    "searchLabel": "Search articles",
+    "noResults": "No articles match this search.",
+    "newsletterEyebrow": "Keep your plan in order",
+    "newsletterTitle": "A new idea for your next event.",
+    "read": "Read",
+    "minutes": "{n} min read",
+    "layout": {
+      "GUIDE": "Guide",
+      "INSPIRATION": "Inspiration",
+      "PRODUCT": "Ivy Events"
+    },
+    "toc": {
+      "GUIDE": "In this guide",
+      "INSPIRATION": "On this page",
+      "PRODUCT": "In this article"
+    },
+    "relatedEyebrow": {
+      "GUIDE": "Keep reading",
+      "INSPIRATION": "Related"
+    },
+    "relatedTitle": {
+      "GUIDE": "Related articles",
+      "INSPIRATION": "Plan ahead.",
+      "PRODUCT": "Read also"
+    },
+    "openArticle": "Open article",
+    "vendorsEyebrow": "Vendors on the same topic",
+    "vendorsTitle": "Who can help",
+    "viewVendor": "View profile",
+    "mock": {
+      "label": "Illustration of the response overview, not real data",
+      "section": "Guests and responses",
+      "illustration": "Illustration",
+      "overview": "Overview",
+      "guests": "Guests",
+      "invitations": "Invitations",
+      "events": "Events",
+      "title": "Response overview",
+      "guest": "Guest {letter}",
+      "confirmed": "Confirmed",
+      "pending": "Awaiting reply",
+      "declined": "Declined",
+      "foot": "Illustrative interface and sample names — not connected to any data."
+    }
   },
   "inspiration": {
     "subtitle": "{count} professionals",
@@ -2949,39 +3069,6 @@
     "thin": "This page is not indexed — fewer than {minimum} listings.",
     "empty": "Nothing here yet.",
     "notFound": "This page does not exist."
-  },
-  "contentEditor": {
-    "title": "Content",
-    "subtitle": "Articles, translations and SEO.",
-    "newTitle": "Title",
-    "category": "Category",
-    "create": "Create",
-    "variantTitle": "Title",
-    "excerpt": "Excerpt",
-    "body": "Body",
-    "seo": "SEO",
-    "seoTitle": "SEO title",
-    "seoDescription": "SEO description",
-    "canonical": "Canonical URL",
-    "socialImage": "Social image",
-    "searchPreview": "How this looks in search",
-    "noindex": "This version will not be indexed.",
-    "noWarnings": "No warnings.",
-    "status": "Status",
-    "stateDRAFT": "Draft",
-    "stateREVIEW": "In review",
-    "stateSCHEDULED": "Scheduled",
-    "statePUBLISHED": "Published",
-    "stateARCHIVED": "Archived",
-    "moveREVIEW": "Send to review",
-    "moveSCHEDULED": "Schedule",
-    "movePUBLISHED": "Publish",
-    "moveARCHIVED": "Archive",
-    "publishAt": "Publish at",
-    "publishHint": "Scheduling needs a time; publishing takes effect immediately.",
-    "links": "Related items",
-    "unusable": "Not publishable",
-    "noLinks": "No related items."
   },
   "contentAnalytics": {
     "title": "Content and conversions",
@@ -3027,8 +3114,8 @@
     "status": {
       "DRAFT": "Draft",
       "PENDING": "Pending",
-      "ACTIVATED": "Active",
-      "ACHIVED": "Archived"
+      "ACTIVE": "Active",
+      "ARCHIVED": "Archived"
     },
     "reason": {
       "OVERDUE_TASKS": "Overdue",
@@ -3121,7 +3208,12 @@
     "emailRequired": "Email is required",
     "roleRequired": "At least one role is required",
     "confirmDelete": "Delete user \"{name}\"?",
-    "loadFailedTitle": "The directory could not be loaded"
+    "loadFailedTitle": "The directory could not be loaded",
+    "placeholders": {
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "email": "jane{'@'}example.com"
+    }
   },
   "adminUsers": {
     "title": "Users",
@@ -3334,7 +3426,30 @@
     "tasks": "Tasks",
     "calendar": "Calendar",
     "vendors": "Suppliers",
-    "reports": "Reports"
+    "reports": "Reports",
+    "ownerRole": "Agency administrator",
+    "memberRole": "Team member",
+    "groups": {
+      "main": "Main",
+      "operations": "Operations",
+      "management": "Management",
+      "myWork": "My work",
+      "resources": "Resources"
+    },
+    "allEvents": "All events",
+    "centralCalendar": "Central calendar",
+    "myOverview": "My overview",
+    "myCalendar": "My calendar",
+    "myTasks": "My tasks",
+    "vendorDirectory": "Vendors · directory",
+    "teamPermissions": "Team permissions",
+    "tiers": {
+      "FREE": "Free",
+      "PERSONAL": "Personal",
+      "ORGANIZER": "Organizer",
+      "AGENCY": "Agency"
+    },
+    "site": "Public site"
   },
   "rsvpSuccess": {
     "title": "RSVP received",
@@ -3390,7 +3505,12 @@
       "event": "My event",
       "organizer": "Organiser",
       "vendor": "Supplier",
-      "admin": "Admin"
+      "admin": "Admin",
+      "agency": "Agency",
+      "users": "Users",
+      "events": "Events",
+      "content": "Content",
+      "messages": "Messages"
     }
   },
   "agencyCalendar": {
@@ -3399,11 +3519,33 @@
     "previous": "Previous",
     "next": "Next",
     "today": "Today",
-    "inMonth": "{n} events this month"
+    "inMonth": "{n} events this month",
+    "createOn": "Create an event on {day}",
+    "myTitle": "My calendar",
+    "schedule": "Schedule",
+    "scheduleHint": "Events and their deadlines on one calendar.",
+    "viewLabel": "View",
+    "month": "Month",
+    "thisWeek": "This week",
+    "weekEmpty": "No events or deadlines in the next 7 days.",
+    "kind": {
+      "event": "Event",
+      "task": "Deadline"
+    },
+    "kpi": {
+      "events": "Events on the calendar",
+      "eventsNote": "Limited by role",
+      "soon": "Next {days} days",
+      "soonNote": "From today",
+      "deadlines": "Deadlines this week",
+      "deadlinesNote": "From events you can see",
+      "month": "Month",
+      "monthNote": "Use the arrows to change it"
+    }
   },
   "agencyTasks": {
     "title": "Tasks",
-    "subtitle": "Everything open across every event, in one place.",
+    "subtitle": "Work by event, owner and due date.",
     "filterLabel": "Filter by event",
     "allEvents": "All events",
     "count": "{n} tasks",
@@ -3412,7 +3554,57 @@
       "PENDING": "To do",
       "IN_PROGRESS": "In progress",
       "DONE": "Done"
-    }
+    },
+    "myTitle": "My tasks",
+    "mySubtitle": "The tasks on the events you work on.",
+    "scopeLabel": "Whose tasks",
+    "kpi": {
+      "inView": "Tasks in view",
+      "inViewNote": "Under the chosen filters",
+      "overdue": "Overdue",
+      "overdueNote": "Past due and not done",
+      "week": "This week",
+      "weekNote": "Due in the next 7 days",
+      "unassigned": "Unassigned",
+      "unassignedNote": "Open tasks nobody has taken",
+      "unassignedMemberNote": "Open tasks with no owner"
+    },
+    "ownerSection": "Agency tasks",
+    "memberSection": "Tasks assigned to {name}",
+    "sectionHint": "Every task belongs to an event, a due date and a person.",
+    "viewLabel": "Task view",
+    "view": {
+      "list": "List",
+      "board": "Board"
+    },
+    "filter": {
+      "status": "Status",
+      "statusAll": "All tasks",
+      "statusOverdue": "Overdue",
+      "statusWeek": "This week",
+      "event": "Event",
+      "assignee": "Assignee",
+      "assigneeAll": "All members"
+    },
+    "table": {
+      "task": "Task",
+      "event": "Event",
+      "due": "Due",
+      "assignee": "Assignee",
+      "status": "Status",
+      "open": "Open"
+    },
+    "overdueTag": "Overdue",
+    "noDate": "No due date",
+    "unassignedName": "Unassigned",
+    "assignLabel": "Assignee for {title}",
+    "cardLabel": "{title}, assigned to {assignee}",
+    "keyboardHint": "Drag a card to another column, or use the left and right arrows on a focused card.",
+    "moveFailed": "The task was not moved: {reason}",
+    "assignFailed": "The assignee was not changed: {reason}",
+    "empty": "No tasks match the chosen filters.",
+    "scopeMine": "Mine",
+    "scopeAll": "All"
   },
   "agencyVendors": {
     "title": "Suppliers",
@@ -3511,5 +3703,1534 @@
     "INVITED": "Awaiting reply",
     "DECLINED": "Not coming",
     "PENDING": "Not invited yet"
+  },
+  "adminBlog": {
+    "title": "Blog",
+    "subtitle": "Posts by language, tags, cover images and publishing.",
+    "newPost": "New post",
+    "list": {
+      "search": "Search by title",
+      "allCategories": "All categories",
+      "allStatuses": "All statuses",
+      "allLocales": "All languages",
+      "tag": "Tag",
+      "clear": "Clear filters",
+      "count": "{n} posts",
+      "loading": "Loading posts…",
+      "empty": "No posts match these filters.",
+      "emptyAll": "No posts yet. Start with New post.",
+      "untitled": "(untitled)",
+      "archived": "Archived",
+      "previous": "Previous",
+      "next": "Next",
+      "pageOf": "Page {page} of {pages}",
+      "columns": {
+        "title": "Title",
+        "category": "Category",
+        "tags": "Tags",
+        "languages": "Languages",
+        "status": "Status",
+        "updated": "Updated",
+        "author": "Author",
+        "seo": "SEO"
+      },
+      "allSeo": "All SEO states",
+      "seoERRORS": "With SEO errors",
+      "seoCLEAN": "No findings",
+      "seoErrors": "{n} errors",
+      "seoWarnings": "{n} tips",
+      "seoClean": "OK"
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "IN_REVIEW": "In review",
+      "SCHEDULED": "Scheduled",
+      "PUBLISHED": "Published",
+      "ARCHIVED": "Withdrawn"
+    },
+    "locales": {
+      "mk": "Macedonian",
+      "en": "English",
+      "sq": "Albanian"
+    },
+    "editor": {
+      "toolbar": "Formatting",
+      "h2": "Heading",
+      "h3": "Subheading",
+      "bold": "Bold",
+      "italic": "Italic",
+      "bulletList": "List",
+      "orderedList": "Numbered list",
+      "blockquote": "Quote",
+      "link": "Link",
+      "linkUrl": "Link address",
+      "linkApply": "Apply",
+      "linkRemove": "Remove link",
+      "callout": "Tip",
+      "checklist": "Checklist",
+      "pullquote": "Pull quote",
+      "figure": "Photo with caption",
+      "gallery": "Photo strip",
+      "calloutTitle": "Practical tip",
+      "calloutText": "Write the tip here.",
+      "checklistItem": "First item",
+      "pullquoteText": "The sentence the reader should remember.",
+      "mediaFiles": "Choose photos",
+      "mediaAlt": "Photo description (alt)",
+      "mediaCaption": "Caption",
+      "mediaInsert": "Insert",
+      "mediaUploading": "Uploading…",
+      "mediaCancel": "Cancel"
+    },
+    "tags": {
+      "placeholder": "Type a tag and press Enter",
+      "hint": "Up to {max} tags. Enter or a comma adds a tag.",
+      "remove": "Remove tag {tag}",
+      "tooLong": "A tag can be at most {max} characters.",
+      "tooMany": "At most {max} tags per post."
+    },
+    "cover": {
+      "empty": "No cover image",
+      "upload": "Upload image",
+      "replace": "Replace",
+      "remove": "Remove",
+      "uploading": "Uploading…",
+      "hint": "JPG, PNG or WebP, up to 5 MB.",
+      "wrongType": "Only JPG, PNG and WebP images are allowed.",
+      "tooLarge": "The image is larger than 5 MB.",
+      "previewAlt": "Cover image preview"
+    },
+    "editorPage": {
+      "newTitle": "New post",
+      "subtitle": "Text per language, tags, image and publishing.",
+      "back": "All posts",
+      "viewLive": "View on site",
+      "save": "Save",
+      "saving": "Saving…",
+      "saved": "Saved.",
+      "loading": "Loading the post…",
+      "languages": "Languages",
+      "notWritten": "Not written",
+      "unsaved": "unsaved",
+      "archivedNotice": "This post is archived and does not appear on the site."
+    },
+    "fields": {
+      "title": "Title",
+      "excerpt": "Excerpt",
+      "body": "Text",
+      "bodyCount": "{n} words",
+      "category": "Category",
+      "slug": "Address",
+      "tags": "Tags",
+      "cover": "Cover image",
+      "layout": "Article layout",
+      "featured": "Featured on the blog",
+      "featuredHint": "The blog listing opens with this article. There is only one — the previous one is unfeatured.",
+      "heroCaption": "Caption under the photo"
+    },
+    "seo": {
+      "title": "SEO and sharing",
+      "seoTitle": "SEO title",
+      "seoDescription": "SEO description",
+      "canonical": "Canonical address",
+      "preview": "Google preview",
+      "noWarnings": "No warnings.",
+      "afterSave": "The preview and warnings reflect the last save.",
+      "issuesTitle": "SEO findings",
+      "summary": "{errors} errors · {warnings} tips",
+      "keyword": "Focus keyword",
+      "keywordHint": "The phrase you want this language of the post to be found by on Google.",
+      "severity": {
+        "ERROR": "Error",
+        "WARNING": "Tip"
+      }
+    },
+    "publish": {
+      "title": "Publishing",
+      "saveFirst": "Save the text in this language before it can be published.",
+      "needsTitle": "A title is required.",
+      "tooShort": "The text has {n} characters; publishing needs at least {min}.",
+      "scheduleAt": "Publish date and time",
+      "scheduledFor": "Scheduled for {date}",
+      "publishedAt": "Published on {date}",
+      "move": {
+        "IN_REVIEW": "Send to review",
+        "DRAFT": "Back to draft",
+        "SCHEDULED": "Schedule",
+        "PUBLISHED": "Publish",
+        "ARCHIVED": "Withdraw this language"
+      },
+      "done": {
+        "IN_REVIEW": "Sent to review.",
+        "DRAFT": "Moved back to draft.",
+        "SCHEDULED": "Scheduled.",
+        "PUBLISHED": "Published.",
+        "ARCHIVED": "This language was withdrawn."
+      },
+      "fixErrors": "Fix the SEO errors ({n}) and save — then it can be published."
+    },
+    "post": {
+      "title": "Post"
+    },
+    "links": {
+      "title": "Related",
+      "empty": "No linked professionals or templates.",
+      "unusable": "not shown"
+    },
+    "takeDown": {
+      "title": "Taking down",
+      "archive": "Archive post",
+      "confirmArchive": "Confirm archive",
+      "delete": "Delete post",
+      "confirmDelete": "Confirm delete",
+      "deleteBlocked": "A published post cannot be deleted, only archived.",
+      "archived": "The post was archived.",
+      "cancel": "Cancel"
+    },
+    "issues": {
+      "TITLE_MISSING": "There is no title.",
+      "TITLE_TOO_LONG": "The title is {length} characters — Google shows about {max} and hides the rest.",
+      "TITLE_TOO_SHORT": "The title is {length} characters — under {min} rarely says enough about the text.",
+      "TITLE_DUPLICATE": "Another published post in this language has the same title.",
+      "DESCRIPTION_MISSING": "There is neither an SEO description nor an excerpt — Google will pick a sentence itself.",
+      "DESCRIPTION_TOO_SHORT": "The description is {length} characters; under {min} Google often writes its own.",
+      "DESCRIPTION_TOO_LONG": "The description is {length} characters — Google shows about {max}.",
+      "DESCRIPTION_DUPLICATE": "Another published post in this language has the same description.",
+      "CONTENT_TOO_THIN": "The text has {words} words — under {min} the page is thin and rarely ranks.",
+      "NO_SUBHEADINGS": "A long text without subheadings (H2) is hard to scan.",
+      "HEADING_SKIPPED": "An H3 comes before the first H2 — a heading level is skipped.",
+      "PARAGRAPH_TOO_LONG": "{count} paragraph(s) are longer than {max} words — split them.",
+      "NO_INTERNAL_LINK": "There is no link to another page on Ivy Events.",
+      "LINK_TEXT_GENERIC": "The link “{text}” does not say where it goes.",
+      "COVER_MISSING": "There is no cover image — a shared link without one goes unnoticed.",
+      "NO_TAGS": "There are no tags.",
+      "SLUG_TOO_LONG": "The address is {length} characters — a shorter one reads and shares better.",
+      "KEYWORD_MISSING": "There is no focus keyword.",
+      "KEYWORD_NOT_IN_TITLE": "The focus keyword “{keyword}” is not in the title.",
+      "KEYWORD_NOT_IN_SLUG": "The focus keyword “{keyword}” is not in the address.",
+      "KEYWORD_NOT_IN_INTRO": "The focus keyword “{keyword}” is not in the first paragraph.",
+      "KEYWORD_NOT_IN_DESCRIPTION": "The focus keyword “{keyword}” is not in the description.",
+      "KEYWORD_NOT_IN_SUBHEADING": "The focus keyword “{keyword}” is not in any subheading (H2)."
+    },
+    "layoutHint": {
+      "GUIDE": "Numbered sections, a table of contents, tips and a checklist.",
+      "INSPIRATION": "A large photo, photo strips and a pull quote.",
+      "PRODUCT": "An article about Ivy Events: an illustration of the app instead of a photo."
+    }
+  },
+  "adminTags": {
+    "title": "Tags",
+    "subtitle": "Each tag’s name in every language. A change here applies to every post.",
+    "search": "Search tags",
+    "onlyMissing": "Missing a translation",
+    "count": "{n} tags",
+    "loading": "Loading tags…",
+    "empty": "No tags match.",
+    "emptyAll": "No tags yet. They are created when you add a tag to a post.",
+    "columns": {
+      "tag": "Tag",
+      "posts": "Posts"
+    },
+    "nameLabel": "{language} name for “{tag}”",
+    "missing": "Not translated",
+    "postCount": "{n} posts",
+    "save": "Save",
+    "saved": "Saved “{tag}”.",
+    "remove": "Delete",
+    "confirmRemove": "Delete from {n} posts",
+    "confirmRemoveUnused": "Confirm delete",
+    "cancel": "Cancel",
+    "removed": "Deleted “{tag}”."
+  },
+  "adminRevenue": {
+    "title": "Revenue",
+    "hint": "Successful payments less refunds, in MKD, by payment date within the selected range.",
+    "package": "Package",
+    "allPackages": "All packages",
+    "payments": "{n} payments",
+    "refunded": "{amount} refunded",
+    "error": "Revenue could not be loaded.",
+    "packages": {
+      "INV_BASIC": "Invitation Basic",
+      "INV_PRO": "Invitation Pro",
+      "INV_PREMIUM": "Invitation Premium",
+      "GALLERY_BASIC": "Gallery Basic",
+      "GALLERY_PREMIUM": "Gallery Premium"
+    }
+  },
+  "cookieConsent": {
+    "title": "Analytics cookies",
+    "text": "We count visits and clicks to learn what is useful on the site. No name, no email, nothing shared with third parties.",
+    "accept": "Accept",
+    "decline": "Decline"
+  },
+  "siteAnalytics": {
+    "title": "Site traffic",
+    "subtitle": "Visitors, clicks, time on site and purchases.",
+    "periodLabel": "Period",
+    "groups": {
+      "day": "Day",
+      "week": "Week",
+      "month": "Month",
+      "year": "Year"
+    },
+    "periods": {
+      "TODAY": "Today",
+      "YESTERDAY": "Yesterday",
+      "THIS_WEEK": "This week",
+      "LAST_WEEK": "Last week",
+      "THIS_MONTH": "This month",
+      "LAST_MONTH": "Last month",
+      "THIS_YEAR": "This year",
+      "LAST_YEAR": "Last year",
+      "LAST_5_YEARS": "5 years"
+    },
+    "visitors": "Visitors",
+    "pageViews": "Page views",
+    "clicks": "Clicks",
+    "purchases": "Purchases",
+    "revenue": "Revenue",
+    "conversion": "Conversion",
+    "timeOnSite": "Time on site",
+    "median": "median",
+    "average": "average",
+    "topPages": "Top pages",
+    "topClicks": "Most clicked",
+    "topReferrers": "Where they came from",
+    "noReferrers": "Every visit was direct.",
+    "noData": "No data",
+    "loading": "Loading…",
+    "privacy": "Only visitors who accepted cookies are counted. No names, no email addresses, no IP addresses. Revenue is read from payments, not from the counter."
+  },
+  "eventSite": {
+    "notFound": "This invitation is not here.",
+    "notFoundHint": "The address may have changed, or the invitation is not published yet."
+  },
+  "privileges": {
+    "title": "Team permissions",
+    "subtitle": "Which of your team may open which screen.",
+    "ownersOnly": "Only an owner may change permissions.",
+    "loading": "Loading…",
+    "noMembers": "Nobody has been added to this workspace yet.",
+    "heldCount": "{held} of {all}",
+    "save": "Save",
+    "saving": "Saving…",
+    "remove": "Remove",
+    "failed": "The change did not go through.",
+    "ownerNote": "Owners are not on this list. They hold everything by being owners — there is nothing to untick, and so no way to lock the business out of this screen.",
+    "names": {
+      "agency:dashboard": "Overview",
+      "agency:events": "Events",
+      "agency:crm": "Clients / CRM",
+      "agency:calendar": "Calendar",
+      "agency:tasks": "Tasks",
+      "agency:team": "Team",
+      "agency:vendors": "Vendors",
+      "agency:services": "Services and packages",
+      "agency:documents": "Documents",
+      "agency:reports": "Reports",
+      "agency:finance": "Finance and margin",
+      "agency:settings": "Settings",
+      "vendor:overview": "Overview",
+      "vendor:inquiries": "Enquiries",
+      "vendor:quotes": "Quotes",
+      "vendor:bookings": "Bookings",
+      "vendor:calendar": "Calendar",
+      "vendor:events": "Events",
+      "vendor:packages": "Packages",
+      "vendor:portfolio": "Portfolio",
+      "vendor:team": "Team",
+      "vendor:messages": "Messages",
+      "vendor:profile": "Profile",
+      "vendor:settings": "Settings"
+    }
+  },
+  "createEventDay": {
+    "title": "New event",
+    "name": "Event name",
+    "namePh": "e.g. Ana and Marko",
+    "category": "Event type",
+    "whichBirthday": "Whose birthday?",
+    "create": "Create",
+    "cancel": "Cancel",
+    "saving": "Creating…",
+    "categories": {
+      "WEDDING": "Wedding",
+      "ENGAGEMENT": "Engagement",
+      "BIRTHDAY": "Birthday",
+      "CORPORATE": "Corporate",
+      "BABY_SHOWER": "Baby shower",
+      "GALLERY": "Gallery",
+      "OTHER": "Other"
+    },
+    "types": {
+      "BIRTHDAY_ADULT": "Adult",
+      "BIRTHDAY_CHILD": "Child"
+    }
+  },
+  "agencyWork": {
+    "newTask": "+ New task",
+    "open": "Open",
+    "view": "View",
+    "unassigned": "Unassigned",
+    "today": "today",
+    "inDays": "in {n} days",
+    "daysAgo": "{n} days ago",
+    "overdue": "{n} overdue",
+    "myOverdue": "{n} of mine overdue",
+    "noOverdue": "Nothing overdue",
+    "myRole": {
+      "LEAD": "Lead organizer",
+      "ASSISTANT": "Assistant"
+    },
+    "status": {
+      "ACTIVE": "In preparation",
+      "DRAFT": "Draft",
+      "PENDING": "Awaiting payment",
+      "COMPLETED": "Completed",
+      "SUSPENDED": "Suspended"
+    },
+    "table": {
+      "event": "Event / client",
+      "date": "Date",
+      "lead": "Lead organizer",
+      "myRole": "My role",
+      "tasks": "Tasks",
+      "myTasks": "My tasks",
+      "rsvp": "RSVP",
+      "budget": "Budget",
+      "nextStep": "Next step",
+      "actions": "Quick actions",
+      "open": "Open {name}",
+      "donePercent": "{n}% done",
+      "answered": "{n}% answered",
+      "awaiting": "{n} awaiting",
+      "empty": "No active events."
+    },
+    "actions": {
+      "tasks": "Tasks",
+      "guests": "Guests",
+      "timeline": "Agenda"
+    },
+    "budget": {
+      "title": "Event budgets",
+      "subtitle": "Planned against recorded expenses.",
+      "none": "Not set",
+      "over": "Over budget by {amount}",
+      "used": "{n}% used",
+      "overCount": "{n} over budget",
+      "usedOf": "{name} · budget used",
+      "remaining": "{amount} left",
+      "empty": "No active event has a budget yet.",
+      "note": "This is the event's budget, not the agency's revenue or profit."
+    },
+    "attention": {
+      "title": "Next actions",
+      "subtitle": "Open the event or the task straight from the list.",
+      "events": "{n} events",
+      "filterLabel": "Filter alerts",
+      "segment": {
+        "ALL": "All",
+        "TASKS": "Tasks",
+        "GUESTS": "Guests",
+        "VENDORS": "Vendors"
+      },
+      "kind": {
+        "TASKS": "Tasks",
+        "GUESTS": "Guests",
+        "VENDORS": "Vendor"
+      },
+      "tasks": "{n} overdue tasks · event is {when} · lead: {lead}",
+      "guests": "{n} guests have not answered · event is {when} · send a reminder",
+      "vendors": "Awaiting confirmation ({n}): {names}",
+      "empty": "Nothing needs urgent attention."
+    },
+    "deadlines": {
+      "title": "This week",
+      "window": "{from} – {to}",
+      "rangeLabel": "Range",
+      "nextDays": "Next {n} days",
+      "eventDay": "Event day: {name}",
+      "rsvpDeadline": "RSVP deadline",
+      "assignee": "owner: {name}",
+      "kind": {
+        "TASK": "Task",
+        "EVENT_DAY": "Event",
+        "RSVP_DEADLINE": "Guests"
+      },
+      "empty": "No deadlines in this range."
+    },
+    "team": {
+      "title": "Team workload",
+      "subtitle": "Assigned tasks across every active event.",
+      "members": "{n} members",
+      "unknown": "Unknown member",
+      "load": "{events} events · {tasks} tasks this week",
+      "unassigned": "Nobody assigned",
+      "unassignedHint": "Overdue tasks nobody has taken on."
+    },
+    "vendors": {
+      "title": "Decisions & vendors",
+      "subtitle": "Things waiting on an outside confirmation.",
+      "confirm": "Confirmation from {vendor}",
+      "empty": "No vendor is waiting to confirm.",
+      "waiting": "Waiting",
+      "stage": {
+        "TENTATIVE": "Waiting",
+        "DEPOSIT_REQUIRED": "Deposit due"
+      }
+    },
+    "nextSteps": {
+      "title": "My next step",
+      "subtitle": "The next task on each event you work on.",
+      "empty": "No open tasks.",
+      "due": "due {date}"
+    },
+    "awaiting": {
+      "title": "Guests awaiting an answer",
+      "subtitle": "Only for the events in this view.",
+      "empty": "No guests are awaiting an answer."
+    },
+    "cards": {
+      "overdue": "Overdue tasks",
+      "myOverdue": "My overdue tasks"
+    },
+    "kpi": {
+      "activeEvents": "Active events",
+      "myEvents": "My events",
+      "soon": "Next {days} days",
+      "overdue": "Overdue tasks",
+      "myOverdue": "My overdue tasks",
+      "myOverdueNote": "of {n} on my events",
+      "unassignedCount": "{n} unassigned",
+      "awaitingRsvp": "Awaiting RSVP",
+      "awaitingMost": "{n} for {name}",
+      "vendorsAwaiting": "Vendors to confirm",
+      "vendorsAcross": "across {n} events",
+      "inProgress": "Events in progress",
+      "leadOrAssistant": "Lead or assistant",
+      "overBudget": "Over budget",
+      "overBudgetNote": "From recorded expenses",
+      "noRsvp": "No RSVP answer",
+      "nothingSoon": "No event in the next 30 days",
+      "nextDays": "{n} in the next {days} days"
+    },
+    "home": {
+      "memberEmptyTitle": "You are not on any event yet",
+      "memberEmptyBody": "When the agency owner adds you to an event, it will appear here.",
+      "ownerTitle": "Agency dashboard",
+      "memberTitle": "My overview",
+      "ownerSubtitle": "Every event, risk and deadline in one place.",
+      "memberSubtitle": "My events, tasks and deadlines in one place.",
+      "attentionTitle": "Needs attention",
+      "priorityTitle": "My priority",
+      "attentionLine": "Every deadline belongs to an event and a person.",
+      "allTasks": "All tasks",
+      "upcomingEvents": "Coming up",
+      "upcomingEventsHint": "Nearest dates first.",
+      "openEvents": "Open events"
+    },
+    "events": {
+      "ownerTitle": "All events",
+      "memberTitle": "My events",
+      "ownerSubtitle": "Planning, alerts and owners across the whole agency.",
+      "memberSubtitle": "Events you are assigned to as lead organizer or assistant.",
+      "ownerHint": "The figures are computed from every event shown and move with the filters.",
+      "memberHint": "You only see the events you are assigned to. The tasks are only yours.",
+      "ownerList": "Agency events",
+      "memberList": "Events I work on",
+      "ownerListHint": "With lead organizer, risks and budget.",
+      "memberListHint": "Limited to the events you are assigned to.",
+      "viewLabel": "Event view",
+      "viewTable": "Table",
+      "viewCards": "Cards",
+      "search": "Search",
+      "searchPlaceholder": "Event, client or location…",
+      "status": "Status",
+      "allStatuses": "All statuses",
+      "period": "Date",
+      "allDates": "All dates",
+      "allLeads": "All organizers",
+      "allAssigned": "All assigned",
+      "iLead": "I am the lead",
+      "iAssist": "I am an assistant",
+      "clear": "Clear",
+      "shown": "Showing {shown} of {total} available events",
+      "ownerFoot": "The organizer filter applies to the lead organizer.",
+      "memberFoot": "The agency's other events are not available in this role.",
+      "noMatch": "No events match the chosen filters.",
+      "needAttention": "Events needing attention",
+      "needAttentionHint": "Check the nearest events with overdue tasks first.",
+      "noLate": "No overdue tasks in this view.",
+      "distribution": "Agency distribution",
+      "distributionHint": "Lead organizers of the events shown.",
+      "eventCount": "{n} events",
+      "ownerFootnote": "The financial indicator uses only the budget and recorded expenses. Billing, invoices and margin are not part of this view.",
+      "memberFootnote": "Quick actions are available only on events you are assigned to.",
+      "kpiShown": "Events in view",
+      "kpiShownNote": "Drafts included",
+      "kpiSoonNote": "Events in preparation",
+      "kpiLateNote": "Across the events shown",
+      "kpiOverBudget": "Over budget",
+      "kpiOverBudgetNote": "Events with recorded expenses",
+      "kpiMyLateNote": "Only tasks assigned to you",
+      "kpiRsvpNote": "On my events shown"
+    }
+  },
+  "vendorWork": {
+    "openMicrosite": "Open microsite ↗",
+    "nav": {
+      "home": "Dashboard",
+      "inbox": "Inquiries",
+      "calendar": "Calendar",
+      "portfolio": "Portfolio",
+      "profile": "My profile",
+      "microsite": "Microsite",
+      "team": "Team & permissions",
+      "insights": "Insights",
+      "groups": {
+        "work": "Work",
+        "presentation": "Presentation",
+        "management": "Management"
+      }
+    },
+    "home": {
+      "title": "Dashboard",
+      "subtitle": "Next inquiries, dates and the state of your public page.",
+      "seeInquiries": "See inquiries",
+      "attention": "Needs attention",
+      "attentionHint": "A short view of the work that leads to a booking.",
+      "openInquiries": "Open inquiries",
+      "activities": "Next activities",
+      "activitiesHint": "Inquiries with the nearest date first.",
+      "noActivities": "Nothing is waiting on you.",
+      "upcoming": "Upcoming dates",
+      "upcomingHint": "Confirmed and held dates.",
+      "seeCalendar": "See calendar",
+      "noUpcoming": "Nothing booked in the next 60 days."
+    },
+    "kpi": {
+      "newInquiries": "New inquiries",
+      "newInquiriesNote": "From the microsite and Ivy Events",
+      "awaitingReply": "Awaiting reply",
+      "awaitingReplyNote": "Check and set a status",
+      "upcoming": "Upcoming engagements",
+      "upcomingNote": "In the next 60 days",
+      "microsite": "Microsite",
+      "micrositeLiveNote": "Review how it looks",
+      "micrositeDraftNote": "Prepare and publish"
+    },
+    "activity": {
+      "title": {
+        "INQUIRY_NEW": "Reply to {name}",
+        "INQUIRY_IN_CONVERSATION": "Continue with {name}",
+        "BOOKING_HELD": "Confirm the date for {name}",
+        "PROFILE_INCOMPLETE": "Complete your profile",
+        "MICROSITE_DRAFT": "Publish your public page",
+        "PORTFOLIO_EMPTY": "Add photos to your portfolio"
+      },
+      "sub": {
+        "INQUIRY_NEW": "Inquiry for {date}",
+        "INQUIRY_IN_CONVERSATION": "Event on {date}",
+        "BOOKING_HELD": "{date} · held date",
+        "PROFILE_INCOMPLETE": "A clear profile brings better inquiries",
+        "MICROSITE_DRAFT": "Pick a look and check the contact form",
+        "PORTFOLIO_EMPTY": "Clients see your best work first"
+      },
+      "tag": {
+        "INQUIRY_NEW": "New",
+        "INQUIRY_IN_CONVERSATION": "In conversation",
+        "BOOKING_HELD": "Pending",
+        "PROFILE_INCOMPLETE": "Profile",
+        "MICROSITE_DRAFT": "Microsite",
+        "PORTFOLIO_EMPTY": "Portfolio"
+      }
+    },
+    "readiness": {
+      "title": "Profile readiness",
+      "hint": "A clear profile brings better inquiries.",
+      "continue": "Continue with the profile",
+      "step": {
+        "BASICS": "Basics",
+        "PORTFOLIO": "Portfolio",
+        "CONTACT": "Contact",
+        "MICROSITE": "Microsite"
+      },
+      "done": {
+        "BASICS": "Name, description, city, services",
+        "PORTFOLIO": "Has photos and a cover",
+        "CONTACT": "Email and phone",
+        "MICROSITE": "Public page is live"
+      },
+      "todo": {
+        "BASICS": "Add name, description, city and services",
+        "PORTFOLIO": "Add real photos and pick a cover",
+        "CONTACT": "Add a public email or phone",
+        "MICROSITE": "Check the public fields and publish"
+      }
+    },
+    "approval": {
+      "DRAFT": "Draft",
+      "SUBMITTED": "Awaiting approval",
+      "CHANGES_REQUESTED": "Changes requested",
+      "APPROVED": "Approved profile",
+      "REJECTED": "Rejected",
+      "SUSPENDED": "Suspended"
+    },
+    "booking": {
+      "HELD": "Pending",
+      "CONFIRMED": "Confirmed"
+    },
+    "workflow": {
+      "NEW": "New",
+      "IN_CONVERSATION": "In conversation",
+      "ANSWERED": "Answered",
+      "BOOKED": "Booked",
+      "CLOSED": "Closed"
+    },
+    "source": {
+      "MICROSITE": "Microsite",
+      "IVY": "Ivy Events"
+    },
+    "inbox": {
+      "title": "Inquiries",
+      "subtitle": "Every new contact from the microsite and Ivy Events in one place.",
+      "total": "All inquiries",
+      "newNote": "Needs a first reply",
+      "conversationNote": "Next step with the client",
+      "fromMicrosite": "From the microsite",
+      "sourceNote": "Where the contact came from",
+      "search": "Search",
+      "searchPlaceholder": "Name, type, city…",
+      "status": "Status",
+      "allStatuses": "All statuses",
+      "source": "Source",
+      "allSources": "All sources",
+      "none": "No inquiries match the filters.",
+      "eventType": "Event type",
+      "date": "Date",
+      "city": "City",
+      "guests": "Guests",
+      "notGiven": "Not given",
+      "replyTo": "Reply to {email}",
+      "replyPlaceholder": "Write a short reply…",
+      "markAs": {
+        "IN_CONVERSATION": "Mark: in conversation",
+        "BOOKED": "Mark: booked",
+        "CLOSED": "Close"
+      },
+      "send": "Send reply",
+      "replyNote": "Replying marks the inquiry as answered.",
+      "pick": "Pick an inquiry to see the details.",
+      "noMedian": "No replies yet",
+      "median": "Typical reply in {time}",
+      "minutes": "{n} min",
+      "hours": "{n} h",
+      "days": "{n} days"
+    },
+    "calendar": {
+      "kind": {
+        "BOOKING_CONFIRMED": "Confirmed",
+        "BOOKING_HELD": "Held date",
+        "HOLD": "Held date",
+        "BLOCKED": "Blocked",
+        "INQUIRY": "Inquiry"
+      },
+      "kindNote": {
+        "BOOKING_CONFIRMED": "Confirmed engagement",
+        "BOOKING_HELD": "Awaiting confirmation",
+        "HOLD": "Held for now",
+        "BLOCKED": "Unavailable day",
+        "INQUIRY": "Asked about, not booked yet"
+      },
+      "confirmed": "Confirmed dates",
+      "nextDays": "In the next {n} days",
+      "held": "Held dates",
+      "heldNote": "Awaiting confirmation",
+      "inquiries": "Inquiries for a date",
+      "inquiriesNote": "No confirmed booking",
+      "blocked": "Blocked days",
+      "blockedNote": "Unavailability",
+      "legend": "Legend",
+      "viewLabel": "View",
+      "month": "Month",
+      "list": "List",
+      "upcoming": "Upcoming",
+      "nothing": "Nothing in the next 60 days."
+    },
+    "portfolio": {
+      "cover": "Cover",
+      "makeCover": "Make cover",
+      "moveEarlier": "Move earlier: {title}",
+      "moveLater": "Move later: {title}"
+    },
+    "profile": {
+      "title": "My profile",
+      "subtitle": "Edit the details that present your studio.",
+      "tab": {
+        "basic": "Basics",
+        "services": "Services",
+        "contact": "Contact",
+        "faq": "FAQ"
+      },
+      "name": "Studio name",
+      "tagline": "Short tagline",
+      "description": "Description",
+      "descriptionHelp": "Talk about the service and how you work, not about the platform.",
+      "city": "City",
+      "serviceArea": "Service area",
+      "services": "Services",
+      "servicesHelp": "E.g. weddings, corporate events, private parties.",
+      "delivery": "Delivery time",
+      "availability": "Availability",
+      "availabilityMode": {
+        "ON_REQUEST": "On request",
+        "FREE_DATES": "Show free dates only"
+      },
+      "included": "What the service includes",
+      "includedPlaceholder": "Shooting, editing, gallery…",
+      "email": "Public email",
+      "phone": "Phone",
+      "website": "Website",
+      "contactHelp": "The microsite contact form can stay the main way to reach you.",
+      "faqHelp": "Answer questions about booking, delivery and scope.",
+      "faqItem": "Question {n}",
+      "question": "Question",
+      "answer": "Answer",
+      "removeQuestion": "Remove",
+      "addQuestion": "Add question",
+      "saved": "Saved — the changes are public.",
+      "save": "Save",
+      "preview": "See public preview",
+      "statusTitle": "Profile status",
+      "statusHint": "Changes to an approved profile are visible as soon as they are saved.",
+      "toApplication": "Approval application"
+    },
+    "microsite": {
+      "title": "Microsite",
+      "subtitle": "From a profile to your own public page that brings inquiries.",
+      "preview": "Public preview",
+      "live": "Live",
+      "draft": "Draft",
+      "draftLong": "Draft — not published",
+      "tab": {
+        "design": "Look",
+        "content": "Content",
+        "sections": "Sections",
+        "seo": "Link & SEO"
+      },
+      "theme": {
+        "CLASSIC": {
+          "name": "Classic",
+          "hint": "Services + trust"
+        },
+        "GALLERY": {
+          "name": "Gallery",
+          "hint": "Portfolio first"
+        },
+        "STAGE": {
+          "name": "Stage",
+          "hint": "A visual story"
+        },
+        "EDITORIAL": {
+          "name": "Text-led",
+          "hint": "Editorial style"
+        }
+      },
+      "themeHelp": "The look changes layout and type; the same details feed the public page.",
+      "section": {
+        "gallery": {
+          "name": "Gallery",
+          "hint": "Chosen photos from the portfolio"
+        },
+        "services": {
+          "name": "Services",
+          "hint": "What you offer and where you work"
+        },
+        "faq": {
+          "name": "Frequently asked questions",
+          "hint": "Clear answers before a client writes"
+        },
+        "form": {
+          "name": "Inquiry form",
+          "hint": "Contacts arrive in \"Inquiries\""
+        }
+      },
+      "link": "Public link",
+      "slug": "Address",
+      "seoTitle": "Search title",
+      "seoDescription": "Short description",
+      "saveSeo": "Save",
+      "saved": "Saved.",
+      "visibility": "Public visibility",
+      "visibilityHint": "Control what a visitor sees.",
+      "check": {
+        "profile": "Profile",
+        "profileTodo": "Awaiting approval",
+        "gallery": "Gallery",
+        "galleryOn": "Shown on the page",
+        "galleryOff": "Hidden",
+        "inquiries": "Inquiries",
+        "inquiriesHint": "The form writes into \"Inquiries\""
+      },
+      "publish": "Publish",
+      "unpublish": "Back to draft"
+    },
+    "team": {
+      "title": "Team & permissions",
+      "subtitle": "Team members and their rights in the portal.",
+      "members": "Team members",
+      "membersHint": "The owner can invite colleagues with limited access.",
+      "invite": "Invite member",
+      "email": "Email",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "role": "Role",
+      "roles": {
+        "OWNER": {
+          "name": "Owner",
+          "scope": "Profile, publishing, inquiries and permissions"
+        },
+        "EDITOR": {
+          "name": "Editor",
+          "scope": "Portfolio and profile",
+          "tag": "Limited"
+        },
+        "ASSISTANT": {
+          "name": "Assistant",
+          "scope": "Inquiries and calendar",
+          "tag": "Operational"
+        }
+      },
+      "inviteNote": "Members cannot publish the microsite or manage permissions.",
+      "cancel": "Cancel",
+      "send": "Send invite",
+      "customRole": "Custom permissions",
+      "remove": "Remove",
+      "none": "No other members",
+      "noneHint": "Invite someone when they need to handle inquiries or the portfolio.",
+      "byRole": "Permissions by role",
+      "byRoleHint": "Clear limits for the public page and communication.",
+      "full": "Full",
+      "finePermissions": "Detailed permissions per member"
+    },
+    "insights": {
+      "title": "Insights",
+      "subtitle": "What works for your inquiries and your public page.",
+      "window": "Period",
+      "lastDays": "Last {n} days",
+      "views": "Profile views",
+      "viewsNote": "Visits to the public profile",
+      "inquiries": "Inquiries",
+      "inquiriesNote": "From both sources",
+      "bookings": "Confirmed bookings",
+      "bookingsNote": "An inquiry status is not a sale",
+      "bySource": "Inquiries by source",
+      "bySourceHint": "Where the contacts come from.",
+      "sourceNote": {
+        "MICROSITE": "Contact form on the public page",
+        "IVY": "Inquiry through the platform"
+      },
+      "pipeline": "Where the inquiries stand",
+      "pipelineHint": "The status your team keeps.",
+      "median": "Typical time to first reply",
+      "noData": "No data",
+      "note": "Only metrics with a real source are shown."
+    },
+    "site": {
+      "services": "What we offer",
+      "faq": "Before you ask",
+      "contactTitle": "Tell us what you are planning",
+      "contactBody": "Send the date, the place and a few lines about the event — we will reply with the next step."
+    },
+    "publicForm": {
+      "sentBadge": "Inquiry received",
+      "thanks": "Thank you!",
+      "sentBody": "The vendor has your inquiry and will reply by email.",
+      "title": "Send an inquiry",
+      "intro": "Leave your contact and a few details for a concrete answer.",
+      "name": "Name",
+      "email": "Email",
+      "date": "Event date",
+      "type": "Event type",
+      "types": {
+        "other": "Other event"
+      },
+      "city": "City",
+      "guests": "Approximate guests",
+      "optional": "Optional",
+      "message": "Short description",
+      "messagePlaceholder": "Tell us what you need and what matters most…",
+      "consent": "I agree that my contact is used to reply to this inquiry.",
+      "previewNote": "This is a preview — the form does not send from here.",
+      "send": "Send inquiry",
+      "required": "Fill in the required fields.",
+      "badEmail": "Enter a valid email.",
+      "pastDate": "The date cannot be in the past.",
+      "needConsent": "We need your consent to reply."
+    }
+  },
+  "agencyScreens": {
+    "clients": {
+      "title": "Clients",
+      "subtitle": "From a first inquiry to an active client.",
+      "newInquiry": "New inquiry",
+      "kpiAll": "Clients & inquiries",
+      "kpiAllNote": "Open in the pipeline",
+      "kpiNew": "New inquiries",
+      "kpiNewNote": "Awaiting first contact",
+      "kpiProposals": "Proposals waiting",
+      "kpiProposalsNote": "Needs follow-up",
+      "kpiWon": "Won clients",
+      "kpiWonNote": "With an event created",
+      "pipeline": "Sales pipeline",
+      "pipelineHint": "Every inquiry by stage, with its next step.",
+      "followUp": "Needs follow-up",
+      "followUpHint": "Inquiries whose next step is late, or that have none.",
+      "late": "Late",
+      "nothingDropped": "Every open inquiry has a next step on time."
+    },
+    "vendors": {
+      "ownerTitle": "Vendors",
+      "memberTitle": "Vendor directory",
+      "ownerSubtitle": "The directory, and which vendors the agency's events are waiting on.",
+      "memberSubtitle": "Basic vendor details, without contracts or prices.",
+      "engagements": "Engagements awaiting confirmation",
+      "engagementsHint": "Vendors holding the date who have not confirmed yet.",
+      "awaiting": "{n} waiting",
+      "awaitingConfirmation": "Awaiting confirmation",
+      "noEngagements": "No vendor is waiting to confirm.",
+      "search": "Search vendors",
+      "category": "Category",
+      "statusLabel": "Engagement status",
+      "status": {
+        "ALL": "All",
+        "HELD": "Awaiting confirmation",
+        "CONFIRMED": "Confirmed",
+        "CANCELLED": "Cancelled"
+      }
+    },
+    "team": {
+      "title": "Team",
+      "subtitle": "Members, workload and how the work is spread.",
+      "invite": "Invite member",
+      "kpiMembers": "Members",
+      "kpiMembersNote": "With work on active events",
+      "kpiEvents": "Events in progress",
+      "kpiEventsNote": "Active events",
+      "kpiOverdue": "Overdue tasks",
+      "kpiOverdueNote": "Spread across the team",
+      "kpiUnassigned": "Unassigned",
+      "kpiUnassignedNote": "Overdue tasks nobody has taken on",
+      "kpiUnassignedNone": "No unassigned tasks",
+      "engagement": "Members & workload",
+      "engagementHint": "Check the load before assigning a new event.",
+      "colMember": "Member",
+      "colRole": "Role",
+      "colEvents": "On",
+      "colOverdue": "Overdue tasks",
+      "colActions": "Actions",
+      "eventsCount": "{n} events",
+      "permissions": "Permissions",
+      "noWorkload": "The team's workload is not available right now.",
+      "accounts": "Team accounts",
+      "leadOf": "Lead organizer of {n}",
+      "teamMember": "Team member"
+    },
+    "permissions": {
+      "modelTitle": "Access model",
+      "modelHint": "The role decides which pages open; assignment decides which events and tasks are visible.",
+      "owner": "Administrator",
+      "ownerScope": "All events, clients, reports and management.",
+      "ownerTag": "Agency",
+      "member": "Team member",
+      "memberScope": "Assigned events, own tasks and the directory only.",
+      "memberTag": "Assigned",
+      "checksTitle": "Server-side checks",
+      "checksHint": "A hidden menu is not enough — the server checks these too.",
+      "check": {
+        "agency": "The agency is read from the token on every request",
+        "assignment": "A member sees only the events they are assigned to",
+        "finance": "Budgets and the team are never sent to a member"
+      },
+      "matrixTitle": "Permission matrix",
+      "matrixHint": "What applies today. Per-member permissions are below.",
+      "action": "Action",
+      "row": {
+        "allEvents": "See all events",
+        "assignedEvents": "See assigned events",
+        "ownTasks": "Own tasks and calendar",
+        "pipeline": "Clients and pipeline",
+        "reports": "Reports and budgets",
+        "vendors": "Vendor directory",
+        "members": "Manage members",
+        "settings": "Permissions and settings"
+      },
+      "byGrant": "If granted",
+      "editorTitle": "Permissions per member"
+    },
+    "reports": {
+      "title": "Reports",
+      "subtitle": "Metrics from the events and the day-to-day work.",
+      "export": "Export CSV",
+      "kpiActive": "Active events",
+      "kpiActiveNote": "+ {n} draft",
+      "kpiRsvp": "RSVP answers",
+      "kpiRsvpNote": "{answered} of {invited} invited",
+      "kpiOverdue": "Overdue tasks",
+      "kpiOverdueNote": "On active events",
+      "kpiSpent": "Recorded expenses",
+      "kpiSpentNote": "Budget: {amount}",
+      "byMonth": "Events by month",
+      "byMonthHint": "How many events fall in each month.",
+      "noMonths": "No dated events yet.",
+      "intervention": "What needs intervention",
+      "interventionHint": "Each number leads to its source.",
+      "overdueLine": "{n} overdue tasks",
+      "overdueLineNote": "Open the tasks",
+      "open": "Open",
+      "rsvpLine": "{n} guests without an RSVP",
+      "rsvpLineNote": "On active events",
+      "events": "Events",
+      "budgetLine": "{n} events over budget",
+      "budgetLineNote": "By recorded expenses",
+      "review": "Review",
+      "note": "This report shows no revenue, client payments or margin: those need financial data of their own."
+    },
+    "settings": {
+      "tab": {
+        "general": "General",
+        "brand": "Brand",
+        "notifications": "Notifications",
+        "plan": "Plan"
+      },
+      "timezone": "Time zone",
+      "currency": "Budget currency",
+      "language": "Language",
+      "languages": {
+        "mk": "Macedonian",
+        "en": "English",
+        "sq": "Albanian"
+      },
+      "senderName": "Sender name",
+      "replyTo": "Reply-to email",
+      "primaryColor": "Primary colour",
+      "surfaceColor": "Background colour",
+      "textColor": "Text colour",
+      "brandSaved": "Brand saved.",
+      "notify": {
+        "overdue": {
+          "name": "Overdue tasks",
+          "who": "To the person responsible"
+        },
+        "deadlines": {
+          "name": "Event deadlines",
+          "who": "To the event's team"
+        },
+        "rsvp": {
+          "name": "RSVP reminders",
+          "who": "When an organizer sends them"
+        },
+        "vendors": {
+          "name": "Vendor confirmations",
+          "who": "To the event's organizer"
+        }
+      },
+      "planTier": "Current plan",
+      "planStatus": "Status",
+      "planActive": "Active",
+      "planInactive": "Inactive",
+      "planEvents": "Active events",
+      "planExpires": "Valid until",
+      "noPlan": "No plan details.",
+      "planNote": "Changing the plan goes through a separate billing flow.",
+      "workingTitle": "Working defaults",
+      "ownerOnly": "Only the agency owner can change these settings.",
+      "prefsSaved": "Settings saved."
+    }
+  },
+  "workspaceSearch": {
+    "label": "Search",
+    "results": "Search results",
+    "noResults": "Nothing found",
+    "kinds": {
+      "EVENT": "Events",
+      "TASK": "Tasks",
+      "LEAD": "Clients",
+      "INQUIRY": "Inquiries",
+      "BOOKING": "Bookings",
+      "PACKAGE": "Packages"
+    }
+  },
+  "workspaceInbox": {
+    "fallback": "New notification",
+    "templates": {
+      "VENDOR_INQUIRY_RECEIVED": "New inquiry from {organizerName}",
+      "BOOKING_CONFIRMED_VENDOR": "Booking confirmed: {title}",
+      "BOOKING_CONFIRMED_CLIENT": "{vendorName} confirmed your booking",
+      "BOOKING_CONFIRMED_ORGANIZER": "{vendorName} confirmed the booking: {title}",
+      "BOOKING_CANCELLED_CRITICAL_ADMIN": "{vendorName} cancelled a booking {noticeDays} days before the event",
+      "BOOKING_CANCELLED_CRITICAL_COUPLE": "{vendorName} cancelled your booking — {noticeDays} days before the event",
+      "BOOKING_CANCELLED_CRITICAL_ORGANIZER": "{vendorName} cancelled a booking {noticeDays} days before the event",
+      "BOOKING_CANCELLED_CRITICAL_AGENCY": "{vendorName} cancelled a booking {noticeDays} days before the event",
+      "AGENCY_TASKS_OVERDUE": "Overdue tasks: {count}",
+      "AGENCY_EVENT_DEADLINE": "{eventName} is coming up on {date}",
+      "EVENT_TRANSFERRED_CLIENT": "{eventName} has been handed over to you",
+      "EVENT_TRANSFERRED_AGENCY": "{eventName} was handed over to the client",
+      "AGENCY_SITE_INQUIRY": "New request from your site: {name} ({eventType})"
+    }
+  },
+  "tags": {
+    "label": "Tags",
+    "filter": "Filter by tag",
+    "relatedPosts": "Articles on the same topic",
+    "admin": {
+      "newTitle": "New tag",
+      "newName": "Tag name ({language})",
+      "create": "Add tag",
+      "created": "Tag \"{tag}\" added.",
+      "vendors": "Vendors"
+    },
+    "picker": {
+      "tab": "Tags",
+      "help": "Pick up to {max} tags that describe your work. Readers of blog articles and topic pages find you through them.",
+      "none": "There are no tags to pick yet.",
+      "count": "{n} of {max} picked"
+    },
+    "page": {
+      "eyebrow": "Topic",
+      "subtitle": "Articles, vendors and agencies on this topic.",
+      "posts": "Articles",
+      "vendors": "Vendors",
+      "empty": "Nothing is filed under this tag yet.",
+      "notFound": "This tag does not exist.",
+      "loading": "Loading…",
+      "description": "Articles, vendors and agencies about {tag} on Ivy Events.",
+      "agencies": "Agencies"
+    }
+  },
+  "vendorMicrosite": {
+    "common": {
+      "navigation": "Navigation",
+      "workingIn": "We work in",
+      "email": "Email",
+      "backToTop": "Back to top ↑",
+      "topics": "Topics",
+      "related": "From the blog",
+      "zoom": "Enlarge: {caption}",
+      "photo": "Photo preview",
+      "close": "Close",
+      "heroEyebrow": "{kind} · {place}",
+      "heroCta": "Check availability",
+      "heroSecondary": "See the portfolio",
+      "servicesEyebrow": "What we offer",
+      "servicesTitle": "Services shaped to your event.",
+      "workEyebrow": "Selected work",
+      "workTitle": "A closer look.",
+      "aboutEyebrow": "About {name}",
+      "contactEyebrow": "Contact",
+      "contactTitle": "Let us plan your event.",
+      "contactText": "Send the date and the basics. We will reply with our availability and a suggested service.",
+      "footer": "© {name} · Microsite on Ivy Events",
+      "introEyebrow": "How we work",
+      "approachEyebrow": "Our approach",
+      "processEyebrow": "Process",
+      "processTitle": "How we work together.",
+      "chapterCta": "Check availability",
+      "faqEyebrow": "Before you write",
+      "faqTitle": "Frequently asked questions.",
+      "steps": {
+        "request": {
+          "title": "Request",
+          "description": "You send the date, the place and a short description of the event."
+        },
+        "offer": {
+          "title": "Proposal",
+          "description": "We confirm availability and prepare an offer for what you need."
+        },
+        "agreement": {
+          "title": "Agreement",
+          "description": "We settle the details, the timing and the deadlines."
+        }
+      }
+    },
+    "gallery": {
+      "heroEyebrow": "{name} — {kind}",
+      "heroCta": "Explore the work",
+      "workEyebrow": "Portfolio",
+      "workTitle": "Selected frames.",
+      "servicesEyebrow": "Our work",
+      "servicesTitle": "Present in the moment.",
+      "contactEyebrow": "Have a date?",
+      "contactTitle": "Let us see if we are free.",
+      "contactText": "Tell us where and when the event is. The answer is personal — no automatic promises on price or dates."
+    },
+    "scene": {
+      "heroCta": "See the story",
+      "introEyebrow": "Behind the frame",
+      "chapter": "Chapter {n}",
+      "contactEyebrow": "Next chapter",
+      "contactTitle": "Tell us what you are planning.",
+      "contactText": "Write to us about your event and we will get back with availability and next steps."
+    },
+    "textual": {
+      "heroCta": "Check availability",
+      "servicesEyebrow": "Services",
+      "servicesTitle": "What we offer.",
+      "contactEyebrow": "Contact / new request",
+      "contactTitle": "We start with the date and the details.",
+      "contactText": "Fill in the form so we can check availability."
+    },
+    "nav": {
+      "services": "Services",
+      "work": "Work",
+      "about": "About",
+      "requestOffer": "Request an offer",
+      "projects": "Projects",
+      "contact": "Contact",
+      "story": "Story",
+      "process": "How we work",
+      "sendRequest": "Send a request",
+      "approach": "Approach",
+      "faq": "Questions"
+    },
+    "models": {
+      "CLASSIC": {
+        "description": "The clearest choice for a vendor with several services and a clear offer."
+      },
+      "GALLERY": {
+        "description": "Portfolio first. Works best with many strong, varied photos."
+      },
+      "STAGE": {
+        "description": "A story about how you work, the atmosphere and the client experience."
+      },
+      "EDITORIAL": {
+        "description": "Clear expertise and description, editorial look, few photos."
+      }
+    },
+    "editor": {
+      "intro": "Fields you leave empty are filled from your profile or with default wording.",
+      "section": {
+        "hero": "Header",
+        "eventTypes": "Event types band",
+        "intro": "Introduction",
+        "approach": "Approach",
+        "services": "Services",
+        "gallery": "Gallery",
+        "quote": "Quote",
+        "chapters": "Chapters",
+        "steps": "Process",
+        "faq": "Questions",
+        "contact": "Contact and footer"
+      },
+      "eyebrow": "Small heading",
+      "title": "Title",
+      "heading": "Heading",
+      "titleAccent": "Accent (italic)",
+      "text": "Text",
+      "ctaLabel": "Button text",
+      "secondaryLabel": "Second link",
+      "caption": "Caption",
+      "captionNote": "Small text under the caption",
+      "heroPicture": "Header picture",
+      "coverPicture": "The portfolio cover",
+      "noPicture": "No picture",
+      "picture": "Picture",
+      "eventType": "Event type",
+      "servicesHint": "Empty = the packages or services from your profile.",
+      "serviceLabel": "Label",
+      "serviceName": "Name",
+      "galleryHint": "Choose up to {n} pictures from your portfolio. Empty = the whole portfolio.",
+      "noPortfolio": "Your portfolio is empty — add pictures first.",
+      "attribution": "Attribution",
+      "quote": "Quote",
+      "stepsHint": "Empty = the three standard steps.",
+      "faqHint": "Empty = the questions from your profile.",
+      "question": "Question",
+      "answer": "Answer",
+      "footer": "Footer text",
+      "add": "Add",
+      "up": "Up",
+      "down": "Down",
+      "remove": "Remove",
+      "save": "Save content"
+    }
+  },
+  "agencySite": {
+    "loading": "Loading…",
+    "tags": "Topics",
+    "footer": "A microsite on Ivy Events",
+    "toTop": "Back to top",
+    "notFound": {
+      "title": "Site not found",
+      "body": "This agency has no published site at this address.",
+      "back": "Go to Ivy Events"
+    },
+    "nav": {
+      "label": "Navigation",
+      "services": "Services",
+      "events": "Events",
+      "process": "How we work",
+      "sendRequest": "Send a request",
+      "talk": "Talk to us",
+      "projects": "Projects",
+      "whatWeDo": "What we do",
+      "newRequest": "New request",
+      "viewProjects": "See projects",
+      "approach": "Approach",
+      "processShort": "Process",
+      "contact": "Contact",
+      "formats": "Formats",
+      "proposal": "Request a proposal",
+      "brief": "Send a brief"
+    },
+    "contact": {
+      "email": "Contact",
+      "location": "Location",
+      "fallbackTitle": "Tell us what you are planning."
+    },
+    "form": {
+      "title": "Your event",
+      "help": "Send us the basics so we can see whether we can work together.",
+      "name": "Your name",
+      "namePlaceholder": "Full name",
+      "email": "Email",
+      "type": "Event type",
+      "typePick": "Choose a type",
+      "types": {
+        "corporate": "Corporate event",
+        "conference": "Conference",
+        "private": "Private event",
+        "other": "Other"
+      },
+      "date": "Date or period",
+      "datePlaceholder": "E.g. 12 October / October",
+      "city": "Place",
+      "cityPlaceholder": "City / venue",
+      "guests": "Expected guests",
+      "optional": "Optional",
+      "message": "What are you planning?",
+      "messagePlaceholder": "A few sentences on the goal, the format and your needs",
+      "consent": "I agree that the agency may contact me about this request.",
+      "send": "Send request",
+      "sending": "Sending…",
+      "sentTitle": "Your request has been sent.",
+      "sentBody": "The agency will review it and reply to the email address you gave.",
+      "again": "New request",
+      "previewNote": "Preview: the form sends nothing here.",
+      "missing": "Fill in the required fields and confirm your consent.",
+      "failed": "The request was not sent. Please try again."
+    },
+    "models": {
+      "CLASSIC": {
+        "name": "Classic",
+        "hint": "the all-rounder",
+        "description": "Services, realised events, process and a request form on one clear page."
+      },
+      "PORTFOLIO": {
+        "name": "Portfolio",
+        "hint": "visual projects",
+        "description": "Photos of real projects lead; services and the request stay clear."
+      },
+      "EDITORIAL": {
+        "name": "Editorial",
+        "hint": "story and style",
+        "description": "A story about the agency's approach and the way it works."
+      },
+      "CORPORATE": {
+        "name": "Corporate",
+        "hint": "business clients",
+        "description": "Services, formats, responsibilities and a short brief for business clients."
+      }
+    },
+    "editor": {
+      "title": "Public site",
+      "subtitle": "The look, the copy and the portfolio your clients see.",
+      "openSite": "Open the site",
+      "tabs": {
+        "model": "Layout",
+        "content": "Content",
+        "projects": "Projects",
+        "tags": "Tags",
+        "publish": "SEO & publishing"
+      },
+      "unsavedNote": "The site has not been saved yet. You are starting from sample copy — change it and save.",
+      "contentHint": "Showing the sections the chosen layout uses. The others are kept and come back if you switch layout.",
+      "sections": {
+        "hero": "Hero",
+        "keywords": "Keyword band",
+        "services": "Services",
+        "projects": "Projects heading",
+        "statement": "Statement",
+        "chapters": "Chapters",
+        "process": "Process",
+        "formats": "Formats",
+        "contact": "Contact"
+      },
+      "fields": {
+        "eyebrow": "Eyebrow",
+        "title": "Title",
+        "titleAccent": "Highlighted part of the title",
+        "text": "Text",
+        "ctaLabel": "Main button",
+        "secondaryLabel": "Second link",
+        "caption": "Photo caption",
+        "captionNote": "Caption note",
+        "image": "Photo",
+        "keywords": "Keywords",
+        "label": "Label",
+        "symbol": "Symbol",
+        "name": "Name",
+        "description": "Description",
+        "projectTitle": "Project title",
+        "eventType": "Event type",
+        "city": "City",
+        "publishedProject": "Show on the site",
+        "siteName": "Agency name",
+        "slug": "Address",
+        "email": "Email",
+        "phone": "Phone",
+        "seoTitle": "SEO title",
+        "seoDescription": "SEO description"
+      },
+      "keywordsHint": "Comma-separated, at most {max}.",
+      "addItem": "Add",
+      "remove": "Remove",
+      "saving": "Saving…",
+      "saveContent": "Save content",
+      "noImage": "No image",
+      "upload": "Upload",
+      "uploading": "Uploading…",
+      "projectsHint": "Realised events you want to show. They are not taken from your events — you do not reveal clients without their consent.",
+      "hidden": "Hidden",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "close": "Close",
+      "edit": "Edit",
+      "addPhoto": "Add photo",
+      "deleteProject": "Delete project",
+      "save": "Save",
+      "newProject": "New project",
+      "addProject": "Add project",
+      "tagsHint": "Pick up to {max} topics. The same tags connect your site with articles and vendors.",
+      "tagsUnavailable": "The tag list is not available right now.",
+      "noTags": "There are no tags yet.",
+      "saveTags": "Save tags",
+      "live": "Published",
+      "draft": "Not published",
+      "draftHint": "Visitors cannot see the site.",
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "slugPlaceholder": "e-g-ivena",
+      "slugHint": "Lowercase Latin letters, digits and hyphens. It is also your subdomain.",
+      "saveSettings": "Save settings",
+      "preview": "Preview",
+      "desktop": "Desktop",
+      "phone": "Mobile",
+      "namePlaceholder": "Your agency",
+      "saved": "Saved.",
+      "publishedNotice": "The site is published.",
+      "unpublishedNotice": "The site is no longer published."
+    }
   }
 }

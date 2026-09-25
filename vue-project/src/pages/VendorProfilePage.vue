@@ -16,6 +16,11 @@
             ★ {{ rating.average.toFixed(1) }}
             <span class="rating-count">{{ t('vendorProfile.fromReviews', { n: rating.reviewCount }) }}</span>
           </p>
+          <ul v-if="vendor.tags?.length" class="tag-chips" :aria-label="t('tags.label')">
+            <li v-for="tag in vendor.tags" :key="tag.slug">
+              <RouterLink :to="{ name: 'TagPage', params: { lang, slug: tag.slug } }">#{{ tag.name }}</RouterLink>
+            </li>
+          </ul>
         </div>
       </header>
 
@@ -93,6 +98,18 @@
         </a>
       </section>
 
+      <!-- Articles filed under the same shared tags: how a couple reading
+           about this vendor finds the guide about what they do. -->
+      <section v-if="vendor.relatedPosts?.length" class="block related-posts">
+        <h2>{{ t('tags.relatedPosts') }}</h2>
+        <ul>
+          <li v-for="post in vendor.relatedPosts" :key="post.slug">
+            <RouterLink :to="{ name: 'BlogPost', params: { lang, slug: post.slug } }">{{ post.title }}</RouterLink>
+            <p v-if="post.excerpt">{{ post.excerpt }}</p>
+          </li>
+        </ul>
+      </section>
+
       <section class="block">
         <h2>{{ t('vendorProfile.reviews') }}</h2>
 
@@ -132,9 +149,12 @@ import { useI18n } from 'vue-i18n'
 import { vendorDirectoryService, vendorReviewService } from '@/services/vendorDirectory.service'
 import { inquiriesService } from '@/services/inquiries.service'
 import { baseUrl } from '@/services/baseUrl'
+import { applySeo } from '@/composables/useDocumentSeo'
 
 const { t } = useI18n()
 const route = useRoute()
+
+const lang = computed(() => route.params.lang || 'mk')
 
 const vendor = ref(null)
 const reviews = ref([])
@@ -190,13 +210,15 @@ async function sendInquiry() {
 
 onMounted(load)
 watch(() => route.params.slug, load)
+// Tag names, related articles and the search copy are all per language.
+watch(() => route.params.lang, load)
 
 async function load() {
   loading.value = true
   notFound.value = false
 
   try {
-    const response = await vendorDirectoryService.bySlug(route.params.slug)
+    const response = await vendorDirectoryService.bySlug(route.params.slug, lang.value)
     vendor.value = response?.data ?? response
     applyMetadata()
     await loadReviews()
@@ -236,48 +258,10 @@ async function applyMetadata() {
     const seo = response?.data ?? response
     if (!seo) return
 
-    document.title = seo.title
-    setMeta('description', seo.description)
-    setLink('canonical', seo.canonicalUrl)
-    setMeta('robots', seo.noindex ? 'noindex,follow' : 'index,follow')
-    setJsonLd(seo.structuredData)
+    applySeo({ ...seo, type: 'website' })
   } catch {
     // A missing title is not worth failing the page over.
   }
-}
-
-function setMeta(name, content) {
-  if (!content) return
-  let tag = document.querySelector(`meta[name="${name}"]`)
-  if (!tag) {
-    tag = document.createElement('meta')
-    tag.setAttribute('name', name)
-    document.head.appendChild(tag)
-  }
-  tag.setAttribute('content', content)
-}
-
-function setLink(rel, href) {
-  if (!href) return
-  let tag = document.querySelector(`link[rel="${rel}"]`)
-  if (!tag) {
-    tag = document.createElement('link')
-    tag.setAttribute('rel', rel)
-    document.head.appendChild(tag)
-  }
-  tag.setAttribute('href', href)
-}
-
-function setJsonLd(data) {
-  if (!data) return
-  const id = 'vendor-json-ld'
-  document.getElementById(id)?.remove()
-
-  const script = document.createElement('script')
-  script.id = id
-  script.type = 'application/ld+json'
-  script.textContent = JSON.stringify(data)
-  document.head.appendChild(script)
 }
 
 /** Only the type-specific fields — name, city and description already have
@@ -326,6 +310,15 @@ function readable(value) {
 .details { margin: 0; display: grid; gap: 10px 24px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
 .details dt { font-size: 12px; color: #8a8a8a; }
 .details dd { margin: 2px 0 0; }
+
+.tag-chips { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 8px 0 0; padding: 0; }
+.tag-chips a { display: inline-block; padding: 2px 10px; border-radius: 999px; background: #f0efe9;
+  color: #4a4a4a; font-size: 12.5px; text-decoration: none; }
+.tag-chips a:hover { background: #e6e3d8; }
+
+.related-posts ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.related-posts a { color: var(--brand); font-weight: 600; }
+.related-posts p { margin: 2px 0 0; font-size: 14px; color: #6b6b6b; }
 
 .links { display: flex; gap: 16px; }
 .links a { color: var(--brand); }

@@ -130,7 +130,6 @@ function formatDate(d) {
 </script>
 
 <style scoped>
-.admin-page { max-width: 1200px; }
 
 .filter-select {
   padding: 9px 14px; border: 1px solid var(--line); border-radius: 10px;

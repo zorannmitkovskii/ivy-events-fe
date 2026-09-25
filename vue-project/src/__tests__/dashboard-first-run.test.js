@@ -37,7 +37,7 @@ const payload = (overrides = {}) => ({
       confirmedCount: 0, respondedCount: 0, responseRate: null, overdueTaskCount: 0,
       ...overrides.totals,
     },
-    statusBreakdown: { DRAFT: 0, PENDING: 0, ACTIVATED: 0 },
+    statusBreakdown: { DRAFT: 0, PENDING: 0, ACTIVE: 0 },
     upcoming: { next30: 0, next60: 0, next90: 0 },
     monthly: [],
     attention: overrides.attention ?? { total: 0, overdueCount: 0, atRiskCount: 0, riskWindowDays: 30, limit: 25, items: [] },

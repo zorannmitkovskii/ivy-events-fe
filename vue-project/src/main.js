@@ -6,6 +6,7 @@ import i18n from '@/i18n'
 import './services/auth.service'
 import './services/events.service'
 import { registerServiceWorker, showUpdatePrompt } from '@/services/pwa'
+import { installSiteAnalytics } from '@/composables/useSiteAnalytics'
 
 import './assets/styles/colors.css'
 import './assets/styles/styles.css'
@@ -66,6 +67,11 @@ async function bootstrap() {
   app.use(i18n);
   app.config.globalProperties.$keycloak = keycloak;
   app.mount('#app');
+
+  // Site traffic (IVY-906). After mount so a counter never delays first paint,
+  // and with the router so a view is one route rather than one full page load.
+  // Records nothing until the visitor accepts in the consent banner.
+  installSiteAnalytics(router);
 
   // Offline check-in (IVY-602). After mount, not before: a service worker is
   // not worth delaying first paint for, and a registration that fails must not

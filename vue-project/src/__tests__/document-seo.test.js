@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { applySeo, clearSeo } from '@/composables/useDocumentSeo'
 
 /**
- * The tags a crawler reads (IVY-902).
+ * The tags a crawler reads (IVY-902, IVY-907).
  *
  * <p>The failure worth testing is the one a single-page app makes and a
  * server-rendered site cannot: tags left behind. A canonical from the previous
@@ -18,6 +18,7 @@ function content(selector) {
 }
 
 const canonical = () => head().querySelector('link[rel="canonical"]')?.getAttribute('href') ?? null
+const hreflangs = () => [...head().querySelectorAll('link[rel="alternate"]')].map((link) => link.getAttribute('hreflang'))
 
 const seo = (overrides = {}) => ({
   title: 'Десет идеи за свадба',
@@ -25,8 +26,16 @@ const seo = (overrides = {}) => ({
   canonicalUrl: 'https://ivy.mk/mk/blog/deset-idei',
   imageUrl: 'https://cdn.ivy.mk/hero.jpg',
   noindex: false,
-  structuredData: { '@type': 'Article', headline: 'Десет идеи за свадба' },
-  warnings: [],
+  locale: 'mk',
+  alternates: [
+    { locale: 'mk', url: 'https://ivy.mk/mk/blog/deset-idei' },
+    { locale: 'en', url: 'https://ivy.mk/en/blog/deset-idei' },
+    { locale: 'x-default', url: 'https://ivy.mk/mk/blog/deset-idei' },
+  ],
+  publishedAt: '2026-09-01T10:00:00Z',
+  modifiedAt: '2026-09-05T10:00:00Z',
+  tags: ['свадба', 'сала'],
+  structuredData: { '@context': 'https://schema.org', '@graph': [{ '@type': 'Article' }, { '@type': 'BreadcrumbList' }] },
   ...overrides,
 })
 
@@ -59,7 +68,7 @@ describe('applying', () => {
     applySeo(seo())
 
     const script = head().querySelector('script[type="application/ld+json"]')
-    expect(JSON.parse(script.textContent)['@type']).toBe('Article')
+    expect(JSON.parse(script.textContent)['@graph'].map((node) => node['@type'])).toEqual(['Article', 'BreadcrumbList'])
   })
 
   it('emits a robots tag only when the page is not to be indexed', () => {
@@ -68,6 +77,23 @@ describe('applying', () => {
 
     applySeo(seo({ noindex: true }))
     expect(content('meta[name="robots"]')).toBe('noindex, follow')
+  })
+
+  it('names each language the article exists in, and x-default', () => {
+    applySeo(seo())
+
+    expect(hreflangs()).toEqual(['mk', 'en', 'x-default'])
+    expect(head().querySelector('link[hreflang="en"]').getAttribute('href')).toBe('https://ivy.mk/en/blog/deset-idei')
+  })
+
+  it('writes the locale, the dates and one article:tag per tag', () => {
+    applySeo(seo())
+
+    expect(content('meta[property="og:locale"]')).toBe('mk_MK')
+    expect(content('meta[property="article:published_time"]')).toBe('2026-09-01T10:00:00Z')
+    expect(content('meta[property="article:modified_time"]')).toBe('2026-09-05T10:00:00Z')
+    expect([...head().querySelectorAll('meta[property="article:tag"]')].map((tag) => tag.getAttribute('content')))
+      .toEqual(['свадба', 'сала'])
   })
 
   it('adds nothing at all when there is no SEO to apply', () => {
@@ -100,6 +126,14 @@ describe('not leaving the last page behind', () => {
     expect(head().querySelector('meta[name="robots"]')).toBeNull()
   })
 
+  it('does not keep the previous article\'s languages or tags when the next has fewer', () => {
+    applySeo(seo())
+    applySeo(seo({ alternates: [{ locale: 'mk', url: 'https://ivy.mk/mk/blog/vtor' }], tags: [] }))
+
+    expect(hreflangs()).toEqual(['mk'])
+    expect(head().querySelectorAll('meta[property="article:tag"]')).toHaveLength(0)
+  })
+
   it('clears everything it added and nothing it did not', () => {
     const theirs = document.createElement('meta')
     theirs.setAttribute('name', 'viewport')
@@ -111,7 +145,18 @@ describe('not leaving the last page behind', () => {
 
     expect(head().querySelector('link[rel="canonical"]')).toBeNull()
     expect(head().querySelector('meta[name="description"]')).toBeNull()
+    expect(head().querySelectorAll('link[rel="alternate"]')).toHaveLength(0)
     // The app's own tags are not ours to remove.
     expect(content('meta[name="viewport"]')).toBe('width=device-width')
+  })
+})
+
+describe('og:type', () => {
+  it('is an article unless the caller says otherwise', () => {
+    applySeo(seo())
+    expect(content('meta[property="og:type"]')).toBe('article')
+
+    applySeo(seo({ type: 'website' }))
+    expect(content('meta[property="og:type"]')).toBe('website')
   })
 })

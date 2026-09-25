@@ -20,7 +20,7 @@
     <p v-else-if="error" class="empty" role="alert">{{ error }}</p>
 
     <template v-else-if="payments.length">
-      <div class="tbl-round">
+      <div class="card tbl-card">
         <table class="tbl">
           <thead>
             <tr>
@@ -152,8 +152,15 @@ function toneFor(value) {
 </script>
 
 <style scoped>
-/* `.toolbar`, `.tbl`, `.tbl-round`, `.chip` and `.pager` are the design's, in
-   `ivy/dash.css`. Local: the filter pills and the reference column. */
+/* `.toolbar`, `.tbl`, `.card`, `.chip` and `.pager` are the design's, in
+   `ivy/dash.css`. Local: the filter pills, the reference column, and the card
+   around the table. Not `.tbl-round`: that is the seating plan's round table
+   (`aspect-ratio: 1; border-radius: 50%`), and it drew the list in a circle. */
+.card.tbl-card {
+  padding: 0;
+  overflow-x: auto;
+}
+
 .filters-row {
   display: flex;
   gap: 8px;

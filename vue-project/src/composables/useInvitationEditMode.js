@@ -66,13 +66,13 @@ export function useInvitationEditMode() {
     };
     window.addEventListener('beforeunload', onBeforeUnload);
 
-    const removeGuard = router.beforeEach((to, from, next) => {
+    const removeGuard = router.beforeEach(() => {
       if (dirty.value) {
         const leave = window.confirm('You have unsaved changes. Leave without saving?');
-        if (!leave) return next(false);
+        if (!leave) return false;
         clearDirty();
       }
-      next();
+      return true;
     });
 
     return () => {
