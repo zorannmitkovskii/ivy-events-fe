@@ -4,6 +4,7 @@ import { scheduleProactiveRefresh } from "./api";
 import { getRuntimeEnv, detectDefaultEnvFromLocation, computeKeycloakBaseUrl } from '@/services/env';
 import { claimOnboardingFor } from '@/store/onboarding.store';
 import { decodeJwtPayload } from '@/services/jwt';
+import { takeCodeVerifier } from '@/services/googleOAuth';
 
 export function isAuthenticated() {
   return !!localStorage.getItem("access_token");
@@ -240,6 +241,10 @@ export async function exchangeOAuthCode(code, redirectUri) {
   params.append('code', code);
   params.append('client_id', clientId);
   params.append('redirect_uri', redirectUri);
+  // PKCE: the client requires it, and Keycloak refuses the code without the
+  // verifier its challenge was made from.
+  const verifier = takeCodeVerifier();
+  if (verifier) params.append('code_verifier', verifier);
 
   const response = await fetch(tokenUrl, {
     method: 'POST',

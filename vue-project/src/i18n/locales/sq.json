@@ -420,6 +420,11 @@
       "cta": "Rivendos fjalëkalimin",
       "backToLogin": "Kthehu te hyrja",
       "successMessage": "Fjalëkalimi u ndryshua me sukses. Tani mund të hyni."
+    },
+    "google": {
+      "failedTitle": "Hyrja me Google dështoi",
+      "failedText": "Nuk arritëm t’ju identifikojmë me Google. Provoni përsëri ose hyni me email dhe fjalëkalim.",
+      "back": "Kthehu te hyrja"
     }
   },
   "onboarding": {

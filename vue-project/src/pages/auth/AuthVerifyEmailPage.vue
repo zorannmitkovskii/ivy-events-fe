@@ -1,6 +1,16 @@
 <template>
+  <!-- Keycloak came back with an error instead of a code: say so, never the verify form -->
+  <AuthShell v-if="oauthError">
+    <AuthCard>
+      <AuthBrand />
+      <AuthCardTitle :title="$t('auth.google.failedTitle')" :subtitle="$t('auth.google.failedText')" />
+      <p class="oauth-detail" data-testid="oauth-error">{{ oauthError }}</p>
+      <ButtonMain :label="$t('auth.google.back')" variant="main" class="w-100" type="button" @click="backFromFailedGoogle" />
+    </AuthCard>
+  </AuthShell>
+
   <!-- Google OAuth callback: show only a spinner, never the verify form -->
-  <AuthShell v-if="isOAuthCallback">
+  <AuthShell v-else-if="isOAuthCallback">
     <AuthCard>
       <div class="oauth-loading">
         <div class="spinner"></div>
@@ -59,6 +69,7 @@ import AuthInput from "@/components/auth/AuthInput.vue";
 import { onboardingStore, setEmailVerified, getTempPassword, clearTempCredentials } from "@/store/onboarding.store";
 import { verifyEmail, exchangeOAuthCode, assignRole, refreshAccessToken, loginWithCredentials, isAuthenticated } from "@/services/auth.service";
 import { landingAfterAuth } from "@/router/landing";
+import { takeGoogleIntent } from "@/services/googleOAuth";
 import { syncDraftToBackend } from "@/composables/useDraftSync";
 
 const router = useRouter();
@@ -70,8 +81,18 @@ const code = ref("");
 const loading = ref(false);
 const error = ref("");
 
-// Detect OAuth callback synchronously so template never shows the verify form
-const isOAuthCallback = computed(() => !!(route.query.code && route.query.session_state));
+// Detect OAuth callback synchronously so template never shows the verify form.
+// By the code alone: Keycloak does not always send session_state, and a
+// callback taken for a signup left the user on an empty code form.
+const isOAuthCallback = computed(() => !!route.query.code);
+
+/** Keycloak refused the sign-in (e.g. a misconfigured client) and says why. */
+const oauthError = computed(() => (route.query.error ? String(route.query.error_description || route.query.error) : ""));
+
+function backFromFailedGoogle() {
+  const intent = takeGoogleIntent();
+  router.replace({ name: intent === "signup" ? "signup" : "login", params: { lang: lang.value } });
+}
 
 // Handle Google OAuth callback — exchange code and redirect to category page
 onMounted(async () => {
@@ -100,8 +121,7 @@ onMounted(async () => {
     const createdEvent = await syncDraftToBackend();
 
     // Login → dashboard, Signup → event creation flow
-    const intent = sessionStorage.getItem("google_oauth_intent");
-    sessionStorage.removeItem("google_oauth_intent");
+    const intent = takeGoogleIntent();
 
     if (createdEvent?.event?.id || createdEvent?.id) {
       // Event was auto-created from draft — go straight to dashboard
@@ -231,5 +251,14 @@ function onChangeEmail() {
   font-size: 14px;
   font-weight: 600;
   text-align: center;
+}
+
+/* Keycloak's own words, for whoever has to fix it — small, but not hidden. */
+.oauth-detail {
+  margin: 0 0 16px;
+  color: var(--ink-3, #6b665e);
+  font-size: 12.5px;
+  text-align: center;
+  word-break: break-word;
 }
 </style>
