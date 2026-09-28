@@ -1,6 +1,7 @@
 import axios from "axios";
 import { decodeJwtPayload } from "@/services/jwt";
 import { baseUrl } from "./baseUrl";
+import { refreshTokens, SessionExpiredError } from "./tokenRefresh";
 
 function getToken() {
   return localStorage.getItem("access_token");
@@ -41,26 +42,9 @@ function processQueue(error, token) {
 }
 
 async function refreshAccessToken() {
-  const refreshToken = getRefreshToken();
-  if (!refreshToken) throw new Error("No refresh token");
-
-  const res = await axios.post(`${baseUrl}/public/users/refresh-token`, {
-    refreshToken
-  });
-
-  const data = res.data;
-  const accessToken = data.access_token || data.accessToken;
-  const newRefresh = data.refresh_token || data.refreshToken;
-
-  if (accessToken) {
-    localStorage.setItem("access_token", accessToken);
-  }
-  if (newRefresh) {
-    localStorage.setItem("refresh_token", newRefresh);
-  }
-
+  const data = await refreshTokens();
   scheduleProactiveRefresh();
-  return accessToken;
+  return data.access_token;
 }
 
 // Response interceptor – refresh token on 401
@@ -91,6 +75,12 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError, null);
+        // Only a refused refresh token ends the session. A refresh that
+        // failed because the network blinked leaves the person signed in;
+        // this request fails, and the next one tries again.
+        if (!(refreshError instanceof SessionExpiredError)) {
+          return Promise.reject(error);
+        }
         // Clear tokens and redirect to login
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");

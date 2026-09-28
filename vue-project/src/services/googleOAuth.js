@@ -1,4 +1,4 @@
-import { getRuntimeEnv, detectDefaultEnvFromLocation, computeKeycloakBaseUrl } from '@/services/env'
+import { keycloakClientConfig } from '@/services/keycloakClient'
 
 /**
  * Signing in with Google, through Keycloak, with PKCE.
@@ -26,18 +26,6 @@ const TOKEN_KEYS = ['access_token', 'refresh_token', 'id_token', 'onboarding_sta
 /** Where Keycloak sends the browser back to, in both directions of the flow. */
 export function callbackUri(lang) {
   return `${window.location.origin}/${lang}/auth/verify-email`
-}
-
-/** The Keycloak realm and public client, fixed outside local development. */
-export function keycloakClientConfig() {
-  const env = getRuntimeEnv()
-  const appEnv = (env.APP_ENV || detectDefaultEnvFromLocation()).toString().toLowerCase()
-  const isLocal = appEnv === 'local'
-  return {
-    keycloakUrl: isLocal ? env.VITE_KEYCLOAK_URL || computeKeycloakBaseUrl(appEnv) : computeKeycloakBaseUrl(appEnv),
-    realm: isLocal ? env.VITE_KEYCLOAK_REALM || 'event-app' : 'event-app',
-    clientId: isLocal ? env.VITE_KEYCLOAK_CLIENT_ID || 'eventFE' : 'eventFE',
-  }
 }
 
 function base64Url(bytes) {
