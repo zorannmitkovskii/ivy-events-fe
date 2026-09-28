@@ -150,6 +150,29 @@
     Чекорите означени со <span class="who mine">Claude</span> се во кодот и ги правам јас.
   </p>
 
+  <section class="step" aria-labelledby="s-server">
+    <div class="step-head"><h2 id="s-server">Вашиот сервер</h2></div>
+    <p>Утврдено на 25.09.2026. Certbot на самиот сервер <b>нема</b> сертификати (<code>No certificates found</code>). Сите се во Docker:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Што</th><th>На серверот</th><th>Во контејнер</th></tr></thead>
+        <tbody>
+          <tr><td>Сертификати</td><td><code>/opt/ivy-events/infra/certbot/conf</code></td><td><code>/etc/letsencrypt</code></td></tr>
+          <tr><td>ACME webroot</td><td><code>/opt/ivy-events/infra/certbot/www</code></td><td><code>/var/www/certbot</code></td></tr>
+          <tr><td>Nginx конфигурација</td><td><code>/opt/ivy-events/infra/nginx/conf.d</code></td><td><code>/etc/nginx/conf.d</code></td></tr>
+          <tr><td>Контејнери</td><td colspan="2"><code>ivy-nginx</code>, <code>ivy-certbot</code> (<code>certbot/certbot</code>), <code>ivy-events-fe</code>, <code>ivy-events-be</code>, <code>ivy-keycloak</code></td></tr>
+          <tr><td>Compose</td><td colspan="2"><code>docker compose</code> (v5), нема <code>docker-compose</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Затоа наместо <code>sudo certbot …</code> секаде се користи <code>docker exec ivy-certbot certbot …</code>, а наместо <code>systemctl reload nginx</code> се користи <code>docker exec ivy-nginx nginx -s reload</code>.</p>
+    <div class="danger">
+      <b>Прво проверете го ова:</b> <code>ivy-nginx</code> работеше без прекин 3 месеци, а сертификатите се обновени на 17–18.09.
+      Nginx го чита сертификатот само при старт или reload. Ако датумот што го служи (чекор 1б) е постар од оној на диск (чекор 1а), направете reload веднаш:
+<pre><code>docker exec ivy-nginx nginx -t &amp;&amp; docker exec ivy-nginx nginx -s reload</code></pre>
+    </div>
+  </section>
+
   <section class="step" aria-labelledby="s-check">
     <div class="step-head"><h2 id="s-check">Напредок</h2></div>
     <p class="progress"><span id="progress-text">0 од 0</span> чекори готови · се чува само во овој прелистувач</p>
@@ -183,17 +206,17 @@
 
     <h3>а) На серверот: сите сертификати, домени и рок</h3>
     <div class="tabs" role="tablist" data-group="certs">
-      <button role="tab" aria-selected="true" data-tab="host">certbot на серверот</button>
-      <button role="tab" aria-selected="false" data-tab="docker">certbot во Docker</button>
+      <button role="tab" aria-selected="true" data-tab="docker">ivy-certbot (вашиот случај)</button>
+      <button role="tab" aria-selected="false" data-tab="host">certbot на серверот</button>
     </div>
-    <div class="tab-panel" data-group="certs" data-panel="host">
+    <div class="tab-panel" data-group="certs" data-panel="host" hidden>
 <pre><code>sudo certbot certificates</code></pre>
     </div>
-    <div class="tab-panel" data-group="certs" data-panel="docker" hidden>
-<pre><code># Името на сервисот/контејнерот го наоѓате со: docker ps
-docker compose run --rm certbot certificates
-# или, без compose:
-docker run --rm -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot certificates</code></pre>
+    <div class="tab-panel" data-group="certs" data-panel="docker">
+<pre><code>docker exec ivy-certbot certbot certificates
+
+# Ако контејнерот не работи:
+docker run --rm -v /opt/ivy-events/infra/certbot/conf:/etc/letsencrypt certbot/certbot certificates</code></pre>
     </div>
     <p>За секој сертификат гледајте:</p>
     <ul>
@@ -217,16 +240,17 @@ $req.ServicePoint.Certificate | Format-List Subject, Issuer, GetExpirationDateSt
   <section class="step" aria-labelledby="s2">
     <div class="step-head"><span class="num">2</span><h2 id="s2">Проверете го автоматското обновување <span class="who">вие</span></h2></div>
 <pre><code># Проба на обновување, без вистински промени
-sudo certbot renew --dry-run
+docker exec ivy-certbot certbot renew --dry-run
 
-# Дали има тајмер/cron што го извршува
-systemctl list-timers | grep -i certbot
-sudo crontab -l | grep -i certbot</code></pre>
-    <p>Ако certbot е во Docker, обновувањето најчесто е cron на хостот што го стартува контејнерот. Проверете го и тој cron.</p>
+# Како ivy-certbot обновува: неговата команда (најчесто јамка „renew; sleep 12h“)
+docker inspect ivy-certbot --format '{{.Config.Entrypoint}} {{.Config.Cmd}}'
+
+# Дали нешто на хостот прави reload на nginx по обновување
+crontab -l | grep -iE 'certbot|nginx'</code></pre>
     <div class="warn">
       По обновување nginx мора да се reload-ира, инаку продолжува да го служи стариот сертификат од меморија.
       Проверете дали во <code>/etc/letsencrypt/renewal/*.conf</code> или во cron-от има <code>--deploy-hook "nginx -s reload"</code>
-      (за Docker: <code>docker exec &lt;nginx-контејнер&gt; nginx -s reload</code>).
+      (кај вас: <code>docker exec ivy-nginx nginx -s reload</code>, на пример cron секој ден во 04:00).
     </div>
   </section>
 
@@ -294,14 +318,13 @@ Resolve-DnsName proba-123.ivyevents.mk   # PowerShell</code></pre>
     <p>Препорака: нов сертификат со посебно име <code>ivyevents.mk-wildcard</code>. Сегашните два не се допираат, па ништо од постоечкото не може да се скрши.</p>
 
     <div class="tabs" role="tablist" data-group="dns01">
-      <button role="tab" aria-selected="true" data-tab="cf">6а. Cloudflare (автоматски)</button>
-      <button role="tab" aria-selected="false" data-tab="cfdocker">6а. Cloudflare во Docker</button>
+      <button role="tab" aria-selected="true" data-tab="cfdocker">6а. Cloudflare во Docker (вашиот случај)</button>
+      <button role="tab" aria-selected="false" data-tab="cf">6а. Cloudflare на серверот</button>
       <button role="tab" aria-selected="false" data-tab="manual">6б. Рачно (без API)</button>
     </div>
 
-    <div class="tab-panel" data-group="dns01" data-panel="cf">
-      <p>1. Во Cloudflare: <i>My Profile → API Tokens → Create Token → „Edit zone DNS“</i>, ограничено на зоната <code>ivyevents.mk</code>.</p>
-      <p>2. На серверот:</p>
+    <div class="tab-panel" data-group="dns01" data-panel="cf" hidden>
+      <p>Само ако certbot е инсталиран на самиот сервер. Кај вас не е, видете го првиот таб.</p>
 <pre><code>sudo apt install -y python3-certbot-dns-cloudflare     # или: pip install certbot-dns-cloudflare
 
 sudo mkdir -p /root/.secrets
@@ -317,21 +340,36 @@ sudo certbot certonly \
       <p>Обновувањето потоа е автоматско, со истиот plugin (проверете повторно со <code>certbot renew --dry-run</code>).</p>
     </div>
 
-    <div class="tab-panel" data-group="dns01" data-panel="cfdocker" hidden>
+    <div class="tab-panel" data-group="dns01" data-panel="cfdocker">
+      <p>1. Во Cloudflare: <i>My Profile → API Tokens → Create Token → „Edit zone DNS“</i>, ограничено на зоната <code>ivyevents.mk</code>.</p>
+      <p>2. Токенот на серверот, читлив само за root:</p>
+<pre><code>mkdir -p /opt/ivy-events/infra/certbot/secrets
+echo 'dns_cloudflare_api_token = ОВДЕ_ТОКЕНОТ' &gt; /opt/ivy-events/infra/certbot/secrets/cloudflare.ini
+chmod 600 /opt/ivy-events/infra/certbot/secrets/cloudflare.ini</code></pre>
+      <p>3. Издавање:</p>
 <pre><code>docker run --rm \
-  -v /etc/letsencrypt:/etc/letsencrypt \
-  -v /root/.secrets:/secrets:ro \
+  -v /opt/ivy-events/infra/certbot/conf:/etc/letsencrypt \
+  -v /opt/ivy-events/infra/certbot/secrets:/secrets:ro \
   certbot/dns-cloudflare certonly \
     --dns-cloudflare \
     --dns-cloudflare-credentials /secrets/cloudflare.ini \
     --dns-cloudflare-propagation-seconds 30 \
     --cert-name ivyevents.mk-wildcard \
     -d ivyevents.mk -d '*.ivyevents.mk'</code></pre>
-      <p>За обновување, во cron-от за renew користете ја истата слика <code>certbot/dns-cloudflare</code>, не <code>certbot/certbot</code>. Обичната слика го нема plugin-от.</p>
+      <div class="danger">
+        <b>Обновувањето ќе падне ако ова не се смени.</b> <code>ivy-certbot</code> користи <code>certbot/certbot</code>, која го нема Cloudflare plugin-от.
+        Во compose датотеката во <code>/opt/ivy-events/infra</code>, кај сервисот за <code>ivy-certbot</code>:
+        <ul>
+          <li><code>image: certbot/dns-cloudflare:latest</code> (ги содржи сите функции на обичната слика, па HTTP-01 обновувањата на постоечките два сертификати продолжуваат да работат);</li>
+          <li>дополнителен volume: <code>./certbot/secrets:/secrets:ro</code>.</li>
+        </ul>
+        Потоа <code>docker compose up -d &lt;сервис&gt;</code> и <code>docker exec ivy-certbot certbot renew --dry-run</code>. Мора да поминат сите три сертификати.
+      </div>
     </div>
 
     <div class="tab-panel" data-group="dns01" data-panel="manual" hidden>
-<pre><code>sudo certbot certonly --manual --preferred-challenges dns \
+<pre><code>docker run --rm -it -v /opt/ivy-events/infra/certbot/conf:/etc/letsencrypt certbot/certbot \
+  certonly --manual --preferred-challenges dns \
   --cert-name ivyevents.mk-wildcard \
   -d ivyevents.mk -d '*.ivyevents.mk'</code></pre>
       <p>Certbot ќе побара TXT запис <code>_acme-challenge.ivyevents.mk</code> (можно е два, по еден за секое име; тогаш двата стојат истовремено). Додајте го во DNS панелот и <b>пред</b> да притиснете Enter проверете:</p>
@@ -340,14 +378,16 @@ sudo certbot certonly \
     </div>
 
     <p>Проверка дека е издаден:</p>
-<pre><code>sudo certbot certificates --cert-name ivyevents.mk-wildcard
+<pre><code>docker exec ivy-certbot certbot certificates --cert-name ivyevents.mk-wildcard
 # Domains: ivyevents.mk *.ivyevents.mk
 # Certificate Path: /etc/letsencrypt/live/ivyevents.mk-wildcard/fullchain.pem</code></pre>
   </section>
 
   <section class="step" aria-labelledby="s7">
     <div class="step-head"><span class="num">7</span><h2 id="s7">Nginx блок за поддомените <span class="who">вие</span></h2></div>
-    <p>Во <code>ivy-events-fe/vue-project/nginx.conf</code> (продукцискиот) додадете го ова <b>после</b> постоечките <code>server</code> блокови.
+    <p>На серверот конфигурацијата е во <code>/opt/ivy-events/infra/nginx/conf.d</code> (во репото: <code>ivy-events-fe/vue-project/nginx.conf</code>). Прво копија:</p>
+<pre><code>cp -a /opt/ivy-events/infra/nginx/conf.d /opt/ivy-events/infra/nginx/conf.d.bak-$(date +%F)</code></pre>
+    <p>Потоа додадете го ова <b>после</b> постоечките <code>server</code> блокови.
       Nginx секогаш прво бара точно име (<code>api.</code>, <code>auth.</code>, <code>www.</code>, <code>test.</code>) пред regex, па тие не се засегнати.</p>
 <pre><code># ─── Сајтовите на *.ivyevents.mk: настани, добавувачи, агенции ───
 # Истиот SPA. Апликацијата го чита името од hostname-от, па тука нема rewrite.
@@ -393,12 +433,8 @@ server {
     }
 }</code></pre>
     <p>Проверка и reload:</p>
-<pre><code># nginx на хостот
-sudo nginx -t &amp;&amp; sudo systemctl reload nginx
-
-# nginx во Docker (името од: docker ps)
-docker exec &lt;nginx-контејнер&gt; nginx -t &amp;&amp; docker exec &lt;nginx-контејнер&gt; nginx -s reload</code></pre>
-    <div class="warn">Ако nginx е во Docker, папката <code>/etc/letsencrypt</code> мора да е mount-ната во контејнерот (веќе е, бидејќи сегашните сертификати работат). Новата <code>ivyevents.mk-wildcard</code> папка ќе се појави таму сама.</div>
+<pre><code>docker exec ivy-nginx nginx -t &amp;&amp; docker exec ivy-nginx nginx -s reload</code></pre>
+    <div class="note"><code>/opt/ivy-events/infra/certbot/conf</code> е веќе mount-нат во <code>ivy-nginx</code> како <code>/etc/letsencrypt</code>, па новата папка <code>ivyevents.mk-wildcard</code> ќе се појави таму сама. Ако <code>nginx -t</code> пријави грешка, reload не се прави и стариот конфиг продолжува да работи. Вратете ја копијата.</div>
   </section>
 
   <section class="step" aria-labelledby="s8">
