@@ -494,8 +494,8 @@ async function remove(pkg) {
 .price { font-weight: 700; color: var(--ink); font-size: 15px; }
 
 .td-actions { text-align: right; }
-.actions { display: flex; justify-content: flex-end; gap: 6px; opacity: 0; transition: opacity 0.15s; }
-.row-hover:hover .actions { opacity: 1; }
+/* Always visible: DataTable rows carry no hover class, and touch screens have no hover. */
+.actions { display: flex; justify-content: flex-end; gap: 6px; }
 
 .action-btn {
   width: 32px; height: 32px; border-radius: 8px; border: none;
