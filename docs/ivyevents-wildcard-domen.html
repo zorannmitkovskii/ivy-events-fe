@@ -439,21 +439,24 @@ server {
 
   <section class="step" aria-labelledby="s8">
     <div class="step-head"><span class="num">8</span><h2 id="s8">Кодот <span class="who mine">Claude</span></h2></div>
-    <p>Ова го правам јас, по ваше одобрување. Тука е за да знаете што уште фали:</p>
+    <p>Готово во кодот (треба само deploy на BE и FE):</p>
     <ul>
-      <li><b>Адреса на API-то од поддомен.</b> Денес <code>baseUrl.js</code> на <code>ana-marko.ivyevents.mk</code> би барал <code>https://ana-marko.ivyevents.mk:8282</code>, што не постои. Треба секој <code>*.ivyevents.mk</code> да оди на <code>https://api.ivyevents.mk</code>. CORS не треба да се менува: јавните endpoints (<code>/v1/api/public/**</code>) веќе примаат барања од секаде.</li>
-      <li><b>Резервирање адреса за настан</b> (BE):
-        <ul>
-          <li>endpoint за организаторот;</li>
-          <li>предлог од името: „Ана &amp; Марко“ → <code>ana-marko</code>;</li>
-          <li>409 ако е зафатено, со предлог;</li>
-          <li>одбивање на резервирани зборови;</li>
-          <li>вклучи/исклучи.</li>
-        </ul>
-      </li>
-      <li><b>Поле „Адреса на поканата“</b> во поставките на настанот (FE), и линковите и QR кодовите да ја користат новата адреса.</li>
-      <li><b>Отворени прашања кон вас:</b> дали е бесплатно или дел од пакет (<code>CUSTOM_DOMAIN</code> / INV_PREMIUM / INV_PRO), и кој смее да ја вклучи.</li>
+      <li>✅ <b>Адреса на API-то од поддомен.</b> Секој <code>&lt;име&gt;.ivyevents.mk</code> оди на <code>api.</code>, <code>iam.</code> и <code>auth.ivyevents.mk</code>; секој тест-сајт <code>&lt;име&gt;.test.ivyevents.mk</code> на <code>api.</code>, <code>iam.</code> и <code>auth.test.ivyevents.mk</code>.</li>
+      <li>✅ <b>CORS:</b> <code>/v1/api/public/**</code> сега прима барања од секој поддомен (претходно само <code>/public/**</code> — сајтовите на поддомени би биле блокирани).</li>
+      <li>✅ <b>Адреса за покана:</b> бесплатна за секој настан; ја поставува секој што смее да го менува настанот. Поставки → Детали → „Адреса на поканата“: предлог од името, проверка дали е слободна, вклучи/исклучи, копирај линк.</li>
+      <li>✅ <b>Линковите за гостите</b> (Линкови за покана, QR) ја користат новата адреса кога е вклучена.</li>
     </ul>
+    <div class="warn">
+      <b>Тест-серверот</b>: апликацијата и сајтовите се на <code>test.ivyevents.mk</code> — сајтовите како <code>&lt;име&gt;.test.ivyevents.mk</code>. Таму треба:
+      <ul>
+        <li>BE (<code>/opt/ivy-events/env/be.env</code>): <code>IVY_MICROSITE_PLATFORMDOMAIN=test.ivyevents.mk</code>, па BE одново.</li>
+        <li>FE: ништо — доменот го чита од адресата. <code>VITE_PLATFORM_DOMAIN</code> служи само за изречна замена.</li>
+        <li>DNS во DigitalOcean, зона <code>ivyevents.mk</code>: A запис <code>*.test</code> → <code>138.68.65.94</code>.</li>
+        <li>Wildcard сертификат за <code>test.ivyevents.mk</code> и <code>*.test.ivyevents.mk</code> (<code>--cert-name test.ivyevents.mk-wildcard</code>), со <code>certbot/dns-digitalocean</code>. <code>*.ivyevents.mk</code> не покрива две нивоа.</li>
+        <li>Nginx блок со <code>server_name "~^[a-z0-9][a-z0-9-]{0,62}\.test\.ivyevents\.mk$"</code> и патеките <code>/etc/letsencrypt/live/test.ivyevents.mk-wildcard/</code>.</li>
+      </ul>
+      На продукција не треба ништо од ова: и двата стандардно се <code>ivyevents.mk</code>.
+    </div>
   </section>
 
   <section class="step" aria-labelledby="s9">
@@ -488,7 +491,7 @@ for h in ivyevents.mk api.ivyevents.mk auth.ivyevents.mk; do curl -sI https://$h
           <tr><td>certbot: <code>Incorrect TXT record</code></td><td>TXT записот уште не се проширил</td><td>Подолго <code>--dns-…-propagation-seconds</code> (60–120); <code>dig TXT _acme-challenge.ivyevents.mk</code></td></tr>
           <tr><td>certbot: <code>too many certificates already issued</code></td><td>Rate limit на Let's Encrypt (5 исти на недела)</td><td>Пробувајте со <code>--dry-run</code> / <code>--staging</code> додека не успее</td></tr>
           <tr><td><code>api.</code> или <code>auth.</code> почна да ја враќа насловната</td><td>Wildcard блокот е пред нив или им фали точното <code>server_name</code></td><td>Точните имиња мора да постојат во свои блокови</td></tr>
-          <tr><td>Поддоменот се отвора, ама е празен / грешка во конзола кон <code>:8282</code></td><td>Кодот уште не е поправен (чекор 8)</td><td>Кај мене</td></tr>
+          <tr><td>Поддоменот се отвора, ама е празен / грешка во конзола кон <code>:8282</code> или CORS</td><td>Стара верзија на FE/BE на серверот</td><td>Deploy на најновиот FE и BE (чекор 8)</td></tr>
           <tr><td>По 90 дена сите поддомени паднаа</td><td>Рачен сертификат (6б) или renew без DNS plugin</td><td>Чекор 2 и 6а</td></tr>
         </tbody>
       </table>

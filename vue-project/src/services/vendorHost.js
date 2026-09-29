@@ -1,4 +1,4 @@
-import { getRuntimeEnv } from '@/services/env'
+import { getRuntimeEnv, siteDomainOf } from '@/services/env'
 
 /**
  * Which vendor, if any, this hostname belongs to (IVY-706).
@@ -14,7 +14,7 @@ import { getRuntimeEnv } from '@/services/env'
  */
 
 /** Hostnames that are the platform itself, never a vendor. */
-const RESERVED = new Set(['www', 'api', 'admin', 'app', 'test', 'staging', 'mail', 'cdn']);
+const RESERVED = new Set(['www', 'api', 'admin', 'app', 'test', 'dev', 'staging', 'mail', 'cdn', 'auth', 'iam']);
 
 export function platformDomain() {
   const env = getRuntimeEnv();
@@ -22,7 +22,10 @@ export function platformDomain() {
   // A literal `${...}` is env.js served without substitution — see baseUrl.js
   // for the same guard and the reason it exists.
   const usable = configured && !/\$\{[^}]+\}/.test(configured) ? configured : null;
-  return usable || 'ivyevents.mk';
+  // Otherwise read it off the address: on test.ivyevents.mk and its sites the
+  // sites live under test.ivyevents.mk, with no configuration to forget on deploy.
+  const host = typeof window === 'undefined' ? '' : window.location?.hostname;
+  return usable || siteDomainOf(host) || 'ivyevents.mk';
 }
 
 /**

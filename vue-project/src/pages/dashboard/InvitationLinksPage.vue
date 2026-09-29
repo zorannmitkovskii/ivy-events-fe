@@ -35,7 +35,7 @@
           v-if="!isGallery"
           :title="t('invitationLinks.regular')"
           :description="t('invitationLinks.regularDesc')"
-          :url="event.invitationUrl || ''"
+          :url="regularUrl"
           qr-file-name="invitation-qr-code.png"
         />
 
@@ -78,11 +78,15 @@ import { onboardingStore, setSelectedCategory } from "@/store/onboarding.store";
 import { EventCategoryEnum } from "@/enums/EventCategory";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import LinkCard from "@/components/dashboard/settings/LinkCard.vue";
+import { eventAddressService, invitationLinkFor } from "@/services/eventAddress.service";
 import { getErrorMessage } from "@/services/apiError";
 
 const { t, locale } = useI18n();
 
 const event = ref(null);
+/** The event's own address, when it has one switched on — it replaces the regular link. */
+const address = ref(null);
+const regularUrl = computed(() => invitationLinkFor(address.value, event.value?.invitationUrl));
 const loading = ref(false);
 const error = ref(null);
 
@@ -146,6 +150,8 @@ async function loadEvent() {
       privateInvitationUrl: inv.privateInvitationUrl || data.privateInvitationUrl || '',
       invitationName: inv.invitationName || '',
     };
+    // Best effort: without it the ordinary invitation address is shown, which still works.
+    address.value = await eventAddressService.get(eventId.value).catch(() => null);
 
     const cat = data?.categoryType || data?.category || "";
     if (cat) {

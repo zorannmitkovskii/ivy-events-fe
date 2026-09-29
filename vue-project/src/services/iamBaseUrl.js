@@ -6,7 +6,7 @@
 // two addresses, and pointing the whole app at either one breaks the other
 // half: aim it all at IAM and every /v1/api call comes back 403, aim it all at
 // the backend and login hits paths that no longer exist there.
-import { detectDefaultEnvFromLocation, getRuntimeEnv } from './env'
+import { detectDefaultEnvFromLocation, getRuntimeEnv, platformRootOf } from './env'
 
 const runtimeEnv = getRuntimeEnv()
 
@@ -26,8 +26,8 @@ function computeDefaultIamBaseUrl(env) {
     // network can reach it too.
     return `${usedProtocol}//${usedHost}:8282`
   }
-  if (usedHost === 'ivyevents.mk') return 'https://iam.ivyevents.mk'
-  if (usedHost === 'test.ivyevents.mk') return 'https://iam.test.ivyevents.mk'
+  const root = platformRootOf(usedHost)
+  if (root) return `https://iam.${root}`
   return `${usedProtocol}//${usedHost}:8282`
 }
 

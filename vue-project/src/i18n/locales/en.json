@@ -5262,5 +5262,28 @@
   },
   "listPager": {
     "label": "Pages"
+  },
+  "eventAddress": {
+    "title": "Invitation address",
+    "lede": "A short address for your invitation, free for every event: for example ana-marko.{domain}.",
+    "loading": "Loading…",
+    "label": "Address",
+    "checking": "Checking…",
+    "available": "\"{label}\" is free.",
+    "saved": "This is your address.",
+    "useSuggestion": "Use \"{label}\"",
+    "enable": "Open the invitation at this address",
+    "save": "Save address",
+    "saving": "Saving…",
+    "copy": "Copy link",
+    "copied": "Copied",
+    "note": "The invitation stays reachable at its usual address too; this is a second, shorter door.",
+    "loadFailed": "The address could not be loaded. Please try again.",
+    "saveFailed": "The address was not saved. Please try again.",
+    "problem": {
+      "INVALID": "At least 3 characters: Latin letters, digits and hyphens, with no hyphen at either end.",
+      "RESERVED": "\"{label}\" is reserved for the platform.",
+      "TAKEN": "\"{label}\" is taken."
+    }
   }
 }

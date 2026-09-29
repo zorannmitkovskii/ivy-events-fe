@@ -5266,5 +5266,28 @@
   },
   "listPager": {
     "label": "Faqet"
+  },
+  "eventAddress": {
+    "title": "Adresa e ftesës",
+    "lede": "Një adresë e shkurtër për ftesën tuaj, falas për çdo event: për shembull ana-marko.{domain}.",
+    "loading": "Po ngarkohet…",
+    "label": "Adresa",
+    "checking": "Po kontrolloj…",
+    "available": "„{label}“ është e lirë.",
+    "saved": "Kjo është adresa juaj.",
+    "useSuggestion": "Përdor „{label}“",
+    "enable": "Ftesa të hapet në këtë adresë",
+    "save": "Ruaj adresën",
+    "saving": "Po ruhet…",
+    "copy": "Kopjo lidhjen",
+    "copied": "U kopjua",
+    "note": "Ftesa mbetet e arritshme edhe në adresën e zakonshme; kjo është një derë e dytë, më e shkurtër.",
+    "loadFailed": "Adresa nuk u ngarkua. Provoni përsëri.",
+    "saveFailed": "Adresa nuk u ruajt. Provoni përsëri.",
+    "problem": {
+      "INVALID": "Të paktën 3 karaktere: shkronja latine, shifra dhe viza, pa vizë në fillim ose në fund.",
+      "RESERVED": "„{label}“ është e rezervuar për platformën.",
+      "TAKEN": "„{label}“ është e zënë."
+    }
   }
 }

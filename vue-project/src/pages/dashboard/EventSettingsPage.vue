@@ -65,6 +65,7 @@
         @go-invitations="goToInvitations"
         @go-packages="goToPackages"
       />
+      <EventAddressSection v-if="activeTab === 'details' && !isGallery && eventId" :event-id="String(eventId)" />
 
       <SettingsAgendaTab v-if="activeTab === 'agenda'" />
 
@@ -91,6 +92,7 @@ import SettingsAgendaTab from "@/components/dashboard/settings/SettingsAgendaTab
 import SettingsOurStoryTab from "@/components/dashboard/settings/SettingsOurStoryTab.vue";
 import SettingsCollageTab from "@/components/dashboard/settings/SettingsCollageTab.vue";
 import SettingsWeddingDetailsTab from "@/components/dashboard/settings/SettingsWeddingDetailsTab.vue";
+import EventAddressSection from "@/components/dashboard/settings/EventAddressSection.vue";
 
 const { t, locale } = useI18n();
 const router = useRouter();

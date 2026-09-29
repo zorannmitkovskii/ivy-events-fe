@@ -2,7 +2,7 @@
 // Fallbacks:
 // - local: default to current host with port 8282 (e.g., http://localhost:8282 or http://<lan-ip>:8282) for real-device testing
 // - test/prod: default to same host but BE port 8282 or dedicated public API domains to avoid hitting FE Nginx
-import { detectDefaultEnvFromLocation, getRuntimeEnv } from './env'
+import { detectDefaultEnvFromLocation, getRuntimeEnv, platformRootOf } from './env'
 const runtimeEnv = getRuntimeEnv();
 
 // Helper to determine if a value looks like an unresolved template placeholder (e.g., "${VITE_API_BASE_URL}")
@@ -28,13 +28,10 @@ function computeDefaultApiBaseUrl(env) {
     return `${usedProtocol}//${usedHost}:8282`;
   }
 
-  // Prefer dedicated public API domains in known environments
-  if (usedHost === 'ivyevents.mk')  {
-    return 'https://api.ivyevents.mk'
-  };
-  if (usedHost === 'test.ivyevents.mk')  {
-    return 'https://api.test.ivyevents.mk'
-  };
+  // Prefer dedicated public API domains in known environments — for the root
+  // and for the sites served one label under it (<label>.ivyevents.mk).
+  const root = platformRootOf(usedHost);
+  if (root) return `https://api.${root}`;
 
   // Fallback: use same origin with backend port 8282 (may require CORS/SSL on that port)
   return `${usedProtocol}//${usedHost}:8282`;
