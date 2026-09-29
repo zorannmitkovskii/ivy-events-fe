@@ -27,7 +27,7 @@ const { getAdminUsers, getAdminUser, createAdminUser, updateAdminUser, deleteUse
   }))
 
 vi.mock('@/services/userService', () => ({
-  getAdminUsers: (...args) => getAdminUsers(...args),
+  getAllAdminUsers: (...args) => getAdminUsers(...args),
   getAdminUser: (...args) => getAdminUser(...args),
   createAdminUser: (...args) => createAdminUser(...args),
   updateAdminUser: (...args) => updateAdminUser(...args),

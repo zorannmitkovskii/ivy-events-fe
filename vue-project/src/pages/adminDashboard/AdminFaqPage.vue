@@ -1,7 +1,14 @@
 <template>
   <div class="admin-page">
     <!-- Header -->
-    <PageHeader :title="$t('admin.faq.title')" :subtitle="$t('admin.faq.subtitle')" />
+    <PageHeader :title="$t('admin.faq.title')" :subtitle="$t('admin.faq.subtitle')">
+      <template #actions>
+        <button type="button" class="btn-create" data-testid="create" @click="openCreate">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          {{ $t('admin.faq.addBtn') }}
+        </button>
+      </template>
+    </PageHeader>
 
     <!-- Toolbar -->
     <Toolbar v-model:search="search" :search-placeholder="$t('admin.faq.searchPh')" />
@@ -42,18 +49,7 @@
       </template>
 
       <template v-if="filtered.length" #footer>
-        <span>{{ $t('common.showingRange', { from: startIndex, to: endIndex, total: filtered.length }) }}</span>
-        <span class="pagination-btns">
-          <button class="pg-btn" :disabled="page === 1" @click="prev">{{ $t('userDirectory.previous') }}</button>
-          <button
-            v-for="n in totalPages"
-            :key="n"
-            class="pg-btn"
-            :class="{ 'pg-btn--active': n === page }"
-            @click="goto(n)"
-          >{{ n }}</button>
-          <button class="pg-btn" :disabled="page === totalPages" @click="next">{{ $t('userDirectory.next') }}</button>
-        </span>
+        <ListPager v-model:page="page" :total-pages="totalPages" :from="startIndex" :to="endIndex" :total="filtered.length" />
       </template>
     </DataTable>
 
@@ -94,6 +90,7 @@
 <script setup>
 import StatusPill from '@/components/ui/StatusPill.vue'
 import DataTable from '@/components/ui/DataTable.vue'
+import ListPager from '@/components/ui/ListPager.vue'
 import Toolbar from '@/components/ui/Toolbar.vue'
 import PageHeader from '@/components/ui/PageHeader.vue'
 import { ref, computed, onMounted, watch } from "vue";
@@ -158,9 +155,6 @@ const endIndex = computed(() =>
   Math.min(page.value * perPage, filtered.value.length)
 );
 
-function next() { if (page.value < totalPages.value) page.value++; }
-function prev() { if (page.value > 1) page.value--; }
-function goto(n) { page.value = n; }
 
 /* ---- modal ---- */
 const modalOpen = ref(false);
@@ -225,6 +219,17 @@ function truncate(str, len) {
 </script>
 
 <style scoped>
+/* The create action lives in the page header, as on Пакети. */
+.btn-create {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 20px; border: none; border-radius: 10px;
+  background: var(--brand-main); color: #fff;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-create:hover { background: var(--brand-dark); }
+.btn-create svg { width: 16px; height: 16px; }
+
 
 .btn-add {
   padding: 9px 18px; border: none; border-radius: 10px;

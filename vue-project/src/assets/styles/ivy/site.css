@@ -181,8 +181,11 @@
 :is(.ivy-site, .ivy-dash) .tab b {display:block;font-weight:600;font-size:17px;color:var(--ink)}
 :is(.ivy-site, .ivy-dash) .tab span span {display:block;font-size:15px;color:var(--ink-2);margin-top:2px}
 :is(.ivy-site, .ivy-dash) .panel-wrap {background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow);min-height:420px}
-:is(.ivy-site, .ivy-dash) .panel {display:none}
-:is(.ivy-site, .ivy-dash) .panel.active {display:block;animation:fade .35s both}
+/* Only the landing tabs' panels start hidden. A bare `.panel` here hid every
+   element of that name inside the dashboard shell, the admin Settings page's
+   two sections among them. */
+:is(.ivy-site, .ivy-dash) .panel-wrap > .panel {display:none}
+:is(.ivy-site, .ivy-dash) .panel-wrap > .panel.active {display:block;animation:fade .35s both}
 :is(.ivy-site, .ivy-dash) .panel-head {display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line)}
 :is(.ivy-site, .ivy-dash) .panel-head b {font-weight:600}
 :is(.ivy-site, .ivy-dash) .panel-head span {font-size:14px;color:var(--ink-3)}

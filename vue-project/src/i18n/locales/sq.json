@@ -1705,7 +1705,10 @@
     "tableNumber": "Tavolina {number}",
     "noResults": "Nuk u gjet asnjë mysafir me atë emër",
     "loading": "Duke kërkuar tavolina...",
-    "error": "Nuk mund të ngarkoheshin informacionet e tavolinës. Provoni përsëri."
+    "error": "Nuk mund të ngarkoheshin informacionet e tavolinës. Provoni përsëri.",
+    "hint": "Shkruani të paktën {n} shkronja të emrit tuaj.",
+    "tooMany": "Shumë përpjekje. Prisni pak dhe provoni përsëri.",
+    "noTable": "Tavolina ende nuk është caktuar"
   },
   "cpay": {
     "pay": "Paguaj me cPay",
@@ -2080,7 +2083,7 @@
     "allergiesPlaceholder": "p.sh. arra, guackat, gluten...",
     "sending": "Duke dërguar...",
     "rsvpSuccess": "Faleminderit! RSVP juaj është pranuar.",
-    "rsvpError": "Diçka shkoi keq. Ju lutem provoni përsëri.",
+    "rsvpError": "Përgjigjja nuk u dërgua. Kontrolloni lidhjen dhe provoni përsëri — të dhënat mbeten në formular.",
     "youreInvited": "Jeni të ftuar",
     "youAreInvited": "Jeni të ftuar në dasmën e",
     "rsvpNow": "RSVP tani",
@@ -2091,7 +2094,8 @@
     "firstDance": "Vallëzimi i parë",
     "howWeMetDefault": "Një takim i rastësishëm në një kafene që ndryshoi gjithçka.",
     "firstDateDefault": "Një piknik në perëndim dielli buzë liqenit, një bisedë që zgjati me orë.",
-    "theProposalDefault": "Nën yje u bë një pyetje dhe u dha një premtim."
+    "theProposalDefault": "Nën yje u bë një pyetje dhe u dha një premtim.",
+    "rsvpTooMany": "Shumë përpjekje nga ky rrjet. Prisni disa minuta dhe provoni përsëri."
   },
   "editCollage": {
     "title": "Fotot e kolazhit",
@@ -2830,7 +2834,7 @@
     "domainStatus": {
       "NONE": "Asnjë domen i kërkuar.",
       "PENDING_VERIFICATION": "Në pritje të regjistrimit TXT në DNS.",
-      "VERIFIED": "I verifikuar. Në pritje të certifikatës.",
+      "VERIFIED": "Pronësia u konfirmua. Domeni ende duhet të drejtohet te ne.",
       "ACTIVE": "Aktiv përmes HTTPS.",
       "FAILED": "Dështoi."
     },
@@ -2848,7 +2852,9 @@
       "notFound": "Ky profil nuk është këtu.",
       "notFoundHint": "Adresa mund të ketë ndryshuar, ose profili ende nuk është publikuar.",
       "browseAll": "Shiko të gjithë profesionistët"
-    }
+    },
+    "pointHint": "Hapi 2: drejtojeni domenin te Ivy Events. Certifikata HTTPS lëshohet automatikisht; pastaj shtypni „Kontrollo tani“.",
+    "pointApexHint": "Për domenin kryesor (pa www), ku CNAME nuk lejohet, shtoni një rekord A drejt së njëjtës adresë IP si {target}."
   },
   "inbox": {
     "title": "Kërkesat e klientëve",
@@ -4435,7 +4441,9 @@
       "median": "Përgjigje tipike për {time}",
       "minutes": "{n} min",
       "hours": "{n} orë",
-      "days": "{n} ditë"
+      "days": "{n} ditë",
+      "emailed": "U dërgua me email te klienti.",
+      "notEmailed": "Nuk u dërgua me email — klienti nuk do ta shohë përgjigjen. Telefononi ose provoni përsëri."
     },
     "calendar": {
       "kind": {
@@ -5241,5 +5249,22 @@
       "publishedNotice": "Faqja u publikua.",
       "unpublishedNotice": "Faqja u hoq nga publikimi."
     }
+  },
+  "vendorOwner": {
+    "title": "Llogaria e furnitorit",
+    "hint": "Krijon llogarinë që drejton furnitorin (roli VENDOR). Një fjalëkalim i përkohshëm dërgohet me email. Një furnitor që ka tashmë llogari nuk mund të marrë pronar të dytë — stafin e shton pronari.",
+    "vendor": "Furnitori",
+    "pickVendor": "Zgjidhni furnitorin…",
+    "email": "Emaili i pronarit",
+    "firstName": "Emri",
+    "lastName": "Mbiemri",
+    "submit": "Cakto pronarin",
+    "saving": "Po krijohet…",
+    "created": "Llogaria {email} u krijua për {vendor}. Fjalëkalimi i përkohshëm u dërgua me email.",
+    "failed": "Llogaria nuk u krijua.",
+    "loadFailed": "Furnitorët nuk u ngarkuan."
+  },
+  "listPager": {
+    "label": "Faqet"
   }
 }

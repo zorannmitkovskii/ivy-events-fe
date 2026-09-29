@@ -105,6 +105,14 @@
               <p class="domain-name">{{ settings.customDomain }}</p>
               <p class="status" :class="domainClass">{{ t(`microsite.domainStatus.${settings.domainStatus}`) }}</p>
               <p v-if="settings.domainError" class="help">{{ settings.domainError }}</p>
+              <!-- Step two. Ownership is proven; the site goes live once the
+                   domain points at us and answers over HTTPS — which the check
+                   below tests for real rather than assumes. -->
+              <div v-if="settings.domainStatus === 'VERIFIED'" class="record" data-testid="domain-point-step">
+                <p>{{ t('microsite.pointHint') }}</p>
+                <p><span>CNAME</span> {{ pointTarget }}</p>
+                <p class="help">{{ t('microsite.pointApexHint', { target: pointTarget }) }}</p>
+              </div>
               <!-- The record to publish, spelled out. A vendor doing this once a year
                    should not have to work out what "TXT at a subdomain" means. -->
               <div v-if="claimDetails" class="record">
@@ -207,6 +215,9 @@ const number = (index) => String(index + 1).padStart(2, '0')
 
 const approved = computed(() => profile.value?.approvalStatus === 'APPROVED')
 const linkPrefix = computed(() => `${resolveVendorHost().platformDomain}/vendors/`)
+
+/** The name a vendor's own domain should point at: their free platform address. */
+const pointTarget = computed(() => `${settings.slug || slugDraft.value || '…'}.${resolveVendorHost().platformDomain}`)
 
 const domainClass = computed(() => ({
   ok: settings.domainStatus === 'ACTIVE',

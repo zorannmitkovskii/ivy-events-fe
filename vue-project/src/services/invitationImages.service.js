@@ -1,4 +1,5 @@
 import { api } from "@/services/api";
+import { baseUrl } from "@/services/baseUrl";
 import backendApi from "@/services/backendApi";
 import { withRetry, runInBackgroundWithRetry } from "@/utils/retry";
 
@@ -49,11 +50,9 @@ export const invitationImagesService = {
     });
   },
 
+  // Authenticated: deleting is for whoever manages the event.
   deleteOurStoryImage(eventId, url) {
-    return backendApi.delete("/public/media", { params: { path: url } });
+    return api.del(`${baseUrl}/public/media`, { params: { path: url } });
   },
 
-  deleteHeroImage(eventId) {
-    return backendApi.delete("/public/media", { params: { eventId } });
-  },
 };

@@ -130,6 +130,31 @@ describe('the inbox', () => {
     await flushPromises()
     expect(microsite.text()).not.toContain('Accept')
   })
+
+  it('says whether each reply to a microsite visitor was e-mailed, since that is the only way they read it', async () => {
+    service.inbox.mockResolvedValue({ data: [inquiry({ source: 'MICROSITE' })] })
+    service.thread.mockResolvedValue({ data: [
+      { id: 'm-1', authorRole: 'ORGANIZER', authorName: 'Ivana', body: 'Are you free?', createdAt: '2026-09-24T10:00:00Z' },
+      { id: 'm-2', authorRole: 'VENDOR', authorName: 'Studio', body: 'Yes!', createdAt: '2026-09-24T11:00:00Z', emailedAt: '2026-09-24T11:00:01Z' },
+      { id: 'm-3', authorRole: 'VENDOR', authorName: 'Studio', body: 'Also…', createdAt: '2026-09-24T12:00:00Z', emailedAt: null },
+    ] })
+    const wrapper = mountWith(VendorInboxPage)
+    await flushPromises()
+
+    const labels = wrapper.findAll('[data-testid="reply-delivery"]').map((label) => label.text())
+    expect(labels).toEqual([en.vendorWork.inbox.emailed, en.vendorWork.inbox.notEmailed])
+  })
+
+  it('says nothing about e-mail on an Ivy inquiry, whose client reads the thread in the app', async () => {
+    service.inbox.mockResolvedValue({ data: [inquiry({ source: 'IVY' })] })
+    service.thread.mockResolvedValue({ data: [
+      { id: 'm-2', authorRole: 'VENDOR', authorName: 'Studio', body: 'Yes!', createdAt: '2026-09-24T11:00:00Z', emailedAt: null },
+    ] })
+    const wrapper = mountWith(VendorInboxPage)
+    await flushPromises()
+
+    expect(wrapper.find('[data-testid="reply-delivery"]').exists()).toBe(false)
+  })
 })
 
 describe('the public inquiry form', () => {

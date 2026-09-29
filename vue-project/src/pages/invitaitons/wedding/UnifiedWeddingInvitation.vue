@@ -163,7 +163,7 @@
             :border-radius="rsvpConfig.borderRadius"
             :max-guests="rsvpConfig.maxGuests"
             :event-inactive="eventNotActive"
-            @submit="onRsvpSubmit"
+            :send="onRsvpSubmit"
           />
         </div>
       </div>

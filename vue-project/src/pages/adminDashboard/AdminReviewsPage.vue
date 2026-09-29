@@ -41,12 +41,16 @@
       <template #cell-date="{ row }">
         <span class="text-sub">{{ formatDate(row.createdAt) }}</span>
       </template>
+      <template v-if="filtered.length" #footer>
+        <ListPager v-model:page="page" :total-pages="totalPages" :from="startIndex" :to="endIndex" :total="filtered.length" />
+      </template>
     </DataTable>
   </div>
 </template>
 
 <script setup>
 import DataTable from '@/components/ui/DataTable.vue'
+import ListPager from '@/components/ui/ListPager.vue'
 import { useI18n } from 'vue-i18n'
 import Toolbar from '@/components/ui/Toolbar.vue'
 import PageHeader from '@/components/ui/PageHeader.vue'
@@ -119,9 +123,6 @@ const endIndex = computed(() =>
   Math.min(page.value * perPage, filtered.value.length)
 );
 
-function next() { if (page.value < totalPages.value) page.value++; }
-function prev() { if (page.value > 1) page.value--; }
-function goto(n) { page.value = n; }
 
 function formatDate(d) {
   if (!d) return "—";

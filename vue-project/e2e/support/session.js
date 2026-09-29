@@ -57,4 +57,25 @@ export async function signIn(page, { userId, eventId, lang = 'mk', roles = ['ORG
     },
     { token: fakeToken({ sub: userId, roles }), eventId, lang },
   )
+
+  // A platform admin holds every admin screen, as the backend answers. The
+  // sidebar is drawn from /me/privileges, so a spec whose stub never mentions
+  // that endpoint would otherwise show an admin an empty sidebar. Registered
+  // last, so it wins over a spec's catch-all route.
+  if (roles.includes('ADMIN')) {
+    await page.route('**/v1/api/me/privileges', (route) => route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ success: true, message: null, data: [{ type: 'ADMIN', owner: true, privileges: ADMIN_PRIVILEGES }] }),
+    }))
+  }
 }
+
+/** Every `admin:<path>` screen, in the order of `adminSections.js`. */
+const ADMIN_PRIVILEGES = [
+  'dashboard', 'site-analytics', 'settings',
+  'users', 'organizers', 'vendor-queue', 'reviews',
+  'events', 'packages', 'payments', 'invitation-templates',
+  'blog', 'tags', 'content-analytics', 'faq',
+  'contacts', 'email-templates', 'email-send',
+].map((path) => `admin:${path}`)

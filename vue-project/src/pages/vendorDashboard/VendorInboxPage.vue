@@ -91,6 +91,15 @@
             <li v-for="message in thread" :key="message.id" :class="['message', message.authorRole === 'VENDOR' ? 'mine' : '']">
               <small>{{ message.authorName || t('inbox.someone') }} · {{ day(message.createdAt) }}</small>
               <p>{{ message.body }}</p>
+              <!-- A visitor from the microsite has no account: the e-mail is the
+                   only way the reply reaches them, so say whether it went. -->
+              <small
+                v-if="message.authorRole === 'VENDOR' && selected.source === 'MICROSITE'"
+                :class="['delivery', message.emailedAt ? 'sent' : 'unsent']"
+                data-testid="reply-delivery"
+              >
+                {{ message.emailedAt ? t('vendorWork.inbox.emailed') : t('vendorWork.inbox.notEmailed') }}
+              </small>
             </li>
             <li v-if="!thread.length && selected.requirements" class="message">
               <p>{{ selected.requirements }}</p>
@@ -467,6 +476,15 @@ onMounted(async () => {
 .message small {
   color: var(--ink-3);
   font-size: 12px;
+}
+
+.message small.delivery {
+  display: block;
+  margin-top: 6px;
+}
+
+.message small.delivery.unsent {
+  color: var(--amber-ink, #8a5a12);
 }
 
 .message p {

@@ -1,5 +1,6 @@
 import axios from "axios";
 import backendApi from "@/services/backendApi";
+import { api } from "@/services/api";
 import { baseUrl } from "@/services/baseUrl";
 import { withRetry, runInBackgroundWithRetry } from "@/utils/retry";
 
@@ -67,21 +68,19 @@ export const mediaService = {
     });
   },
 
-  async remove(path) {
-    const res = await backendApi.delete("/public/media", {
-      params: { path }
-    });
-    return res.data;
+  // Deleting needs the host's token (only whoever manages the event may), so
+  // these go through the authenticated client. It is based on /v1/api; an
+  // absolute URL takes it to /public/media instead.
+  remove(path) {
+    return api.del(`${baseUrl}/public/media`, { params: { path } });
   },
 
-  async deleteById(id) {
-    const res = await backendApi.delete(`/public/media/${encodeURIComponent(id)}`);
-    return res.data;
+  deleteById(id) {
+    return api.del(`${baseUrl}/public/media/${encodeURIComponent(id)}`);
   },
 
-  async deleteSelected(fileIds) {
-    const res = await backendApi.post("/public/media/delete/selected", fileIds);
-    return res.data;
+  deleteSelected(fileIds) {
+    return api.post(`${baseUrl}/public/media/delete/selected`, fileIds);
   },
 
   downloadOneUrl(fileId) {

@@ -82,7 +82,7 @@ async function stubApi(page, { listFails = false } = {}) {
     if (path === '/crm/agency/risk-window') return wrapped({ riskWindowDays: 30, isDefault: true })
     if (path === '/events') return bare([{ id: EVENT, name: 'Ana & Marko', categoryType: 'WEDDING' }])
 
-    if (path === '/admin/users' && method === 'GET') {
+    if (path === '/admin/users/page' && method === 'GET') {
       if (listFails) {
         return route.fulfill({
           status: 403, contentType: 'application/json',
@@ -92,7 +92,8 @@ async function stubApi(page, { listFails = false } = {}) {
           }),
         })
       }
-      return bare(team)
+      // The directory pages through /admin/users/page and stops when hasMore is false.
+      return bare({ items: team, nextFirst: team.length, hasMore: false })
     }
 
     if (path === '/admin/users' && method === 'POST') {

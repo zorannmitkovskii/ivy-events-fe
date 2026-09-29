@@ -58,7 +58,7 @@ vi.mock('@/services/privileges.service', () => ({
   privilegesService: { mine: mocks.mine, catalogue: mocks.catalogue, members: mocks.members },
 }))
 vi.mock('@/services/userService', () => ({
-  getAdminUsers: (...args) => mocks.users(...args),
+  getAllAdminUsers: (...args) => mocks.users(...args),
   getAdminUser: vi.fn(),
   createAdminUser: vi.fn(),
   updateAdminUser: vi.fn(),

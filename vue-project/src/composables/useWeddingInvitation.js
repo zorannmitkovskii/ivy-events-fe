@@ -927,19 +927,20 @@ export function useWeddingInvitation(preset) {
   /*  RSVP submit                                                     */
   /* ================================================================ */
 
+  /**
+   * Sends a guest's RSVP. A failure is thrown, not swallowed: the form shows
+   * it and keeps the answers. Swallowing it here was what made the form thank
+   * a guest whose reply never arrived.
+   */
   async function onRsvpSubmit(payload) {
     if (!eventId) return;
-    try {
-      await rsvpService.submitRsvp(eventId, payload);
-      const names = payload.guests ? payload.guests.map(g => g.fullName) : [];
-      router.push({
-        name: 'RsvpSuccessSubmitPage',
-        params: { lang: route.params.lang || 'mk' },
-        query: { names: JSON.stringify(names) },
-      });
-    } catch (e) {
-      console.error('RSVP submit failed:', e);
-    }
+    await rsvpService.submitRsvp(eventId, payload);
+    const names = payload.guests ? payload.guests.map(g => g.fullName) : [];
+    router.push({
+      name: 'RsvpSuccessSubmitPage',
+      params: { lang: route.params.lang || 'mk' },
+      query: { names: JSON.stringify(names) },
+    });
   }
 
   /* ================================================================ */

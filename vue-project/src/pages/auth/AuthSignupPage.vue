@@ -48,7 +48,7 @@
            verification, and one with no name is a row nobody can identify
            in a registry other products read. -->
       <AuthInput
-        v-if="accountType === 'AGENCY_MEMBER'"
+        v-if="accountType === AGENCY"
         v-model="organizationName"
         :label="t('register.organizationName')"
         required
@@ -207,7 +207,12 @@ onMounted(() => resumePendingGoogleSignIn(onGoogle));
 // Personal by default. The safe reading of "they did not choose": an account
 // that should have been an agency is a support ticket; an agency created by
 // accident is a tenant in the registry nobody asked for.
-const ACCOUNT_TYPES = ["PERSONAL", "AGENCY_MEMBER"];
+// The values zm-iam-service accepts. It used to send AGENCY_MEMBER — the Ivy
+// role of an agency's staff, not an account type — which IAM refused, so no
+// agency could sign up. ORGANIZER makes IAM create the organization at
+// verification and grant this realm's owner role, AGENCY.
+const AGENCY = "ORGANIZER";
+const ACCOUNT_TYPES = ["PERSONAL", AGENCY];
 
 const accountType = ref("PERSONAL");
 const organizationName = ref("");
@@ -232,7 +237,7 @@ const translations = {
     'register.accountType': 'What kind of account do you need?',
     'register.personal': 'Personal',
     'register.personalHint': 'I am planning my own event',
-    'register.organizer': 'Organizer',
+    'register.organizer': 'Agency',
     'register.organizerHint': 'I plan events for clients',
     'register.organizationName': 'Agency name',
     'register.firstName': 'First Name',
@@ -278,7 +283,7 @@ const translations = {
     'register.accountType': 'Каков профил ти треба?',
     'register.personal': 'Личен',
     'register.personalHint': 'Планирам сопствен настан',
-    'register.organizer': 'Организатор',
+    'register.organizer': 'Агенција',
     'register.organizerHint': 'Планирам настани за клиенти',
     'register.organizationName': 'Име на агенцијата',
     'register.firstName': 'Име',
@@ -316,6 +321,15 @@ const translations = {
     'register.error.alreadyExists': 'Веќе постои сметка со оваа е-пошта.',
     'register.error.default': 'Регистрацијата не успеа. Ве молиме обидете се повторно.'
   }
+};
+
+translations.sq = {
+  'register.accountType': 'Çfarë lloj llogarie ju nevojitet?',
+  'register.personal': 'Personale',
+  'register.personalHint': 'Po planifikoj eventin tim',
+  'register.organizer': 'Agjenci',
+  'register.organizerHint': 'Planifikoj evente për klientë',
+  'register.organizationName': 'Emri i agjencisë',
 };
 
 const t = (key) => {
@@ -372,7 +386,7 @@ const canSubmit = computed(() => {
   // An agency without a name cannot be created, and the server refuses it. The
   // button says so first rather than letting somebody fill in a whole form to
   // be told at the end.
-  const organizationNamed = accountType.value !== "AGENCY_MEMBER"
+  const organizationNamed = accountType.value !== AGENCY
     || organizationName.value.trim().length > 0;
 
   return (
@@ -431,7 +445,7 @@ async function onRegister() {
       accountType: accountType.value,
       // Sent only when it means something. An organization name on a personal
       // signup is a field the server would have to decide to ignore.
-      organizationName: accountType.value === "AGENCY_MEMBER"
+      organizationName: accountType.value === AGENCY
         ? organizationName.value.trim()
         : null
     });
@@ -656,7 +670,7 @@ function onGoogle() {
   transition: transform 0.2s ease;
 }
 
-.segmented[data-picked='AGENCY_MEMBER']::before {
+.segmented[data-picked='ORGANIZER']::before {
   transform: translateX(100%);
 }
 

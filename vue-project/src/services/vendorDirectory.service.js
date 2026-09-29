@@ -79,6 +79,20 @@ export const vendorApplicationService = {
     return api.post(`/vendor-portal/application/${encodeURIComponent(vendorId)}/decision`,
       { decision, note });
   },
+
+  /** Every vendor, for choosing which one gets an owner. ADMIN reads them all. */
+  allVendors() {
+    return api.get("/vendors");
+  },
+
+  /**
+   * Creates the account that runs one vendor (role VENDOR on it). The server
+   * emails it a temporary password, and refuses with 409 when the vendor
+   * already has an account — after that, its owner adds the staff.
+   */
+  createOwner(vendorId, { email, firstName, lastName }) {
+    return api.post(`/admin/vendors/${encodeURIComponent(vendorId)}/owner`, { email, firstName, lastName });
+  },
 };
 
 /** Reviews from the couple's and the vendor's side. */

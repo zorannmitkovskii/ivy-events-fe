@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { VENDOR_GROUPS, VENDOR_TABS, capabilityForRoute, firstTabFor } from "@/router/vendorTabs";
+import { VENDOR_GROUPS, VENDOR_TABS, capabilityForRoute, firstAllowedTab, firstTabFor, privilegeForRoute } from "@/router/vendorTabs";
 
 /**
  * The tab list is used twice — the layout draws from it and the route guard
@@ -73,5 +73,25 @@ describe("vendor tabs", () => {
     const hidden = VENDOR_TABS.filter((tab) => tab.nav === false).map((tab) => tab.name);
 
     expect(hidden).toEqual(["vendor.application", "vendor.privileges"]);
+  });
+});
+
+describe("staff privileges", () => {
+  it("names the privilege each vendor screen needs, preview included", () => {
+    expect(privilegeForRoute("vendor.inbox")).toBe("vendor:inquiries");
+    expect(privilegeForRoute("vendor.calendar")).toBe("vendor:calendar");
+    expect(privilegeForRoute("vendor.application")).toBe("vendor:settings");
+    expect(privilegeForRoute("vendor.microsite.preview")).toBe("vendor:profile");
+    expect(privilegeForRoute("home")).toBeNull();
+  });
+
+  it("sends a member to the first screen they were given", () => {
+    const given = new Set(["vendor:calendar", "vendor:packages"]);
+    expect(firstAllowedTab((p) => given.has(p))).toBe("vendor.calendar");
+  });
+
+  it("never offers a hidden screen or one outside the member's grants", () => {
+    expect(firstAllowedTab((p) => p === "vendor:settings")).toBeNull();
+    expect(firstAllowedTab(() => false)).toBeNull();
   });
 });

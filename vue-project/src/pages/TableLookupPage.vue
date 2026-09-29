@@ -29,6 +29,8 @@
         </button>
       </div>
 
+      <p v-if="query.trim() && query.trim().length < MIN_QUERY" class="lookup-hint">{{ t('tableLookup.hint', { n: MIN_QUERY }) }}</p>
+
       <!-- Loading -->
       <div v-if="loading" class="state-msg">
         <div class="spinner"></div>
@@ -37,23 +39,24 @@
 
       <!-- Error -->
       <div v-else-if="error" class="state-msg state-msg--error">
-        {{ t('tableLookup.error') }}
+        {{ error }}
       </div>
 
       <!-- Results -->
-      <div v-else-if="query.length >= 2" class="results">
-        <div v-if="filtered.length === 0" class="no-results">
+      <div v-else-if="query.trim().length >= MIN_QUERY" class="results">
+        <div v-if="results.length === 0" class="no-results">
           {{ t('tableLookup.noResults') }}
         </div>
 
         <div
-          v-for="guest in filtered"
+          v-for="guest in results"
           :key="guest.name"
           class="result-card"
         >
           <div class="result-name">{{ guest.name }}</div>
           <div class="result-table">
-            <span class="table-badge">{{ t('tableLookup.tableNumber', { number: guest.tableNumber }) }}</span>
+            <span v-if="guest.tableNumber" class="table-badge">{{ t('tableLookup.tableNumber', { number: guest.tableNumber }) }}</span>
+            <span v-else class="table-badge table-badge--none">{{ t('tableLookup.noTable') }}</span>
           </div>
         </div>
       </div>
@@ -62,43 +65,66 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { getTableInfo } from '@/services/backendApi';
+
+/*
+  The page asks the server for the name being typed and shows only what comes
+  back. It used to download every guest with their table on load and filter
+  here — the whole guest list, to anybody holding the link.
+*/
+const MIN_QUERY = 3;
+const DEBOUNCE_MS = 350;
+const TOO_MANY_REQUESTS = 429;
 
 const { t } = useI18n();
 const route = useRoute();
 
 const query = ref('');
-const guests = ref([]);
+const results = ref([]);
 const loading = ref(false);
-const error = ref(false);
+const error = ref('');
 const searchInput = ref(null);
 
-const filtered = computed(() => {
-  if (query.value.length < 2) return [];
-  const q = query.value.toLowerCase();
-  return guests.value.filter(g => g.name.toLowerCase().includes(q));
-});
+let timer = null;
+let latest = 0;
 
-onMounted(async () => {
+async function search(name) {
   const eventId = route.query.eventId;
   if (!eventId) return;
-
+  const ticket = ++latest;
   loading.value = true;
+  error.value = '';
   try {
-    const res = await getTableInfo(eventId);
-    guests.value = Array.isArray(res.data) ? res.data : (Array.isArray(res) ? res : []);
+    const res = await getTableInfo(eventId, name);
+    if (ticket !== latest) return;
+    results.value = Array.isArray(res?.data) ? res.data : [];
   } catch (e) {
-    console.error('Failed to load table info:', e);
-    error.value = true;
+    if (ticket !== latest) return;
+    results.value = [];
+    const status = e?.status ?? e?.response?.status;
+    error.value = status === TOO_MANY_REQUESTS ? t('tableLookup.tooMany') : t('tableLookup.error');
   } finally {
-    loading.value = false;
+    if (ticket === latest) loading.value = false;
   }
+}
 
-  searchInput.value?.focus();
+watch(query, (value) => {
+  clearTimeout(timer);
+  const name = value.trim();
+  if (name.length < MIN_QUERY) {
+    latest++;
+    results.value = [];
+    loading.value = false;
+    error.value = '';
+    return;
+  }
+  timer = setTimeout(() => search(name), DEBOUNCE_MS);
 });
+
+onMounted(() => searchInput.value?.focus());
 </script>
 
 <style scoped>
@@ -212,6 +238,17 @@ onMounted(async () => {
   padding: 24px 0;
   font-size: 14px;
   color: var(--ink-3);
+}
+
+.lookup-hint {
+  margin: 10px 0 0;
+  color: #7a7468;
+  font-size: 13px;
+  text-align: center;
+}
+
+.table-badge--none {
+  opacity: 0.7;
 }
 
 .state-msg--error {

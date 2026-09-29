@@ -190,9 +190,13 @@ const props = defineProps({
   dietaryLabel: { type: String, default: '' },
   dietaryOptions: { type: Array, default: null },
   eventInactive: { type: Boolean, default: false },
+  /**
+   * Sends the reply; resolves once it is stored. Awaited, so the guest sees
+   * "received" only when it was — an emitted event cannot be awaited, and the
+   * form used to thank the guest even when the request failed.
+   */
+  send: { type: Function, required: true },
 });
-
-const emit = defineEmits(['submit']);
 
 const guests = ref([{ fullName: '', isChild: false, dietary: '', allergies: '' }]);
 const notificationType = ref('');
@@ -268,12 +272,14 @@ async function onSubmit() {
   };
 
   try {
-    emit('submit', payload);
+    await props.send(payload);
     isSuccess.value = true;
     submitMessage.value = t('invitation.rsvpSuccess');
   } catch (e) {
+    // The answers stay in the form, so trying again is one click.
     isSuccess.value = false;
-    submitMessage.value = t('invitation.rsvpError');
+    const status = e?.status ?? e?.response?.status;
+    submitMessage.value = t(status === 429 ? 'invitation.rsvpTooMany' : 'invitation.rsvpError');
   } finally {
     isSubmitting.value = false;
   }

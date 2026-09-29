@@ -64,6 +64,9 @@
         </button>
         </div>
       </template>
+      <template v-if="filtered.length" #footer>
+        <ListPager v-model:page="page" :total-pages="totalPages" :from="startIndex" :to="endIndex" :total="filtered.length" />
+      </template>
     </DataTable>
 
     <!-- View Message Modal -->
@@ -99,6 +102,7 @@
 
 <script setup>
 import DataTable from '@/components/ui/DataTable.vue'
+import ListPager from '@/components/ui/ListPager.vue'
 import { useI18n } from 'vue-i18n'
 import StatusPill from '@/components/ui/StatusPill.vue'
 import Toolbar from '@/components/ui/Toolbar.vue'
@@ -173,9 +177,6 @@ const endIndex = computed(() =>
   Math.min(page.value * perPage, filtered.value.length)
 );
 
-function next() { if (page.value < totalPages.value) page.value++; }
-function prev() { if (page.value > 1) page.value--; }
-function goto(n) { page.value = n; }
 
 /* ---- modal ---- */
 const modalOpen = ref(false);

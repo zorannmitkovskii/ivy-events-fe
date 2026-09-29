@@ -210,12 +210,14 @@ test('an editor writes, tags, illustrates and publishes a post that readers can 
   await expect(page.locator('tbody')).toContainText('EN · Published')
 
   await page.goto(`/en/blog?tag=${TAG}`)
-  await expect(page.locator('.active-tag .tag')).toHaveText('#venues')
-  await expect(page.locator('.post .card-tags')).toHaveText('#venues')
+  // The redesigned list names the tag it is narrowed to; its cards carry no tags.
+  await expect(page.locator('.bl-active-tag .tag')).toHaveText('#venues')
+  await expect(page.locator('.bl-card')).toContainText('Choosing a venue')
   await page.getByRole('link', { name: /Choosing a venue/ }).first().click()
 
   await expect(page.locator('.prose h2')).toHaveText('Capacity first')
-  await expect(page.locator('.post-tags a')).toHaveAttribute('href', `/en/blog?tag=${TAG}`)
+  // A tag on an article opens the shared tag page: its posts, vendors and agencies.
+  await expect(page.locator('.bl-tags a')).toHaveAttribute('href', `/en/tags/${TAG}`)
 })
 
 test('SEO errors stop publishing, say what to fix, and publishing works once they are fixed', async ({ page }) => {

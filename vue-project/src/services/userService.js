@@ -21,6 +21,30 @@ export function getAdminUsers(params = {}) {
   return api.get("/admin/users", { params });
 }
 
+/** Keycloak rows per request; the server caps it at the same number. */
+const USERS_PAGE = 100;
+/** A ceiling on requests, so a runaway answer cannot loop forever. */
+const MAX_USER_PAGES = 50;
+
+/**
+ * Every user the caller may see, page by page.
+ *
+ * <p>The plain list endpoint answered twenty and the directory showed those
+ * twenty. Its length cannot say whether more exist — filtering by package
+ * happens after paging — so this reads `hasMore` from the paged endpoint.
+ */
+export async function getAllAdminUsers(params = {}) {
+  const users = [];
+  let first = 0;
+  for (let request = 0; request < MAX_USER_PAGES; request++) {
+    const page = await api.get("/admin/users/page", { params: { ...params, first, max: USERS_PAGE } });
+    users.push(...(page?.items ?? []));
+    if (!page?.hasMore) break;
+    first = page.nextFirst;
+  }
+  return users;
+}
+
 export function getAdminUser(id) {
   return api.get(`/admin/users/${encodeURIComponent(id)}`);
 }

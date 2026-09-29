@@ -30,12 +30,14 @@ export function subscribeToDiscounts(payload) {
 }
 
 /**
- * Fetch table-info for guests (public endpoint)
+ * A guest's table, looked up by the name they type (public endpoint).
+ * Only the guests whose name contains it come back — never the whole list.
  * @param {string} eventId
- * @returns {Promise<import('axios').AxiosResponse<Array<{name: string, tableNumber: string}>>>}
+ * @param {string} name at least 3 letters
+ * @returns {Promise<import('axios').AxiosResponse<Array<{name: string, tableNumber: string|null}>>>}
  */
-export function getTableInfo(eventId) {
-  return api.get('/public/guests/table-info', { params: { eventId } })
+export function getTableInfo(eventId, name) {
+  return api.get('/public/guests/table-info', { params: { eventId, name } })
 }
 
 export default api

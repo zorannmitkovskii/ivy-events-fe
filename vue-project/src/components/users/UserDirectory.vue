@@ -103,18 +103,7 @@
       </template>
 
       <template v-if="filtered.length > 0" #footer>
-        <span>{{ t('userDirectory.showing', { from: startIndex, to: endIndex, total: filtered.length }) }}</span>
-        <span class="pagination-btns">
-          <button class="pg-btn" :disabled="page === 1" @click="prev">{{ t('userDirectory.previous') }}</button>
-          <button
-            v-for="n in totalPages"
-            :key="n"
-            class="pg-btn"
-            :class="{ 'pg-btn--active': n === page }"
-            @click="goto(n)"
-          >{{ n }}</button>
-          <button class="pg-btn" :disabled="page === totalPages" @click="next">{{ t('userDirectory.next') }}</button>
-        </span>
+        <ListPager v-model:page="page" :total-pages="totalPages" :from="startIndex" :to="endIndex" :total="filtered.length" />
       </template>
     </DataTable>
 
@@ -210,10 +199,11 @@
 import Toolbar from '@/components/ui/Toolbar.vue'
 import { ref, computed, onMounted, watch } from 'vue'
 import DataTable from '@/components/ui/DataTable.vue'
+import ListPager from '@/components/ui/ListPager.vue'
 import PageHeader from '@/components/ui/PageHeader.vue'
 import StatusPill from '@/components/ui/StatusPill.vue'
 import { useI18n } from 'vue-i18n'
-import { getAdminUsers, getAdminUser, createAdminUser, updateAdminUser, deleteUser } from '@/services/userService'
+import { getAllAdminUsers, getAdminUser, createAdminUser, updateAdminUser, deleteUser } from '@/services/userService'
 import { eventsService } from '@/services/events.service'
 import { getErrorMessage } from '@/services/apiError'
 import { PackageTypeEnum } from '@/enums/PackageType'
@@ -280,8 +270,8 @@ async function fetchUsers() {
     const params = {}
     if (roleFilter.value) params.role = roleFilter.value
     if (props.showPackages && packageFilter.value) params.packageType = packageFilter.value
-    const data = await getAdminUsers(params)
-    users.value = Array.isArray(data) ? data : []
+    const list = await getAllAdminUsers(params)
+    users.value = Array.isArray(list) ? list : []
   } catch (e) {
     loadError.value = `${t('userDirectory.loadFailed')} ${getErrorMessage(e)}`
     users.value = []
@@ -328,9 +318,6 @@ const endIndex = computed(() =>
   Math.min(page.value * perPage, filtered.value.length)
 )
 
-function next() { if (page.value < totalPages.value) page.value++ }
-function prev() { if (page.value > 1) page.value-- }
-function goto(n) { page.value = n }
 
 /* ---- selection ---- */
 const selected = ref(new Set())

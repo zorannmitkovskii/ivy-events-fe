@@ -5,6 +5,10 @@
       <p class="sub">{{ t('vendorQueue.subtitle') }}</p>
     </header>
 
+    <!-- A vendor gets its account here and nowhere else: the portal needs the
+         VENDOR role, and no other screen hands it out. -->
+    <VendorOwnerForm ref="ownerForm" :preselect="ownerFor" />
+
     <p v-if="loading" class="state">{{ t('directory.loading') }}</p>
     <p v-else-if="!items.length" class="state">{{ t('vendorQueue.empty') }}</p>
 
@@ -45,6 +49,9 @@
           <button class="link-btn danger" @click="decide(vendor, 'REJECTED')">
             {{ t('vendorQueue.reject') }}
           </button>
+          <button class="link-btn" type="button" data-testid="set-owner" @click="setOwner(vendor)">
+            {{ t('vendorOwner.submit') }}
+          </button>
         </div>
       </li>
     </ul>
@@ -57,6 +64,7 @@
 import { onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { vendorApplicationService } from '@/services/vendorDirectory.service'
+import VendorOwnerForm from '@/components/admin/VendorOwnerForm.vue'
 
 const { t } = useI18n()
 
@@ -64,8 +72,16 @@ const items = ref([])
 const notes = reactive({})
 const loading = ref(true)
 const error = ref('')
+const ownerFor = ref('')
+const ownerForm = ref(null)
 
 onMounted(load)
+
+/** Opens the owner form on this vendor. */
+function setOwner(vendor) {
+  ownerFor.value = vendor.id
+  ownerForm.value?.$el?.scrollIntoView?.({ behavior: 'smooth', block: 'start' })
+}
 
 async function load() {
   loading.value = true

@@ -4,7 +4,8 @@ import { isAuthenticated, hasRole } from "@/services/auth.service";
 import { onboardingStore } from "@/store/onboarding.store";
 import { startLoading, stopLoading } from "@/store/loading.store";
 import { useVendorProfile } from "@/composables/useVendorProfile";
-import { capabilityForRoute, firstTabFor } from "@/router/vendorTabs";
+import { capabilityForRoute, firstAllowedTab, firstTabFor, privilegeForRoute } from "@/router/vendorTabs";
+import { usePrivileges } from "@/composables/usePrivileges";
 import { resolveVendorHost, siteTarget } from "@/services/vendorHost";
 import { api } from "@/services/api";
 import { homeForCurrentUser } from "@/router/landing";
@@ -433,6 +434,9 @@ const router = createRouter({
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition;
+    // An in-page link (the admin dashboard's "Извештаи" tile → #charts) goes to
+    // its section. Always returning the top made those links do nothing.
+    if (to.hash) return { el: to.hash, top: 16, behavior: "smooth" };
     return { top: 0 };
   },
 });
@@ -506,6 +510,19 @@ router.beforeEach(async (to) => {
     const needed = capabilityForRoute(to.name);
     if (profile && needed && !can(needed)) {
       return { name: firstTabFor(profile.capabilities), params: { lang } };
+    }
+  }
+
+  // Staff typing the address of a screen the owner did not give them. The
+  // server refuses the data as well; this spares them a screen of errors.
+  if (to.meta.requiresVendor && hasRole("VENDOR_MEMBER") && !hasRole("VENDOR")) {
+    const { load: loadPrivileges, can: mayOpen } = usePrivileges();
+    await loadPrivileges();
+    const privilege = privilegeForRoute(to.name);
+    if (privilege && !mayOpen(privilege)) {
+      const fallback = firstAllowedTab(mayOpen);
+      const target = fallback ?? "vendor.home";
+      if (target !== to.name) return { name: target, params: { lang } };
     }
   }
 

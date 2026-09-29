@@ -48,6 +48,28 @@ export function firstTabFor(capabilities = []) {
   return tab ? tab.name : "vendor.home";
 }
 
+/** Screens outside the sidebar that still belong to one privilege. */
+const EXTRA_ROUTE_PRIVILEGES = { "vendor.microsite.preview": "vendor:profile" };
+
+/** The privilege a staff member needs to open this route, or null when none does. */
+export function privilegeForRoute(routeName) {
+  return VENDOR_TABS.find((tab) => tab.name === routeName)?.privilege ?? EXTRA_ROUTE_PRIVILEGES[routeName] ?? null;
+}
+
+/**
+ * Where a staff member goes when they open a screen they were not given: the
+ * first tab they may open. Null when they may open none.
+ */
+export function firstAllowedTab(canOpen, capabilities = null) {
+  const tab = VENDOR_TABS.find(
+    (candidate) =>
+      candidate.nav !== false &&
+      canOpen(candidate.privilege) &&
+      (capabilities === null || candidate.capability === null || capabilities.includes(candidate.capability)),
+  );
+  return tab ? tab.name : null;
+}
+
 export function capabilityForRoute(routeName) {
   return VENDOR_TABS.find((tab) => tab.name === routeName)?.capability ?? null;
 }

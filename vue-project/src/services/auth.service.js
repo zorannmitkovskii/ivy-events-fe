@@ -1,6 +1,6 @@
-import apiPublic from "./backendApi";
 import iamApi from "./iamApi";
-import { scheduleProactiveRefresh } from "./api";
+import { api, scheduleProactiveRefresh } from "./api";
+import { baseUrl } from "./baseUrl";
 import { getRuntimeEnv, detectDefaultEnvFromLocation, computeKeycloakBaseUrl } from '@/services/env';
 import { claimOnboardingFor } from '@/store/onboarding.store';
 import { decodeJwtPayload } from '@/services/jwt';
@@ -156,9 +156,11 @@ export async function changePassword(email, currentPassword, newPassword) {
   return res?.data || res;
 }
 
-// Assign a role to a user by email (e.g. after Google OAuth registration)
+// Gives the signed-in account the ordinary USER role after Google sign-up.
+// Sent with the fresh access token: the server only lets a caller give
+// themselves USER, and only on their own email.
 export async function assignRole(email, role = "USER") {
-  const res = await apiPublic.post("/public/users/assign-role", { email, role });
+  const res = await api.post(`${baseUrl}/public/users/assign-role`, { email, role });
   return res?.data || res;
 }
 

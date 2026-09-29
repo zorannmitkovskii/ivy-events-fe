@@ -94,6 +94,9 @@
         </button>
         </div>
       </template>
+      <template v-if="filtered.length" #footer>
+        <ListPager v-model:page="page" :total-pages="totalPages" :from="startIndex" :to="endIndex" :total="filtered.length" />
+      </template>
     </DataTable>
 
     <!-- Delete error -->
@@ -296,6 +299,7 @@
 
 <script setup>
 import DataTable from '@/components/ui/DataTable.vue'
+import ListPager from '@/components/ui/ListPager.vue'
 import StatusPill from '@/components/ui/StatusPill.vue'
 import Toolbar from '@/components/ui/Toolbar.vue'
 import PageHeader from '@/components/ui/PageHeader.vue'
@@ -373,9 +377,6 @@ const endIndex = computed(() =>
   Math.min(page.value * perPage, filtered.value.length)
 );
 
-function next() { if (page.value < totalPages.value) page.value++; }
-function prev() { if (page.value > 1) page.value--; }
-function goto(n) { page.value = n; }
 
 /* ---- selection ---- */
 const selected = ref(new Set());
@@ -503,7 +504,7 @@ async function openEdit(event) {
       },
       invitationName: full.invitation?.invitationName || "",
     };
-  } catch (e) {
+  } catch {
     formError.value = "Failed to load event details";
   }
 }

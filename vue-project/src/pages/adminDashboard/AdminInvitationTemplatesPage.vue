@@ -1,7 +1,14 @@
 <template>
   <div class="admin-page">
     <!-- Header -->
-    <PageHeader :title="$t('admin.invitationTemplates.title')" :subtitle="$t('admin.invitationTemplates.subtitle')" />
+    <PageHeader :title="$t('admin.invitationTemplates.title')" :subtitle="$t('admin.invitationTemplates.subtitle')">
+      <template #actions>
+        <button type="button" class="btn-create" data-testid="create" @click="openCreate">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          {{ $t('admin.invitationTemplates.addBtn') }}
+        </button>
+      </template>
+    </PageHeader>
 
     <!-- Toolbar -->
     <Toolbar v-model:search="search" :search-placeholder="$t('admin.invitationTemplates.searchPh')">
@@ -57,6 +64,9 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
         </button>
         </div>
+      </template>
+      <template v-if="filtered.length" #footer>
+        <ListPager v-model:page="page" :total-pages="totalPages" :from="startIndex" :to="endIndex" :total="filtered.length" />
       </template>
     </DataTable>
 
@@ -114,6 +124,7 @@
 
 <script setup>
 import DataTable from '@/components/ui/DataTable.vue'
+import ListPager from '@/components/ui/ListPager.vue'
 import { useI18n } from 'vue-i18n'
 import StatusPill from '@/components/ui/StatusPill.vue'
 import Toolbar from '@/components/ui/Toolbar.vue'
@@ -194,9 +205,6 @@ const endIndex = computed(() =>
   Math.min(page.value * perPage, filtered.value.length)
 );
 
-function next() { if (page.value < totalPages.value) page.value++; }
-function prev() { if (page.value > 1) page.value--; }
-function goto(n) { page.value = n; }
 
 /* ---- path helper ---- */
 function buildFullPath(path) {
@@ -303,6 +311,17 @@ async function confirmDelete(row) {
 </script>
 
 <style scoped>
+/* The create action lives in the page header, as on Пакети. */
+.btn-create {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 20px; border: none; border-radius: 10px;
+  background: var(--brand-main); color: #fff;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-create:hover { background: var(--brand-dark); }
+.btn-create svg { width: 16px; height: 16px; }
+
 
 .filter-select {
   padding: 9px 14px; border: 1px solid var(--line); border-radius: 10px;

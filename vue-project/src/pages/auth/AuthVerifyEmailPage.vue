@@ -190,7 +190,11 @@ async function onVerify() {
       return;
     }
 
-    await router.push({ name: "EventCategoryPage", params: { lang: lang.value } });
+    // By role, the same as after a login: a new agency belongs on its own
+    // workspace, and a new couple with no event yet still lands on the first
+    // onboarding step. Sending everybody to the category page put agencies in
+    // the couple's flow on the first screen they ever saw.
+    await router.push(await landingAfterAuth(lang.value));
   } catch (e) {
     error.value = e?.message || "Verification failed";
   } finally {

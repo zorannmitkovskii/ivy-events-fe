@@ -9,7 +9,7 @@ import sq from '@/i18n/locales/sq.json'
 /** The create dialog's example values are the page's language, not a hard-coded "John Doe". */
 
 vi.mock('@/services/userService', () => ({
-  getAdminUsers: () => Promise.resolve({ content: [], totalElements: 0 }),
+  getAllAdminUsers: () => Promise.resolve({ content: [], totalElements: 0 }),
   getAdminUser: vi.fn(),
   createAdminUser: vi.fn(),
   updateAdminUser: vi.fn(),

@@ -1800,7 +1800,10 @@
     "tableNumber": "Table {number}",
     "noResults": "No guest found with that name",
     "loading": "Looking up tables...",
-    "error": "Could not load table information. Please try again."
+    "error": "Could not load table information. Please try again.",
+    "hint": "Type at least {n} letters of your name.",
+    "tooMany": "Too many attempts. Please wait a moment and try again.",
+    "noTable": "No table assigned yet"
   },
   "cpay": {
     "pay": "Pay with cPay",
@@ -2175,7 +2178,7 @@
     "allergiesPlaceholder": "e.g. nuts, shellfish, gluten...",
     "sending": "Sending...",
     "rsvpSuccess": "Thank you! Your RSVP has been received.",
-    "rsvpError": "Something went wrong. Please try again.",
+    "rsvpError": "Your reply was not sent. Check your connection and try again — what you entered is still in the form.",
     "youreInvited": "You're Invited",
     "youAreInvited": "You are invited to the wedding of",
     "rsvpNow": "RSVP Now",
@@ -2186,7 +2189,8 @@
     "firstDateDefault": "A sunset picnic by the lake, a conversation that lasted for hours.",
     "theProposalDefault": "Under the stars, a question was asked and a promise was made.",
     "rsvpMessage": "Please respond by {date}. We can't wait to celebrate with you!",
-    "contactQuestion": "For questions or additional information, please contact us at"
+    "contactQuestion": "For questions or additional information, please contact us at",
+    "rsvpTooMany": "Too many attempts from this network. Wait a few minutes and try again."
   },
   "editCollage": {
     "title": "Collage Photos",
@@ -2826,7 +2830,7 @@
     "domainStatus": {
       "NONE": "No domain claimed.",
       "PENDING_VERIFICATION": "Waiting for the TXT record in DNS.",
-      "VERIFIED": "Verified. Waiting for a certificate.",
+      "VERIFIED": "Ownership confirmed. The domain still has to point at us.",
       "ACTIVE": "Live over HTTPS.",
       "FAILED": "Failed."
     },
@@ -2844,7 +2848,9 @@
       "notFound": "This profile is not here.",
       "notFoundHint": "The address may have changed, or the profile is not published yet.",
       "browseAll": "Browse all suppliers"
-    }
+    },
+    "pointHint": "Step 2: point the domain at Ivy Events. The HTTPS certificate is issued automatically; then press \"Check now\".",
+    "pointApexHint": "For a bare domain (no www), where CNAME is not allowed, add an A record to the same IP address as {target}."
   },
   "inbox": {
     "title": "Client inquiries",
@@ -4431,7 +4437,9 @@
       "median": "Typical reply in {time}",
       "minutes": "{n} min",
       "hours": "{n} h",
-      "days": "{n} days"
+      "days": "{n} days",
+      "emailed": "E-mailed to the client.",
+      "notEmailed": "Not e-mailed — the client will not see this reply. Call them or try again."
     },
     "calendar": {
       "kind": {
@@ -5237,5 +5245,22 @@
       "publishedNotice": "The site is published.",
       "unpublishedNotice": "The site is no longer published."
     }
+  },
+  "vendorOwner": {
+    "title": "Vendor account",
+    "hint": "Creates the account that runs the vendor (role VENDOR). A temporary password is emailed. A vendor that already has an account cannot get a second owner — its owner adds the staff.",
+    "vendor": "Vendor",
+    "pickVendor": "Choose a vendor…",
+    "email": "Owner's email",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "submit": "Set owner",
+    "saving": "Creating…",
+    "created": "Account {email} created for {vendor}. A temporary password was emailed.",
+    "failed": "The account was not created.",
+    "loadFailed": "Vendors could not be loaded."
+  },
+  "listPager": {
+    "label": "Pages"
   }
 }

@@ -10,10 +10,12 @@ export const rsvpService = {
             name: g.fullName.trim(),
             isChild: g.isChild ?? false,
             dietary: g.dietary || null,
+            // Asked per guest on the form and, until now, dropped right here.
+            allergies: (g.allergies || '').trim() || null,
           }))
       : (formData.fullNames || [])
           .filter(n => n && n.trim())
-          .map(n => ({ name: n.trim(), isChild: false, dietary: null }));
+          .map(n => ({ name: n.trim(), isChild: false, dietary: null, allergies: null }));
 
     const isAccepted = formData.attendance === 'accept' || formData.attendance === 'yes';
 

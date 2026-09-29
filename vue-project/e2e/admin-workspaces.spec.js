@@ -57,7 +57,7 @@ test('the administrator top bar offers the console tabs, each with its own sideb
   const tabs = page.locator('header.top .roles a')
   const sidebar = page.locator('nav.snav a')
   await expect(tabs).toHaveText(['Admin', 'Users', 'Events', 'Content', 'Messages'])
-  await expect(sidebar).toHaveText(['Dashboard', 'Settings'])
+  await expect(sidebar).toHaveText(['Dashboard', 'Site traffic', 'Settings'])
 
   await tabs.filter({ hasText: 'Users' }).click()
 
@@ -129,9 +129,10 @@ test('on a phone the console tabs are in the menu', async ({ page }) => {
 
 test('an agency owner\'s panel offers no "My event"', async ({ page }) => {
   await stubApi(page)
-  await signIn(page, { userId: USER_ID, eventId: 'none', lang: 'en', roles: ['ORG_ADMIN', 'USER'] })
+  // AGENCY is the owner's role; the retired ORG_ADMIN no longer makes an agency.
+  await signIn(page, { userId: USER_ID, eventId: 'none', lang: 'en', roles: ['AGENCY', 'USER'] })
 
-  await page.goto('/en/org/dashboard')
+  await page.goto('/en/agency/dashboard')
 
   await expect(page.locator('header.top')).toBeVisible()
   await expect(page.locator('header.top .roles')).toHaveCount(0)

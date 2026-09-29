@@ -96,8 +96,10 @@ test('the sidebar reaches the directory and the rows carry their workload', asyn
   await page.goto('/en/admin/dashboard')
 
   // The sidebar entry specifically — since IVY-1103 the dashboard's nav grid
-  // offers the same destination, and this test is about the sidebar.
-  await page.locator('.nav-item[href="/en/admin/organizers"]').click()
+  // offers the same destination, and this test is about the sidebar. The
+  // console is tabbed: Organizers lives under Users, so that tab comes first.
+  await page.locator('header.top .roles a').filter({ hasText: 'Users' }).click()
+  await page.locator('nav.snav a[href="/en/admin/organizers"]').click()
   await expect(page).toHaveURL(/\/en\/admin\/organizers$/)
 
   const firstRow = page.locator('tbody tr').first()

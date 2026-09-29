@@ -111,9 +111,11 @@ async function fetchMessages() {
   loading.value = true;
   try {
     const eventId = currentEventId();
+    // Without an event, the caller's own messages. listAll is the support
+    // desk's whole inbox and is admin-only on the server.
     const data = eventId
       ? await contactService.listByEvent(eventId)
-      : await contactService.listAll();
+      : await contactService.listMine();
     messages.value = Array.isArray(data) ? data : [];
   } catch (e) {
     console.error("Failed to load messages:", e);

@@ -99,7 +99,8 @@ test('the platform dashboard leads with the tiles and leaves out task health and
   }))
   await openDashboard(page)
 
-  await expect(page.locator('.cards article, .cards a')).toHaveCount(2)
+  // Two event cards plus the revenue card the admin page adds through the cards slot.
+  await expect(page.locator('.cards article, .cards a')).toHaveCount(3)
   await expect(page.locator('.cards')).toContainText('76')     // total events
   await expect(page.getByText('78%')).toHaveCount(0)            // no RSVP rate anywhere
   await expect(page.locator('#attention')).toHaveCount(0)
@@ -112,10 +113,11 @@ test('the platform dashboard leads with the tiles and leaves out task health and
 
 test('an agency owner typing the admin URL is sent to their own dashboard', async ({ page }) => {
   await stubApi(page)
-  await signIn(page, { userId: ADMIN, eventId: 'none', lang: 'en', roles: ['ORG_ADMIN', 'USER'] })
+  // AGENCY, not the retired ORG_ADMIN; and the agency shell moved from /org to /agency.
+  await signIn(page, { userId: ADMIN, eventId: 'none', lang: 'en', roles: ['AGENCY', 'USER'] })
   await page.goto('/en/admin/dashboard')
 
-  await expect(page).toHaveURL(/\/en\/org\/dashboard$/)
+  await expect(page).toHaveURL(/\/en\/agency\/dashboard$/)
 })
 
 test('the Reports card brings the charts into view rather than leaving the page', async ({ page }) => {

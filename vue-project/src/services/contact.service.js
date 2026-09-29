@@ -42,4 +42,9 @@ export const contactService = {
   listByEvent(eventId) {
     return api.get(`/contact-us/event/${encodeURIComponent(eventId)}`);
   },
+
+  /** The caller's own messages — what a signed-in user sees without an event. */
+  listMine() {
+    return api.get("/contact-us/mine");
+  },
 };
