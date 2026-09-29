@@ -3227,6 +3227,20 @@
       "firstName": "Марија",
       "lastName": "Петровска",
       "email": "marija{'@'}primer.mk"
+    },
+    "links": {
+      "agency": "Агенција",
+      "existingAgency": "Постоечка агенција",
+      "newAgency": "Нова агенција",
+      "newAgencyPlaceholder": "Име на новата агенција",
+      "chooseAgency": "— Изберете агенција —",
+      "vendor": "Добавувач",
+      "searchVendors": "Пребарај добавувачи…",
+      "chooseVendor": "— Изберете добавувач —",
+      "ownerHint": "Сопственикот го води профилот на добавувачот. Ако добавувачот веќе има сопственик, ќе биде одбиено.",
+      "agencyAndVendor": "Корисникот не може истовремено да биде во агенција и кај добавувач.",
+      "agencyRequired": "За улогите AGENCY и AGENCY_MEMBER изберете агенција.",
+      "vendorRequired": "За улогите VENDOR и VENDOR_MEMBER изберете добавувач."
     }
   },
   "adminUsers": {

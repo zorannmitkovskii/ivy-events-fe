@@ -56,3 +56,9 @@ export function createAdminUser(data) {
 export function updateAdminUser(id, data) {
   return api.put(`/admin/users/${encodeURIComponent(id)}`, data);
 }
+
+/** Every agency, for placing a user in one: `{ id, name, ownerEmail }`. Platform admin only. */
+export async function getAllAgencies() {
+  const res = await api.get("/admin/agencies");
+  return res?.data ?? res ?? [];
+}

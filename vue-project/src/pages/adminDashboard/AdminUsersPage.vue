@@ -6,6 +6,7 @@
       :role-options="ROLE_OPTIONS"
       :protected-roles="PROTECTED_ROLES"
       :default-roles="DEFAULT_ROLES"
+      link-roles
       show-packages
     >
       <template #header-actions>
@@ -70,7 +71,8 @@ import { useI18n } from 'vue-i18n'
 import UserDirectory from '@/components/users/UserDirectory.vue'
 import { subscribeToDiscounts } from '@/services/backendApi'
 
-const ROLE_OPTIONS = ['ADMIN', 'AGENCY_MEMBER', 'USER']
+// Every role; agency and vendor roles ask which agency or vendor (link-roles).
+const ROLE_OPTIONS = ['ADMIN', 'AGENCY', 'AGENCY_MEMBER', 'VENDOR', 'VENDOR_MEMBER', 'USER']
 const PROTECTED_ROLES = ['ADMIN']
 const DEFAULT_ROLES = ['USER']
 

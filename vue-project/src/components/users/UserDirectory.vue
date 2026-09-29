@@ -138,6 +138,52 @@
                 </label>
               </div>
             </div>
+            <!-- An agency role is a seat in one agency, a vendor role a job at one
+                 vendor: without the link the account signs in to a workspace
+                 that has nothing to show it. -->
+            <div v-if="needsAgency" class="form-group form-group--full" data-testid="link-agency">
+              <label>{{ t('userDirectory.links.agency') }} <span class="req">*</span></label>
+              <div v-if="isAgencyOwner" class="link-mode">
+                <label class="check-label">
+                  <input v-model="form.orgMode" type="radio" value="existing" />
+                  <span>{{ t('userDirectory.links.existingAgency') }}</span>
+                </label>
+                <label class="check-label">
+                  <input v-model="form.orgMode" type="radio" value="new" />
+                  <span>{{ t('userDirectory.links.newAgency') }}</span>
+                </label>
+              </div>
+              <input
+                v-if="isAgencyOwner && form.orgMode === 'new'"
+                v-model="form.newOrganizationName"
+                type="text"
+                maxlength="120"
+                class="form-input"
+                :placeholder="t('userDirectory.links.newAgencyPlaceholder')"
+              />
+              <select v-else v-model="form.orgId" class="form-input">
+                <option value="">{{ t('userDirectory.links.chooseAgency') }}</option>
+                <option v-for="agency in agencies" :key="agency.id" :value="agency.id">
+                  {{ agency.name }}{{ agency.ownerEmail ? ` (${agency.ownerEmail})` : '' }}
+                </option>
+              </select>
+            </div>
+            <div v-if="needsVendor" class="form-group form-group--full" data-testid="link-vendor">
+              <label>{{ t('userDirectory.links.vendor') }} <span class="req">*</span></label>
+              <input
+                v-model="vendorSearch"
+                type="text"
+                class="form-input event-search-input"
+                :placeholder="t('userDirectory.links.searchVendors')"
+              />
+              <select v-model="form.vendorId" class="form-input">
+                <option value="">{{ t('userDirectory.links.chooseVendor') }}</option>
+                <option v-for="vendor in filteredVendors" :key="vendor.id" :value="vendor.id">
+                  {{ vendor.name }}{{ vendor.type ? ` — ${vendor.type}` : '' }}
+                </option>
+              </select>
+              <p v-if="form.roles.includes('VENDOR')" class="link-hint">{{ t('userDirectory.links.ownerHint') }}</p>
+            </div>
             <div v-if="showPackages" class="form-group">
               <label>{{ t('userDirectory.packageTypes') }}</label>
               <div class="checkbox-group checkbox-group--wrap">
@@ -203,7 +249,8 @@ import ListPager from '@/components/ui/ListPager.vue'
 import PageHeader from '@/components/ui/PageHeader.vue'
 import StatusPill from '@/components/ui/StatusPill.vue'
 import { useI18n } from 'vue-i18n'
-import { getAllAdminUsers, getAdminUser, createAdminUser, updateAdminUser, deleteUser } from '@/services/userService'
+import { getAllAdminUsers, getAdminUser, createAdminUser, updateAdminUser, deleteUser, getAllAgencies } from '@/services/userService'
+import { vendorApplicationService } from '@/services/vendorDirectory.service'
 import { eventsService } from '@/services/events.service'
 import { getErrorMessage } from '@/services/apiError'
 import { PackageTypeEnum } from '@/enums/PackageType'
@@ -218,7 +265,13 @@ const props = defineProps({
   /** Roles whose holders this caller must not delete. */
   protectedRoles: { type: Array, default: () => ['ADMIN'] },
   /** What a newly opened create dialog starts with. */
-  defaultRoles: { type: Array, default: () => ['USER'] }
+  defaultRoles: { type: Array, default: () => ['USER'] },
+  /**
+   * The platform administrator's editor: agency and vendor roles ask which
+   * agency or vendor, and send the link with the roles. An agency owner's team
+   * screen leaves it off — their organization is the only one.
+   */
+  linkRoles: { type: Boolean, default: false }
 })
 
 /**
@@ -392,7 +445,63 @@ function getRolePillClass(user) {
   if (roles.includes('ADMIN')) return 'pill--purple'
   if (roles.includes('AGENCY')) return 'pill--purple'
   if (roles.includes('AGENCY_MEMBER')) return 'pill--teal'
+  if (roles.includes('VENDOR')) return 'pill--amber'
+  if (roles.includes('VENDOR_MEMBER')) return 'pill--rose'
   return 'pill--blue'
+}
+
+/* ---- agency and vendor links (platform administrator only) ---- */
+const AGENCY_ROLES = ['AGENCY', 'AGENCY_MEMBER']
+const VENDOR_ROLES = ['VENDOR', 'VENDOR_MEMBER']
+
+const agencies = ref([])
+const vendors = ref([])
+const vendorSearch = ref('')
+
+const needsAgency = computed(() => props.linkRoles && form.value.roles.some(role => AGENCY_ROLES.includes(role)))
+const needsVendor = computed(() => props.linkRoles && form.value.roles.some(role => VENDOR_ROLES.includes(role)))
+/** Only a new owner may bring a new agency; an organizer joins an existing one. */
+const isAgencyOwner = computed(() => form.value.roles.includes('AGENCY'))
+
+const filteredVendors = computed(() => {
+  const q = vendorSearch.value.trim().toLowerCase()
+  const sorted = [...vendors.value].sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''), 'mk'))
+  if (!q) return sorted
+  // The chosen one stays listed, so a search never hides what is selected.
+  return sorted.filter(v => v.id === form.value.vendorId || String(v.name || '').toLowerCase().includes(q))
+})
+
+async function fetchLinkOptions() {
+  if (!props.linkRoles) return
+  const [agencyList, vendorList] = await Promise.all([
+    getAllAgencies().catch(() => []),
+    vendorApplicationService.allVendors().then(r => r?.data ?? r ?? []).catch(() => []),
+  ])
+  agencies.value = Array.isArray(agencyList) ? agencyList : []
+  vendors.value = Array.isArray(vendorList) ? vendorList : []
+}
+
+/** Mirrors the server's rules, so the common mistakes are named before a round trip. */
+function linkError() {
+  if (!props.linkRoles) return ''
+  if (needsAgency.value && needsVendor.value) return t('userDirectory.links.agencyAndVendor')
+  if (needsAgency.value) {
+    const wantsNew = isAgencyOwner.value && form.value.orgMode === 'new'
+    if (wantsNew ? !form.value.newOrganizationName.trim() : !form.value.orgId) return t('userDirectory.links.agencyRequired')
+  }
+  if (needsVendor.value && !form.value.vendorId) return t('userDirectory.links.vendorRequired')
+  return ''
+}
+
+/** The link fields the server reads, set only for the roles that need them. */
+function linkPayload() {
+  if (!props.linkRoles) return {}
+  const wantsNew = needsAgency.value && isAgencyOwner.value && form.value.orgMode === 'new'
+  return {
+    orgId: needsAgency.value && !wantsNew ? form.value.orgId || null : null,
+    newOrganizationName: wantsNew ? form.value.newOrganizationName.trim() : null,
+    vendorId: needsVendor.value ? form.value.vendorId || null : null,
+  }
 }
 
 /** Somebody this caller may see but must not remove — an owner, an administrator. */
@@ -412,7 +521,11 @@ const defaultForm = () => ({
   email: '',
   roles: [...props.defaultRoles],
   packageTypes: [],
-  eventIds: []
+  eventIds: [],
+  orgMode: 'existing',
+  orgId: '',
+  newOrganizationName: '',
+  vendorId: ''
 })
 
 const form = ref(defaultForm())
@@ -422,17 +535,21 @@ function openCreate() {
   form.value = defaultForm()
   formError.value = ''
   eventSearch.value = ''
+  vendorSearch.value = ''
   dialogOpen.value = true
   fetchEvents()
+  fetchLinkOptions()
 }
 
 async function openEdit(user) {
   editingId.value = user.id
   formError.value = ''
   eventSearch.value = ''
+  vendorSearch.value = ''
   form.value = defaultForm()
   dialogOpen.value = true
   fetchEvents()
+  fetchLinkOptions()
 
   try {
     const full = await getAdminUser(user.id)
@@ -442,7 +559,11 @@ async function openEdit(user) {
       email: full.email || '',
       roles: Array.isArray(full.roles) ? [...full.roles] : (full.role ? [full.role] : [...props.defaultRoles]),
       packageTypes: Array.isArray(full.packages) ? [...full.packages] : (full.packageType ? [full.packageType] : []),
-      eventIds: Array.isArray(full.eventIds) ? [...full.eventIds] : (full.eventId ? [full.eventId] : [])
+      eventIds: Array.isArray(full.eventIds) ? [...full.eventIds] : (full.eventId ? [full.eventId] : []),
+      orgMode: 'existing',
+      orgId: full.orgId || '',
+      newOrganizationName: '',
+      vendorId: full.vendorId || ''
     }
   } catch {
     formError.value = t('userDirectory.loadUserFailed')
@@ -462,6 +583,8 @@ async function save() {
   if (!form.value.lastName.trim()) { formError.value = t('userDirectory.lastNameRequired'); return }
   if (!form.value.email.trim()) { formError.value = t('userDirectory.emailRequired'); return }
   if (!form.value.roles.length) { formError.value = t('userDirectory.roleRequired'); return }
+  const missingLink = linkError()
+  if (missingLink) { formError.value = missingLink; return }
 
   const packageTypes = props.showPackages ? form.value.packageTypes : []
 
@@ -471,7 +594,8 @@ async function save() {
     email: form.value.email.trim(),
     roles: form.value.roles,
     packages: editingId.value ? packageTypes : (packageTypes.length ? packageTypes : null),
-    eventIds: editingId.value ? form.value.eventIds : (form.value.eventIds.length ? form.value.eventIds : null)
+    eventIds: editingId.value ? form.value.eventIds : (form.value.eventIds.length ? form.value.eventIds : null),
+    ...linkPayload()
   }
 
   saving.value = true
@@ -613,6 +737,10 @@ defineExpose({ openCreate })
 .pill--blue { background: #eff6ff; color: #2563eb; }
 .pill--purple { background: #f3e8ff; color: #7c3aed; }
 .pill--teal { background: #f0fdfa; color: #0d9488; }
+.pill--amber { background: #fffbeb; color: #b45309; }
+.pill--rose { background: #fff1f2; color: #be123c; }
+.link-mode { display: flex; gap: 16px; margin-bottom: 8px; }
+.link-hint { margin: 6px 0 0; font-size: 12.5px; color: var(--ink-3); }
 .pill--gray { background: var(--sunken); color: var(--ink-2); }
 .pill--gap { margin-right: 4px; margin-bottom: 2px; }
 

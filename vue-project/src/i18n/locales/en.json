@@ -3224,6 +3224,20 @@
       "firstName": "Jane",
       "lastName": "Smith",
       "email": "jane{'@'}example.com"
+    },
+    "links": {
+      "agency": "Agency",
+      "existingAgency": "Existing agency",
+      "newAgency": "New agency",
+      "newAgencyPlaceholder": "Name of the new agency",
+      "chooseAgency": "— Choose an agency —",
+      "vendor": "Vendor",
+      "searchVendors": "Search vendors…",
+      "chooseVendor": "— Choose a vendor —",
+      "ownerHint": "The owner runs the vendor profile. If the vendor already has an owner, this is refused.",
+      "agencyAndVendor": "A user cannot belong to an agency and a vendor at the same time.",
+      "agencyRequired": "AGENCY and AGENCY_MEMBER need an agency.",
+      "vendorRequired": "VENDOR and VENDOR_MEMBER need a vendor."
     }
   },
   "adminUsers": {

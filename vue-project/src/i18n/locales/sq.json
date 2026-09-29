@@ -3228,6 +3228,20 @@
       "firstName": "Arta",
       "lastName": "Krasniqi",
       "email": "arta{'@'}shembull.com"
+    },
+    "links": {
+      "agency": "Agjencia",
+      "existingAgency": "Agjenci ekzistuese",
+      "newAgency": "Agjenci e re",
+      "newAgencyPlaceholder": "Emri i agjencisë së re",
+      "chooseAgency": "— Zgjidhni agjencinë —",
+      "vendor": "Furnitori",
+      "searchVendors": "Kërko furnitorë…",
+      "chooseVendor": "— Zgjidhni furnitorin —",
+      "ownerHint": "Pronari e menaxhon profilin e furnitorit. Nëse furnitori ka tashmë pronar, kërkesa refuzohet.",
+      "agencyAndVendor": "Përdoruesi nuk mund të jetë njëkohësisht në agjenci dhe te furnitori.",
+      "agencyRequired": "Për rolet AGENCY dhe AGENCY_MEMBER zgjidhni agjencinë.",
+      "vendorRequired": "Për rolet VENDOR dhe VENDOR_MEMBER zgjidhni furnitorin."
     }
   },
   "adminUsers": {
