@@ -1,6 +1,12 @@
+function isNotClientError(err) {
+  const status = err?.response?.status ?? err?.status;
+  return !(status >= 400 && status < 500);
+}
+
 /**
  * Retry an async function with exponential backoff.
- * Stops retrying on 4xx client errors (the request itself is bad).
+ * By default stops retrying on 4xx client errors (the request itself is bad);
+ * pass `shouldRetry` to narrow it further.
  */
 export async function withRetry(fn, opts = {}) {
   const {
@@ -8,6 +14,7 @@ export async function withRetry(fn, opts = {}) {
     baseDelayMs = 600,
     maxDelayMs = 5000,
     onAttempt = null,
+    shouldRetry = isNotClientError,
   } = opts;
 
   let attempt = 0;
@@ -15,9 +22,7 @@ export async function withRetry(fn, opts = {}) {
     try {
       return await fn(attempt);
     } catch (err) {
-      const status = err?.response?.status ?? err?.status;
-      const isClientError = status >= 400 && status < 500;
-      if (attempt >= retries || isClientError) throw err;
+      if (attempt >= retries || !shouldRetry(err)) throw err;
 
       const delay = Math.min(maxDelayMs, baseDelayMs * Math.pow(2, attempt))
         + Math.floor(Math.random() * 200);

@@ -89,8 +89,11 @@ import BaseModal from "@/components/ui/BaseModal.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import { invitationImagesService } from "@/services/invitationImages.service.js";
 import { onboardingStore } from "@/store/onboarding.store.js";
+import { useToast } from "@/composables/useToast";
+import { uploadErrorMessage } from "@/utils/uploadError";
 
 const { t } = useI18n();
+const toast = useToast();
 
 const props = defineProps({
   open: { type: Boolean, default: false },
@@ -98,7 +101,7 @@ const props = defineProps({
   subModal: { type: Boolean, default: false },
 });
 
-const emit = defineEmits(["close", "uploaded", "files-collected", "upload-failed"]);
+const emit = defineEmits(["close", "uploaded", "upload-failed"]);
 
 const pendingFiles = ref([]);
 const uploading = ref(false);
@@ -162,11 +165,9 @@ async function uploadAll() {
   const files = pendingFiles.value.map((pf) => pf.file);
   const eventId = onboardingStore.eventId;
 
+  // Nothing can store the files without an event, so keep them selected instead of dropping them.
   if (!eventId) {
-    emit("files-collected", files);
-    pendingFiles.value = [];
-    revokeAll();
-    emit("close");
+    errorMsg.value = t("uploadErrors.noEvent");
     return;
   }
 
@@ -179,6 +180,8 @@ async function uploadAll() {
     onSuccess: () => emit("uploaded"),
     onError: (err) => {
       console.error("[OurStoryUploadModal] Background upload failed after retries", err);
+      // The modal is already closed, so the toast is the only place the failure shows.
+      toast.error(uploadErrorMessage(err, t));
       emit("upload-failed", err?.message || "Upload failed after retries");
     },
   });

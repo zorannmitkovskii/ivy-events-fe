@@ -47,8 +47,11 @@ import BaseModal from "@/components/ui/BaseModal.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import { invitationImagesService } from "@/services/invitationImages.service";
 import { onboardingStore } from "@/store/onboarding.store";
+import { useToast } from "@/composables/useToast";
+import { uploadErrorMessage } from "@/utils/uploadError";
 
 const { t } = useI18n();
+const toast = useToast();
 
 const props = defineProps({
   open: { type: Boolean, default: false },
@@ -112,6 +115,8 @@ async function submit() {
     onSuccess: () => emit("updated"),
     onError: (err) => {
       console.error("[EditHeroModal] Hero upload failed after retries", err);
+      // The modal is already closed, so the toast is the only place the failure shows.
+      toast.error(uploadErrorMessage(err, t));
       emit("upload-failed", err?.message || "Hero image upload failed");
     },
   });

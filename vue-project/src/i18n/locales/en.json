@@ -5299,5 +5299,10 @@
       "RESERVED": "\"{label}\" is reserved for the platform.",
       "TAKEN": "\"{label}\" is taken."
     }
+  },
+  "uploadErrors": {
+    "tooLarge": "The image is too large to upload. Please choose a smaller image.",
+    "failed": "The image could not be uploaded. Please try again.",
+    "noEvent": "Create the event first, then upload the images."
   }
 }

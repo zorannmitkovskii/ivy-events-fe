@@ -1,5 +1,4 @@
 import { api } from "@/services/api";
-import { baseUrl } from "@/services/baseUrl";
 import backendApi from "@/services/backendApi";
 import { withRetry, runInBackgroundWithRetry } from "@/utils/retry";
 
@@ -17,6 +16,13 @@ function postOurStoryImages(eventId, files) {
   );
 }
 
+// Our-story uploads append, so retry only when the request never reached the app (502/503).
+// A timeout or 504 may already have saved the images, and a retry would add them twice.
+function isSafeToRetryOurStoryUpload(err) {
+  const status = err?.response?.status ?? err?.status;
+  return status === 502 || status === 503;
+}
+
 function postHeroImage(eventId, file) {
   const fd = new FormData();
   fd.append("file", file);
@@ -29,13 +35,16 @@ function postHeroImage(eventId, file) {
 
 export const invitationImagesService = {
   uploadOurStoryImages(eventId, files) {
-    return withRetry(() => postOurStoryImages(eventId, files));
+    return withRetry(() => postOurStoryImages(eventId, files), {
+      shouldRetry: isSafeToRetryOurStoryUpload,
+    });
   },
 
   uploadOurStoryImagesInBackground(eventId, files, { onSuccess, onError } = {}) {
     runInBackgroundWithRetry(() => postOurStoryImages(eventId, files), {
       onSuccess,
       onError,
+      shouldRetry: isSafeToRetryOurStoryUpload,
     });
   },
 
@@ -50,9 +59,12 @@ export const invitationImagesService = {
     });
   },
 
-  // Authenticated: deleting is for whoever manages the event.
+  // The invitation endpoint removes the image from the invitation as well as from storage;
+  // /public/media only deleted the file and left a broken image in the invitation.
   deleteOurStoryImage(eventId, url) {
-    return api.del(`${baseUrl}/public/media`, { params: { path: url } });
+    return api.del(`/invitation-images/our-story/${encodeURIComponent(eventId)}`, {
+      params: { url },
+    });
   },
 
 };

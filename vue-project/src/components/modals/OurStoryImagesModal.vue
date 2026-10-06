@@ -78,6 +78,7 @@ import ButtonMain from "@/components/generic/ButtonMain.vue";
 import { invitationImagesService } from "@/services/invitationImages.service.js";
 import { ourStoryApi } from "@/services/ourStory.service.js";
 import { onboardingStore } from "@/store/onboarding.store.js";
+import { uploadErrorMessage } from "@/utils/uploadError";
 
 const { t } = useI18n();
 
@@ -162,7 +163,7 @@ async function uploadAll() {
     revokeAll();
     emit("updated", { id: props.item.id, imageUrl: lastUrl });
   } catch (e) {
-    errorMsg.value = e?.message || "Upload failed";
+    errorMsg.value = uploadErrorMessage(e, t);
   } finally {
     uploading.value = false;
   }

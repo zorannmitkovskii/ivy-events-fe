@@ -11,6 +11,7 @@ import ButtonMain from "@/components/generic/ButtonMain.vue";
 import { onboardingStore } from "@/store/onboarding.store.js";
 import { OUR_STORY_FIELD_CONFIG, DEFAULT_FIELD_CONFIG } from "@/config/ourStoryFieldConfig.js";
 import { invitationImagesService } from "@/services/invitationImages.service.js";
+import { uploadErrorMessage } from "@/utils/uploadError";
 
 const { t } = useI18n();
 
@@ -78,7 +79,7 @@ async function onImgFileChange(e) {
     await invitationImagesService.uploadOurStoryImages(onboardingStore.eventId, files);
     await loadStories();
   } catch (err) {
-    imgError.value = err?.message || "Upload failed";
+    imgError.value = uploadErrorMessage(err, t);
   } finally {
     imgUploading.value = false;
     if (imgFileInput.value) imgFileInput.value.value = "";
