@@ -56,24 +56,54 @@
         @apply="applyFilters"
       />
 
-      <div v-if="items.length === 0" class="d-card d-card-pad empty-state">
-        <div class="empty-title">{{ t("guests.emptyTitle") }}</div>
-        <div class="empty-sub">{{ t("guests.emptyMessage") }}</div>
-        <div style="margin-top:12px;">
+      <!--
+        INV-703: before the first reply. An event with no guests yet is the
+        normal state right after publishing, not an error — say where the
+        replies will appear and what can be done meanwhile.
+      -->
+      <section
+        v-if="noGuestsYet"
+        class="d-card d-card-pad empty-state"
+        aria-labelledby="guests-empty-title"
+        data-testid="guests-empty"
+      >
+        <h2 id="guests-empty-title" class="empty-title">{{ t("guests.rsvpEmpty.title") }}</h2>
+        <p class="empty-sub">{{ t("guests.rsvpEmpty.message") }}</p>
+        <div class="empty-actions">
           <ButtonMain variant="main" @click="openCreateModal">{{ t("guests.addGuest") }}</ButtonMain>
+          <router-link
+            class="empty-link"
+            :to="{ name: 'dashboard.invitation-links', params: { lang: route.params.lang || 'mk' } }"
+            data-testid="guests-empty-share"
+          >
+            {{ t("guests.rsvpEmpty.share") }}
+          </router-link>
         </div>
+      </section>
+
+      <div v-else-if="items.length === 0" class="d-card d-card-pad empty-state" data-testid="guests-no-match">
+        <div class="empty-title">{{ t("guests.rsvpEmpty.noMatch") }}</div>
       </div>
 
-      <GuestsTable
-        v-else
-        :rows="items"
-        :tables="tables"
-        :totals="totals"
-        @changeTable="onChangeTable"
-        @changeStatus="onChangeStatus"
-        @remove="onRemove"
-        @edit="openEditModal"
-      />
+      <template v-else>
+        <p v-if="noRepliesYet" class="rsvp-waiting" data-testid="guests-no-replies">
+          {{ t("guests.rsvpEmpty.noReplies") }}
+        </p>
+        <GuestsTable
+          :rows="items"
+          :tables="tables"
+          :totals="totals"
+          @changeTable="onChangeTable"
+          @changeStatus="onChangeStatus"
+          @remove="onRemove"
+          @edit="openEditModal"
+        />
+      </template>
+
+      <p class="guests-who" data-testid="guests-who">
+        <i class="bi bi-lock" aria-hidden="true"></i>
+        {{ t("guests.rsvpEmpty.who") }}
+      </p>
     </template>
 
     <AddGuestModal
@@ -120,8 +150,17 @@ const {
   addGuest,
   updateGuest,
   updateTable,
-  removeGuest
+  removeGuest,
+  isDemo
 } = useGuests();
+
+// INV-703: nobody on the list at all (filters do not matter), and — once
+// there are guests — nobody has answered yet (all added by hand, still pending).
+const noGuestsYet = computed(() => (totals.value?.total || 0) === 0);
+const noRepliesYet = computed(() =>
+  !isDemo.value && (totals.value?.total || 0) > 0
+  && (totals.value?.confirmed || 0) + (totals.value?.declined || 0) === 0
+);
 
 // Auto-open modal when navigated with ?action=add
 watch(() => route.query.action, (action) => {
@@ -220,7 +259,47 @@ async function onRemove(guestId) {
   padding: 48px 24px;
 }
 
+.empty-actions {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.empty-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dash-charcoal);
+  text-decoration: underline;
+}
+
+.empty-link:focus-visible { outline: 3px solid var(--dash-charcoal); outline-offset: 2px; }
+
+.rsvp-waiting {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border-radius: var(--dash-radius);
+  border: 1px solid var(--dash-cream-border);
+  background: var(--dash-cream-card);
+  font-size: 13px;
+  color: var(--dash-charcoal);
+}
+
+.guests-who {
+  margin: 16px 0 0;
+  font-size: 12px;
+  color: var(--dash-muted);
+  overflow-wrap: anywhere;
+}
+
 .empty-title {
+  margin: 0;
   font-family: var(--font-display);
   font-weight: 400;
   font-size: 18px;
@@ -228,6 +307,10 @@ async function onRemove(guestId) {
 }
 
 .empty-sub {
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
   margin-top: 6px;
   font-size: 13px;
   color: var(--dash-muted);

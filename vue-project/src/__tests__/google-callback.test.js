@@ -25,7 +25,7 @@ const replace = vi.hoisted(() => vi.fn())
 
 vi.mock('@/services/auth.service', () => auth)
 vi.mock('@/router/landing', () => ({ landingAfterAuth: vi.fn(async () => ({ name: 'dashboard.overview' })) }))
-vi.mock('@/composables/useDraftSync', () => ({ syncDraftToBackend: vi.fn(async () => null) }))
+vi.mock('@/composables/useDraftSync', () => ({ syncDraftToBackend: vi.fn(async () => null), resumeDraftAfterAuth: vi.fn(async () => null), hasPendingDraft: () => false, pendingDraftDesign: () => 'my-wedding' }))
 vi.mock('@/services/jwt', () => ({ decodeJwtPayload: () => ({ email: 'ana@example.com', realm_access: { roles: ['USER'] } }) }))
 vi.mock('vue-router', async () => ({
   ...(await vi.importActual('vue-router')),

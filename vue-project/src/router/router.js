@@ -9,6 +9,8 @@ import { usePrivileges } from "@/composables/usePrivileges";
 import { resolveVendorHost, siteTarget } from "@/services/vendorHost";
 import { api } from "@/services/api";
 import { homeForCurrentUser } from "@/router/landing";
+import { paymentReturnRef } from "@/utils/publishOutcome";
+import { linkedEventId, selectEventFromLink, refuseEventLink, settleEventLinkNotice } from "@/services/eventSelection.service";
 
 // Marketing (keep eager for above-the-fold)
 import HomePage from "@/pages/marketing/HomePage.vue";
@@ -27,6 +29,7 @@ const AuthVerifyEmailPage = () => import("@/pages/auth/AuthVerifyEmailPage.vue")
 
 const EventCategoryPage = () => import("@/pages/onboarding/EventCategoryPage.vue");
 const EventInvitationsPage = () => import("@/pages/onboarding/EventInvitationsPage.vue");
+const EventBasicsPage = () => import("@/pages/onboarding/EventBasicsPage.vue");
 const CheckoutPurchasePage = () => import("@/pages/onboarding/CheckoutPurchasePage.vue");
 const EventLivePage = () => import("@/pages/onboarding/EventLivePage.vue");
 const RsvpSuccessSubmitPage = () => import("@/pages/onboarding/RsvpSuccessSubmitPage.vue");
@@ -84,7 +87,11 @@ const routes = [
       { path: "faq", name: "faq", component: () => import("@/pages/FaqPage.vue") },
 
       // ONBOARDING
-      { path: "event-category", name: "EventCategoryPage", component: EventCategoryPage, meta: { requiresAuth: true } },
+      // INV-104: the event comes first and needs no account — category, then
+      // the basics, then the design. Sign-up/sign-in is asked for only when
+      // the invitation is saved.
+      { path: "event-category", name: "EventCategoryPage", component: EventCategoryPage },
+      { path: "event-basics", name: "EventBasicsPage", component: EventBasicsPage },
 
       // Accepting a collaborator invitation (IVY-103). Deliberately NOT under
       // the "auth" block: that one is guestOnly, and claiming a code needs a
@@ -466,6 +473,17 @@ router.beforeEach(async (to) => {
     // page is a better answer than a blank screen.
   }
 
+  // INV-701: the CPay callback sends the browser back to CPAY_REDIRECT_URL
+  // (configured as the dashboard overview) with `?ref=<order>` (CPay round 2
+  // dropped `status=`; an old one is ignored). The
+  // payment result page is where the publication is confirmed with the
+  // server, so the return goes there — before the sign-in check, which that
+  // page handles itself without losing the reference.
+  const cpayReturnRef = paymentReturnRef(to);
+  if (cpayReturnRef) {
+    return { name: "PaymentResult", params: { lang }, query: { ref: cpayReturnRef }, replace: true };
+  }
+
   // Auth-required routes
   if (to.meta.requiresAuth && !isAuthenticated()) {
     return {
@@ -526,17 +544,32 @@ router.beforeEach(async (to) => {
     }
   }
 
+  // INV-703: a link into the dashboard for one event (`?eventId=`, e.g. the
+  // guest list from the publication screen). The dashboard pages read the
+  // selected event, so the link selects it first — only if it is one of the
+  // person's events — and the id then leaves the address, like every other
+  // dashboard page. Done here, before any page mounts, so the page never
+  // starts on the previously selected event.
+  if (typeof to.name === "string" && to.name.startsWith("dashboard.")) {
+    if (to.query.eventId !== undefined) {
+      const linked = linkedEventId(to);
+      if (linked) await selectEventFromLink(linked);
+      else refuseEventLink();
+      const { eventId: _linked, ...query } = to.query;
+      return { name: to.name, params: to.params, query, hash: to.hash, replace: true };
+    }
+    settleEventLinkNotice();
+  }
+
   // Guest-only routes (if logged in, send to appropriate dashboard)
   if (to.meta.guestOnly && isAuthenticated()) {
     return homeForCurrentUser(lang);
   }
 
   // Onboarding guards
-  const isCategoryPage = to.name === 'EventCategoryPage';
-
-  // Block category page until email is verified (authenticated users are implicitly verified)
-  if (isCategoryPage && !onboardingStore.isEmailVerified && !isAuthenticated()) {
-    return { name: 'AuthVerifyEmailPage', params: { lang } };
+  // The basics belong to a category: without one there is nothing to ask.
+  if (to.name === 'EventBasicsPage' && !onboardingStore.selectedCategory) {
+    return { name: 'EventCategoryPage', params: { lang } };
   }
 
   // Block invitations page until category selected (for authenticated users in onboarding)

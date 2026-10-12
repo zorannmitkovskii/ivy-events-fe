@@ -1,4 +1,4 @@
-import { reactive, ref, onMounted, computed, watch } from 'vue';
+import { reactive, ref, onMounted, onBeforeUnmount, computed, watch, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { rsvpService } from '@/services/rsvp.service';
@@ -14,11 +14,30 @@ import {
   getDraftTheme, setDraftTheme,
   getDraftSectionState, setDraftSectionState,
   setDraftFullPayload,
+  getDraftClientRequestId,
+  clearDraft,
+  saveUnsyncedSnapshot,
+  getUnsyncedSnapshot,
+  clearUnsyncedSnapshot,
 } from '@/store/invitationDraft.store';
+import { createAutosave, SAVE_STATUS } from '@/composables/useAutosave';
+import { createEditHistory } from '@/composables/useEditHistory';
+import { createInvitationPhotos } from '@/composables/useInvitationPhotos';
 import { isAuthenticated } from '@/services/auth.service';
+import { setDraftPendingFiles, markDraftCreateSent, renewDraftClientRequestId, replaceDraftItems, generateLocalId } from '@/store/invitationDraft.store';
+import { currentAccount, isClaimedKeyError, RESUME_CONFLICT } from '@/composables/useDraftSync';
+import { onboardingStore, setEventDetails } from '@/store/onboarding.store';
+import {
+  DEFAULT_TIMEZONE, basicsToInvitationInfo, hasBasics, usesCoupleNames, rsvpReplyByDate,
+  normalizeBasics, epochToZonedWallClock, isValidTimeZone,
+} from '@/utils/eventBasics';
+import { landingAfterAuth } from '@/router/landing';
 import { OUR_STORY_FIELD_CONFIG } from '@/config/ourStoryFieldConfig.js';
 import { EventDetailTypeSortOrder } from '@/enums/EventDetailType';
 import { buildEventFullPayload } from '@/utils/buildEventFullPayload';
+import { discardLocalDraft } from '@/utils/creationDraft';
+import { startLoading, stopLoading } from '@/store/loading.store';
+import { withoutUnsavedExamples } from '@/utils/creationSteps';
 
 /* ------------------------------------------------------------------ */
 /*  Constants                                                         */
@@ -37,6 +56,22 @@ const SPACING_MAP = {
   spacious: { section: '120px 32px', gap: '48px', cardPadding: '40px' },
 };
 
+/**
+ * INV-402: a save held back because a section of an existing event could not
+ * be read — sending it would replace the stored entries with an empty list.
+ */
+export class SectionsNotLoadedError extends Error {
+  constructor(sections) {
+    super(`Sections not loaded: ${sections.join(', ')}`);
+    this.name = 'SectionsNotLoadedError';
+    this.sections = [...sections];
+  }
+}
+
+export function isSectionsNotLoaded(err) {
+  return err?.name === 'SectionsNotLoadedError';
+}
+
 /* ------------------------------------------------------------------ */
 /*  Composable                                                        */
 /* ------------------------------------------------------------------ */
@@ -46,7 +81,13 @@ export function useWeddingInvitation(preset) {
   const { t, locale } = useI18n();
   const route = useRoute();
   const router = useRouter();
-  const { eventId, loading, localized, formatDate, formatTime, fetchData } = useInvitationData();
+  const { eventId, loading, error: eventReadError, localized, formatDate, formatTime, fetchData } = useInvitationData();
+  // INV-403: whether the event itself (/public/invitation-page) was read.
+  // 'idle' — no event behind the page (a draft); 'failed' — it could not be
+  // read, so the names, date, place and settings on screen are the design's
+  // demo, not the event's, and must never be saved over it.
+  const eventLoad = ref(eventId ? 'loading' : 'idle');
+  let eventLoadPromise = Promise.resolve();
 
   const {
     isEditMode, activeModal, activeRootSection, editingItem,
@@ -56,8 +97,10 @@ export function useWeddingInvitation(preset) {
     handleEventDetailSave, handleEventDetailUpdate, handleEventDetailDelete,
     handleOurStorySave, handleOurStoryUpdate, handleOurStoryDelete,
     loadEditData, fetchInvitationConfig,
-    dirty, previewMode, markDirty, clearDirty, toggleSection, setupUnsavedGuard,
+    dirty, changed, previewMode, markDirty, clearDirty, toggleSection, setupUnsavedGuard,
     saveFullEvent, saving,
+    onChange, adoptSavedIds, eventId: editEventId, setEditTracker, currentIdOf,
+    sectionLoad, failedSections, isSectionLoaded, whenSectionsSettled, retryFailedSections,
   } = useInvitationEditMode();
 
   const toast = useToast();
@@ -259,19 +302,27 @@ export function useWeddingInvitation(preset) {
   });
 
   /* ---- Sidebar sections ------------------------------------------ */
+  // INV-103: `advanced` — shown only in the advanced settings (useEditorMode);
+  // `layout` — has a Layout sub-tab where the design offers layouts;
+  // `panel` — a plain panel (not a modal): on a phone it opens inside the sheet.
+  // INV-501: `group` — the editor task group (useEditorMode.EDITOR_GROUPS): content and
+  // rsvp in the Content tab, animation and look in the advanced Style tab. `tab` stays
+  // data: it orders the saved `sectionOrder` and is not where the control shows.
+  // `switch: false` — no show/hide switch: the invitation does not draw that visibility
+  // (story photos follow the story, collage photos the gallery opening).
   const SIDEBAR_SECTIONS = [
-    // Tab 1: Sections
-    { key: 'entry',        label: t('editSection.entry'),    tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>' },
-    { key: 'hero',         label: t('editSection.hero'),     tab: 'sections', mandatory: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>' },
-    { key: 'details',      label: t('editSection.details'),  tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' },
-    { key: 'agendaList',   label: t('editSection.agenda'),   tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>' },
-    { key: 'ourStoryList', label: t('editSection.ourStory'), tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>' },
-    { key: 'ourStoryImages', label: t('editSection.storyImages') || 'Story Images', tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>' },
-    { key: 'collage',      label: t('editSection.collage'),  tab: 'sections', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>' },
-    { key: 'rsvp',         label: t('editSection.rsvp'),     tab: 'sections', mandatory: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' },
-    // Tab 2: Style
-    { key: 'colors',     label: t('editSection.colors'),     tab: 'style', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="19" cy="13" r="2.5"/><circle cx="14.5" cy="19.5" r="2.5"/><circle cx="6" cy="17" r="2.5"/><circle cx="4.5" cy="9.5" r="2.5"/></svg>' },
-    { key: 'fonts',      label: t('editSection.fonts'),      tab: 'style', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>' },
+    // Data tab 'sections' (saved order)
+    { key: 'entry',        get label() { return t('editSection.controls.entry'); }, tab: 'sections', group: 'animation', advanced: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>' },
+    { key: 'hero',         get label() { return t('editSection.controls.hero'); }, tab: 'sections', group: 'content', mandatory: true, layout: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>' },
+    { key: 'details',      get label() { return t('editSection.controls.details'); }, tab: 'sections', group: 'content', layout: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' },
+    { key: 'agendaList',   get label() { return t('editSection.controls.agendaList'); }, tab: 'sections', group: 'content', layout: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>' },
+    { key: 'ourStoryList', get label() { return t('editSection.controls.ourStoryList'); }, tab: 'sections', group: 'content', layout: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>' },
+    { key: 'ourStoryImages', get label() { return t('editSection.controls.ourStoryImages'); }, tab: 'sections', group: 'content', panel: true, switch: false, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>' },
+    { key: 'collage',      get label() { return t('editSection.controls.collage'); }, tab: 'sections', group: 'animation', advanced: true, panel: true, switch: false, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>' },
+    { key: 'rsvp',         get label() { return t('editSection.controls.rsvp'); }, tab: 'sections', group: 'rsvp', mandatory: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' },
+    // Data tab 'style'
+    { key: 'colors',     get label() { return t('editSection.controls.colors'); }, tab: 'style', group: 'look', advanced: true, panel: true, switch: false, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="19" cy="13" r="2.5"/><circle cx="14.5" cy="19.5" r="2.5"/><circle cx="6" cy="17" r="2.5"/><circle cx="4.5" cy="9.5" r="2.5"/></svg>' },
+    { key: 'fonts',      get label() { return t('editSection.controls.fonts'); }, tab: 'style', group: 'look', advanced: true, switch: false, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>' },
   ];
 
   /* ---- Section layout definitions -------------------------------- */
@@ -319,6 +370,24 @@ export function useWeddingInvitation(preset) {
     return result;
   });
 
+  /* ---- Optional sections: empty, hidden, skipped (INV-402) -------- */
+  // Whether a list section has anything for the guests. An empty one is left
+  // out of the invitation guests open rather than drawn as an empty block.
+  const sectionHasContent = computed(() => ({
+    agendaList:   (config.scheduleEvents?.length || 0) > 0,
+    ourStoryList: (config.stories?.length || 0) > 0 || serverStoryImageCount.value > 0,
+  }));
+
+  /**
+   * Shows or hides an optional section ("Skip this section" / "Show it
+   * again"). Only the visibility changes: the entries stay in the editor and
+   * in every save, so showing it again brings them back.
+   */
+  function setSectionShown(key, shown) {
+    if (isSectionVisible(key) !== shown) toggleVisibility(key);
+    markDirty();
+  }
+
   /* ---- Entry active computed ------------------------------------- */
   const entryActive = computed(() => showEntry.value && isSectionVisible('entry'));
 
@@ -339,6 +408,9 @@ export function useWeddingInvitation(preset) {
     weddingDate:     formatWeddingDateFull(_futureDate),
     weddingDateTime: toLocalISO(_futureDate, '16:00:00'),
     weddingTime:     '4:00 PM',
+    // The event's own zone (INV-104): date, time and the RSVP deadline are
+    // the wall clock there.
+    eventTimezone:   DEFAULT_TIMEZONE,
     venue:           dc.venue           || '',
     location:        dc.location        || '',
     heroPhotoUrl:    dc.heroPhotoUrl    || '',
@@ -396,18 +468,81 @@ export function useWeddingInvitation(preset) {
     rsvpMessage: '',
   });
 
+  /* ---- RSVP line the guests read (INV-401) ------------------------ */
+  // "Please respond by …" above the form follows what is entered now: the
+  // RSVP deadline, else 14 days before the event's date — in the editor's
+  // preview and on the public invitation alike, so they cannot differ.
+  const serverRsvpDeadline = ref('');
+  function refreshRsvpMessage() {
+    const by = rsvpReplyByDate(rsvpConfig.deadline || serverRsvpDeadline.value, config.weddingDateTime);
+    // Noon, so the shown day does not move with the viewer's offset.
+    config.rsvpMessage = by ? t('invitation.rsvpSubtitle', { date: formatDate(`${by}T12:00:00`) }) : '';
+  }
+  watch(
+    [() => rsvpConfig.deadline, () => config.weddingDateTime, serverRsvpDeadline, locale],
+    refreshRsvpMessage,
+    { immediate: true },
+  );
+
   /* ---- Hero event data computed ---------------------------------- */
   const heroEventData = computed(() => ({
     heroImageUrl: config.heroPhotoUrl || '',
   }));
 
-  /* ---- File refs ------------------------------------------------- */
-  const heroFile = ref(null);
-  const ourStoryFiles = ref([]);
-  const collageFiles = ref([]);
+  /* ---- Photos (INV-403) ------------------------------------------- */
+  // Every photo slot — hero, story, collage — and what each picked photo is
+  // in: checked, waiting, uploading with the save, saved or failed. A change
+  // to any slot is a change to save (before, story and collage slot picks did
+  // not count as one, so an existing event's autosave left them out).
+  // Autosave sends the photos of a kind only when they changed since the
+  // last successful save; the server keeps the stored images otherwise.
+  const photos = createInvitationPhotos({
+    onChange: () => markDirty(),
+    serverBacked: () => isAuthenticated() && !!editEventId.value,
+  });
+  const heroFallback = dc.heroPhotoUrl || '';
+  const usablePicks = (name) => {
+    const g = photos.groups[name];
+    return Object.keys(g.picks).map(Number).sort((a, b) => a - b).map((i) => g.picks[i])
+      .filter((p) => p.file && p.status !== 'invalid' && p.status !== 'checking');
+  };
+  // The files waiting to be saved (read-only views of the slots).
+  const heroFile = computed(() => usablePicks('hero')[0]?.file || null);
+  const ourStoryFiles = computed(() => usablePicks('story').map((p) => p.file));
+  const collageFiles = computed(() => usablePicks('collage').map((p) => p.file));
+
+  function showHeroPreview() {
+    config.heroPhotoUrl = photos.previewUrl('hero', 0, '') || heroFallback;
+  }
+
+  /** A photo chosen for a slot. Returns why it was refused, or null. */
+  function pickPhoto(name, index, file) {
+    const problem = photos.pick(name, index, file);
+    if (name === 'hero') showHeroPreview();
+    return problem;
+  }
+
+  /** Takes a photo out of a slot (a pick is dropped; a saved one goes with the next save). */
+  function removePhoto(name, index) {
+    photos.remove(name, index);
+    if (name === 'hero') showHeroPreview();
+  }
+
+  function restorePhoto(name, index) {
+    photos.restore(name, index);
+    if (name === 'hero') showHeroPreview();
+  }
+
+  /** The browser could not draw a picked photo: it is refused, never shown as saved. */
+  function brokenPhoto(name, index) {
+    photos.markBroken(name, index);
+    if (name === 'hero') showHeroPreview();
+  }
 
   /* ---- Backend data ref ------------------------------------------ */
   const backendData = ref(null);
+  // Story photos the event really has (not the design's demo photos).
+  const serverStoryImageCount = ref(0);
 
   /* ================================================================ */
   /*  Font utilities                                                  */
@@ -472,23 +607,34 @@ export function useWeddingInvitation(preset) {
     markDirty();
   }
 
-  function onOurStoryFiles(files) { ourStoryFiles.value.push(...files); markDirty(); }
-  function onCollageFiles(files)  { collageFiles.value.push(...files); markDirty(); }
-
   function onHeroChange(data) {
+    if (data.heroFile) {
+      // A refused file is not drawn (INV-403); a good one shows at once.
+      const problem = photos.pick('hero', 0, data.heroFile, { url: data.heroImageUrl });
+      if (!problem && data.heroImageUrl) config.heroPhotoUrl = data.heroImageUrl;
+      else showHeroPreview();
+      return;
+    }
     if (data.heroImageUrl) config.heroPhotoUrl = data.heroImageUrl;
-    if (data.heroFile !== undefined) heroFile.value = data.heroFile;
     markDirty();
   }
 
+  // True once the names/date/place are the user's own (typed here, or restored
+  // from their draft or onboarding basics) rather than a design's demo text.
+  const basicsKnown = ref(false);
+
   function onInfoChange(data) {
+    basicsKnown.value = true;
     if (data.brideName !== undefined) config.brideName = data.brideName;
     if (data.groomName !== undefined) config.groomName = data.groomName;
-    if (data.date) {
-      config.weddingDateTime = data.date;
-      config.weddingDate = formatDate(data.date);
-      config.weddingTime = formatTime(data.date);
+    // Date and time are the wall clock where the event is (INV-104); kept
+    // together so changing one does not drop the other.
+    if (data.date || data.time) {
+      const date = data.date || (config.weddingDateTime || '').slice(0, 10);
+      const time = data.time !== undefined ? data.time : (config.weddingDateTime || '').slice(11, 16);
+      if (date) setWallClock(date, time);
     }
+    if (data.timezone && isValidTimeZone(data.timezone)) config.eventTimezone = data.timezone;
     if (data.location) {
       const loc = data.location;
       if (loc.name) config.venue = loc.name;
@@ -502,6 +648,14 @@ export function useWeddingInvitation(preset) {
       }
     }
     markDirty();
+  }
+
+  /** Sets the start as "YYYY-MM-DDTHH:mm:00" in the event's zone, and the display strings. */
+  function setWallClock(date, time) {
+    const iso = `${date}T${time || '00:00'}:00`;
+    config.weddingDateTime = iso;
+    config.weddingDate = formatDate(iso);
+    config.weddingTime = time ? formatTime(iso) : '';
   }
 
   function onColorsChange(colors) {
@@ -546,8 +700,8 @@ export function useWeddingInvitation(preset) {
   function onDetailsEdit(item) {
     openModal('eventDetail', item);
   }
-  async function onDetailsDelete(id) {
-    await handleEventDetailDelete(id);
+  async function onDetailsDelete(id, original) {
+    await handleEventDetailDelete(id, original);
   }
 
   function onAgendaAdd() {
@@ -556,9 +710,11 @@ export function useWeddingInvitation(preset) {
   function onAgendaEdit(item) {
     openModal('agendaItem', item);
   }
-  async function onAgendaDelete(id) {
-    await handleAgendaDelete(id);
-    agenda.loadAgenda();
+  // Re-read only an event's list: a draft has no server list, and the
+  // onboarding store may point at another event (INV-402).
+  async function onAgendaDelete(id, original) {
+    await handleAgendaDelete(id, original);
+    if (id && isAuthenticated() && editEventId.value) agenda.loadAgenda();
   }
 
   function onOurStoryAdd() {
@@ -567,9 +723,9 @@ export function useWeddingInvitation(preset) {
   function onOurStoryEdit(item) {
     openModal('ourStoryItem', item);
   }
-  async function onOurStoryDelete(id) {
-    await handleOurStoryDelete(id);
-    ourStory.loadStories();
+  async function onOurStoryDelete(id, original) {
+    await handleOurStoryDelete(id, original);
+    if (id && isAuthenticated() && editEventId.value) ourStory.loadStories();
   }
 
   /* ================================================================ */
@@ -586,11 +742,19 @@ export function useWeddingInvitation(preset) {
     if (ev.coupleNames?.bride) config.brideName = ev.coupleNames.bride;
     if (ev.coupleNames?.groom) config.groomName = ev.coupleNames.groom;
     if (ev.heroImageUrl) config.heroPhotoUrl = ev.heroImageUrl;
+    photos.setServer('hero', ev.heroImageUrl ? [ev.heroImageUrl] : []);
 
     if (ev.date) {
       config.weddingDateTime = ev.date;
       config.weddingDate = formatDate(ev.date);
       config.weddingTime = formatTime(ev.date);
+    }
+    // INV-104: the start is an instant; shown as the wall clock in the
+    // event's own zone, whatever zone the viewer's browser is in.
+    if (isValidTimeZone(ev.timezone)) config.eventTimezone = ev.timezone;
+    if (ev.startDate) {
+      const wall = epochToZonedWallClock(ev.startDate, config.eventTimezone);
+      if (wall) setWallClock(wall.slice(0, 10), wall.slice(11, 16));
     }
 
     const subtitle = localized(ev.messageI18n, ev.message);
@@ -631,8 +795,13 @@ export function useWeddingInvitation(preset) {
       }
     }
 
+    // INV-402: on the invitation guests open, an event without a programme or
+    // a story has none — not the design's demo entries. (The editor shows its
+    // own items, so it keeps what its lists put there.)
+    const guestView = !isEditMode.value;
+
     // Agenda -> schedule timeline
-    if (Array.isArray(data.agenda) && data.agenda.length) {
+    if (Array.isArray(data.agenda) && (data.agenda.length || guestView)) {
       const sorted = [...data.agenda].sort(
         (a, b) => parseTimeToMinutes(a.time || a.startTime || '') - parseTimeToMinutes(b.time || b.startTime || '')
       );
@@ -654,7 +823,9 @@ export function useWeddingInvitation(preset) {
 
     // Our Story
     const ourStoryImages = Array.isArray(data.ourStoryImages) ? data.ourStoryImages : [];
-    if (Array.isArray(data.ourStory) && data.ourStory.length) {
+    serverStoryImageCount.value = ourStoryImages.length;
+    photos.setServer('story', ourStoryImages);
+    if (Array.isArray(data.ourStory) && (data.ourStory.length || guestView)) {
       config.stories = data.ourStory.map((s, i) => {
         const desc = localized(s.descriptionI18n, s.description);
         const storyType = s.storyType || s.type || '';
@@ -688,19 +859,15 @@ export function useWeddingInvitation(preset) {
 
     // Collage/gallery photos from backend
     const collageImages = Array.isArray(data.collageImages) ? data.collageImages : [];
+    photos.setServer('collage', collageImages);
     if (collageImages.length) {
       config.galleryPhotos = collageImages.map((url, i) => ({ url, alt: `Photo ${i + 1}` }));
     }
 
     // RSVP
-    const rsvpDate = ev.rsvpDeadline || (ev.date ? (() => {
-      const d = new Date(ev.date);
-      d.setDate(d.getDate() - 14);
-      return d.toISOString();
-    })() : null);
-    if (rsvpDate) {
-      config.rsvpMessage = t('invitation.rsvpSubtitle', { date: formatDate(rsvpDate) });
-    }
+    // The line itself is worked out by refreshRsvpMessage (INV-401) from the
+    // deadline, else the event's date.
+    serverRsvpDeadline.value = ev.rsvpDeadline || '';
 
     // ---- Apply saved theme/config from public endpoint ----
     // Only for builder ("my-wedding") — preset templates keep their own defaults.
@@ -773,7 +940,17 @@ export function useWeddingInvitation(preset) {
   /*  Refresh all data                                                */
   /* ================================================================ */
 
-  async function refreshAllData() {
+  function refreshAllData() {
+    const run = readEvent();
+    eventLoadPromise = run.then(() => {}, () => {});
+    return run;
+  }
+
+  async function readEvent() {
+    // INV-403: once read, the event's data stays on screen even if a later
+    // re-read fails; until then a failed read stops every save of it.
+    if (eventId && eventLoad.value !== 'loaded') eventLoad.value = 'loading';
+    eventReadError.value = null;
     const data = await fetchData();
     if (data) {
       backendData.value = data;
@@ -782,7 +959,18 @@ export function useWeddingInvitation(preset) {
       applyBackendData(data);
       await loadGalleryImages();
       if (!config.heroPhotoUrl) config.heroPhotoUrl = defaultHero;
+      if (eventId) eventLoad.value = 'loaded';
+    } else if (eventId && eventLoad.value !== 'loaded') {
+      // A failed request; a successful answer without a body is an event
+      // with nothing to show (as for the sections, INV-402), not a failure.
+      eventLoad.value = eventReadError.value ? 'failed' : 'loaded';
     }
+  }
+
+  /** Reads the event again after a failed read ("Load again"). */
+  async function reloadEvent() {
+    await refreshAllData();
+    return eventLoad.value !== 'failed';
   }
 
   refreshCallback.value = refreshAllData;
@@ -791,9 +979,50 @@ export function useWeddingInvitation(preset) {
   /*  Draft save / load                                               */
   /* ================================================================ */
 
+  // The couple's details typed in the editor. Kept with the local draft so a
+  // reload restores them, not just the colours (IVY-INV-301).
+  function draftInfo() {
+    return {
+      brideName:       config.brideName,
+      groomName:       config.groomName,
+      weddingDateTime: config.weddingDateTime,
+      eventTimezone:   config.eventTimezone,
+      venue:           config.venue,
+      location:        config.location,
+      locationLat:     config.locationLat,
+      locationLng:     config.locationLng,
+      locationMapUrl:  config.locationMapUrl,
+      heroLabel:       config.heroLabel,
+    };
+  }
+
+  /**
+   * The basics typed in the editor, mirrored into the onboarding store so the
+   * design picker shows the same names, date and place (INV-104).
+   */
+  function mirrorBasicsToOnboarding() {
+    // Demo names of a design nobody personalised are not the user's basics.
+    if (!basicsKnown.value) return;
+    const couple = usesCoupleNames(onboardingStore.selectedCategory);
+    const previous = normalizeBasics(onboardingStore.eventDetails);
+    const wall = config.weddingDateTime || '';
+    setEventDetails({
+      ...previous,
+      brideName: couple ? config.brideName || '' : previous.brideName,
+      groomName: couple ? config.groomName || '' : previous.groomName,
+      title:     couple ? previous.title : config.brideName || '',
+      date:      /^\d{4}-\d{2}-\d{2}/.test(wall) ? wall.slice(0, 10) : previous.date,
+      time:      /T\d{2}:\d{2}/.test(wall) ? wall.slice(11, 16) : previous.time,
+      timezone:  config.eventTimezone || previous.timezone,
+      location:  { name: config.venue || '', address: config.location || '' },
+    });
+  }
+
   function saveThemeToDraft() {
-    if (!isAuthenticated()) {
+    if (!isAuthenticated() || !editEventId.value) {
+      mirrorBasicsToOnboarding();
       setDraftTheme({
+        info:          draftInfo(),
         rootBg:        rootBg.value,
         palette:       { ...palette },
         fonts:         { ...fonts },
@@ -831,10 +1060,36 @@ export function useWeddingInvitation(preset) {
           layouts:    invConfig.sectionLayouts || {},
         };
       }
-    } else if (!isAuthenticated()) {
-      // Guest: from localStorage draft
+    } else if (!isAuthenticated() || !editEventId.value) {
+      // Guest (or a new event not created yet): from localStorage draft
       theme        = getDraftTheme();
       sectionState = getDraftSectionState();
+      // The draft's own info, else the basics entered before the design was
+      // chosen (INV-104) — either way the user's names, not the demo couple.
+      const basics = onboardingStore.eventDetails;
+      const category = onboardingStore.selectedCategory;
+      const info = theme?.info || (hasBasics(basics, category) ? basicsToInvitationInfo(basics, category) : null);
+      if (info) {
+        basicsKnown.value = true;
+        if (info.brideName) config.brideName = info.brideName;
+        // A title-only event has no second name; an empty one is deliberate.
+        if (info.groomName !== undefined) config.groomName = info.groomName || '';
+        if (isValidTimeZone(info.eventTimezone)) config.eventTimezone = info.eventTimezone;
+        if (info.weddingDateTime) {
+          config.weddingDateTime = info.weddingDateTime;
+          config.weddingDate = formatDate(info.weddingDateTime);
+          config.weddingTime = formatTime(info.weddingDateTime);
+        }
+        if (info.venue) config.venue = info.venue;
+        if (info.location) config.location = info.location;
+        if (info.locationLat != null) config.locationLat = info.locationLat;
+        if (info.locationLng != null) config.locationLng = info.locationLng;
+        if (info.locationMapUrl) {
+          config.locationMapUrl = info.locationMapUrl;
+          config.heroMapUrl = info.locationMapUrl;
+        }
+        if (info.heroLabel) config.heroLabel = info.heroLabel;
+      }
     }
 
     const currentDesign = route.params.design || route.query.design;
@@ -873,8 +1128,17 @@ export function useWeddingInvitation(preset) {
   /*  Global save                                                     */
   /* ================================================================ */
 
-  async function onGlobalSave() {
-    const payloadArgs = {
+  /** The entries of a section to save, or null when it must be left out (INV-402). */
+  function sectionToSend(key, items) {
+    if (isAuthenticated() && editEventId.value && !isSectionLoaded(key)) return null;
+    return withoutUnsavedExamples(items, key);
+  }
+
+  function currentPayloadArgs() {
+    return {
+      // INV-403: an existing event that was not read — its names, date,
+      // place and settings on screen are the design's demo, never sent.
+      eventLoaded:       eventLoad.value !== 'failed' && eventLoad.value !== 'loading',
       config,
       rootBg: rootBg.value,
       palette,
@@ -888,40 +1152,618 @@ export function useWeddingInvitation(preset) {
       sectionOrder:      sectionOrder.value,
       sectionVisibility: sectionVisibility.value,
       sectionLayouts:    { ...sectionLayouts },
-      eventDetailItems:  eventDetails.items.value,
-      agendaItems:       agenda.items.value,
-      ourStoryItems:     ourStory.items.value,
+      // INV-401: a design's examples shown in an empty section of an existing
+      // event are not the person's content — never sent as such.
+      // INV-402: a section of an existing event that was not read from the
+      // server is left out (null), never sent as an empty list.
+      eventDetailItems:  sectionToSend('eventDetails', eventDetails.items.value),
+      agendaItems:       sectionToSend('agenda', agenda.items.value),
+      ourStoryItems:     sectionToSend('ourStory', ourStory.items.value),
       invitationName:    route.params.design || preset.id,
       lang:              locale.value,
+      // An existing event keeps its own category; a new one takes what was
+      // chosen in onboarding (INV-104) — not always a wedding.
+      categoryType:      backendData.value?.event?.eventCategory || onboardingStore.selectedCategory || 'WEDDING',
+      typeCode:          editEventId.value ? undefined : onboardingStore.selectedTypeCode || undefined,
+      timezone:          config.eventTimezone,
       heroFamily:        heroFamily.value,
       detailsFamily:     detailsFamily.value,
       scheduleFamily:    scheduleFamily.value,
       storyFamily:       storyFamily.value,
     };
+  }
 
-    if (isAuthenticated()) {
-      try {
-        const payload = buildEventFullPayload(payloadArgs);
-        await saveFullEvent(payload, {
-          heroImage:      heroFile.value,
-          ourStoryImages: ourStoryFiles.value.length ? ourStoryFiles.value : undefined,
-          collageImages:  collageFiles.value.length  ? collageFiles.value  : undefined,
-        });
-        clearDirty();
-        await router.push({ name: 'dashboard.overview', params: { lang: locale.value } });
-      } catch (e) {
-        toast.apiError(e);
-      }
-      return;
-    } else {
-      const payload = buildEventFullPayload(payloadArgs);
-      saveThemeToDraft();
-      setDraftFullPayload(payload);
-      clearDirty();
-      router.push({ name: 'signup', params: { lang: locale.value } });
-      return;
+  /* ================================================================ */
+  /*  Autosave (IVY-INV-301)                                          */
+  /* ================================================================ */
+  //
+  // Where each state lives:
+  //  - guest, or signed in without an event yet → the local draft
+  //    (invitationDraft.store): "saved on this device". The event is created
+  //    on sign-up / on the explicit Save, with the draft's idempotency key.
+  //  - existing event → PUT /events/full/{id} (a full replacement, safe to
+  //    repeat). A copy of what is being sent is kept per event until the
+  //    server confirms it, so a failure or a closed tab loses nothing.
+
+  // Signed in, no event yet: the server create happens on the explicit Save
+  // only — autosave never makes an event nobody asked for.
+  const createRequested = ref(false);
+  // A copy left unsynced by an earlier visit to this event.
+  const unsyncedFromBefore = ref(null);
+
+  function autosaveSnapshot() {
+    const payload = buildEventFullPayload(currentPayloadArgs());
+    // INV-403: an existing event's story / collage photos are named slot by
+    // slot, so replacing or removing one keeps the others.
+    const photoSnap = photos.snapshot({ layout: isAuthenticated() && !!editEventId.value });
+    return {
+      payload,
+      photos: photoSnap,
+      files: photoSnap.files,
+    };
+  }
+
+  // INV-502: the last write to this device failed (storage full / blocked) —
+  // a draft's latest changes then exist only in memory.
+  let deviceCopyFailed = false;
+
+  function persistLocally(snap) {
+    try {
+      writeLocalCopy(snap);
+      deviceCopyFailed = false;
+    } catch (err) {
+      deviceCopyFailed = true;
+      throw err;
     }
   }
+
+  function writeLocalCopy(snap) {
+    if (isAuthenticated() && editEventId.value) {
+      saveUnsyncedSnapshot(editEventId.value, snap.payload);
+      unsyncedFromBefore.value = null;
+      return;
+    }
+    saveThemeToDraft();
+    setDraftFullPayload({ ...snap.payload, clientRequestId: getDraftClientRequestId() });
+    // Picked photos cannot be written to this device; remember how many, so
+    // they are asked for again after sign-in rather than lost unannounced.
+    setDraftPendingFiles(pickedPhotoCounts());
+  }
+
+  function pickedPhotoCounts() {
+    return photos.counts();
+  }
+
+  /** Photos picked in this visit that exist only in memory (guest / not created yet). */
+  const unsavedPhotoCount = computed(() => {
+    const c = pickedPhotoCounts();
+    return c.hero + c.story + c.collage;
+  });
+
+  async function syncToServer(snap) {
+    const creating = !editEventId.value;
+    // INV-402: a section that could not be read is never saved over. Nothing
+    // goes to the server until it is read again ("Try again").
+    // INV-403: the same for the event itself — when it could not be read,
+    // what is on screen is the design's demo, not the event.
+    if (!creating) {
+      await Promise.all([whenSectionsSettled(), eventLoadPromise]);
+      const failed = [...(eventLoad.value === 'failed' ? ['event'] : []), ...failedSections.value];
+      if (failed.length) {
+        photos.markFailed(snap.photos, null, { held: true });
+        throw new SectionsNotLoadedError(failed);
+      }
+    }
+    // INV-303: the create is recorded before it is sent, so a lost answer is
+    // resent with the same key on this account's next sign-in.
+    if (creating) markDraftCreateSent(currentAccount());
+    let result;
+    // The photo layout travels only with the request — never in the local
+    // copy, which cannot hold the files it refers to.
+    const body = snap.photos?.slots ? { ...snap.payload, ...snap.photos.slots } : snap.payload;
+    const withPhotos = !!snap.photos?.sent?.length;
+    photos.markUploading(snap.photos);
+    try {
+      result = await saveFullEvent(
+        body,
+        snap.files || {},
+        {
+          ...(creating ? { clientRequestId: getDraftClientRequestId() } : {}),
+          ...(withPhotos ? {
+            onUploadProgress: (e) => {
+              if (e?.total) photos.setProgress(snap.photos, Math.min(100, Math.round((e.loaded / e.total) * 100)));
+            },
+          } : {}),
+        },
+      );
+    } catch (e) {
+      photos.markFailed(snap.photos, e);
+      // The key belongs to another account's event (a shared device): a new
+      // key, so the next explicit try creates this account's own event.
+      if (creating && isClaimedKeyError(e)) renewDraftClientRequestId();
+      throw e;
+    }
+    // The draft became an event; its key must not be reused for another one.
+    if (creating) clearDraft();
+    return result;
+  }
+
+  const autosave = createAutosave({
+    snapshot: autosaveSnapshot,
+    persistLocal: persistLocally,
+    clearLocal: () => { if (editEventId.value) clearUnsyncedSnapshot(editEventId.value); },
+    sync: syncToServer,
+    canSync: () => isAuthenticated() && (!!editEventId.value || createRequested.value),
+    onSynced: (result, snap) => {
+      if (snap.photos) {
+        photos.markSaved(snap.photos, result);
+        showHeroPreview();
+      }
+      if (!snap.restored) adoptSavedIds(result, snap.payload);
+    },
+  });
+
+  const saveStatus = autosave.status;
+  const lastSyncedAt = autosave.lastSyncedAt;
+
+  /** Which "saved on this device" it is — the message differs. */
+  const saveStatusDetail = computed(() => {
+    // INV-402: saving is held back until the sections are read again.
+    if (saveStatus.value === SAVE_STATUS.ERROR && isSectionsNotLoaded(autosave.lastError.value)) return 'sectionsNotLoaded';
+    if (saveStatus.value !== SAVE_STATUS.LOCAL) return null;
+    if (unsyncedFromBefore.value) return 'previous';
+    return isAuthenticated() ? 'notCreated' : 'guest';
+  });
+
+  onChange(() => {
+    if (isEditMode.value) autosave.schedule();
+  });
+
+  // Only a confirmed save clears "unsaved changes".
+  watch(saveStatus, (s) => {
+    if (s === SAVE_STATUS.SYNCED) clearDirty();
+  });
+
+  /* ================================================================ */
+  /*  Undo / redo in this visit (INV-801)                             */
+  /* ================================================================ */
+  //
+  // What can be undone — each a field of the history (useEditHistory): the
+  // names, the date and time, the zone, the place, the RSVP settings, which
+  // sections show, the layout (order, layouts, section styles), the colours,
+  // the fonts, the opening animation, and the entries of details, programme
+  // and story. Not photos: a picked photo, an upload in progress and what the
+  // server stored stay as they are (the slots have their own remove/restore).
+  //
+  // Undo is not a saved version. It writes the earlier values back and they
+  // are saved like any other change: the device copy at once, an existing
+  // event with the next PUT /events/full — a full replacement, so an entry
+  // created or deleted on the server since is put right by that save. The
+  // save status says "Saving…" until the server confirms it.
+
+  const pickFrom = (obj, keys) => Object.fromEntries(keys.map((k) => [k, obj[k] ?? null]));
+  const replaceIn = (obj, value) => {
+    Object.keys(obj).forEach((k) => { if (!(k in value)) delete obj[k]; });
+    Object.assign(obj, value);
+  };
+  const WHEN_FIELDS = ['weddingDateTime', 'weddingDate', 'weddingTime'];
+  const PLACE_FIELDS = ['venue', 'location', 'locationLat', 'locationLng', 'locationMapUrl', 'heroMapUrl'];
+  const serverBacked = () => isAuthenticated() && !!editEventId.value;
+
+  /** A section's entries: what counts is the content, not the ids a save gives. */
+  function entriesField(section, listRef) {
+    return {
+      read: () => listRef.value,
+      content: (list) => (list || []).map(({ id, _localId, ...rest }) => rest),
+      write: (list) => {
+        if (serverBacked()) {
+          // The id the entry has now (a save since may have given it a new one).
+          // An entry deleted since keeps its old id: the next save creates it again.
+          listRef.value = list.map((item) => (item.id ? { ...item, id: currentIdOf(item.id) } : item));
+          return;
+        }
+        // A draft: its entries live on this device too.
+        const local = list.map((item) => {
+          const localId = item._localId || (String(item.id || '').startsWith('_local_') ? item.id : generateLocalId());
+          return { ...item, _localId: localId, id: localId };
+        });
+        listRef.value = local;
+        replaceDraftItems(section, local);
+      },
+    };
+  }
+
+  const HISTORY_FIELDS = {
+    names:    { read: () => pickFrom(config, ['brideName', 'groomName']), write: (v) => Object.assign(config, v) },
+    when:     { read: () => pickFrom(config, WHEN_FIELDS), write: (v) => Object.assign(config, v) },
+    timezone: { read: () => config.eventTimezone, write: (v) => { config.eventTimezone = v; } },
+    place:    { read: () => pickFrom(config, PLACE_FIELDS), write: (v) => Object.assign(config, v) },
+    rsvp:     { read: () => rsvpConfig, write: (v) => replaceIn(rsvpConfig, v) },
+    visibility: { read: () => sectionVisibility.value, write: (v) => { sectionVisibility.value = v; } },
+    layout: {
+      read: () => ({
+        order: sectionOrder.value,
+        layouts: sectionLayouts,
+        families: { hero: heroFamily.value, details: detailsFamily.value, schedule: scheduleFamily.value, story: storyFamily.value },
+      }),
+      write: (v) => {
+        sectionOrder.value = v.order;
+        replaceIn(sectionLayouts, v.layouts || {});
+        heroFamily.value = v.families.hero;
+        detailsFamily.value = v.families.details;
+        scheduleFamily.value = v.families.schedule;
+        storyFamily.value = v.families.story;
+      },
+    },
+    colors: {
+      read: () => ({ rootBg: rootBg.value, palette, buttonStyle, cardStyle, spacingPreset: spacingPreset.value }),
+      write: (v) => {
+        rootBg.value = v.rootBg;
+        replaceIn(palette, v.palette);
+        replaceIn(buttonStyle, v.buttonStyle);
+        replaceIn(cardStyle, v.cardStyle);
+        spacingPreset.value = v.spacingPreset;
+      },
+    },
+    fonts: {
+      read: () => fonts,
+      write: (v) => {
+        replaceIn(fonts, v);
+        loadGoogleFont(extractFontName(fonts.heading || ''));
+        loadGoogleFont(extractFontName(fonts.body || ''));
+      },
+    },
+    entry: {
+      read: () => ({ type: entryType.value, design: entryDesign.value }),
+      write: (v) => { entryType.value = v.type; entryDesign.value = v.design; },
+    },
+    details: entriesField('eventDetails', eventDetails.items),
+    agenda:  entriesField('agenda', agenda.items),
+    ourStory: entriesField('ourStory', ourStory.items),
+  };
+
+  // What a step is called ("Undo: Programme"): its most specific field.
+  const HISTORY_LABELS = {
+    names: 'editSection.history.what.names',
+    when: 'editSection.history.what.when',
+    timezone: 'editSection.history.what.timezone',
+    place: 'editSection.history.what.place',
+    details: 'editSection.controls.details',
+    agenda: 'editSection.controls.agendaList',
+    ourStory: 'editSection.controls.ourStoryList',
+    rsvp: 'editSection.controls.rsvp',
+    entry: 'editSection.controls.entry',
+    colors: 'editSection.controls.colors',
+    fonts: 'editSection.controls.fonts',
+    layout: 'editSection.history.what.layout',
+    visibility: 'editSection.history.what.visibility',
+  };
+  const HISTORY_PRIORITY = Object.keys(HISTORY_LABELS);
+  const SECTION_OF_FIELD = { details: 'eventDetails', agenda: 'agenda', ourStory: 'ourStory' };
+  const EVENT_FIELDS = new Set(['names', 'when', 'timezone', 'place', 'rsvp', 'visibility']);
+
+  function historyWhat(step) {
+    if (!step) return '';
+    const key = HISTORY_PRIORITY.find((k) => step.keys.includes(k)) || step.keys[0];
+    return t(HISTORY_LABELS[key]);
+  }
+
+  const historyAnnouncement = ref('');
+  const historyListeners = new Set();
+  /** Called after undo / redo wrote values back (the page resets its own view of them). */
+  function onHistoryRestored(fn) {
+    historyListeners.add(fn);
+    return () => historyListeners.delete(fn);
+  }
+
+  const editHistory = createEditHistory({
+    fields: HISTORY_FIELDS,
+    // Never written back over what could not be read (INV-402 / INV-403):
+    // the next save would then replace the stored content with it.
+    isRestorable: (key) => {
+      if (SECTION_OF_FIELD[key]) return isSectionLoaded(SECTION_OF_FIELD[key]);
+      if (EVENT_FIELDS.has(key)) return eventLoad.value !== 'failed';
+      return true;
+    },
+    onRestored: (step, direction) => {
+      // A change like any other: unsaved until a save confirms it — never
+      // shown as saved because it matches an earlier state.
+      markDirty();
+      if (serverBacked()) autosave.flush();
+      const text = t(direction === 'undo' ? 'editSection.history.undone' : 'editSection.history.redone', { what: historyWhat(step) });
+      historyAnnouncement.value = '';
+      nextTick(() => { historyAnnouncement.value = text; });
+      historyListeners.forEach((fn) => {
+        try { fn(step, direction); } catch (e) { console.warn('[history] listener failed', e); }
+      });
+    },
+  });
+  setEditTracker(editHistory);
+  editHistory.start();
+
+  const historyState = computed(() => ({
+    canUndo: editHistory.canUndo.value,
+    canRedo: editHistory.canRedo.value,
+    undoWhat: historyWhat(editHistory.nextUndo.value),
+    redoWhat: historyWhat(editHistory.nextRedo.value),
+    announcement: historyAnnouncement.value,
+  }));
+
+  function undoEdit() {
+    return isEditMode.value ? editHistory.undo() : null;
+  }
+  function redoEdit() {
+    return isEditMode.value ? editHistory.redo() : null;
+  }
+
+  /**
+   * Another design (INV-203): its look replaces the style, so steps about the
+   * style no longer apply. Content steps (names, entries, RSVP…) stay.
+   */
+  function forgetStyleHistory() {
+    editHistory.forget(['colors', 'fonts', 'entry', 'layout', 'visibility']);
+  }
+
+  async function reloadAfterRestore() {
+    await refreshAllData();
+    const invConfig = await fetchInvitationConfig();
+    if (invConfig) loadThemeFromDraft(invConfig);
+    await loadEditData();
+  }
+
+  /** Resend after a failure — or send the copy an earlier visit left unsynced. */
+  async function retrySave() {
+    // INV-403: the event itself first, when it could not be read.
+    if (eventLoad.value === 'failed') {
+      const loaded = await reloadEvent();
+      if (!loaded) return autosave.retry();
+    }
+    // INV-402: first read again what could not be read; only then save.
+    if (failedSections.value.length) {
+      const loaded = await retryFailedSections();
+      if (!loaded) return autosave.retry();
+    }
+    const left = unsyncedFromBefore.value;
+    if (left) {
+      const outcome = await autosave.retry({
+        snapshot: () => ({ payload: left.payload, files: {}, restored: true }),
+      });
+      if (outcome.synced) {
+        unsyncedFromBefore.value = null;
+        await reloadAfterRestore();
+      }
+      return outcome;
+    }
+    return autosave.retry();
+  }
+
+  async function onGlobalSave() {
+    if (isAuthenticated()) {
+      createRequested.value = true;
+      let outcome = await autosave.flush();
+      // A change made while that save ran is still waiting — send it too.
+      if (outcome.synced && autosave.isPending()) outcome = await autosave.flush();
+      if (outcome.synced) {
+        clearDirty();
+        await router.push({ name: 'dashboard.overview', params: { lang: locale.value } });
+      } else if (isSectionsNotLoaded(outcome.error)) {
+        toast.error(t('editSection.sectionStates.loadFailed.saveBlocked'));
+      } else if (outcome.error) {
+        toast.apiError(outcome.error);
+      }
+      return;
+    }
+    // Guest: keep everything on this device (with the idempotency key) and
+    // ask for an account only now, at the final action (INV-104). The dialog
+    // says the draft is in this browser only; cancelling keeps editing.
+    await autosave.flush();
+    authGateOpen.value = true;
+  }
+
+  /* ================================================================ */
+  /*  Sign-up / sign-in at the final action (INV-104)                 */
+  /* ================================================================ */
+
+  const authGateOpen = ref(false);
+
+  function closeAuthGate() {
+    authGateOpen.value = false;
+  }
+
+  /** To sign-up or sign-in with the draft; it is created there (useDraftSync). */
+  async function continueToAuth(kind) {
+    await autosave.flush();
+    authGateOpen.value = false;
+    // The draft is on this device; leaving is not losing it.
+    clearDirty();
+    router.push({ name: kind === 'login' ? 'login' : 'signup', params: { lang: locale.value } });
+  }
+
+  // Arriving back from sign-in with a draft: ?resume=choose (the account
+  // already has an event — never created or merged on its own) or
+  // ?resume=failed (the create did not go through). ?photos=N: photos picked
+  // before signing in that have to be added again.
+  const resumeMode = ref(['choose', 'failed'].includes(route.query.resume) ? route.query.resume : null);
+  // Why it asks (INV-303): the account has events (default), could not be
+  // checked, or the draft was already saved by another account on this device.
+  const resumeConflict = ref(Object.values(RESUME_CONFLICT).includes(route.query.conflict) ? route.query.conflict : RESUME_CONFLICT.EVENTS);
+  const photosToReAdd = ref(Math.max(0, parseInt(route.query.photos, 10) || 0));
+
+  function dropResumeQuery(keys) {
+    const query = { ...route.query };
+    keys.forEach((k) => delete query[k]);
+    router.replace({ query }).catch(() => {});
+  }
+
+  /** "Save as a new event" / "Try again": the explicit save, nothing else. */
+  async function saveDraftAsNewEvent() {
+    resumeMode.value = null;
+    await onGlobalSave();
+    if (saveStatus.value !== SAVE_STATUS.SYNCED) resumeMode.value = 'failed';
+  }
+
+  /** "Keep it on this device for now". */
+  function keepDraftForLater() {
+    resumeMode.value = null;
+    dropResumeQuery(['resume', 'conflict']);
+  }
+
+  /**
+   * "Discard this draft" — only after the dialog's confirmation, which names
+   * what goes (INV-302). The same deletion as the start page's: the draft and
+   * the type/basics/design chosen for it; events in the account stay.
+   */
+  async function discardDraft() {
+    discardLocalDraft();
+    resumeMode.value = null;
+    clearDirty();
+    router.push(await landingAfterAuth(locale.value));
+  }
+
+  function dismissPhotosNotice() {
+    photosToReAdd.value = 0;
+    dropResumeQuery(['photos']);
+  }
+
+  /**
+   * Writes what is pending before the editor is left for another step of the
+   * flow (INV-102) or the preview. A draft is on this device, an event in the
+   * account; either way nothing is lost by leaving, so no "unsaved" prompt.
+   */
+  async function flushBeforeLeaving() {
+    await autosave.flush();
+    if (!editEventId.value || saveStatus.value === SAVE_STATUS.SYNCED) clearDirty();
+  }
+
+  /* ================================================================ */
+  /*  Leaving with unsaved changes (INV-502)                          */
+  /* ================================================================ */
+
+  /**
+   * What leaving now would lose, if anything:
+   *  - 'event' — an existing event with a change from this visit that the
+   *    server has not confirmed (waiting, failed, offline, held by INV-402);
+   *  - 'draft' — a draft whose latest change could not be written to this
+   *    device. A draft that was written is not lost by leaving (INV-102).
+   * Nothing after a confirmed save.
+   */
+  function unsavedOnLeave() {
+    if (!changed.value) return null;
+    if (isAuthenticated() && editEventId.value) {
+      return saveStatus.value === SAVE_STATUS.SYNCED ? null : 'event';
+    }
+    return deviceCopyFailed ? 'draft' : null;
+  }
+
+  const leavePrompt = reactive({ open: false, kind: 'event', busy: false, failed: false });
+  let leaveResolve = null;
+
+  function askToLeave() {
+    leavePrompt.kind = unsavedOnLeave() || 'event';
+    leavePrompt.busy = false;
+    leavePrompt.failed = false;
+    leavePrompt.open = true;
+    // The navigation waits on a question, not on loading: the route loader
+    // (started by the app's guard) would cover the dialog.
+    stopLoading();
+    return new Promise((resolve) => { leaveResolve = resolve; });
+  }
+
+  function answerLeave(leave) {
+    leavePrompt.open = false;
+    leavePrompt.busy = false;
+    if (leave) startLoading();
+    const resolve = leaveResolve;
+    leaveResolve = null;
+    resolve?.(leave);
+  }
+
+  /** "Keep editing". */
+  function stayInEditor() {
+    if (!leavePrompt.busy) answerLeave(false);
+  }
+
+  /** "Save and exit": leaves only once the save is confirmed. */
+  async function saveAndLeave() {
+    if (leavePrompt.busy) return;
+    leavePrompt.busy = true;
+    leavePrompt.failed = false;
+    try {
+      if (leavePrompt.kind === 'event') {
+        const outcome = await retrySave();
+        // A change made while that save ran is still waiting — send it too.
+        if (outcome?.synced && autosave.isPending()) await autosave.flush();
+      } else {
+        await autosave.flush();
+      }
+    } catch (err) {
+      console.warn('[invitation] save before leaving failed', err);
+    }
+    if (!leavePrompt.open) return;
+    if (!unsavedOnLeave()) {
+      answerLeave(true);
+    } else {
+      leavePrompt.busy = false;
+      leavePrompt.failed = true;
+    }
+  }
+
+  /** "Discard changes": nothing waiting is written; the device copy goes. */
+  function discardAndLeave() {
+    if (leavePrompt.busy) return;
+    autosave.dispose();
+    if (leavePrompt.kind === 'event' && editEventId.value) clearUnsyncedSnapshot(editEventId.value);
+    answerLeave(true);
+  }
+
+  let removeLeaveGuard = null;
+  function guardLeaving() {
+    removeLeaveGuard = setupUnsavedGuard(router, {
+      isUnsaved: () => !!unsavedOnLeave(),
+      // Write what is waiting first; a change that saves needs no question.
+      settle: async () => {
+        if (autosave.hasScheduled()) await autosave.flush();
+        else await autosave.whenIdle();
+      },
+      // A closing tab: the device copy is written synchronously; the server
+      // save may not finish, so an event still asks (the browser's own text).
+      beforeUnload: () => { if (autosave.hasScheduled()) autosave.flush(); },
+      confirmLeave: askToLeave,
+    });
+  }
+
+  /** The invitation as a guest will see it — the draft, without the editor. */
+  async function openGuestPreview() {
+    await flushBeforeLeaving();
+    const query = { ...route.query, preview: '1' };
+    delete query.edit;
+    delete query.step;
+    if (editEventId.value) { query.eventId = editEventId.value; delete query.new; }
+    router.push({ path: route.path, query });
+  }
+
+  /** Back from the preview: the same page, so the draft in it stays (INV-602). */
+  function backToEditor() {
+    const query = { ...route.query, edit: 'true' };
+    delete query.preview;
+    delete query.step;
+    delete query.isPrivate;
+    return router.push({ path: route.path, query });
+  }
+
+  /** Previewing an unsaved draft: the page shows the way back to the editor. */
+  const isDraftPreview = computed(() => !isEditMode.value && route.query.preview === '1');
+
+  onBeforeUnmount(() => {
+    // INV-502: the guard and the unload listener go with the editor.
+    removeLeaveGuard?.();
+    removeLeaveGuard = null;
+    editHistory.dispose();
+    if (leaveResolve) answerLeave(false);
+    // A debounced change not yet written: write it now rather than drop it.
+    if (autosave.hasScheduled()) autosave.flush();
+    autosave.dispose();
+  });
 
   /* ================================================================ */
   /*  RSVP submit                                                     */
@@ -992,8 +1834,16 @@ export function useWeddingInvitation(preset) {
     }
   }, { deep: true });
 
-  watch(() => agenda.items.value, (items) => {
-    if (!items.length) return;
+  // INV-602: the guest preview draws what guests get — an example that is
+  // only on the editor's screen (an existing event's empty section, INV-401)
+  // is never saved, so it is not drawn there.
+  const forGuests = (items, section) => (isEditMode.value ? items : withoutUnsavedExamples(items, section));
+
+  watch(() => [agenda.items.value, isEditMode.value], ([all]) => {
+    const items = forGuests(all, 'agenda');
+    // INV-402: an emptied programme is empty in the preview too — not the
+    // design's demo schedule.
+    if (!items.length) { config.scheduleEvents = []; return; }
     // Deduplicate by id + type+time combo
     const seen = new Set();
     const unique = items.filter(a => {
@@ -1021,11 +1871,17 @@ export function useWeddingInvitation(preset) {
     });
   }, { deep: true });
 
+  // The story photos the editor read with the story (INV-403: the slots).
+  watch(() => ourStory.images?.value, (images) => {
+    if (isEditMode.value && Array.isArray(images)) photos.setServer('story', images);
+  });
+
   // Default placeholder images for stories (saved on init before watchers run)
   const _defaultStoryImages = config.stories.map(s => s.imageUrl);
 
-  watch(() => ourStory.items.value, (items) => {
-    if (!items.length) return;
+  watch(() => [ourStory.items.value, isEditMode.value], ([all]) => {
+    const items = forGuests(all, 'ourStory');
+    if (!items.length) { config.stories = []; config.storyParagraphs = []; return; }
     config.stories = items.map((s, i) => {
       const desc = s.description || '';
       const sType = s.storyType || s.type || '';
@@ -1055,8 +1911,50 @@ export function useWeddingInvitation(preset) {
   /*  Reset preset (when navigating between designs)                  */
   /* ================================================================ */
 
-  async function resetToPreset(p) {
-    // Reset visual state to new preset defaults
+  // INV-203: a design is only the look. Each design's style as it was left in
+  // this visit (colours, fonts, layouts, opening), so switching back to a
+  // design brings back what was changed there.
+  const styleByDesign = new Map();
+
+  function captureStyle() {
+    return JSON.parse(JSON.stringify({
+      rootBg: rootBg.value, palette, fonts, buttonStyle, cardStyle,
+      spacingPreset: spacingPreset.value,
+      entryType: entryType.value, entryDesign: entryDesign.value,
+      heroFamily: heroFamily.value, detailsFamily: detailsFamily.value,
+      scheduleFamily: scheduleFamily.value, storyFamily: storyFamily.value,
+    }));
+  }
+
+  function applyStyle(s) {
+    rootBg.value = s.rootBg;
+    Object.assign(palette, s.palette);
+    Object.assign(fonts, s.fonts);
+    Object.assign(buttonStyle, s.buttonStyle);
+    Object.assign(cardStyle, s.cardStyle);
+    spacingPreset.value = s.spacingPreset;
+    entryType.value = s.entryType;
+    entryDesign.value = s.entryDesign;
+    heroFamily.value = s.heroFamily;
+    detailsFamily.value = s.detailsFamily;
+    scheduleFamily.value = s.scheduleFamily;
+    storyFamily.value = s.storyFamily;
+  }
+
+  /**
+   * Shows the invitation in another design (INV-203). Only the look changes:
+   * the new preset's colours, fonts, layouts and opening (or the ones this
+   * design had earlier in the visit). Names, date, place, details, programme,
+   * story, photos, RSVP settings and section visibility are not touched, and
+   * nothing is fetched again — a refetch would replace changes that are not
+   * saved yet with the server's copy.
+   *
+   * @param p    the new design's preset
+   * @param from the design being left (its style is remembered)
+   * @param to   the design being opened
+   */
+  function resetToPreset(p, { from, to } = {}) {
+    if (from) styleByDesign.set(from, captureStyle());
     entryType.value = p.entryType || 'envelop';
     entryDesign.value = p.entryDesign || 'white-gold-seal';
     heroFamily.value = p.family || 'coastal';
@@ -1079,10 +1977,12 @@ export function useWeddingInvitation(preset) {
       }
     });
 
-    // Re-fetch backend data & theme for the new design
-    await refreshAllData();
-    const invConfig = await fetchInvitationConfig();
-    if (invConfig) loadThemeFromDraft(invConfig);
+    const remembered = to && styleByDesign.get(to);
+    if (remembered) {
+      applyStyle(remembered);
+      loadGoogleFont(extractFontName(fonts.heading));
+      loadGoogleFont(extractFontName(fonts.body));
+    }
   }
 
   /* ================================================================ */
@@ -1090,6 +1990,9 @@ export function useWeddingInvitation(preset) {
   /* ================================================================ */
 
   onMounted(async () => {
+    // INV-502: registered before anything is awaited, so an editor that
+    // unmounts early removes it again; it asks only after a change.
+    guardLeaving();
     // Load preset fonts
     const fontLinks = preset.fontUrls || [];
     fontLinks.forEach(href => {
@@ -1106,10 +2009,23 @@ export function useWeddingInvitation(preset) {
     // Always load theme (colors, fonts, families) — both view and edit mode
     const invConfig = await fetchInvitationConfig();
     if (invConfig) loadThemeFromDraft(invConfig);
+    else if (!editEventId.value && !eventId) {
+      // No event behind this page: it is the visitor's own draft — in the
+      // editor, or previewed as a guest will see it (INV-104).
+      loadThemeFromDraft(null);
+      if (!isEditMode.value) loadEditData();
+    }
 
     if (isEditMode.value) {
       loadEditData();
-      setupUnsavedGuard(router);
+      autosave.start();
+      if (isAuthenticated() && editEventId.value) {
+        const left = getUnsyncedSnapshot(editEventId.value);
+        if (left) {
+          unsyncedFromBefore.value = left;
+          autosave.markLocal();
+        }
+      }
     }
   });
 
@@ -1130,7 +2046,24 @@ export function useWeddingInvitation(preset) {
     // Edit mode
     isEditMode, activeModal, activeRootSection, editingItem,
     openModal, closeModal, closeAllModals, selectSection,
-    dirty, previewMode, markDirty, saving,
+    dirty, previewMode, markDirty, clearDirty, saving,
+    saveStatus, saveStatusDetail, lastSyncedAt, retrySave,
+    // INV-104: account only at the final action; resuming after sign-in
+    authGateOpen, closeAuthGate, continueToAuth, unsavedPhotoCount,
+    resumeMode, resumeConflict, photosToReAdd, saveDraftAsNewEvent, keepDraftForLater, discardDraft, dismissPhotosNotice,
+    openGuestPreview, backToEditor, isDraftPreview, flushBeforeLeaving,
+    // INV-502: leaving with unsaved changes
+    leavePrompt, saveAndLeave, discardAndLeave, stayInEditor,
+    // INV-801: undo / redo in this visit
+    historyState, undoEdit, redoEdit, onHistoryRestored, forgetStyleHistory, editHistory,
+    // The names/date/place are the user's own, not the design's demo (INV-102 stepper).
+    basicsKnown,
+    isNewUnsaved: computed(() => isEditMode.value && !editEventId.value),
+
+    // INV-402: empty / hidden sections, and sections that could not be read
+    sectionHasContent, setSectionShown, sectionLoad, failedSections,
+    // INV-403: the event itself could not be read; the photo slots
+    eventLoad, photos, pickPhoto, removePhoto, restorePhoto, brokenPhoto,
 
     // Sections
     orderedSections, sectionVisibility, sectionLayouts, sectionOverrides, sectionAdvancedState,
@@ -1155,7 +2088,6 @@ export function useWeddingInvitation(preset) {
     onDetailsAdd, onDetailsEdit, onDetailsDelete,
     onAgendaAdd, onAgendaEdit, onAgendaDelete,
     onOurStoryAdd, onOurStoryEdit, onOurStoryDelete,
-    onOurStoryFiles, onCollageFiles,
     onRsvpSubmit,
 
     // Utilities

@@ -524,6 +524,10 @@
       "failedTitle": "Google sign-in failed",
       "failedText": "We could not sign you in with Google. Please try again, or sign in with your email and password.",
       "back": "Back to sign in"
+    },
+    "draftNotice": {
+      "text": "Your invitation is saved only in this browser. Once you are signed in it will be saved to your account.",
+      "back": "Back to your invitation"
     }
   },
   "onboarding": {
@@ -537,6 +541,67 @@
       "types": {
         "BIRTHDAY_ADULT": "An adult's",
         "BIRTHDAY_CHILD": "A child's"
+      },
+      "start": {
+        "title": "How would you like to start?",
+        "resumeTitle": "Continue your draft",
+        "resumeAction": "Continue draft",
+        "newTitle": "Start a new invitation",
+        "newDesc": "Choose the type of event, then a design for it.",
+        "newAction": "Start a new invitation",
+        "newNote": "Drafts saved in your account stay — you will find them in My events.",
+        "summary": {
+          "category": "Type",
+          "name": "Name",
+          "date": "Date",
+          "updatedAt": "Last edited"
+        },
+        "newDescLocal": "The draft on this device will be deleted — we will ask first and tell you exactly what goes.",
+        "discardAction": "Discard draft",
+        "localWhere": "Saved only in this browser",
+        "expiresAt": "Kept until",
+        "expiresHint": "A draft left unchanged for {days} days is deleted from this device automatically.",
+        "partial": "Part of this draft could not be read and was left out. Check the invitation before you save it.",
+        "serverTitle": "Draft in your account",
+        "serverListLabel": "Drafts saved in your account",
+        "serverAction": "Continue",
+        "serverActionLabel": "Continue the draft {name}",
+        "serverUnsynced": "It has changes saved only on this device — choose “Sync now” in the editor.",
+        "checking": "Checking for drafts saved in your account…",
+        "serverFailed": "We could not check the drafts in your account. You can start a new invitation or try again.",
+        "discarded": "The draft was deleted from this device."
+      },
+      "loadError": "The event types could not be loaded. Check your connection and try again.",
+      "retry": "Try again",
+      "empty": "There is no event type you can create right now. Browse the designs while we get them ready.",
+      "emptyAction": "Browse designs",
+      "unavailable": "“{category}” is not available right now. Choose another type of event.",
+      "draft": {
+        "discard": {
+          "title": "Delete the draft?",
+          "lead": "This will be permanently deleted from this browser:",
+          "event": "The event type and basics: {summary}",
+          "eventPlain": "The event type and basics",
+          "design": "The chosen design: {design}",
+          "details": "{count} detail of yours | {count} details of yours",
+          "agenda": "{count} programme item | {count} programme items",
+          "story": "{count} story chapter | {count} story chapters",
+          "settings": "The invitation settings (colours, section visibility, RSVP)",
+          "generic": "The invitation draft saved on this device",
+          "keepLead": "Not deleted:",
+          "keepAccount": "Events saved in your account, and their unsynced changes on this device.",
+          "keepGuest": "Nothing else — the draft exists only in this browser.",
+          "irreversible": "A deleted draft cannot be restored.",
+          "confirm": "Delete draft",
+          "confirmStartNew": "Delete and start new",
+          "cancel": "Cancel"
+        },
+        "notice": {
+          "expired": "The draft on this device (last edited {date}) was deleted automatically because it was not changed for {days} days. It cannot be restored.",
+          "expiredNoDate": "The draft on this device was deleted automatically because it was not changed for {days} days. It cannot be restored.",
+          "unreadable": "The draft saved on this device was damaged and could not be read, so it was removed. It cannot be restored — start a new invitation.",
+          "dismiss": "OK"
+        }
       }
     },
     "eventBasics": {
@@ -546,16 +611,29 @@
         "brideName": "Bride's Name",
         "groomName": "Groom's Name",
         "weddingDate": "Wedding Date (Optional)",
-        "location": "Location (Optional)"
+        "location": "Location (Optional)",
+        "title": "Event title",
+        "date": "Date",
+        "time": "Start time",
+        "timezone": "Timezone",
+        "venue": "Venue",
+        "address": "Address or city (optional)",
+        "partnerOne": "First partner's name",
+        "partnerTwo": "Second partner's name"
       },
       "placeholders": {
         "brideName": "e.g. Sarah",
         "groomName": "e.g. Michael",
-        "location": "e.g. Napa Valley, CA"
+        "location": "e.g. Napa Valley, CA",
+        "title": "e.g. Mila's 30th birthday",
+        "venue": "e.g. Hotel Aleksandar Palace",
+        "partnerOne": "e.g. Anna",
+        "partnerTwo": "e.g. Mark"
       },
       "hints": {
         "weddingDate": "Don't have a date yet? No worries.",
-        "location": "TBD is perfectly fine at this stage."
+        "location": "TBD is perfectly fine at this stage.",
+        "timezone": "The date, time and RSVP deadline are read in this timezone — where the event happens, not where you are."
       },
       "actions": {
         "continue": "Continue",
@@ -564,7 +642,27 @@
       "protip": {
         "label": "Pro tip:",
         "text": "You can invite collaborators after you’ve set up the basics. We’ll remind you later."
-      }
+      },
+      "back": "Back to event type",
+      "lead": "Only what your invitation needs to show your names, date and place. Story, programme, photos and RSVP come later — and can be skipped.",
+      "namesLegend": "Who is celebrating",
+      "titleLegend": "What is the event called",
+      "whenLegend": "When",
+      "whereLegend": "Where",
+      "errors": {
+        "brideName": "Enter the bride's name.",
+        "groomName": "Enter the groom's name.",
+        "title": "Enter a title for the event.",
+        "date": "Choose the date.",
+        "time": "Choose the start time.",
+        "timezone": "Choose a valid timezone.",
+        "location": "Enter the venue.",
+        "past": "This date and time have already passed in {timezone}.",
+        "partnerOne": "Enter the first partner's name.",
+        "partnerTwo": "Enter the second partner's name."
+      },
+      "noteGuest": "No account needed yet. What you enter is kept only in this browser on this device until you save the invitation.",
+      "noteSignedIn": "Nothing is created in your account until you save the invitation."
     },
     "invitations": {
       "title": "Choose Your Invitation",
@@ -578,7 +676,86 @@
       "buildYourOwn": "Build Your Own",
       "buildDesc": "Mix and match sections freely",
       "editCurrent": "Edit Current Invitation",
-      "editDesc": "Change colors, fonts, content"
+      "editDesc": "Change colors, fonts, content",
+      "basicsMissing": "Add your names, date and place to see them in every design.",
+      "editBasics": "Edit details",
+      "addBasics": "Add details",
+      "forCategory": "Designs for: {category}",
+      "noCategory": "Choose the type of event first — each type has its own designs.",
+      "chooseCategory": "Choose event type",
+      "loadError": "The designs could not be loaded. Check your connection and try again.",
+      "retry": "Try again",
+      "emptyCategory": "There are no designs for “{category}” yet. Choose another type of event.",
+      "chooseOtherCategory": "Choose another type",
+      "card": {
+        "preview": "Preview",
+        "use": "Use this design",
+        "selectedStatus": "Selected design: {name}. Press Continue when you are ready.",
+        "traitsLabel": "What this design has",
+        "sharedSections": "Every design here has event details, a programme, your story and an RSVP form. The cards show how each one lays them out.",
+        "traits": {
+          "layout": {
+            "label": "Layout",
+            "split": "photo beside the names",
+            "fullPhoto": "full-width photo with the names over it",
+            "glassPanel": "photo with a glass panel",
+            "editorial": "magazine-style split"
+          },
+          "story": {
+            "label": "Story",
+            "photoPerChapter": "a photo for each chapter",
+            "onePhoto": "one photo with text",
+            "textAndPhotos": "text chapters and up to 4 photos"
+          },
+          "programme": {
+            "label": "Programme",
+            "cards": "list of cards",
+            "alternating": "alternating timeline",
+            "vertical": "vertical timeline",
+            "horizontal": "horizontal timeline",
+            "table": "table"
+          },
+          "opening": {
+            "label": "Opening",
+            "envelope": "envelope animation",
+            "doors": "opening doors animation",
+            "curtain": "curtain animation",
+            "heart": "heart animation",
+            "gallery": "photo gallery",
+            "wax": "wax seal animation"
+          }
+        },
+        "designs": {
+          "coastal-breeze": "Soft sea blue and coral, classic serif headings, opened from an envelope with a gold seal.",
+          "parisian-wedding": "Gold and blush tones with elegant serif type, opened through French doors.",
+          "persian-wedding": "Pink and lavender with deep rose text, revealed behind a red curtain.",
+          "elegant-chateau": "Warm taupe and sand tones, opened through baroque doors.",
+          "modern-collage": "Bold rose red on soft stone, opened from an envelope with a blue and red seal.",
+          "editorial": "Slate and grey with sharp corners, like a magazine page, opened through white doors."
+        }
+      },
+      "previewDialog": {
+        "title": "Preview: {name}",
+        "device": "Show on",
+        "mobile": "Phone",
+        "desktop": "Desktop",
+        "close": "Close preview",
+        "back": "Back to the designs",
+        "loading": "Loading the preview…",
+        "yours": "Yours",
+        "sample": "Sample content",
+        "items": {
+          "basics": "names, date and place",
+          "details": "details, programme and story",
+          "photos": "photos",
+          "rsvp": "RSVP form (answers are not sent)"
+        },
+        "eventContent": "Your event's content in this design. RSVP answers from the preview are not sent.",
+        "frame": {
+          "mobile": "{name} as guests see it on a phone",
+          "desktop": "{name} as guests see it on a computer"
+        }
+      }
     },
     "builder": {
       "title": "Invitation Builder",
@@ -1088,7 +1265,15 @@
     "children": "Children",
     "note": "Note",
     "notePh": "Optional note...",
-    "totalGuests": "Total Guests"
+    "totalGuests": "Total Guests",
+    "rsvpEmpty": {
+      "title": "No RSVP replies yet",
+      "message": "When guests reply through the invitation, they appear here as \"Confirmed\" or \"Declined\", with the number of guests and dietary needs. Share the invitation link, or add guests by hand.",
+      "share": "Invitation links",
+      "noMatch": "No guests match the selected filters.",
+      "noReplies": "Nobody has replied through the invitation yet. Guests you added by hand stay \"Pending\" until they reply.",
+      "who": "Guest data is visible only to you, team members you gave access to guests and, if an agency runs the event, its administrators (and Ivy Events administrators when providing support). Guests never see the list — each one only sends their own reply."
+    }
   },
   "notifications": {
     "subtitle": "Send updates and RSVPs to your guests",
@@ -1822,7 +2007,66 @@
     "expiredDesc": "The payment session has expired. Please try again.",
     "pendingTitle": "Confirming Payment",
     "pendingDesc": "We are confirming your payment. Please wait...",
-    "unknownTitle": "Unknown Status"
+    "unknownTitle": "Unknown Status",
+    "publish": {
+      "loadingTitle": "Checking your payment…",
+      "confirmingTitle": "Confirming publication",
+      "confirmingDesc": "The bank has sent you back. We're waiting for our server to confirm the payment before your invitation goes live — this usually takes a few seconds.",
+      "slowTitle": "Still waiting for confirmation",
+      "slowDesc": "The bank's confirmation hasn't reached us yet, so the invitation is not shown as published. It is saved — nothing is lost. Check again in a moment; your dashboard shows the status as soon as it's confirmed.",
+      "checkAgain": "Check again",
+      "checking": "Checking…",
+      "status": "Status",
+      "live": "Published",
+      "publishedTitle": "Your invitation is published",
+      "publishedDesc": "Guests can open it with the link below — they don't need an account.",
+      "linkLabel": "Public invitation link",
+      "linkHint": "This is the link for your guests. It never opens the editor.",
+      "openInvitation": "Open invitation",
+      "newTab": "(opens in a new tab)",
+      "continueEditing": "Continue editing",
+      "linkMissing": "The invitation is live, but its public link can't be shown here. You'll find it under Invitation links in your dashboard.",
+      "invitationLinks": "Invitation links",
+      "paidTitle": "Payment successful",
+      "paidDesc": "Your payment has been processed.",
+      "failedTitle": "Invitation not published",
+      "failedReason": {
+        "FAILED": "The payment didn't go through.",
+        "CANCELED": "The payment was canceled.",
+        "EXPIRED": "The payment session expired."
+      },
+      "failedDesc": "Your invitation is saved exactly as you left it. You can try paying again or keep editing.",
+      "retryPayment": "Try paying again",
+      "errorTitle": "We couldn't check the payment",
+      "errorDesc": "This doesn't mean the payment failed. Check your connection and try again.",
+      "retry": "Try again",
+      "forbiddenTitle": "This payment belongs to another account",
+      "forbiddenDesc": "Sign in with the account that made the payment to see its invitation.",
+      "notFoundTitle": "Payment not found",
+      "notFoundDesc": "We couldn't find this payment. Your dashboard shows the status of your events.",
+      "signedOutTitle": "Sign in to see your invitation",
+      "signedOutDesc": "You're signed out. Sign in again and we'll show whether your invitation was published.",
+      "signIn": "Sign in",
+      "share": {
+        "title": "Share the invitation",
+        "copy": "Copy link",
+        "copied": "Link copied",
+        "copyFailed": "Couldn't copy automatically. The link is selected in the field above — copy it with Ctrl+C (or ⌘+C), or long-press it on a phone.",
+        "share": "Share…",
+        "shareTitle": "Invitation",
+        "shareFailed": "Sharing didn't work in this browser. Copy the link instead.",
+        "qrAlt": "QR code of the public invitation link",
+        "qrHint": "Scanning it opens the same public link. Download it for printed invitations.",
+        "qrDownload": "Download QR code (PNG)",
+        "qrFailed": "The QR code couldn't be created. The link above still works."
+      },
+      "rsvp": {
+        "title": "Where you will see your guests' replies",
+        "where": "When guests answer the RSVP form in the invitation, their replies (attending or not, number of guests, dietary needs) appear in this event's guest list — Dashboard → Guests.",
+        "empty": "Until someone replies, the list is empty. That is expected and not an error.",
+        "openGuests": "Open the guest list"
+      }
+    }
   },
   "packages": {
     "title": "Clear prices, paid once, for one event",
@@ -1848,6 +2092,12 @@
     "cartTotal": "Total",
     "checkout": "Proceed to Payment",
     "removeFromCart": "Remove",
+    "checkoutIssue": {
+      "priceChanged": "The price has changed. The new amount is {amount}. Packages and cart have been refreshed — nothing was charged. Please check and continue again.",
+      "inProgress": "A payment is in progress — if you closed the bank page, try again after {time}.",
+      "inProgressSoon": "A payment is in progress — if you closed the bank page, try again in a few minutes.",
+      "discountInvalid": "The discount code is no longer valid and was removed. Nothing was charged — check the price and continue again."
+    },
     "heroTitle": "Clear prices, paid once, for one event",
     "heroLead": "Building and editing the invitation is free. You pay for a plan only before you publish and send it. No monthly subscription.",
     "gallery": {
@@ -2247,11 +2497,11 @@
   },
   "editSection": {
     "collage": "Edit Collage",
-    "hero": "Edit Hero",
-    "details": "Edit Details",
-    "agenda": "Edit Agenda",
-    "ourStory": "Edit Story",
-    "entry": "Edit Entry",
+    "hero": "Edit cover photo",
+    "details": "Edit event details",
+    "agenda": "Edit programme",
+    "ourStory": "Edit “Our story”",
+    "entry": "Edit opening animation",
     "colors": "Colors",
     "fonts": "Fonts",
     "headingFont": "Heading Font",
@@ -2352,7 +2602,343 @@
     "readability": "Readability",
     "readabilityPass": "passes",
     "readabilityFail": "low contrast",
-    "readabilityHint": "Below 4.5:1 is hard to read on a phone and in sunlight. Darken the text or lighten the background."
+    "readabilityHint": "Below 4.5:1 is hard to read on a phone and in sunlight. Darken the text or lighten the background.",
+    "saveStatus": {
+      "label": "Save status",
+      "saving": "Saving…",
+      "localGuest": "Saved on this device. Sign up to keep it in your account.",
+      "localNotCreated": "Saved on this device. Press Save to create the event in your account.",
+      "localPrevious": "Changes from your last visit are saved only on this device and not yet in your account.",
+      "synced": "Saved to your account",
+      "syncedAt": "Saved to your account at {time}",
+      "offline": "You're offline. Your changes are saved on this device and will sync when you're back online.",
+      "error": "Couldn't save to your account. Your changes are kept on this device.",
+      "retry": "Try again",
+      "sync": "Sync now",
+      "sectionsNotLoaded": "Not saved: part of the invitation couldn't be loaded. Saving is paused so your saved content isn't erased.",
+      "reload": "Load again"
+    },
+    "leaveGuard": {
+      "title": "Unsaved changes",
+      "bodyEvent": "Some of your changes aren't saved to your account yet.",
+      "bodyDraft": "Your latest changes couldn't be saved on this device.",
+      "discardHintEvent": "Discard changes: the changes that aren't saved to your account are lost, including the copy kept on this device. This can't be undone.",
+      "discardHintDraft": "Discard changes: your latest changes are lost. The draft keeps the version last saved on this device.",
+      "save": "Save and exit",
+      "discard": "Discard changes",
+      "stay": "Keep editing",
+      "saving": "Saving…",
+      "saveFailed": "Couldn't save. Your changes are still here — try again, discard them or keep editing."
+    },
+    "previewAsGuest": "Preview as guest",
+    "authGate": {
+      "title": "Save your invitation",
+      "body": "Your invitation is saved only in this browser on this device. Create an account or sign in to keep it in your account and publish it — you will come back to this same invitation.",
+      "photos": "{count} photo you added cannot be carried over and will need to be added again after you sign in. | {count} photos you added cannot be carried over and will need to be added again after you sign in.",
+      "signup": "Create an account",
+      "login": "I already have an account",
+      "keepEditing": "Keep editing"
+    },
+    "resume": {
+      "title": "You already have an event",
+      "body": "Your account already has an event. This invitation draft has not been added to it. What would you like to do with it?",
+      "saveNew": "Save it as a new event",
+      "keep": "Keep it on this device for now",
+      "discard": "Discard this draft",
+      "failed": "We couldn't save your invitation to your account. It is still saved in this browser — try again.",
+      "photos": "{count} photo added before signing in was not saved. Please add it again. | {count} photos added before signing in were not saved. Please add them again.",
+      "photosOk": "OK",
+      "titleUnchecked": "We couldn't check your account",
+      "bodyUnchecked": "We couldn't check whether your account already has an event, so this invitation draft has not been added to it. What would you like to do with it?",
+      "titleClaimed": "This draft is already saved to another account",
+      "bodyClaimed": "This invitation draft was already saved to another account that signed in on this device. Nothing has been added to your account. You can save it as your own new event, keep it on this device or discard it.",
+      "existingTitle": "Drafts already in your account",
+      "existingLoading": "Checking the drafts in your account…",
+      "existingFailed": "We couldn't load the drafts in your account.",
+      "existingUpdated": "last edited {date}",
+      "existingStay": "Nothing in your account will be changed or merged — your existing events are in “My events”."
+    },
+    "previewBar": {
+      "text": "This is how guests will see your invitation.",
+      "back": "Back to editing"
+    },
+    "rsvpDeadlineProblem": {
+      "past": "This deadline has already passed in {timezone}.",
+      "afterEvent": "The RSVP deadline is after the event starts."
+    },
+    "editorMode": {
+      "label": "Editor mode",
+      "quick": "Quick start",
+      "advanced": "Advanced settings",
+      "quickHint": "Info, Content and Preview as guest. Style is in Advanced settings; your entries stay.",
+      "advancedHint": "Adds the Style tab: animation, colors, fonts, layouts.",
+      "openedAdvanced": "Advanced settings turned on: {section}.",
+      "back": "Back to the list"
+    },
+    "samplePreview": {
+      "badge": "Preview · sample content",
+      "rsvpNote": "Sample RSVP form: answers in the preview are not sent."
+    },
+    "guestPreview": {
+      "label": "Preview as a guest",
+      "device": "View",
+      "mobile": "Phone",
+      "desktop": "Computer",
+      "link": "Link",
+      "publicLink": "Public link",
+      "privateLink": "Private link",
+      "linkHint": "The programme is shown only on the private link.",
+      "notesToggle": "Notes ({count})",
+      "notesTitle": "Before you send it",
+      "noNotes": "No notes: every section guests see has your own content.",
+      "edit": "Edit",
+      "openIn": "Open “{section}” in the editor",
+      "showPrivate": "View the private link",
+      "rsvpNote": "Preview: a reply sent here is not saved.",
+      "kinds": {
+        "missing": "Check",
+        "hidden": "Hidden",
+        "empty": "Empty",
+        "example": "Example",
+        "info": "Info"
+      },
+      "notes": {
+        "demoBasics": "The names, date and place are still the design's example.",
+        "hidden": "“{section}” is hidden — guests won't see it. What you entered is kept.",
+        "hiddenEntry": "The opening animation is off — guests see the invitation straight away.",
+        "heroPhoto": "The cover photo is the design's example photo.",
+        "detailsDefault": "“{section}” shows the design's example times until you add your own.",
+        "empty": "“{section}” is empty, so it is left out of the invitation.",
+        "exampleItems": "“{section}” still has the design's example entries ({count}).",
+        "privateOnly": "The programme is shown only to guests with the private link.",
+        "storyPhotos": "The story photos are the design's example photos.",
+        "collagePhotos": "The opening collage shows the design's example photos.",
+        "rsvpHidden": "The RSVP form is switched off — guests can't reply through the invitation.",
+        "deadlinePast": "The RSVP deadline has already passed in {timezone}.",
+        "deadlineAfterEvent": "The RSVP deadline is after the event starts.",
+        "rsvpNotOpen": "Guests can reply once the invitation is published; until then the form is inactive for them.",
+        "designHidden": "Kept, but not shown in this design: {item}"
+      }
+    },
+    "prePublish": {
+      "ready": "Nothing blocks publishing",
+      "blocked": "To fix before publishing: {count}",
+      "groups": {
+        "blockers": "Must be fixed before publishing ({count})",
+        "recommendations": "Recommendations — these don't block publishing ({count})",
+        "info": "Good to know ({count})"
+      },
+      "serverBlocked": "The invitation can't be published yet. Fix the following ({count}):",
+      "serverHint": "Nothing has been charged. Once it is fixed, try again.",
+      "fix": "Fix",
+      "problems": {
+        "invitationUrlMissing": "The invitation has no public link for guests yet. Open it in the editor and save it again.",
+        "invitationUrlInvalid": "The invitation's public link is not this event's guest link. Open it in the editor and save it again.",
+        "rsvpDeadlineInvalid": "The RSVP deadline can't be read. Choose the date again."
+      },
+      "alreadyPublished": "This invitation is already published and already has these packages. Nothing has been charged.",
+      "forbidden": "You can't pay for this event — sign in with the account that manages it. Nothing has been charged.",
+      "retryHint": "Nothing has been charged and your cart and invitation are kept. You can try again."
+    },
+    "designSwitch": {
+      "title": "Design",
+      "builderName": "Your own design",
+      "change": "Change design",
+      "close": "Close designs",
+      "keepsContent": "Names, date, place, details, programme, story, photos and RSVP settings stay as they are. Only the look changes, and the preview shows it right away.",
+      "styleNote": "Each design opens in its own colours and fonts. If you go back to a design during this visit, the changes you made to its style come back.",
+      "linkNote": "This event already has an invitation link. With a new design the link changes; links you have already sent keep opening the previous design.",
+      "loading": "Loading designs…",
+      "loadError": "The designs could not be loaded.",
+      "retry": "Try again",
+      "empty": "There are no other designs for this event type.",
+      "listLabel": "Designs for this event",
+      "currentBadge": "Current",
+      "confirmTitle": "Replace your own design?",
+      "confirmBody": "The colours, fonts, layouts and opening you set in your own design will be replaced by those of {name}. Once saved, they cannot be brought back. Your content stays.",
+      "confirmYes": "Use {name}",
+      "confirmNo": "Keep my design",
+      "switched": "Design changed to {name}. All your content is kept.",
+      "hiddenTitle": "Saved, but not shown in this design",
+      "hiddenNote": "Nothing has been deleted. It shows again in a design that has a place for it.",
+      "hidden": {
+        "storyPhotos": "Story photos ({count})",
+        "storyPhotosSome": "Story photos: this design shows {shown} of {count}",
+        "chapterPhotos": "Photos of story chapters ({count})",
+        "storyDates": "Dates of story chapters ({count})",
+        "collagePhotos": "Photos for the gallery opening ({count})"
+      }
+    },
+    "guide": {
+      "required": "Required",
+      "optional": "Optional",
+      "optionalSection": "Optional section",
+      "exampleLabel": "Example:",
+      "location": {
+        "guests": "Guests see the venue name on the invitation, with a map button when the place was picked from the search.",
+        "example": "Lakeside Restaurant, 12 Macedonia Quay, Ohrid"
+      },
+      "programme": {
+        "guests": "Guests see the entries in time order in the programme section. You can hide the section.",
+        "example": "14:00 Groom departs · 16:00 Ceremony · 18:00 Reception"
+      },
+      "story": {
+        "guests": "Guests read this text in your story section. One to three short sentences are enough.",
+        "example": "We met on the shore of Lake Ohrid in 2016 and have gone back every summer since."
+      },
+      "rsvp": {
+        "guests": "Above the form guests see the message with the deadline; in the form they enter their name, whether they are coming and an optional message to you.",
+        "messageLabel": "Guests will see:",
+        "noMessage": "Enter the event date or a reply deadline and the message for guests will appear here.",
+        "deadlineDefault": "Without a deadline, the message shows the date 14 days before the event."
+      },
+      "examples": {
+        "badge": "Example",
+        "note": "Entries marked “Example” are only for display and are not saved. Add your own entries for them to appear on the invitation."
+      }
+    },
+    "sectionStates": {
+      "empty": {
+        "agenda": {
+          "title": "No programme yet",
+          "body": "Add the parts of the day — e.g. the ceremony and the reception — with their times.",
+          "add": "Add the first programme item"
+        },
+        "details": {
+          "title": "No event details yet",
+          "body": "Add where and when the ceremony or the reception takes place.",
+          "add": "Add the first detail"
+        },
+        "story": {
+          "title": "No story yet",
+          "body": "Tell your guests in a few sentences how you met.",
+          "add": "Add the first chapter"
+        },
+        "guestsNote": "This section is optional. While it is empty, guests won't see it on the invitation.",
+        "skip": "Skip — hide this section"
+      },
+      "hidden": {
+        "title": "This section is hidden",
+        "body": "Guests don't see it. Everything you entered is kept and comes back when you show the section again.",
+        "show": "Show the section again"
+      },
+      "loadFailed": {
+        "title": "We couldn't load: {section}",
+        "body": "Saving is paused so the content already saved is not erased. Check your connection and try again.",
+        "retry": "Try again",
+        "loading": "Loading…",
+        "saveBlocked": "Not saved: some sections could not be loaded. Load them again first."
+      },
+      "names": {
+        "eventDetails": "Event details",
+        "agenda": "Programme",
+        "ourStory": "Our story",
+        "event": "Event information"
+      },
+      "previewEmpty": "Empty — guests won't see this section.",
+      "hiddenBadge": "Hidden",
+      "toggleShow": "Show “{section}” on the invitation"
+    },
+    "photos": {
+      "limits": "Each photo up to 50 MB; up to 100 MB of new photos in one save. Photos are uploaded when the invitation is saved.",
+      "hero": "Cover photo",
+      "storySingle": "Story photo",
+      "storySlot": "Story photo {n}",
+      "collageSlot": "Collage photo {n}",
+      "choose": "Choose a photo",
+      "chooseFor": "{slot}: choose a photo",
+      "replaceFor": "{slot}: replace the photo",
+      "remove": "Remove",
+      "removeFor": "Remove — {slot}",
+      "restore": "Undo",
+      "restoreFor": "Undo removing — {slot}",
+      "retry": "Try again",
+      "retryFor": "Try again — {slot}",
+      "progressLabel": "Uploading {slot}",
+      "status": {
+        "empty": "No photo yet.",
+        "example": "Example photo of the design — choose your own.",
+        "saved": "Saved.",
+        "removed": "Will be removed when the invitation is saved.",
+        "checking": "Checking the photo…",
+        "local": "Only on this device for now — uploaded when you save the invitation to your account.",
+        "pending": "Waiting to be saved…",
+        "uploading": "Uploading… {percent}%",
+        "failed": "Not saved.",
+        "unavailable": "Saved, but this photo can’t be shown right now."
+      },
+      "errors": {
+        "type": "This file isn’t an image. Choose a photo file.",
+        "tooLarge": "This photo is larger than 50 MB. Choose a smaller one.",
+        "unreadable": "This photo can’t be opened in the browser, so guests wouldn’t see it either. Choose another one.",
+        "uploadTooLarge": "The photos were too large to send. Choose a smaller photo or remove one, then try again.",
+        "offline": "No connection — it will be sent when you are back online. Your other changes are kept.",
+        "failed": "The upload failed. Your other changes are kept — try again."
+      }
+    },
+    "controls": {
+      "entry": "Opening animation",
+      "hero": "Cover photo",
+      "details": "Event details",
+      "agendaList": "Programme",
+      "ourStoryList": "Our story",
+      "ourStoryImages": "Story photos",
+      "collage": "Collage photos",
+      "rsvp": "RSVP",
+      "colors": "Colors",
+      "fonts": "Fonts"
+    },
+    "editorGroups": {
+      "tabs": {
+        "info": "Info",
+        "sections": "Content",
+        "style": "Style"
+      },
+      "content": "Invitation sections",
+      "rsvp": "Guest replies",
+      "animation": "Animation",
+      "look": "Colors and fonts",
+      "advancedBadge": "Advanced"
+    },
+    "a11y": {
+      "editorTabs": "Editor tabs",
+      "previewWidth": "Preview width",
+      "selected": "Selected",
+      "hexLabel": "{color}: hex code",
+      "hexInvalid": "Enter # and six characters (0–9, A–F), e.g. #1F2937.",
+      "pairs": {
+        "textOnBackground": "Text on the background",
+        "textOnSections": "Text on sections",
+        "textOnCards": "Text on cards",
+        "buttonText": "Text on the button"
+      },
+      "decrease": "Fewer: {label}",
+      "increase": "More: {label}",
+      "radius": "Corners: {value}",
+      "deleteItem": "Delete: {item}",
+      "hours": "Hours",
+      "minutes": "Minutes"
+    },
+    "history": {
+      "label": "Undo and redo",
+      "undo": "Undo",
+      "redo": "Redo",
+      "undoWhat": "Undo: {what}",
+      "redoWhat": "Redo: {what}",
+      "nothingToUndo": "Nothing to undo",
+      "nothingToRedo": "Nothing to redo",
+      "sessionNote": "Only changes from this visit. Undo is not a saved version — the result is saved like any other change.",
+      "undone": "Undone: {what}. Saving this like any other change.",
+      "redone": "Redone: {what}. Saving this like any other change.",
+      "what": {
+        "names": "Names",
+        "when": "Date and time",
+        "timezone": "Time zone",
+        "place": "Venue",
+        "layout": "Layout",
+        "visibility": "Shown sections"
+      }
+    }
   },
   "organizerOverview": {
     "title": "Organizer Overview",
@@ -3536,6 +4122,10 @@
       "events": "Events",
       "content": "Content",
       "messages": "Messages"
+    },
+    "eventLink": {
+      "refused": "You don't have access to the event in that link, or it no longer exists. The event that was already selected is shown.",
+      "dismiss": "OK"
     }
   },
   "agencyCalendar": {
@@ -3687,7 +4277,81 @@
       "FAILED": "Failed",
       "CANCELED": "Cancelled",
       "EXPIRED": "Expired"
-    }
+    },
+    "awaitingFilter": "Awaiting confirmation",
+    "awaiting": {
+      "intro": "CPay payments the bank has not confirmed to us. Check each one in the CPay merchant portal before deciding.",
+      "count": "{n} awaiting confirmation",
+      "empty": "No CPay payment is waiting for confirmation.",
+      "reference": "Reference",
+      "amount": "Amount",
+      "packages": "Packages",
+      "event": "Event",
+      "customer": "Customer",
+      "created": "Created",
+      "age": "Waiting",
+      "reason": "Reason",
+      "actions": "Actions",
+      "noEvent": "No event",
+      "openEvent": "Open event {name} in the events list",
+      "ageMinutes": "{n} min",
+      "ageHours": "{n} h",
+      "ageDays": "{n} d",
+      "markPaid": "Mark as paid and activate",
+      "markFailed": "Mark as failed",
+      "markPaidFor": "Mark payment {ref} as paid and activate",
+      "markFailedFor": "Mark payment {ref} as failed",
+      "reasons": {
+        "NO_BANK_RESPONSE": "No answer from the bank",
+        "NEEDS_CONFIRMATION": "Returned to /ok without a confirmed transaction",
+        "CPAY_MISMATCH": "The bank's answer does not match the payment ({detail})",
+        "PROCESSING_FAILED": "The bank's answer could not be processed",
+        "UNSIGNED_FIELDS": "The bank's answer did not sign the required fields ({detail})",
+        "INVALID_SIGNATURE": "The bank's answer had an invalid signature",
+        "EXPIRED": "Expired — replaced by a newer payment, no answer from the bank",
+        "CPAY_REF_REUSED": "The CPay reference was already used for another payment ({detail}) — not marked paid"
+      },
+      "dialog": {
+        "paidTitle": "Mark as paid and activate",
+        "failedTitle": "Mark as failed",
+        "summary": "Payment {ref} — {amount}",
+        "paidWarning": "Only do this after you have found this payment as successful in the CPay merchant portal. The packages are activated, the event is published and the customer receives the invoice — this cannot be undone here.",
+        "failedWarning": "The payment is closed as failed and the customer receives a \"payment failed\" e-mail. A later answer from the bank will not change it.",
+        "providerReference": "CPay reference / transaction number from the merchant portal",
+        "providerReferenceHint": "Copy it exactly as the merchant portal shows it.",
+        "note": "Note",
+        "noteHint": "Why you are deciding this — saved with the payment history and the audit log.",
+        "required": "Required.",
+        "confirmPaid": "Mark as paid",
+        "confirmFailed": "Mark as failed",
+        "cancel": "Cancel",
+        "saving": "Saving…"
+      },
+      "done": {
+        "paid": "Payment {ref} is marked as paid; the packages are being activated.",
+        "failed": "Payment {ref} is marked as failed."
+      },
+      "conflict": "This payment is no longer waiting — someone (or the bank) already settled it. The list has been refreshed.",
+      "refReused": "This CPay reference already belongs to another payment ({id}). The payment was not marked paid; check the reference in the CPay portal."
+    },
+    "cpayRef": "CPay reference",
+    "orderRef": "Reference (Details2)",
+    "paidAt": "Paid",
+    "period": "Payment period",
+    "from": "From",
+    "to": "To",
+    "periodHint": "Payment date (or creation date if unpaid), both days included.",
+    "clearPeriod": "Clear period",
+    "periodInvalid": "The start date is after the end date.",
+    "reconcileIntro": "Reconciliation with the CPay portal: choose \"Succeeded\" and a period, then copy the list or download a CSV and compare the CPay references.",
+    "copyList": "Copy list",
+    "exportCsv": "Download CSV",
+    "exporting": "Preparing…",
+    "copied": "Copied {n} payments (reference, CPay reference, amount, currency, paid).",
+    "exported": "Downloaded a CSV with {n} payments.",
+    "exportFailed": "The list could not be prepared. Please try again.",
+    "copyFailed": "The browser did not allow copying. Use \"Download CSV\".",
+    "reconcileActions": "Export for reconciliation"
   },
   "tasks": {
     "assignee": {
@@ -5304,5 +5968,32 @@
     "tooLarge": "The image is too large to upload. Please choose a smaller image.",
     "failed": "The image could not be uploaded. Please try again.",
     "noEvent": "Create the event first, then upload the images."
+  },
+  "creationSteps": {
+    "label": "Invitation steps",
+    "steps": {
+      "event": "Event",
+      "design": "Design",
+      "details": "Details",
+      "rsvp": "RSVP",
+      "preview": "Preview"
+    },
+    "status": {
+      "complete": "Done",
+      "error": "Needs attention",
+      "incomplete": "Not done yet",
+      "optional": "Optional",
+      "skipped": "Skipped"
+    },
+    "current": "current step",
+    "position": "Step {n} of {total}",
+    "progress": "Step {n} of {total}: {step}",
+    "fix": "Fill in or fix: {fields}",
+    "fields": {
+      "category": "Event type",
+      "type": "Kind of event",
+      "design": "Design",
+      "rsvpDeadline": "RSVP deadline"
+    }
   }
 }

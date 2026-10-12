@@ -1,7 +1,7 @@
 import { api } from "@/services/api";
 
 export const eventFullService = {
-  createFull(payload, files = {}) {
+  createFull(payload, files = {}, { onUploadProgress } = {}) {
     const fd = new FormData();
     fd.append(
       "data",
@@ -22,10 +22,12 @@ export const eventFullService = {
 
     return api.post("/events/full", fd, {
       headers: { "Content-Type": undefined },
+      // INV-403: the photos travel with the save; the editor shows how far.
+      ...(onUploadProgress ? { onUploadProgress } : {}),
     });
   },
 
-  updateFull(eventId, payload, files = {}) {
+  updateFull(eventId, payload, files = {}, { onUploadProgress } = {}) {
     const fd = new FormData();
     fd.append(
       "data",
@@ -46,6 +48,8 @@ export const eventFullService = {
 
     return api.put(`/events/full/${encodeURIComponent(eventId)}`, fd, {
       headers: { "Content-Type": undefined },
+      // INV-403: the photos travel with the save; the editor shows how far.
+      ...(onUploadProgress ? { onUploadProgress } : {}),
     });
   },
 };

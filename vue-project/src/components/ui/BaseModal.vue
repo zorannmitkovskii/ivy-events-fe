@@ -5,16 +5,24 @@
         :class="editPanelMode ? 'ivy-panel' : 'ivy-overlay'"
         @mousedown.self="!editPanelMode && $emit('close')"
       >
-        <div class="ivy-modal" :class="{ 'ivy-modal--panel': editPanelMode }" role="dialog" aria-modal="true">
+        <!-- INV-503: a dialog only when it covers the page; inside the editor's
+             sidebar it is the open section's panel, not a modal. -->
+        <div
+          ref="dialogRef"
+          class="ivy-modal"
+          :class="{ 'ivy-modal--panel': editPanelMode }"
+          v-bind="dialogAttrs"
+          @keydown="onDialogKeydown"
+        >
           <!-- Hide header in panel mode — accordion header serves this purpose -->
           <header v-if="!editPanelMode || subModal" class="ivy-modal__header" :class="{ 'ivy-modal__header--panel': editPanelMode }">
-            <button v-if="editPanelMode && subModal" class="ivy-modal__back" type="button" @click="$emit('close')">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            <button v-if="editPanelMode && subModal" :id="titleId" ref="backRef" class="ivy-modal__back" type="button" @click="$emit('close')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
               {{ title }}
             </button>
             <template v-else>
-              <h3 class="ivy-modal__title">{{ title }}</h3>
-              <button class="ivy-modal__close" type="button" @click="$emit('close')">&times;</button>
+              <h3 :id="titleId" class="ivy-modal__title">{{ title }}</h3>
+              <button ref="closeRef" class="ivy-modal__close" type="button" :aria-label="closeLabel" @click="$emit('close')">&times;</button>
             </template>
           </header>
 
@@ -31,8 +39,14 @@
   </Teleport>
 </template>
 
+<script>
+// The overlays open right now, newest last: only the top one answers Escape.
+const openOverlays = [];
+</script>
+
 <script setup>
-import { watch, inject, ref, onBeforeUnmount } from "vue";
+import { watch, inject, ref, computed, nextTick, onMounted, onBeforeUnmount, getCurrentInstance, useId } from "vue";
+import { focusableIn, trapTab, focusIfConnected, focusIsLost } from "@/utils/focusTrap";
 
 const editPanelMode = inject("editPanelMode", ref(false));
 
@@ -44,30 +58,110 @@ const props = defineProps({
 
 const emit = defineEmits(["close"]);
 
-function onEsc(e) {
-  if (e.key === "Escape") emit("close");
+const titleId = `${useId()}-title`;
+const dialogRef = ref(null);
+const closeRef = ref(null);
+const backRef = ref(null);
+
+// BaseModal is also used on pages whose tests do not install vue-i18n.
+const globalT = getCurrentInstance()?.appContext.config.globalProperties.$t;
+const closeLabel = computed(() => (globalT ? globalT("common.close") : "Close"));
+
+const dialogAttrs = computed(() => {
+  if (editPanelMode.value) {
+    return props.subModal ? { role: "group", "aria-labelledby": titleId } : {};
+  }
+  const attrs = { role: "dialog", "aria-modal": "true", tabindex: "-1" };
+  if (props.title) attrs["aria-labelledby"] = titleId;
+  return attrs;
+});
+
+const token = {};
+let returnFocusTo = null;
+let overlayOpen = false;
+// A sub-form in the sidebar replaces the list that opened it: where focus
+// goes back to when it closes.
+let panelHost = null;
+let openerTestId = null;
+
+function onDocumentKeydown(e) {
+  if (e.key !== "Escape" || e.defaultPrevented) return;
+  if (openOverlays[openOverlays.length - 1] !== token) return;
+  e.preventDefault();
+  emit("close");
 }
+
+function onDialogKeydown(e) {
+  if (!editPanelMode.value) {
+    trapTab(e, dialogRef.value);
+    return;
+  }
+  // Escape in a sub-form goes back to its list only (the sidebar would
+  // otherwise close the whole section).
+  if (props.subModal && e.key === "Escape" && !e.defaultPrevented) {
+    e.preventDefault();
+    e.stopPropagation();
+    emit("close");
+  }
+}
+
+async function onOpen() {
+  if (editPanelMode.value) {
+    if (!props.subModal) return;
+    openerTestId = document.activeElement?.getAttribute?.("data-testid") || null;
+    await nextTick();
+    panelHost = dialogRef.value?.closest(".ivy-panel")?.parentElement || null;
+    backRef.value?.focus();
+    return;
+  }
+  if (overlayOpen) return;
+  overlayOpen = true;
+  returnFocusTo = document.activeElement;
+  openOverlays.push(token);
+  document.addEventListener("keydown", onDocumentKeydown);
+  document.body.style.overflow = "hidden";
+  await nextTick();
+  const body = dialogRef.value?.querySelector(".ivy-modal__body");
+  (focusableIn(body)[0] || closeRef.value || dialogRef.value)?.focus();
+}
+
+function onClose() {
+  if (editPanelMode.value) {
+    const host = panelHost;
+    const testId = openerTestId;
+    panelHost = null;
+    openerTestId = null;
+    if (!props.subModal || !host) return;
+    nextTick(() => {
+      if (!focusIsLost() || !host.isConnected) return;
+      const opener = testId && host.querySelector(`[data-testid="${testId}"]`);
+      (opener || focusableIn(host)[0])?.focus();
+    });
+    return;
+  }
+  if (!overlayOpen) return;
+  overlayOpen = false;
+  const i = openOverlays.indexOf(token);
+  if (i !== -1) openOverlays.splice(i, 1);
+  document.removeEventListener("keydown", onDocumentKeydown);
+  if (!openOverlays.length) document.body.style.overflow = "";
+  const back = returnFocusTo;
+  returnFocusTo = null;
+  focusIfConnected(back);
+}
+
+// INV-503: a modal mounted already open (the editor's) answers Escape too.
+onMounted(() => {
+  if (props.open) onOpen();
+});
 
 watch(
   () => props.open,
-  (v) => {
-    if (v) {
-      document.addEventListener("keydown", onEsc);
-      if (!editPanelMode.value) {
-        document.body.style.overflow = "hidden";
-      }
-    } else {
-      document.removeEventListener("keydown", onEsc);
-      if (!editPanelMode.value) {
-        document.body.style.overflow = "";
-      }
-    }
-  }
+  (v) => (v ? onOpen() : onClose())
 );
 
 onBeforeUnmount(() => {
-  document.removeEventListener("keydown", onEsc);
-  document.body.style.overflow = "";
+  if (props.open) onClose();
 });
 </script>
 

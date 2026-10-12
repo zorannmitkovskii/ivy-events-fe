@@ -5,6 +5,22 @@
  */
 import { getUsername } from "@/services/auth.service";
 
+/**
+ * What an existing event's editor reads from the event itself
+ * (/public/invitation-page): its names, date, time, zone, place, greeting,
+ * category and the invitation's settings. INV-403: when that read failed the
+ * editor holds the design's demo values there, so these are left out of the
+ * save (the server keeps what it has — null = unchanged).
+ */
+export const EVENT_READ_FIELDS = Object.freeze([
+  "name", "categoryType", "date", "time", "timezone",
+  "groomName", "brideName", "groom", "bride",
+  "location", "message", "messageI18n",
+  "showAgenda", "showOurStory", "showEventDetails",
+  "rsvpConfig", "entry", "theme",
+  "sectionOrder", "sectionVisibility", "sectionLayouts",
+]);
+
 export function buildEventFullPayload({
   config,
   rootBg,
@@ -28,6 +44,11 @@ export function buildEventFullPayload({
   detailsFamily,
   scheduleFamily,
   storyFamily,
+  categoryType,
+  typeCode,
+  timezone,
+  // INV-403: false — the event could not be read; see EVENT_READ_FIELDS.
+  eventLoaded = true,
 }) {
   // Extract raw font name from CSS font-family like "'Cormorant Garamond', serif"
   const extractFont = (css) => (css || "").replace(/^'|'.*$/g, "");
@@ -48,10 +69,24 @@ export function buildEventFullPayload({
     });
   }
 
-  return {
-    name: `${config.brideName || ""} & ${config.groomName || ""}`,
-    categoryType: "WEDDING",
-    date: (config.weddingDateTime || "").split("T")[0] || "",
+  // The start as the wall clock where the event is (INV-104): date, time and
+  // the event's zone travel separately and the server derives the instant —
+  // never from the browser's offset.
+  const wall = config.weddingDateTime || "";
+  const time = /T(\d{2}:\d{2})/.exec(wall)?.[1] || "";
+  // A title-only event (a birthday, a conference) has no second name.
+  const name = config.groomName
+    ? `${config.brideName || ""} & ${config.groomName}`
+    : config.brideName || "";
+
+  const payload = {
+    // The server requires a name; the same placeholder the bare create used.
+    name: name.trim() || "New Event",
+    categoryType: categoryType || "WEDDING",
+    ...(typeCode ? { typeCode } : {}),
+    date: wall.split("T")[0] || "",
+    ...(time ? { time } : {}),
+    timezone: timezone || config.eventTimezone || "Europe/Skopje",
     lang: lang || "en",
     username: getUsername(),
     invitationName: invitationName || "",
@@ -79,7 +114,9 @@ export function buildEventFullPayload({
     showOurStory: visMap.ourStoryList !== false,
     showEventDetails: visMap.details !== false,
 
-    eventDetails: (eventDetailItems || []).map((item) => ({
+    // INV-402: `null` = this section was not read from the server. It is left
+    // out (the server keeps what it has); an empty list would erase it.
+    eventDetails: eventDetailItems === null ? undefined : (eventDetailItems || []).map((item) => ({
       id: item.id && !item.id.startsWith("_local_") ? item.id : undefined,
       type: item.type || "",
       eventDate: item.eventDate || null,
@@ -89,14 +126,14 @@ export function buildEventFullPayload({
       location: item.location || null,
     })),
 
-    agendas: (agendaItems || []).map((item) => ({
+    agendas: agendaItems === null ? undefined : (agendaItems || []).map((item) => ({
       id: item.id && !item.id.startsWith("_local_") ? item.id : undefined,
       type: item.agendaType || item.type || "",
       time: item.time || item.startTime || "",
       description: item.description || "",
     })),
 
-    ourStories: (ourStoryItems || []).map((item, i) => ({
+    ourStories: ourStoryItems === null ? undefined : (ourStoryItems || []).map((item, i) => ({
       id: item.id && !item.id.startsWith("_local_") ? item.id : undefined,
       type: item.type || "",
       description: item.description || "",
@@ -152,4 +189,6 @@ export function buildEventFullPayload({
     sectionVisibility: visMap,
     sectionLayouts: sectionLayouts ? { ...sectionLayouts } : {},
   };
+  if (!eventLoaded) EVENT_READ_FIELDS.forEach((key) => delete payload[key]);
+  return payload;
 }

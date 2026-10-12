@@ -809,7 +809,8 @@ describe('Draft Sync (syncDraftToBackend)', () => {
 
     const result = await syncDraftToBackend();
 
-    expect(eventFullService.createFull).toHaveBeenCalledWith(payload);
+    // IVY-INV-301: the draft also carries its idempotency key.
+    expect(eventFullService.createFull).toHaveBeenCalledWith({ ...payload, clientRequestId: expect.any(String) });
     expect(result.event.id).toBe('ev-full');
     expect(onboardingStore.eventId).toBe('ev-full');
     expect(hasDraft()).toBe(false); // cleared
@@ -925,8 +926,10 @@ describe('Router Guards', () => {
     if (routeMeta.guestOnly && isAuth) {
       return { redirect: isAdmin ? 'admin.events' : 'dashboard.overview' };
     }
-    if (routeName === 'EventCategoryPage' && !isEmailVerified && !isAuth) {
-      return { redirect: 'AuthVerifyEmailPage' };
+    // INV-104: the event comes before the account — the category page is
+    // open to guests; the basics need a category.
+    if (routeName === 'EventBasicsPage' && !hasCategory) {
+      return { redirect: 'EventCategoryPage' };
     }
     if (routeName === 'EventInvitationsPage' && !hasCategory && isAuth && !hasEventId) {
       return { redirect: 'EventCategoryPage' };
@@ -973,9 +976,14 @@ describe('Router Guards', () => {
   });
 
   // Category page guard
-  it('blocks unverified unauthenticated user from category page', () => {
+  it('lets a guest choose the event type before any account exists (INV-104)', () => {
     const result = runGuards({ routeName: 'EventCategoryPage', isAuth: false, isEmailVerified: false });
-    expect(result.redirect).toBe('AuthVerifyEmailPage');
+    expect(result).toBeNull();
+  });
+
+  it('sends the basics step back to the category when none is chosen (INV-104)', () => {
+    expect(runGuards({ routeName: 'EventBasicsPage', isAuth: false, hasCategory: false }).redirect).toBe('EventCategoryPage');
+    expect(runGuards({ routeName: 'EventBasicsPage', isAuth: false, hasCategory: true })).toBeNull();
   });
 
   it('allows authenticated user to category page (implicitly verified)', () => {

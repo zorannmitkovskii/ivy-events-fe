@@ -10,6 +10,8 @@
       <!-- Address input -->
       <input
         ref="addressInputRef"
+        :id="inputId || undefined"
+        :aria-describedby="describedBy || undefined"
         class="field__input"
         type="text"
         :placeholder="placeholder"
@@ -127,6 +129,11 @@ const props = defineProps({
   },
 
   disabled: { type: Boolean, default: false },
+
+  // Optional: lets a label outside this component name the input and a hint
+  // describe it (INV-401). Other callers leave them empty.
+  inputId: { type: String, default: "" },
+  describedBy: { type: String, default: "" },
 
   // i18n labels via props
   pickOnMapLabel: { type: String, default: "Pick on map" },

@@ -3,30 +3,30 @@
     <form class="form" @submit.prevent="submit">
       <div class="two">
         <div class="field">
-          <label>{{ t("eventDetail.form.type") }} *</label>
-          <select class="input" v-model="draft.type">
+          <label :for="ids.type">{{ t("eventDetail.form.type") }} *</label>
+          <select :id="ids.type" class="input" v-model="draft.type" :aria-invalid="errors.type ? 'true' : undefined" :aria-describedby="errors.type ? ids.typeError : undefined">
             <option v-for="val in availableTypes" :key="val" :value="val">
               {{ t(`detailTypes.${val}`) }}
             </option>
           </select>
-          <div v-if="errors.type" class="err">{{ errors.type }}</div>
+          <div v-if="errors.type" :id="ids.typeError" class="err">{{ errors.type }}</div>
         </div>
         <div class="field">
-          <label>{{ t("eventDetail.form.eventDate") }}</label>
-          <DateInput input-class="input" v-model="draft.eventDate" />
+          <label :for="ids.date">{{ t("eventDetail.form.eventDate") }}</label>
+          <DateInput :input-id="ids.date" input-class="input" v-model="draft.eventDate" />
         </div>
       </div>
 
       <div class="field">
-        <label>{{ t("eventDetail.form.time") }}</label>
-        <div class="time-selects">
-          <select class="input" v-model="draft.hour">
+        <label :id="ids.time">{{ t("eventDetail.form.time") }}</label>
+        <div class="time-selects" role="group" :aria-labelledby="ids.time">
+          <select class="input" v-model="draft.hour" :aria-label="t('editSection.a11y.hours')">
             <option v-for="h in 24" :key="h-1" :value="String(h-1).padStart(2,'0')">
               {{ String(h-1).padStart(2,'0') }}
             </option>
           </select>
           <span class="time-sep">:</span>
-          <select class="input" v-model="draft.minute">
+          <select class="input" v-model="draft.minute" :aria-label="t('editSection.a11y.minutes')">
             <option v-for="m in [0,5,10,15,20,25,30,35,40,45,50,55]" :key="m" :value="String(m).padStart(2,'0')">
               {{ String(m).padStart(2,'0') }}
             </option>
@@ -51,7 +51,7 @@
         <template #icon>📍</template>
       </AuthLocationInput>
 
-      <div v-if="validationError" class="err-box">{{ validationError }}</div>
+      <div v-if="validationError" class="err-box" role="alert">{{ validationError }}</div>
     </form>
 
     <template #footer>
@@ -72,7 +72,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, watch, computed } from "vue";
+import { reactive, ref, watch, computed, useId } from "vue";
 import { useI18n } from "vue-i18n";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
@@ -105,6 +105,9 @@ const draft = reactive({
 
 const errors = reactive({ type: "" });
 const validationError = ref("");
+// INV-503: labels and errors tied to their fields.
+const uid = useId();
+const ids = { type: `${uid}-type`, typeError: `${uid}-type-error`, date: `${uid}-date`, time: `${uid}-time` };
 
 watch(
   () => props.open,
@@ -264,5 +267,14 @@ function submit() {
   .two {
     grid-template-columns: 1fr;
   }
+}
+
+/* INV-503 */
+.input:focus-visible,
+.image-upload-area:focus-visible,
+.image-action-btn:focus-visible,
+.toggle-row:focus-visible {
+  outline: 3px solid var(--moss, #5e7f58);
+  outline-offset: 2px;
 }
 </style>

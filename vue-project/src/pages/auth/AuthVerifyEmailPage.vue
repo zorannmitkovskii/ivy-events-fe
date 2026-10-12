@@ -70,7 +70,7 @@ import { onboardingStore, setEmailVerified, getTempPassword, clearTempCredential
 import { verifyEmail, exchangeOAuthCode, assignRole, refreshAccessToken, loginWithCredentials, isAuthenticated } from "@/services/auth.service";
 import { landingAfterAuth } from "@/router/landing";
 import { takeGoogleIntent } from "@/services/googleOAuth";
-import { syncDraftToBackend } from "@/composables/useDraftSync";
+import { resumeDraftAfterAuth } from "@/composables/useDraftSync";
 
 const router = useRouter();
 const route = useRoute();
@@ -118,14 +118,16 @@ onMounted(async () => {
     }
 
     setEmailVerified(true);
-    const createdEvent = await syncDraftToBackend();
+    // A guest's invitation draft (INV-104) goes back to its editor: created
+    // as the account's event, or with the choice when the account has one.
+    const resume = await resumeDraftAfterAuth(lang.value);
 
     // Login → dashboard, Signup → event creation flow
     const intent = takeGoogleIntent();
 
-    if (createdEvent?.event?.id || createdEvent?.id) {
-      // Event was auto-created from draft — go straight to dashboard
-      await router.replace({ name: "dashboard.overview", params: { lang: lang.value } });
+    if (resume) {
+      // Back to the invitation built before signing in
+      await router.replace(resume);
     } else if (intent === "login") {
       await router.replace(await landingAfterAuth(lang.value));
     } else {
@@ -146,7 +148,7 @@ async function onVerify() {
     setEmailVerified(true);
 
     // Auto-login with credentials stored during registration
-    let createdEvent = null;
+    let resume = null;
     const tempPw = getTempPassword();
     if (tempPw && email.value) {
       try {
@@ -168,8 +170,8 @@ async function onVerify() {
           console.warn("[verify] refreshToken failed:", refreshErr?.message);
         }
 
-        createdEvent = await syncDraftToBackend();
-        console.log("[verify] syncDraft result:", createdEvent);
+        // The invitation built before signing up (INV-104), if any.
+        resume = await resumeDraftAfterAuth(lang.value);
       } catch (loginErr) {
         console.warn("[auto-login] failed after verify:", loginErr?.message);
       } finally {
@@ -184,9 +186,10 @@ async function onVerify() {
       return;
     }
 
-    // Event was auto-created from draft — go straight to dashboard
-    if (createdEvent?.event?.id || createdEvent?.id) {
-      await router.push({ name: "dashboard.overview", params: { lang: lang.value } });
+    // Back to the invitation: on the event just created from the draft, or
+    // with a clear note when that did not work (the draft is kept).
+    if (resume) {
+      await router.push(resume);
       return;
     }
 

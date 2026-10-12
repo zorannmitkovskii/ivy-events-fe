@@ -10,14 +10,26 @@ const defaultState = () => ({
   // ambiguous — a birthday is either an adult's or a child's, and they are
   // two different products.
   selectedTypeCode: '',
+  // The event's basics, asked before the design (INV-104): names or a title,
+  // date, time, the event's own timezone and a location. The design cards and
+  // the invitation preview are personalised from these. Read through
+  // `normalizeBasics` (utils/eventBasics) — older saves have location as a
+  // string and no time/timezone.
   eventDetails: {
     brideName: '',
     groomName: '',
+    title: '',
     date: '',
-    location: ''
+    time: '',
+    timezone: 'Europe/Skopje',
+    location: { name: '', address: '' }
   },
   eventId: '',
   invitationName: '',
+  // Where the chosen design opens in the editor ("invitations/<slug>"), so
+  // the stepper (INV-102) can lead back to it from any step. The design's
+  // address, not a progress flag.
+  invitationPath: '',
   eventStatus: '',
   selectedPackageType: ''
 });
@@ -96,23 +108,60 @@ export function claimOnboardingFor(userId) {
   return discarded;
 }
 
+// INV-302: the saved onboarding could not be read on this load (it was set
+// aside, so the flow starts clean instead of failing on it later).
+let loadIssue = null;
+export function getOnboardingLoadIssue() {
+  return loadIssue;
+}
+
+const str = (value) => (typeof value === 'string' ? value : '');
+
 export function initOnboarding() {
+  let raw = null;
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const saved = JSON.parse(raw);
-      onboardingStore.email = saved.email || '';
-      onboardingStore.isEmailVerified = !!saved.isEmailVerified;
-      onboardingStore.selectedCategory = saved.selectedCategory || '';
-      onboardingStore.selectedTypeCode = saved.selectedTypeCode || '';
-      onboardingStore.invitationName = saved.invitationName || '';
-      onboardingStore.eventId = saved.eventId || '';
-      onboardingStore.eventDetails = saved.eventDetails || defaultState().eventDetails;
-      onboardingStore.selectedPackageType = saved.selectedPackageType || '';
-    }
-  } catch (e) {
-    console.warn('[onboarding] failed to parse saved state', e);
+    raw = localStorage.getItem(STORAGE_KEY);
+  } catch {
+    return;
   }
+  if (!raw) return;
+  try {
+    const saved = JSON.parse(raw);
+    if (!saved || typeof saved !== 'object' || Array.isArray(saved)) throw new Error('not an onboarding state');
+    onboardingStore.email = str(saved.email);
+    onboardingStore.isEmailVerified = !!saved.isEmailVerified;
+    onboardingStore.selectedCategory = str(saved.selectedCategory);
+    onboardingStore.selectedTypeCode = str(saved.selectedTypeCode);
+    onboardingStore.invitationName = str(saved.invitationName);
+    onboardingStore.invitationPath = str(saved.invitationPath);
+    onboardingStore.eventId = str(saved.eventId);
+    // Read through normalizeBasics everywhere, so any object is safe here.
+    onboardingStore.eventDetails =
+      saved.eventDetails && typeof saved.eventDetails === 'object' ? saved.eventDetails : defaultState().eventDetails;
+    onboardingStore.selectedPackageType = str(saved.selectedPackageType);
+  } catch (e) {
+    console.warn('[onboarding] failed to parse saved state; it was removed', e);
+    loadIssue = 'unreadable';
+    try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
+  }
+}
+
+/**
+ * Forgets the invitation being made — type, basics and chosen design — when
+ * its draft is discarded or expires (INV-302). When the store points at a
+ * saved event (`eventId`), the category and design describe that event (the
+ * dashboard reads them), so only the basics typed for the new one go.
+ */
+export function clearCreationProgress() {
+  const fresh = defaultState();
+  onboardingStore.eventDetails = fresh.eventDetails;
+  if (!onboardingStore.eventId) {
+    onboardingStore.selectedCategory = '';
+    onboardingStore.selectedTypeCode = '';
+    onboardingStore.invitationName = '';
+    onboardingStore.invitationPath = '';
+  }
+  try { persist(); } catch { /* storage refused: memory is cleared */ }
 }
 
 function persist() {
@@ -122,6 +171,7 @@ function persist() {
     selectedCategory: onboardingStore.selectedCategory,
     selectedTypeCode: onboardingStore.selectedTypeCode,
     invitationName: onboardingStore.invitationName,
+    invitationPath: onboardingStore.invitationPath,
     eventId: onboardingStore.eventId,
     eventDetails: onboardingStore.eventDetails,
     selectedPackageType: onboardingStore.selectedPackageType,
@@ -180,6 +230,11 @@ export function setEventId(id) {
 
 export function setInvitationName(name) {
   onboardingStore.invitationName = name || '';
+  persist();
+}
+
+export function setInvitationPath(path) {
+  onboardingStore.invitationPath = path || '';
   persist();
 }
 

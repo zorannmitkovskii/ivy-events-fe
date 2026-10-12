@@ -2,38 +2,38 @@
   <BaseModal :open="open" title="" :sub-modal="subModal" @close="emit('close')">
     <form class="form" @submit.prevent="submit">
       <div class="field" v-if="fieldConfig.type?.show">
-        <label>{{ t("ourStory.form.type") }} {{ fieldConfig.type.required ? '*' : '' }}</label>
-        <select class="input" v-model="draft.type">
+        <label :for="ids.type">{{ t("ourStory.form.type") }} {{ fieldConfig.type.required ? '*' : '' }}</label>
+        <select :id="ids.type" class="input" v-model="draft.type" :aria-invalid="errors.type ? 'true' : undefined" :aria-describedby="errors.type ? ids.typeError : undefined">
           <option v-for="val in availableTypes" :key="val" :value="val">
             {{ t(`storyTypes.${val}`) }}
           </option>
         </select>
-        <div v-if="errors.type" class="err">{{ errors.type }}</div>
+        <div v-if="errors.type" :id="ids.typeError" class="err">{{ errors.type }}</div>
       </div>
 
       <div class="field">
-        <label class="toggle-row" @click.prevent="draft.showTitle = !draft.showTitle">
-          <span class="toggle-switch" :class="{ on: draft.showTitle }">
+        <button type="button" role="switch" class="toggle-row" :aria-checked="draft.showTitle ? 'true' : 'false'" @click="draft.showTitle = !draft.showTitle">
+          <span class="toggle-switch" :class="{ on: draft.showTitle }" aria-hidden="true">
             <span class="toggle-knob" />
           </span>
           <span class="toggle-label">{{ t("ourStory.form.showTitle") }}</span>
-        </label>
+        </button>
       </div>
 
       <div class="field" v-if="fieldConfig.date?.show">
-        <label>{{ t("ourStory.form.date") }} {{ fieldConfig.date.required ? '*' : '' }}</label>
-        <DateInput input-class="input" v-model="draft.storyDate" />
-        <div v-if="errors.storyDate" class="err">{{ errors.storyDate }}</div>
+        <label :for="ids.date">{{ t("ourStory.form.date") }} {{ fieldConfig.date.required ? '*' : '' }}</label>
+        <DateInput :input-id="ids.date" :invalid="!!errors.storyDate" :described-by="errors.storyDate ? ids.dateError : ''" input-class="input" v-model="draft.storyDate" />
+        <div v-if="errors.storyDate" :id="ids.dateError" class="err">{{ errors.storyDate }}</div>
       </div>
 
       <div class="field">
-        <label>{{ t("ourStory.form.imageUrl") }}</label>
+        <p :id="ids.image" class="field-label-text">{{ t("ourStory.form.imageUrl") }}</p>
         <input ref="fileInput" type="file" accept="image/*" class="hidden-file" @change="onFileSelected" />
 
         <div v-if="imagePreviewUrl" class="image-preview-wrap">
           <img :src="imagePreviewUrl" alt="Story image" class="image-preview" />
           <div class="image-preview-actions">
-            <button type="button" class="image-action-btn" @click="fileInput?.click()">
+            <button type="button" class="image-action-btn" :aria-describedby="ids.image" @click="fileInput?.click()">
               {{ t('ourStory.form.changeImage') }}
             </button>
             <button type="button" class="image-action-btn image-action-btn--remove" @click="removeImage">
@@ -42,28 +42,38 @@
           </div>
         </div>
 
-        <div v-else class="image-upload-area" @click="fileInput?.click()">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <button v-else type="button" class="image-upload-area" :aria-describedby="ids.image" @click="fileInput?.click()">
+          <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="17 8 12 3 7 8"/>
             <line x1="12" y1="3" x2="12" y2="15"/>
           </svg>
           <span class="upload-text">{{ t("ourStory.form.clickToUpload") }}</span>
-        </div>
+        </button>
       </div>
 
       <div class="field" v-if="fieldConfig.description?.show">
-        <label>{{ t(fieldConfig.description.label || "ourStory.form.description") }} {{ fieldConfig.description.required ? '*' : '' }}</label>
+        <label :for="ids.desc">{{ t(fieldConfig.description.label || "ourStory.form.description") }} {{ fieldConfig.description.required ? '*' : '' }}</label>
         <textarea
+          :id="ids.desc"
+          :aria-describedby="errors.description ? ids.descError + ' ' + ids.guide : ids.guide"
+          :aria-invalid="errors.description ? 'true' : undefined"
           class="input textarea"
           v-model="draft.description"
           :placeholder="t('ourStory.addDialog.descriptionPh')"
           rows="3"
         />
-        <div v-if="errors.description" class="err">{{ errors.description }}</div>
+        <div v-if="errors.description" :id="ids.descError" class="err">{{ errors.description }}</div>
+        <!-- INV-401: required or not, what guests see, an example (static text). -->
+        <FieldGuide
+          :id="ids.guide"
+          :required="!!fieldConfig.description.required"
+          :guests="t('editSection.guide.story.guests')"
+          :example="t('editSection.guide.story.example')"
+        />
       </div>
 
-      <div v-if="validationError" class="err-box">{{ validationError }}</div>
+      <div v-if="validationError" class="err-box" role="alert">{{ validationError }}</div>
     </form>
 
     <template #footer>
@@ -84,12 +94,13 @@
 </template>
 
 <script setup>
-import { reactive, ref, watch, computed, onBeforeUnmount } from "vue";
+import { reactive, ref, watch, computed, onBeforeUnmount, useId } from "vue";
 import { useI18n } from "vue-i18n";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import DateInput from "@/components/generic/DateInput.vue";
 import { StoryType } from "@/enums/StoryType";
+import FieldGuide from "@/components/invitations/shared/FieldGuide.vue";
 import { onboardingStore } from "@/store/onboarding.store.js";
 import { OUR_STORY_FIELD_CONFIG, DEFAULT_FIELD_CONFIG } from "@/config/ourStoryFieldConfig.js";
 
@@ -103,6 +114,12 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["close", "submit", "delete"]);
+
+const uid = useId();
+const ids = {
+  desc: `${uid}-desc`, descError: `${uid}-desc-error`, guide: `${uid}-guide`,
+  type: `${uid}-type`, typeError: `${uid}-type-error`, date: `${uid}-date`, dateError: `${uid}-date-error`, image: `${uid}-image`,
+};
 
 const isEdit = computed(() => !!props.item?.id);
 
@@ -403,5 +420,37 @@ function submit() {
 .toggle-label {
   font-size: 13px;
   color: var(--dash-ink, #1a1a1a);
+}
+
+.image-upload-area {
+  width: 100%;
+  background: none;
+  font: inherit;
+}
+
+.toggle-row {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+.field-label-text {
+  font-size: 12px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--neutral-500);
+}
+
+/* INV-503 */
+.input:focus-visible,
+.image-upload-area:focus-visible,
+.image-action-btn:focus-visible,
+.toggle-row:focus-visible {
+  outline: 3px solid var(--moss, #5e7f58);
+  outline-offset: 2px;
 }
 </style>

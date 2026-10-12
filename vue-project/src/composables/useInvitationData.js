@@ -6,7 +6,9 @@ import { onboardingStore } from "@/store/onboarding.store";
 export function useInvitationData() {
   const route = useRoute();
   const lang = computed(() => route.params.lang || "mk");
-  const eventId = route.query.eventId || onboardingStore.eventId;
+  // ?new=1 is an event still being made (INV-104): never show the dashboard's
+  // current event in its place.
+  const eventId = route.query.eventId || (route.query.new === "1" ? "" : onboardingStore.eventId);
 
   const loading = ref(!!eventId);
   const error = ref(null);

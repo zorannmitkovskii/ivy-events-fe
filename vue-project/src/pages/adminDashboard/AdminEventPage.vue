@@ -318,6 +318,7 @@ const columns = computed(() => [
 
 const { t } = useI18n();
 import { ref, computed, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
 import { eventsService } from "@/services/events.service";
 import { invitationTemplateService } from "@/services/invitationTemplate.service";
 import { EventCategoryEnum } from "@/enums/EventCategory";
@@ -345,7 +346,9 @@ async function fetchEvents() {
 onMounted(fetchEvents);
 
 /* ---- filters ---- */
-const searchQuery = ref("");
+// CPay round 2 (5): the payments console links an event here as ?q=<name>.
+const initialSearch = useRoute()?.query?.q;
+const searchQuery = ref(typeof initialSearch === "string" ? initialSearch : "");
 const selectedCategory = ref("");
 
 watch([searchQuery, selectedCategory], () => { page.value = 1; });

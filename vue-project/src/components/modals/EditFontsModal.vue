@@ -3,36 +3,38 @@
     <div class="fonts-modal">
       <!-- Heading Font -->
       <div class="font-section">
-        <label class="font-section-label">{{ t('editSection.headingFont') }}</label>
-        <div class="font-list">
+        <p :id="ids.heading" class="font-section-label">{{ t('editSection.headingFont') }}</p>
+        <div class="font-list" role="group" :aria-labelledby="ids.heading">
           <button
             v-for="font in FONT_LIST"
             :key="'h-' + font.name"
             type="button"
             class="font-btn"
             :class="{ 'font-btn--active': selectedHeading === font.name }"
+            :aria-pressed="selectedHeading === font.name ? 'true' : 'false'"
             :style="{ fontFamily: font.css }"
             @click="selectedHeading = font.name"
           >
-            {{ font.name }}
+            <span v-if="selectedHeading === font.name" aria-hidden="true">✓ </span>{{ font.name }}
           </button>
         </div>
       </div>
 
       <!-- Body Font -->
       <div class="font-section">
-        <label class="font-section-label">{{ t('editSection.bodyFont') }}</label>
-        <div class="font-list">
+        <p :id="ids.body" class="font-section-label">{{ t('editSection.bodyFont') }}</p>
+        <div class="font-list" role="group" :aria-labelledby="ids.body">
           <button
             v-for="font in FONT_LIST"
             :key="'b-' + font.name"
             type="button"
             class="font-btn"
             :class="{ 'font-btn--active': selectedBody === font.name }"
+            :aria-pressed="selectedBody === font.name ? 'true' : 'false'"
             :style="{ fontFamily: font.css }"
             @click="selectedBody = font.name"
           >
-            {{ font.name }}
+            <span v-if="selectedBody === font.name" aria-hidden="true">✓ </span>{{ font.name }}
           </button>
         </div>
       </div>
@@ -50,12 +52,14 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, useId } from 'vue';
 import { useI18n } from 'vue-i18n';
 import BaseModal from '@/components/ui/BaseModal.vue';
 import ButtonMain from '@/components/generic/ButtonMain.vue';
 
 const { t } = useI18n();
+const fontsUid = useId();
+const ids = { heading: `${fontsUid}-heading`, body: `${fontsUid}-body` };
 
 const FONT_LIST = [
   { name: 'Playfair Display', css: "'Playfair Display', serif", category: 'serif' },
@@ -111,9 +115,16 @@ function preloadFonts() {
   }
 }
 
-// Emit change in live-edit mode
+// INV-801: fonts changed from outside while open (undo / redo) are shown.
+watch(() => [props.currentHeading, props.currentBody], ([heading, body]) => {
+  selectedHeading.value = heading;
+  selectedBody.value = body;
+});
+
+// Emit change in live-edit mode — only a choice that differs from what the
+// invitation has (an update from outside is not a new change).
 watch([selectedHeading, selectedBody], () => {
-  if (props.liveEdit) {
+  if (props.liveEdit && (selectedHeading.value !== props.currentHeading || selectedBody.value !== props.currentBody)) {
     emit('change', { heading: selectedHeading.value, body: selectedBody.value });
   }
 });
@@ -140,6 +151,7 @@ function onSave() {
 }
 
 .font-section-label {
+  margin: 0;
   font-size: 13px;
   font-weight: 600;
   color: var(--ink-2);

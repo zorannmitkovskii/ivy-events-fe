@@ -1,14 +1,41 @@
 <template>
   <BaseModal :open="open" :title="t('editSection.rsvp')" @close="emit('close')">
     <div class="rsvp-modal">
+      <!-- INV-602: a reply form switched off (saved that way) — guests cannot
+           answer; the way to switch it back on is here, where the preview's
+           note leads. -->
+      <SectionStateNotice v-if="hidden" kind="rsvp" state="hidden" @show="emit('show')" />
+      <!--
+        INV-401: what guests see in the RSVP section. The message is the one
+        the invitation shows above the form (same source as the preview), so it
+        changes as the deadline or the event date changes.
+      -->
+      <FieldGuide
+        :id="guideId"
+        section
+        :guests="t('editSection.guide.rsvp.guests')"
+        :example="guestMessage"
+        :example-label="t('editSection.guide.rsvp.messageLabel')"
+      >
+        <p v-if="!guestMessage" class="rsvp-guide-empty" data-testid="rsvp-guide-empty">{{ t('editSection.guide.rsvp.noMessage') }}</p>
+      </FieldGuide>
+
       <!-- RSVP Deadline -->
-      <div class="field field--row">
+      <div class="field field--row" data-rsvp-field="deadline">
         <div class="field-left">
           <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <label class="field-label">{{ t('editSection.rsvpDeadline') }}</label>
+          <label class="field-label" :for="ids.deadline">{{ t('editSection.rsvpDeadline') }}</label>
         </div>
-        <DateInput input-class="field-input field-input--compact" :model-value="localDeadline" @update:model-value="localDeadline = $event; emitChange()" />
+        <DateInput
+          :input-id="ids.deadline"
+          :described-by="deadlineDescribedBy"
+          :invalid="!!deadlineProblem"
+          input-class="field-input field-input--compact" :model-value="localDeadline" @update:model-value="localDeadline = $event; emitChange()" />
       </div>
+      <p v-if="!localDeadline" :id="ids.deadlineHint" class="deadline-hint" data-testid="rsvp-deadline-default">{{ t('editSection.guide.rsvp.deadlineDefault') }}</p>
+      <p v-if="deadlineProblem" :id="ids.deadlineError" class="deadline-warning" role="alert" data-testid="rsvp-deadline-warning">
+        <span aria-hidden="true">! </span>{{ t('editSection.rsvpDeadlineProblem.' + deadlineProblem, { timezone: eventTimezone }) }}
+      </p>
 
       <div class="field-divider"></div>
 
@@ -16,12 +43,12 @@
       <div class="field field--row">
         <div class="field-left">
           <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          <label class="field-label">{{ t('editSection.maxGuests') }}</label>
+          <span :id="ids.maxGuests" class="field-label">{{ t('editSection.maxGuests') }}</span>
         </div>
-        <div class="stepper">
-          <button class="stepper-btn" :disabled="localMaxGuests <= 1" @click="localMaxGuests--; emitChange()">-</button>
-          <span class="stepper-value">{{ localMaxGuests }}</span>
-          <button class="stepper-btn" :disabled="localMaxGuests >= 10" @click="localMaxGuests++; emitChange()">+</button>
+        <div class="stepper" role="group" :aria-labelledby="ids.maxGuests">
+          <button type="button" class="stepper-btn" :aria-label="t('editSection.a11y.decrease', { label: t('editSection.maxGuests') })" :disabled="localMaxGuests <= 1" @click="localMaxGuests--; emitChange()">-</button>
+          <span class="stepper-value" aria-live="polite" data-testid="rsvp-max-guests">{{ localMaxGuests }}</span>
+          <button type="button" class="stepper-btn" :aria-label="t('editSection.a11y.increase', { label: t('editSection.maxGuests') })" :disabled="localMaxGuests >= 10" @click="localMaxGuests++; emitChange()">+</button>
         </div>
       </div>
 
@@ -31,16 +58,19 @@
       <div class="field">
         <div class="field-left">
           <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <label class="field-label">{{ t('editSection.contactMethod') }}</label>
+          <span :id="ids.contact" class="field-label">{{ t('editSection.contactMethod') }}</span>
         </div>
-        <div class="chip-row">
+        <!-- INV-503: the chosen option is pressed and ticked, not only darker -->
+        <div class="chip-row" role="group" :aria-labelledby="ids.contact">
           <button
             v-for="m in CONTACT_METHODS"
             :key="m.key"
+            type="button"
             class="chip"
             :class="{ 'chip--active': localContactMethod === m.key }"
+            :aria-pressed="localContactMethod === m.key ? 'true' : 'false'"
             @click="localContactMethod = m.key; emitChange()"
-          >{{ m.label }}</button>
+          ><span v-if="localContactMethod === m.key" aria-hidden="true">✓ </span>{{ t('editSection.' + m.key + 'Option') }}</button>
         </div>
       </div>
 
@@ -50,17 +80,21 @@
       <div class="field">
         <div class="field-left">
           <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5" ry="5"/></svg>
-          <label class="field-label">{{ t('editSection.borderRadius') }}</label>
+          <span :id="ids.radius" class="field-label">{{ t('editSection.borderRadius') }}</span>
         </div>
-        <div class="radius-chips">
+        <div class="radius-chips" role="group" :aria-labelledby="ids.radius">
           <button
             v-for="r in RADIUS_OPTIONS"
             :key="r"
+            type="button"
             class="radius-chip"
             :class="{ 'radius-chip--active': localRadius === r }"
+            :aria-pressed="localRadius === r ? 'true' : 'false'"
+            :aria-label="t('editSection.a11y.radius', { value: r })"
             @click="localRadius = r; emitChange()"
           >
-            <span class="radius-preview" :style="{ borderRadius: r }"></span>
+            <span class="radius-preview" :style="{ borderRadius: r }" aria-hidden="true"></span>
+            <span v-if="localRadius === r" class="radius-check" aria-hidden="true">✓</span>
           </button>
         </div>
       </div>
@@ -74,23 +108,20 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, computed, useId } from 'vue';
 import { useI18n } from 'vue-i18n';
 import BaseModal from '@/components/ui/BaseModal.vue';
 import ButtonMain from '@/components/generic/ButtonMain.vue';
 import DateInput from '@/components/generic/DateInput.vue';
+import FieldGuide from '@/components/invitations/shared/FieldGuide.vue';
+import SectionStateNotice from '@/components/invitations/shared/SectionStateNotice.vue';
+import { DEFAULT_TIMEZONE, rsvpDeadlineProblem } from '@/utils/eventBasics';
 
 const { t } = useI18n();
 
 const RADIUS_OPTIONS = ['4px', '8px', '12px', '24px'];
-const CONTACT_METHODS = [
-  { key: 'email', label: '' },
-  { key: 'sms', label: '' },
-  { key: 'both', label: '' },
-];
-CONTACT_METHODS[0].label = t('editSection.emailOption');
-CONTACT_METHODS[1].label = t('editSection.smsOption');
-CONTACT_METHODS[2].label = t('editSection.bothOption');
+// Labels are read in the template, so they follow a language change.
+const CONTACT_METHODS = [{ key: 'email' }, { key: 'sms' }, { key: 'both' }];
 
 const props = defineProps({
   open: { type: Boolean, default: false },
@@ -99,9 +130,28 @@ const props = defineProps({
   maxGuests: { type: Number, default: 5 },
   borderRadius: { type: String, default: '8px' },
   contactMethod: { type: String, default: 'email' },
+  // INV-104: the deadline is the end of that day where the event is, checked
+  // in the event's zone — not the browser's.
+  eventDateTime: { type: String, default: '' },
+  eventTimezone: { type: String, default: DEFAULT_TIMEZONE },
+  // INV-401: the line the guests read above the form, as the preview shows it.
+  guestMessage: { type: String, default: '' },
+  // INV-602: the RSVP section is hidden on the invitation.
+  hidden: { type: Boolean, default: false },
 });
 
-const emit = defineEmits(['close', 'save', 'change']);
+const guideId = `${useId()}-rsvp-guide`;
+const uid = useId();
+const ids = {
+  deadline: `${uid}-deadline`,
+  deadlineHint: `${uid}-deadline-hint`,
+  deadlineError: `${uid}-deadline-error`,
+  maxGuests: `${uid}-max-guests`,
+  contact: `${uid}-contact`,
+  radius: `${uid}-radius`,
+};
+
+const emit = defineEmits(['close', 'save', 'change', 'show']);
 
 const localDeadline = ref(props.rsvpDeadline);
 const localMaxGuests = ref(props.maxGuests);
@@ -116,6 +166,29 @@ watch(() => props.open, (v) => {
     localContactMethod.value = props.contactMethod;
   }
 }, { immediate: true });
+
+// INV-801: the settings changed from outside while the panel is open (undo /
+// redo) — the fields show them. Nothing is emitted: they are not a new change.
+watch(() => props.rsvpDeadline, (v) => { localDeadline.value = v; });
+watch(() => props.maxGuests, (v) => { localMaxGuests.value = v; });
+watch(() => props.borderRadius, (v) => { localRadius.value = v; });
+watch(() => props.contactMethod, (v) => { localContactMethod.value = v; });
+
+const deadlineProblem = computed(() => {
+  const wall = props.eventDateTime || '';
+  return rsvpDeadlineProblem(
+    localDeadline.value,
+    /^\d{4}-\d{2}-\d{2}/.test(wall) ? wall.slice(0, 10) : '',
+    /T(\d{2}:\d{2})/.exec(wall)?.[1] || '',
+    props.eventTimezone,
+  );
+});
+
+// INV-503: the deadline field is read with its default note and its problem.
+const deadlineDescribedBy = computed(() => [
+  !localDeadline.value && ids.deadlineHint,
+  deadlineProblem.value && ids.deadlineError,
+].filter(Boolean).join(' '));
 
 function getPayload() {
   return {
@@ -138,6 +211,22 @@ function onSave() {
 </script>
 
 <style scoped>
+.deadline-hint {
+  margin: -6px 0 0;
+  font-size: 12px;
+  color: var(--neutral-600, var(--ink-3));
+}
+
+.rsvp-guide-empty {
+  margin: 0;
+}
+
+.deadline-warning {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #b42318;
+}
+
 .rsvp-modal {
   display: flex;
   flex-direction: column;
@@ -312,6 +401,32 @@ function onSave() {
 
 .chip:hover {
   border-color: var(--ink-4);
+}
+
+.radius-chip {
+  position: relative;
+}
+
+.radius-check {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ink, #1f2937);
+  color: #fff;
+  font-size: 10px;
+  line-height: 16px;
+  text-align: center;
+}
+
+.chip:focus-visible,
+.radius-chip:focus-visible,
+.stepper-btn:focus-visible,
+.field-input:focus-visible {
+  outline: 3px solid var(--moss, #5e7f58);
+  outline-offset: 2px;
 }
 
 .chip--active {

@@ -4,6 +4,8 @@
     <h1 class="title">{{ t('register.title') }}</h1>
     <p class="subtitle">{{ t('register.subtitle') }}</p>
 
+    <DraftAuthNotice />
+
     <GoogleButton :label="t('register.googleButton')" @click="onGoogle" />
 
     <AuthDivider :label="t('register.divider')" />
@@ -195,6 +197,7 @@ import AuthCheckbox from "@/components/auth/AuthCheckbox.vue";
 
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import GoogleButton from "@/components/auth/GoogleButton.vue";
+import DraftAuthNotice from "@/components/auth/DraftAuthNotice.vue";
 
 const router = useRouter();
 const route = useRoute();

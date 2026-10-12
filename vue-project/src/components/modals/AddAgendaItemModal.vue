@@ -2,34 +2,42 @@
   <BaseModal :open="open" :title="isEdit ? t('agenda.editDialog.title') : t('agenda.addDialog.title')" :sub-modal="subModal" @close="emit('close')">
     <form class="form" @submit.prevent="submit">
       <div class="field">
-        <label>{{ t("agenda.form.type") }} *</label>
-        <select class="input" v-model="draft.type">
+        <label :for="ids.type">{{ t("agenda.form.type") }} *</label>
+        <select :id="ids.type" class="input" v-model="draft.type" :aria-invalid="errors.type ? 'true' : undefined" :aria-describedby="errors.type ? ids.typeError + ' ' + ids.guide : ids.guide">
           <option v-for="val in availableTypes" :key="val" :value="val">
             {{ t(`agenda.types.${val}`) }}
           </option>
         </select>
-        <div v-if="errors.type" class="err">{{ errors.type }}</div>
+        <div v-if="errors.type" :id="ids.typeError" class="err">{{ errors.type }}</div>
       </div>
 
       <div class="field">
-        <label>{{ t("agenda.form.startTime") }} *</label>
-        <div class="time-selects">
-          <select class="input" v-model="draft.hour">
+        <label :id="ids.timeLabel">{{ t("agenda.form.startTime") }} *</label>
+        <div class="time-selects" role="group" :aria-labelledby="ids.timeLabel" :aria-describedby="errors.time ? ids.timeError + ' ' + ids.guide : ids.guide">
+          <select class="input" v-model="draft.hour" :aria-label="t('editSection.a11y.hours')">
             <option v-for="h in 24" :key="h-1" :value="String(h-1).padStart(2,'0')">
               {{ String(h-1).padStart(2,'0') }}
             </option>
           </select>
           <span class="time-sep">:</span>
-          <select class="input" v-model="draft.minute">
+          <select class="input" v-model="draft.minute" :aria-label="t('editSection.a11y.minutes')">
             <option v-for="m in [0,5,10,15,20,25,30,35,40,45,50,55]" :key="m" :value="String(m).padStart(2,'0')">
               {{ String(m).padStart(2,'0') }}
             </option>
           </select>
         </div>
-        <div v-if="errors.time" class="err">{{ errors.time }}</div>
+        <div v-if="errors.time" :id="ids.timeError" class="err">{{ errors.time }}</div>
       </div>
 
-      <div v-if="validationError" class="err-box">{{ validationError }}</div>
+      <!-- INV-401: optional section, what guests see, an example (static text). -->
+      <FieldGuide
+        :id="ids.guide"
+        section
+        :guests="t('editSection.guide.programme.guests')"
+        :example="t('editSection.guide.programme.example')"
+      />
+
+      <div v-if="validationError" class="err-box" role="alert">{{ validationError }}</div>
     </form>
 
     <template #footer>
@@ -50,11 +58,12 @@
 </template>
 
 <script setup>
-import { reactive, ref, watch, computed } from "vue";
+import { reactive, ref, watch, computed, useId } from "vue";
 import { useI18n } from "vue-i18n";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import { AgendaType } from "@/enums/AgendaType";
+import FieldGuide from "@/components/invitations/shared/FieldGuide.vue";
 
 const { t } = useI18n();
 
@@ -73,6 +82,9 @@ const availableTypes = computed(() => {
 });
 
 const emit = defineEmits(["close", "submit", "delete"]);
+
+const uid = useId();
+const ids = { type: `${uid}-type`, typeError: `${uid}-type-error`, timeLabel: `${uid}-time`, timeError: `${uid}-time-error`, guide: `${uid}-guide` };
 
 const isEdit = computed(() => !!props.item?.id);
 
@@ -132,7 +144,7 @@ function splitDateTime(iso) {
 
 function validate() {
   validationError.value = "";
-  errors.type = draft.type ? "" : "Type is required";
+  errors.type = draft.type ? "" : t("agenda.errors.typeRequired");
   errors.time = "";
 
   return !(errors.type || errors.time);
@@ -236,5 +248,14 @@ function submit() {
   .two {
     grid-template-columns: 1fr;
   }
+}
+
+/* INV-503 */
+.input:focus-visible,
+.image-upload-area:focus-visible,
+.image-action-btn:focus-visible,
+.toggle-row:focus-visible {
+  outline: 3px solid var(--moss, #5e7f58);
+  outline-offset: 2px;
 }
 </style>

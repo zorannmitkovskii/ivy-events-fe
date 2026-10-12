@@ -3,14 +3,14 @@
     <div class="hero-inner">
       <div class="hero-image-col">
         <div class="hero-image-wrap">
-          <img v-if="photoUrl" :src="photoUrl" :alt="brideName + ' & ' + groomName" class="hero-img" />
+          <img v-if="photoUrl" :src="photoUrl" :alt="groomName ? brideName + ' & ' + groomName : brideName" class="hero-img" />
           <div class="hero-image-overlay"></div>
         </div>
       </div>
 
       <div class="hero-text-col">
         <p class="hero-label">{{ labelText }}</p>
-        <h1 class="hero-names">{{ brideName }} &amp; {{ groomName }}</h1>
+        <h1 class="hero-names">{{ brideName }}<template v-if="groomName"> &amp; {{ groomName }}</template></h1>
         <div class="hero-divider"></div>
 
         <div class="hero-details">

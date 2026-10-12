@@ -1,5 +1,6 @@
 <template>
   <form class="auth-form" @submit.prevent="onSubmit">
+    <DraftAuthNotice />
     <AuthInput
       v-model="email"
       :label="$t('auth.fields.email')"
@@ -63,10 +64,11 @@ import { RouterLink, useRoute, useRouter } from 'vue-router';
 import AuthDivider from '@/components/auth/AuthDivider.vue';
 import AuthInput from '@/components/auth/AuthInput.vue';
 import GoogleButton from '@/components/auth/GoogleButton.vue';
+import DraftAuthNotice from '@/components/auth/DraftAuthNotice.vue';
 import ButtonMain from '@/components/generic/ButtonMain.vue';
 import { loginWithCredentials } from '@/services/auth.service';
 import { landingAfterAuth } from '@/router/landing';
-import { syncDraftToBackend } from '@/composables/useDraftSync';
+import { resumeDraftAfterAuth } from '@/composables/useDraftSync';
 import { resumePendingGoogleSignIn, startGoogleSignIn } from '@/services/googleOAuth';
 import { ApiError } from '@/services/apiError';
 
@@ -100,7 +102,14 @@ async function onSubmit() {
       return;
     }
 
-    await syncDraftToBackend();
+    // A guest's invitation draft (INV-104): created and reopened, or — if
+    // this account already has an event — reopened with the choice. Never
+    // created twice, never merged on its own.
+    const resume = await resumeDraftAfterAuth(lang.value);
+    if (resume) {
+      await router.push(resume);
+      return;
+    }
 
     await router.push(await landingAfterAuth(lang.value, route.query.redirect));
   } catch (e) {

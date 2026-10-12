@@ -1,5 +1,6 @@
 <template>
   <InvitationEditLayout
+    ref="editLayoutRef"
     :edit-mode="isEditMode"
     :sections="orderedSections"
     :active-section="activeRootSection"
@@ -8,13 +9,78 @@
     :statuses="sectionStatuses"
     :section-visibility="sectionVisibility"
     :show-layout-tab="isBuilder"
+    :save-status="saveStatus"
+    :save-status-detail="saveStatusDetail"
+    :last-synced-at="lastSyncedAt"
+    :save-enabled="isNewUnsaved"
+    :info-focus="infoFocus"
+    :guest-device="isGuestPreview ? previewDevice : null"
+    :history="isEditMode ? historyState : null"
+    @undo="undoEdit"
+    @redo="redoEdit"
+    @preview-guest="openGuestPreview"
+    @retry-save="retrySave"
     @toggle-section="toggleSection"
     @toggle-visibility="(k) => { toggleVisibility(k); markDirty(); }"
     @save="onGlobalSave"
     @set-preview="previewMode = $event"
     @select-section="selectSection"
   >
+  <!-- INV-602: the final preview as a guest — its bar, above the invitation -->
+  <template v-if="isGuestPreview" #toolbar>
+    <GuestPreviewBar
+      :notes="previewNotes"
+      :device="previewDevice"
+      :private-link="isPrivate"
+      :timezone="config.eventTimezone"
+      @back="backToEditor"
+      @set-device="previewDevice = $event"
+      @set-private="setPreviewPrivate"
+      @note-action="editFromPreview"
+    >
+      <template v-if="showStepper" #steps>
+        <CreationStepper :steps="creationSteps" @go="goToStep" />
+      </template>
+    </GuestPreviewBar>
+  </template>
+  <!-- INV-104: what happened to the draft -->
+  <DraftNotice
+    :failed="resumeMode === 'failed'"
+    :photos="isEditMode ? photosToReAdd : 0"
+    :busy="saveStatus === 'saving'"
+    :editor="isEditMode"
+    @retry="saveDraftAsNewEvent"
+    @dismiss-photos="dismissPhotosNotice"
+  />
+  <InvitationAuthDialog
+    :open="authGateOpen || resumeMode === 'choose'"
+    :mode="authGateOpen ? 'gate' : 'choose'"
+    :photo-count="authGateOpen ? unsavedPhotoCount : photosToReAdd"
+    :busy="saveStatus === 'saving'"
+    :conflict="resumeConflict"
+    @signup="continueToAuth('signup')"
+    @login="continueToAuth('login')"
+    @cancel="authGateOpen ? closeAuthGate() : keepDraftForLater()"
+    @save-new="saveDraftAsNewEvent"
+    @discard="discardDraft"
+  />
+  <!-- INV-502: the one "unsaved changes" question when the editor is left -->
+  <UnsavedChangesDialog
+    :open="leavePrompt.open"
+    :kind="leavePrompt.kind"
+    :busy="leavePrompt.busy"
+    :failed="leavePrompt.failed"
+    @save="saveAndLeave"
+    @discard="discardAndLeave"
+    @stay="stayInEditor"
+  />
+
   <div ref="rootRef" class="unified-invitation" :class="[preset.id, { 'edit-active': isEditMode }]" :style="rootStyle">
+    <!-- INV-202: inside the catalogue's preview — says what is only an example -->
+    <p v-if="isEmbedPreview" class="sample-preview-badge" data-testid="sample-preview-badge">
+      {{ t('editSection.samplePreview.badge') }}
+    </p>
+
     <!-- Loading overlay -->
     <div v-if="loading" class="loading-overlay">
       <div class="loading-spinner"></div>
@@ -37,7 +103,7 @@
       :is-edit-mode="isEditMode"
       :edit-label="t('editSection.entry')"
       @enter="showEntry = false"
-      @edit="openModal('entry')"
+      @edit="editLayoutRef?.requestSection('entry')"
     />
 
     <!-- Hero -->
@@ -94,11 +160,13 @@
     </section>
 
     <!-- Schedule -->
-    <section v-if="(isEditMode || (showAgenda && isPrivate)) && isSectionVisible('agendaList')" v-show="!entryActive" data-edit-section="agendaList" :class="['section section--base', { 'section--editing': isEditMode && activeRootSection === 'agendaList' }]" data-reveal style="position:relative;">
+    <!-- INV-402: an empty programme is left out for guests; the editor says it is empty. -->
+    <section v-if="(isEditMode || (showAgenda && isPrivate && sectionHasContent.agendaList)) && isSectionVisible('agendaList')" v-show="!entryActive" data-edit-section="agendaList" :class="['section section--base', { 'section--editing': isEditMode && activeRootSection === 'agendaList' }]" data-reveal style="position:relative;">
       <SectionEditButton :visible="isEditMode" :label="t('editSection.agenda')" @click="selectSection('agendaList')" />
       <div class="section-inner">
+        <p v-if="!sectionHasContent.agendaList" class="section-empty-hint" data-testid="preview-empty-hint">{{ t('editSection.sectionStates.previewEmpty') }}</p>
         <component
-          v-if="scheduleComponent"
+          v-else-if="scheduleComponent"
           :is="scheduleComponent"
           :title="t('invitation.schedule')"
           :events="config.scheduleEvents"
@@ -110,11 +178,12 @@
     </section>
 
     <!-- Our Story -->
-    <section v-if="(isEditMode || showOurStory) && isSectionVisible('ourStoryList')" v-show="!entryActive" data-edit-section="ourStoryList" :class="['section section--alt', { 'section--editing': isEditMode && activeRootSection === 'ourStoryList' }]" data-reveal style="position:relative;">
+    <section v-if="(isEditMode || (showOurStory && sectionHasContent.ourStoryList)) && isSectionVisible('ourStoryList')" v-show="!entryActive" data-edit-section="ourStoryList" :class="['section section--alt', { 'section--editing': isEditMode && activeRootSection === 'ourStoryList' }]" data-reveal style="position:relative;">
       <SectionEditButton :visible="isEditMode" :label="t('editSection.ourStory')" @click="selectSection('ourStoryList')" />
       <div class="section-inner">
+        <p v-if="!sectionHasContent.ourStoryList" class="section-empty-hint" data-testid="preview-empty-hint">{{ t('editSection.sectionStates.previewEmpty') }}</p>
         <component
-          v-if="storyComponent"
+          v-else-if="storyComponent"
           :is="storyComponent"
           :title="t('invitation.ourStory')"
           :stories="config.stories"
@@ -140,6 +209,13 @@
         </div>
 
         <div class="rsvp-wrapper">
+          <p v-if="isEmbedPreview" class="sample-preview-rsvp" data-testid="sample-preview-rsvp">
+            {{ t('editSection.samplePreview.rsvpNote') }}
+          </p>
+          <!-- INV-602: the form as guests get it — a reply here is never sent -->
+          <p v-else-if="isGuestPreview" class="sample-preview-rsvp" data-testid="guest-preview-rsvp">
+            {{ t('editSection.guestPreview.rsvpNote') }}
+          </p>
           <RsvpForm
             title=""
             :name-label="t('invitation.fullName')"
@@ -163,7 +239,7 @@
             :border-radius="rsvpConfig.borderRadius"
             :max-guests="rsvpConfig.maxGuests"
             :event-inactive="eventNotActive"
-            :send="onRsvpSubmit"
+            :send="isEmbedPreview || isGuestPreview ? sendSampleRsvp : onRsvpSubmit"
           />
         </div>
       </div>
@@ -172,13 +248,48 @@
     </div>
   </div>
 
+    <!-- Steps of a new invitation (INV-102) -->
+    <template v-if="isEditMode && showStepper" #stepper>
+      <CreationStepper :steps="creationSteps" @go="goToStep" />
+    </template>
+
     <!-- Info Panel -->
     <template v-if="isEditMode" #info-panel>
+      <!-- INV-203: another design, the same content -->
+      <DesignSwitcher
+        :current-id="designId"
+        :current-name="currentDesignName"
+        :designs="switchDesigns"
+        :loading="designsLoading"
+        :error="designsError"
+        :busy="designSwitching"
+        :hidden="hiddenContent"
+        :confirm-leaving="isBuilder"
+        :existing-event="!isNewUnsaved"
+        :announcement="designAnnouncement"
+        @open="onDesignSwitchOpen"
+        @retry="loadDesigns"
+        @switch="switchDesign"
+      />
+      <!-- INV-403: the event could not be read — its names, date and place are
+           not offered for editing (the design's demo would be saved over them). -->
+      <SectionStateNotice
+        v-if="eventLoad === 'failed'"
+        kind="event"
+        state="failed"
+        :busy="saveStatus === 'saving'"
+        @retry="retrySave"
+      />
       <EditInfoPanel
+        v-else
         :bride-name="config.brideName"
         :groom-name="config.groomName"
         :wedding-date="config.weddingDateTime ? config.weddingDateTime.slice(0, 10) : ''"
-        :location="backendData?.event?.location || null"
+        :wedding-time="weddingTimeValue"
+        :timezone="config.eventTimezone"
+        :title-mode="titleMode"
+        :location="backendData?.event?.location || (config.venue ? { name: config.venue, address: config.location, lat: config.locationLat ?? null, lng: config.locationLng ?? null } : null)"
+        :invalid-fields="showStepper ? infoInvalidFields : []"
         @change="onInfoChange"
       />
     </template>
@@ -200,15 +311,24 @@
 
     <!-- Hero -->
     <template v-if="isEditMode" #section-hero="{ subTab }">
-      <EditHeroModal
-        v-if="subTab === 'content'"
-        :open="true"
-        :live-edit="true"
-        :event="heroEventData"
-        @close="toggleSection('hero')"
-        @change="onHeroChange"
-        @updated="refreshAllData"
-      />
+      <!-- INV-403: the hero photo with what it is in (saved / uploading / not saved). -->
+      <div v-if="subTab === 'content'" class="story-images-panel" data-testid="photo-panel-hero">
+        <SectionStateNotice v-if="eventLoad === 'failed'" kind="event" state="failed" :busy="saveStatus === 'saving'" @retry="retrySave" />
+        <template v-else>
+          <PhotoSlot
+            wide
+            :photo="photoSlot('hero', 0)"
+            :label="t('editSection.photos.hero')"
+            :placeholder="t('editSection.photos.choose')"
+            :removable-saved="false"
+            @pick="pickPhoto('hero', 0, $event)"
+            @remove="removePhoto('hero', 0)"
+            @retry="retrySave"
+            @broken="brokenPhoto('hero', 0)"
+          />
+          <p class="photo-limits">{{ t('editSection.photos.limits') }}</p>
+        </template>
+      </div>
       <div v-if="subTab === 'layout'" class="family-picker-wrap">
         <p class="family-picker-label">Hero Style</p>
         <SectionLayoutPicker :layouts="HERO_FAMILY_OPTIONS" :current="heroFamily" @select="onHeroFamilyChange($event)" />
@@ -225,10 +345,16 @@
           :items="eventDetails.items.value"
           :max-items="2"
           no-add
+          :hidden="!isSectionVisible('details')"
+          :load-state="sectionLoad.eventDetails"
+          :busy="saveStatus === 'saving'"
           @close="toggleSection('details')"
           @add="onDetailsAdd"
           @delete="onDetailsDelete"
           @update="handleEventDetailUpdate"
+          @skip="setSectionShown('details', false)"
+          @show="setSectionShown('details', true)"
+          @retry-load="retrySave"
         />
         <AddEventDetailModal
           v-if="editingItem || activeModal === 'eventDetail'"
@@ -255,10 +381,16 @@
           v-if="!editingItem && activeModal === 'agendaList'"
           :open="true"
           :items="agenda.items.value"
+          :hidden="!isSectionVisible('agendaList')"
+          :load-state="sectionLoad.agenda"
+          :busy="saveStatus === 'saving'"
           @close="toggleSection('agendaList')"
           @add="onAgendaAdd"
           @delete="onAgendaDelete"
           @update="handleAgendaUpdate"
+          @skip="setSectionShown('agendaList', false)"
+          @show="setSectionShown('agendaList', true)"
+          @retry-load="retrySave"
         />
         <AddAgendaItemModal
           v-if="editingItem || activeModal === 'agendaItem'"
@@ -287,10 +419,16 @@
           :items="ourStory.items.value"
           :field-config="storyFieldConfig"
           :max-items="storyMaxItems"
+          :hidden="!isSectionVisible('ourStoryList')"
+          :load-state="sectionLoad.ourStory"
+          :busy="saveStatus === 'saving'"
           @close="toggleSection('ourStoryList')"
           @add="onOurStoryAdd"
           @delete="onOurStoryDelete"
           @update="handleOurStoryUpdate"
+          @skip="setSectionShown('ourStoryList', false)"
+          @show="setSectionShown('ourStoryList', true)"
+          @retry-load="retrySave"
         />
         <AddOurStoryModal
           v-if="editingItem || activeModal === 'ourStoryItem'"
@@ -312,83 +450,80 @@
 
     <!-- Our Story Images (separate section — hidden for coastal since images are per-card) -->
     <template v-if="isEditMode" #section-ourStoryImages>
-      <div v-if="storyFamily !== 'coastal'" class="story-images-panel">
-        <!-- Single image for Parisian -->
-        <div v-if="storyFamily === 'parisian'" class="story-image-upload">
-          <p class="story-image-label">{{ t('editOurStory.storyImage') || 'Story Image' }}</p>
-          <div v-if="storyImagePreview || config.storyImageUrl" class="story-image-preview-wrap">
-            <img :src="storyImagePreview || config.storyImageUrl" alt="" class="story-image-preview" />
-            <button type="button" class="story-image-change-btn" @click="$refs.storyImageInput?.click()">
-              {{ t('ourStory.form.changeImage') || 'Change' }}
-            </button>
-          </div>
-          <div v-else class="story-image-drop" @click="$refs.storyImageInput?.click()">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-            </svg>
-            <span>{{ t('ourStory.form.clickToUpload') || 'Click to upload' }}</span>
-          </div>
-          <input ref="storyImageInput" type="file" accept="image/*" style="display:none" @change="onSingleStoryImage" />
-        </div>
-
-        <!-- Multi-image grid — always shows all slots -->
+      <div v-if="storyFamily !== 'coastal'" class="story-images-panel" data-testid="photo-panel-story">
+        <!-- INV-403: the story photos come with the story; unread, they are not offered. -->
+        <SectionStateNotice
+          v-if="sectionLoad.ourStory === 'failed' || sectionLoad.ourStory === 'loading'"
+          kind="story"
+          :state="sectionLoad.ourStory"
+          :busy="saveStatus === 'saving'"
+          @retry="retrySave"
+        />
         <template v-else>
-          <div class="story-images-header-row">
-            <span class="story-image-label">{{ t('editOurStory.photos') }}</span>
+          <p class="photo-limits" data-testid="photo-limits">{{ t('editSection.photos.limits') }}</p>
+          <!-- Single image for Parisian: the first story photo -->
+          <div v-if="storyFamily === 'parisian'" class="story-image-upload">
+            <PhotoSlot
+              wide
+              :photo="photoSlot('story', 0)"
+              :label="t('editSection.photos.storySingle')"
+              :placeholder="t('editSection.photos.choose')"
+              @pick="pickPhoto('story', 0, $event)"
+              @remove="removePhoto('story', 0)"
+              @restore="restorePhoto('story', 0)"
+              @retry="retrySave"
+              @broken="brokenPhoto('story', 0)"
+            />
           </div>
 
-          <div class="story-images-grid-edit">
-            <div
-              v-for="(slot, idx) in storyImageSlots"
-              :key="'slot-' + idx"
-              class="story-img-thumb"
-              :class="{ 'story-img-thumb--empty': !slot.url }"
-              @click="triggerSlotUpload(idx)"
-            >
-              <img v-if="slot.url" :src="slot.url" alt="" />
-              <template v-else>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
-                </svg>
-                <span class="placeholder-label">{{ t('editOurStory.photos') }} {{ idx + 1 }}</span>
-              </template>
-              <span v-if="slot.url && slot.isCustom" class="story-img-badge">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              </span>
+          <!-- Multi-image grid — always shows all slots -->
+          <template v-else>
+            <div class="story-images-header-row">
+              <span class="story-image-label">{{ t('editOurStory.photos') }}</span>
             </div>
-          </div>
-          <input ref="slotFileInput" type="file" accept="image/*" style="display:none" @change="onSlotFileSelected" />
+            <div class="story-images-grid-edit">
+              <PhotoSlot
+                v-for="idx in storyImageMax"
+                :key="'slot-' + idx"
+                :photo="photoSlot('story', idx - 1)"
+                :label="t('editSection.photos.storySlot', { n: idx })"
+                :placeholder="String(idx)"
+                @pick="pickPhoto('story', idx - 1, $event)"
+                @remove="removePhoto('story', idx - 1)"
+                @restore="restorePhoto('story', idx - 1)"
+                @retry="retrySave"
+                @broken="brokenPhoto('story', idx - 1)"
+              />
+            </div>
+          </template>
         </template>
       </div>
     </template>
 
     <!-- Collage (shown when gallery entry selected) -->
     <template v-if="isEditMode" #section-collage>
-      <div class="story-images-panel">
-        <div class="story-images-header-row">
-          <span class="story-image-label">{{ t('editSection.collage') }} ({{ collageSlotImages.length }}/6)</span>
-        </div>
-        <div class="story-images-grid-edit">
-          <div
-            v-for="(slot, idx) in collageSlots"
-            :key="'collage-' + idx"
-            class="story-img-thumb"
-            :class="{ 'story-img-thumb--empty': !slot.url }"
-            @click="triggerCollageUpload(idx)"
-          >
-            <img v-if="slot.url" :src="slot.url" alt="" />
-            <template v-else>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
-              </svg>
-              <span class="placeholder-label">{{ idx + 1 }}</span>
-            </template>
-            <span v-if="slot.isCustom" class="story-img-badge">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            </span>
+      <div class="story-images-panel" data-testid="photo-panel-collage">
+        <SectionStateNotice v-if="eventLoad === 'failed'" kind="event" state="failed" :busy="saveStatus === 'saving'" @retry="retrySave" />
+        <template v-else>
+          <div class="story-images-header-row">
+            <span class="story-image-label">{{ t('editSection.collage') }} ({{ collageOwnCount }}/{{ COLLAGE_MAX }})</span>
           </div>
-        </div>
-        <input ref="collageFileInput" type="file" accept="image/*" style="display:none" @change="onCollageSlotSelected" />
+          <p class="photo-limits">{{ t('editSection.photos.limits') }}</p>
+          <div class="story-images-grid-edit">
+            <PhotoSlot
+              v-for="idx in COLLAGE_MAX"
+              :key="'collage-' + idx"
+              :photo="photoSlot('collage', idx - 1)"
+              :label="t('editSection.photos.collageSlot', { n: idx })"
+              :placeholder="String(idx)"
+              @pick="pickPhoto('collage', idx - 1, $event)"
+              @remove="removePhoto('collage', idx - 1)"
+              @restore="restorePhoto('collage', idx - 1)"
+              @retry="retrySave"
+              @broken="brokenPhoto('collage', idx - 1)"
+            />
+          </div>
+        </template>
       </div>
     </template>
 
@@ -399,6 +534,9 @@
         :open="true"
         :live-edit="true"
         :rsvp-deadline="rsvpConfig.deadline"
+        :event-date-time="config.weddingDateTime"
+        :event-timezone="config.eventTimezone"
+        :guest-message="config.rsvpMessage"
         :max-guests="rsvpConfig.maxGuests"
         :show-dietary="rsvpConfig.showDietary"
         :border-radius="rsvpConfig.borderRadius"
@@ -407,6 +545,8 @@
         :contact-method="rsvpConfig.contactMethod"
         :custom-questions="rsvpConfig.customQuestions"
         :require-last-name="rsvpConfig.requireLastName"
+        :hidden="!isSectionVisible('rsvp')"
+        @show="setSectionShown('rsvp', true)"
         @close="toggleSection('rsvp')"
         @change="onRsvpChange"
       />
@@ -417,11 +557,15 @@
     <template v-if="isEditMode" #section-colors>
       <div class="theme-palette-picker">
         <!-- Preset palettes -->
-        <p class="palette-picker-label">{{ t('editSection.chooseTheme') }}</p>
-        <div class="palette-grid">
+        <p :id="paletteHeadingId" class="palette-picker-label">{{ t('editSection.chooseTheme') }}</p>
+        <!-- INV-503: the chosen theme is pressed and ticked, not only outlined -->
+        <div class="palette-grid" role="group" :aria-labelledby="paletteHeadingId">
           <button
             v-for="p in THEME_PALETTES"
             :key="p.name"
+            type="button"
+            :aria-pressed="activePaletteName === p.name ? 'true' : 'false'"
+            :data-palette="p.name"
             class="palette-card"
             :class="{
               'palette-card--active': activePaletteName === p.name,
@@ -431,23 +575,53 @@
             :style="{ background: p.rootBg }"
             @click="applyThemePalette(p)"
           >
-            <span class="palette-accent" :style="{ background: p.accent }"></span>
+            <span class="palette-accent" :style="{ background: p.accent }" aria-hidden="true"></span>
             <span class="palette-info">
               <span class="palette-name" :style="{ color: p.text }">{{ p.original ? (preset.name + ' (Default)') : p.name }}</span>
               <span class="palette-tag" :style="{ color: p.secondary }">{{ p.original ? 'Original' : (p.dark ? 'Dark Luxe' : 'Pastel') }}</span>
             </span>
+            <span v-if="activePaletteName === p.name" class="palette-selected" data-testid="palette-selected">✓ {{ t('editSection.a11y.selected') }}</span>
           </button>
         </div>
 
         <!-- Individual color overrides -->
         <div class="color-overrides">
           <p class="palette-picker-label" style="margin-top:20px">{{ t('editSection.customColors') || 'Custom Colors' }}</p>
-          <div class="color-field" v-for="f in individualColorFields" :key="f.key">
-            <label class="color-field-label">{{ f.label }}</label>
+          <div class="color-field" v-for="f in individualColorFields" :key="f.key" :data-color-field="f.key">
+            <label class="color-field-label" :for="colorInputId(f.key)">{{ f.label }}</label>
             <div class="color-field-input">
-              <input type="color" :value="f.value" @input="onIndividualColorChange(f.key, $event.target.value)" class="color-input" />
-              <input type="text" :value="f.value" @change="onIndividualColorChange(f.key, $event.target.value)" class="hex-input" maxlength="7" />
+              <input :id="colorInputId(f.key)" type="color" :value="f.value" @input="onIndividualColorChange(f.key, $event.target.value)" class="color-input" />
+              <input
+                type="text"
+                :value="hexDrafts[f.key] ?? f.value"
+                class="hex-input"
+                maxlength="7"
+                spellcheck="false"
+                :aria-label="t('editSection.a11y.hexLabel', { color: f.label })"
+                :aria-invalid="hexErrors[f.key] ? 'true' : undefined"
+                :aria-describedby="hexErrors[f.key] ? colorInputId(f.key) + '-error' : undefined"
+                @input="hexDrafts[f.key] = $event.target.value"
+                @change="onHexChange(f.key, $event.target.value)"
+              />
             </div>
+            <p v-if="hexErrors[f.key]" :id="colorInputId(f.key) + '-error'" class="hex-error" data-testid="hex-error">
+              {{ t('editSection.a11y.hexInvalid') }}
+            </p>
+          </div>
+
+          <!-- INV-503: readability of the chosen colours (WCAG 4.5:1), in words -->
+          <div class="color-contrast" data-testid="color-contrast">
+            <p class="palette-picker-label">{{ t('editSection.readability') }}</p>
+            <ul class="color-contrast__list">
+              <li v-for="c in colorContrastChecks" :key="c.key" class="color-contrast__row" :data-contrast="c.key" :data-passes="c.passes ? 'true' : 'false'">
+                <span class="color-contrast__label">{{ c.label }}</span>
+                <span class="color-contrast__ratio">{{ c.ratio === null ? '—' : c.ratio + ':1' }}</span>
+                <StatusPill :tone="c.passes ? 'ok' : 'warn'" :label="(c.passes ? '✓ ' : '! ') + (c.passes ? t('editSection.readabilityPass') : t('editSection.readabilityFail'))" />
+              </li>
+            </ul>
+            <p v-if="colorContrastChecks.some((c) => !c.passes)" class="color-contrast__hint" role="status" data-testid="contrast-hint">
+              {{ t('editSection.readabilityHint') }}
+            </p>
           </div>
         </div>
       </div>
@@ -469,8 +643,8 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, reactive, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { DESIGN_PRESETS } from '@/config/designPresets/index.js';
 import { useWeddingInvitation } from '@/composables/useWeddingInvitation';
 import { HERO_COMPONENTS, DETAILS_COMPONENTS, SCHEDULE_COMPONENTS, STORY_COMPONENTS } from '@/components/invitations/wedding/heroes/index.js';
@@ -486,7 +660,6 @@ import OrnamentDivider from '@/components/invitations/wedding/decorations/Orname
 import EditEntryModal from '@/components/modals/EditEntryModal.vue';
 import EditColorsModal from '@/components/modals/EditColorsModal.vue';
 import EditFontsModal from '@/components/modals/EditFontsModal.vue';
-import EditHeroModal from '@/components/modals/EditHeroModal.vue';
 import EditDetailsModal from '@/components/modals/EditDetailsModal.vue';
 import AddEventDetailModal from '@/components/modals/AddEventDetailModal.vue';
 import EditAgendaModal from '@/components/modals/EditAgendaModal.vue';
@@ -497,10 +670,34 @@ import EditRsvpModal from '@/components/modals/EditRsvpModal.vue';
 import SectionLayoutPicker from '@/components/invitations/shared/SectionLayoutPicker.vue';
 import SectionAdvanced from '@/components/invitations/shared/SectionAdvanced.vue';
 import EditInfoPanel from '@/components/invitations/shared/EditInfoPanel.vue';
+import InvitationAuthDialog from '@/components/invitations/shared/InvitationAuthDialog.vue';
+import DraftNotice from '@/components/invitations/shared/DraftNotice.vue';
+import GuestPreviewBar from '@/components/invitations/shared/GuestPreviewBar.vue';
+import { guestPreviewNotes, basicsProblems } from '@/utils/guestPreviewNotes';
+import UnsavedChangesDialog from '@/components/invitations/shared/UnsavedChangesDialog.vue';
+import { onboardingStore, setInvitationName, setInvitationPath } from '@/store/onboarding.store';
+import CreationStepper from '@/components/onboarding/CreationStepper.vue';
+import { useCreationSteps } from '@/composables/useCreationSteps';
+import { editorCurrentStep, hasOwnDetails, isExampleItem, isUnsavedExample } from '@/utils/creationSteps';
+import { usesCoupleNames, validateBasics, rsvpDeadlineProblem } from '@/utils/eventBasics';
 import SectionEditButton from '@/components/invitations/shared/SectionEditButton.vue';
 import { invitationImagesService } from '@/services/invitationImages.service.js';
+import DesignSwitcher from '@/components/invitations/shared/DesignSwitcher.vue';
+import PhotoSlot from '@/components/invitations/shared/PhotoSlot.vue';
+import SectionStateNotice from '@/components/invitations/shared/SectionStateNotice.vue';
+import StatusPill from '@/components/ui/StatusPill.vue';
+import { parseHex } from '@/composables/useBrandContrast';
+import { readabilityChecks } from '@/utils/colorReadability';
+import { historyShortcut, isTextEditingTarget } from '@/composables/useEditHistory';
+import { invitationTemplateService } from '@/services/invitationTemplate.service';
+import {
+  BUILDER_DESIGN_ID, switchableDesigns, designName, hiddenContentFor, ownStoryCounts,
+} from '@/utils/designSwitch';
 
 const route = useRoute();
+// INV-103: "Edit entry" on the overlay opens the entry settings (part of the
+// advanced settings) through the editor layout, which owns the mode.
+const editLayoutRef = ref(null);
 const designId = computed(() => route.params.design || route.query.design || 'coastal-breeze');
 const isBuilder = computed(() => designId.value === 'my-wedding');
 const preset = computed(() => {
@@ -517,24 +714,30 @@ const {
   heroFamily, detailsFamily, scheduleFamily, storyFamily,
   onHeroFamilyChange, onDetailsFamilyChange, onScheduleFamilyChange, onStoryFamilyChange,
   isEditMode, activeModal, activeRootSection, editingItem,
-  openModal, closeModal, selectSection,
-  dirty, previewMode, markDirty, saving,
+  closeModal, selectSection,
+  dirty, previewMode, markDirty, clearDirty, saving,
+  saveStatus, saveStatusDetail, lastSyncedAt, retrySave,
+  authGateOpen, closeAuthGate, continueToAuth, unsavedPhotoCount,
+  resumeMode, resumeConflict, photosToReAdd, saveDraftAsNewEvent, keepDraftForLater, discardDraft, dismissPhotosNotice,
+  openGuestPreview, backToEditor, isDraftPreview, isNewUnsaved, flushBeforeLeaving, basicsKnown,
+  leavePrompt, saveAndLeave, discardAndLeave, stayInEditor,
+  historyState, undoEdit, redoEdit, onHistoryRestored,
   orderedSections, sectionVisibility, sectionLayouts, sectionOverrides, sectionAdvancedState,
   isSectionVisible, toggleVisibility, toggleSection,
+  sectionHasContent, setSectionShown, sectionLoad,
   SIDEBAR_SECTIONS, SECTION_LAYOUTS, sectionStatuses,
   eventId, locale, isPrivate, backendData,
   agenda, eventDetails, ourStory,
-  heroEventData, heroFile, ourStoryFiles, collageFiles,
+  eventLoad, photos, pickPhoto, removePhoto, restorePhoto, brokenPhoto,
   rootStyle, colorFields, shadows, contrastCardBg, PALETTE_PRESETS, SHADOW_MAP, SPACING_MAP,
-  onEntryChange, onHeroChange, onInfoChange,
+  onEntryChange, onInfoChange,
   onColorsChange, onFontsChange, onRsvpChange,
   onButtonsChange, onBackgroundChange, onSpacingChange,
   onAdvancedUpdate, onGlobalSave,
   onDetailsAdd, onDetailsEdit, onDetailsDelete,
   onAgendaAdd, onAgendaEdit, onAgendaDelete,
   onOurStoryAdd, onOurStoryEdit, onOurStoryDelete,
-  onOurStoryFiles, onCollageFiles,
-  onRsvpSubmit, refreshAllData, t, extractFontName,
+  onRsvpSubmit, t, extractFontName,
   setLayout,
   handleEventDetailSave, handleEventDetailUpdate, handleEventDetailDelete,
   handleAgendaSave, handleAgendaUpdate, handleAgendaDelete,
@@ -542,16 +745,348 @@ const {
   OUR_STORY_FIELD_CONFIG,
 } = inv;
 
+// A title, not a couple, for everything but weddings and anniversaries (INV-104).
+const titleMode = computed(() => {
+  const category = backendData.value?.event?.eventCategory || (eventId ? '' : onboardingStore.selectedCategory);
+  return !!category && !usesCoupleNames(category);
+});
+
+// "HH:mm" of the start, when one is set (INV-104).
+const weddingTimeValue = computed(() => /T(\d{2}:\d{2})/.exec(config.weddingDateTime || '')?.[1] || '');
+
+/*
+ * Drawn inside the design catalogue's preview (INV-202): the page as a guest
+ * sees it, without the flow's own bars, and an RSVP that is never sent — the
+ * same page may be showing a real event's content (dashboard).
+ */
+const isEmbedPreview = computed(() => route.query.embed === '1' && route.query.preview === '1' && !isEditMode.value);
+async function sendSampleRsvp() { /* a preview: nothing is sent */ }
+
+/* ---- The final preview as a guest (INV-602) ------------------------ */
+// The editor's own "preview as guest" (INV-104, ?preview=1): this page, its
+// state and the renderer guests get — without the editor — in a phone or
+// computer view, with notes on what guests will not see. Going back to
+// editing keeps the page and its draft: it is the same route record.
+const isGuestPreview = computed(() => isDraftPreview.value && !isEmbedPreview.value);
+
+const PHONE_MAX = 767;
+const previewDevice = ref(
+  typeof window !== 'undefined' && window.matchMedia?.(`(max-width: ${PHONE_MAX}px)`)?.matches ? 'mobile' : 'desktop'
+);
+
+/** The public or the private link (the programme is only on the private one). */
+function setPreviewPrivate(on) {
+  if (!!on === isPrivate.value) return;
+  const query = { ...route.query };
+  if (on) query.isPrivate = 'true';
+  else delete query.isPrivate;
+  router.replace({ path: route.path, query });
+}
+
+const previewCategory = computed(() =>
+  backendData.value?.event?.eventCategory || onboardingStore.selectedCategory || 'WEDDING'
+);
+
+const previewNotes = computed(() => {
+  if (!isGuestPreview.value) return [];
+  // The names, date and place: checked once they are the person's own (or
+  // the event's) — the design's demo couple is said to be an example instead.
+  const own = basicsKnown.value || !!eventId;
+  const visible = (key) => isSectionVisible(key);
+  const examples = (list, section) => list.filter((i) => !isUnsavedExample(i, section) && isExampleItem(i, section)).length;
+  const date = (config.weddingDateTime || '').slice(0, 10);
+  return guestPreviewNotes({
+    basicsProblems: own ? basicsProblems(validateBasics(editorBasics.value, previewCategory.value)) : [],
+    demoBasics: !own,
+    nameField: titleMode.value ? 'title' : 'brideName',
+    visible: {
+      entry: visible('entry'), details: visible('details'), agendaList: visible('agendaList'),
+      ourStoryList: visible('ourStoryList'), rsvp: visible('rsvp'),
+    },
+    hasContent: { agendaList: sectionHasContent.value.agendaList, ourStoryList: sectionHasContent.value.ourStoryList },
+    examples: {
+      agenda: examples(agenda.items.value, 'agenda'),
+      ourStory: examples(ourStory.items.value, 'ourStory'),
+    },
+    ownDetails: eventDetails.items.value.filter((i) => !isExampleItem(i, 'eventDetails')).length,
+    photos: {
+      heroOwn: photos.slot('hero', 0).own,
+      storyDrawn: storyImageMax.value,
+      storyOwn: ownPhotoCount('story', storyImageMax.value),
+      collageDrawn: entryType.value === 'gallery',
+      collageOwn: collageOwnCount.value,
+    },
+    designHidden: hiddenContent.value,
+    showAgenda: showAgenda.value,
+    privateLink: isPrivate.value,
+    rsvp: {
+      deadlineProblem: rsvpDeadlineProblem(rsvpConfig.deadline, date, weddingTimeValue.value, config.eventTimezone),
+      // An event not yet published takes no replies (the form is off for guests).
+      notOpen: !!eventNotActive.value,
+    },
+  });
+});
+
+/**
+ * A note's "Edit": back to the editor — the same page, so nothing typed is
+ * lost — at the exact control: an Info field, a section, or the design.
+ */
+async function editFromPreview(note) {
+  await backToEditor();
+  await nextTick();
+  await nextTick();
+  showEntry.value = false;
+  if (note.section === 'info' || note.section === 'design') {
+    infoFocus.value = { field: note.section === 'design' ? 'design' : note.field, n: ++infoFocusSeq };
+    return;
+  }
+  editLayoutRef.value?.requestSection(note.section, { focus: note.field !== 'deadline' });
+  document.querySelector(`[data-edit-section="${note.section}"]`)?.scrollIntoView?.({ block: 'start' });
+  if (note.field === 'deadline') {
+    await nextTick();
+    await nextTick();
+    document.querySelector('[data-rsvp-field="deadline"] input')?.focus();
+  }
+}
+
+/* ---- Steps of a new invitation (INV-102) -------------------------- */
+// Shown while a new invitation is being made (?new=1) and is not an event yet:
+// the editor is the Details and RSVP steps, the guest preview is Preview.
+const router = useRouter();
+const showStepper = computed(() =>
+  !isEmbedPreview.value && route.query.new === '1' && (isEditMode.value ? isNewUnsaved.value : isDraftPreview.value)
+);
+
+// The editor's live basics — what the Event step is judged on in here.
+const editorBasics = computed(() => {
+  const wall = config.weddingDateTime || '';
+  const title = titleMode.value;
+  return {
+    brideName: title ? '' : config.brideName || '',
+    groomName: title ? '' : config.groomName || '',
+    title: title ? config.brideName || '' : '',
+    date: /^\d{4}-\d{2}-\d{2}/.test(wall) ? wall.slice(0, 10) : '',
+    time: weddingTimeValue.value,
+    timezone: config.eventTimezone,
+    location: { name: config.venue || '', address: config.location || '' },
+  };
+});
+
+const infoFocus = ref(null);
+let infoFocusSeq = 0;
+
+/** Opens the editor section of a step; from the preview, back to the editor first. */
+async function openEditorStep(key, focusDeadline = false) {
+  if (!isEditMode.value) {
+    const query = { ...route.query, edit: 'true', step: key };
+    delete query.preview;
+    await router.push({ path: route.path, query });
+    return;
+  }
+  // The entry overlay would cover the section being opened.
+  showEntry.value = false;
+  selectSection(key);
+  if (focusDeadline) {
+    await nextTick();
+    await nextTick();
+    document.querySelector('[data-rsvp-field="deadline"] input')?.focus();
+  }
+}
+
+const { steps: creationSteps, go: goToStep } = useCreationSteps({
+  current: () => editorCurrentStep({ preview: isDraftPreview.value, activeSection: activeRootSection.value }),
+  context: () => ({
+    // The design's demo couple is not the person's basics: until their own are
+    // in the editor, the Event step is judged on what onboarding saved.
+    basics: basicsKnown.value ? editorBasics.value : onboardingStore.eventDetails,
+    hasDesign: true,
+    hasDetails: hasOwnDetails({
+      eventDetails: eventDetails.items.value,
+      agenda: agenda.items.value,
+      ourStory: ourStory.items.value,
+    }),
+    rsvpDeadline: rsvpConfig.deadline || '',
+  }),
+  handlers: {
+    fix: (step, problem) => {
+      if (step === 'event' && isEditMode.value && basicsKnown.value && problem.field !== 'category' && problem.field !== 'type') {
+        // Names, date, time, zone and place are all in the Info panel here.
+        infoFocus.value = { field: problem.field, n: ++infoFocusSeq };
+        return true;
+      }
+      if (step === 'rsvp') {
+        openEditorStep('rsvp', true);
+        return true;
+      }
+      return false;
+    },
+    open: (step) => {
+      if (step === 'details' || step === 'rsvp') {
+        openEditorStep(step);
+        return true;
+      }
+      if (step === 'preview') {
+        if (isEditMode.value) openGuestPreview();
+        return true;
+      }
+      return false;
+    },
+    // Leaving for the Event or Design step: the draft is written first.
+    leave: () => (isEditMode.value ? flushBeforeLeaving() : undefined),
+  },
+});
+
+const infoInvalidFields = computed(() => !basicsKnown.value ? [] :
+  (creationSteps.value.find((s) => s.key === 'event')?.problems || []).map((p) => p.field)
+);
+
+// Arriving from another step at the Details or RSVP step (?step=…).
+watch(
+  () => [route.query.step, isEditMode.value],
+  ([step, editing]) => {
+    if (editing && showStepper.value && (step === 'rsvp' || step === 'details')) openEditorStep(step);
+  },
+  { immediate: true },
+);
+
+// INV-601: arriving from the check before publishing (?fix=<field>) — the
+// editor opens at that exact control once the event is loaded: an Info field,
+// or the RSVP deadline. Used once, then taken off the address.
+const FIX_INFO_FIELDS = new Set(['brideName', 'groomName', 'title', 'date', 'time', 'timezone', 'location']);
+watch(
+  () => [route.query.fix, isEditMode.value, loading.value],
+  async ([fix, editing, busy]) => {
+    if (!fix || !editing || busy) return;
+    const query = { ...route.query };
+    delete query.fix;
+    await router.replace({ path: route.path, query });
+    await nextTick();
+    showEntry.value = false;
+    if (fix === 'rsvpDeadline') {
+      openEditorStep('rsvp', true);
+    } else if (FIX_INFO_FIELDS.has(fix)) {
+      // A title-only event names its title where the first name goes.
+      const field = titleMode.value && (fix === 'brideName' || fix === 'groomName') ? 'title' : fix;
+      infoFocus.value = { field, n: ++infoFocusSeq };
+    }
+  },
+  { immediate: true },
+);
+
+// Remember where this design opens, so the other steps can lead back to it.
+onMounted(() => {
+  if (route.query.new !== '1') return;
+  // A preview only looks (INV-201): a design opened from the catalogue's
+  // "Preview" must not become the chosen one. The editor's own "preview as
+  // guest" is the design already recorded when it was opened for editing.
+  if (route.query.preview === '1') return;
+  const path = route.path.replace(/^\/[^/]+\//, '');
+  if (path.startsWith('invitations/')) setInvitationPath(path);
+});
+
 // Event not active → disable RSVP submit
 const eventNotActive = computed(() => {
   const s = backendData.value?.event?.status;
   return s && s !== 'ACTIVE';
 });
 
-// Reset all state when design changes (e.g. navigating from coastal → persian)
-watch(preset, (newPreset) => {
-  inv.resetToPreset(newPreset);
+/* ---- Changing the design (INV-203) --------------------------------- */
+// The design is the route's :design. Changing it keeps this page and its
+// state: only the look is reset to the new preset (or to how that design was
+// left earlier in this visit); every piece of content stays. Watched by id,
+// not by preset — the builder and Coastal Breeze share one preset.
+const paletteNameByDesign = new Map();
+watch(designId, (to, from) => {
+  if (!to || to === from) return;
+  paletteNameByDesign.set(from, activePaletteName.value);
+  inv.resetToPreset(preset.value, { from, to });
+  activePaletteName.value = paletteNameByDesign.get(to) ?? 'Original';
+  // A changed design is a change to save (autosave picks it up).
+  if (isEditMode.value) markDirty();
+  // INV-801: the new look is not an undoable step; steps about the old
+  // design's style no longer apply (content steps stay).
+  inv.forgetStyleHistory();
 });
+
+const switchDesigns = ref([]);
+const designsLoading = ref(false);
+const designsError = ref(false);
+const designSwitching = ref(false);
+const designAnnouncement = ref('');
+let designsLoaded = false;
+
+// The designs of this event's category — the same list as the catalogue.
+const switchCategory = computed(() =>
+  backendData.value?.event?.eventCategory || onboardingStore.selectedCategory || 'WEDDING'
+);
+
+async function loadDesigns() {
+  if (designsLoading.value) return;
+  designsLoading.value = true;
+  designsError.value = false;
+  try {
+    const list = await invitationTemplateService.listByCategory(switchCategory.value);
+    switchDesigns.value = switchableDesigns(Array.isArray(list) ? list : []);
+    designsLoaded = true;
+  } catch (e) {
+    console.error('Failed to load designs:', e);
+    designsError.value = true;
+  } finally {
+    designsLoading.value = false;
+  }
+}
+
+function onDesignSwitchOpen() {
+  if (!designsLoaded) loadDesigns();
+}
+
+const currentDesignName = computed(() =>
+  designId.value === BUILDER_DESIGN_ID
+    ? t('editSection.designSwitch.builderName')
+    : designName(designId.value, switchDesigns.value)
+);
+
+async function switchDesign(target) {
+  if (!target?.presetId || target.presetId === designId.value || designSwitching.value) return;
+  designSwitching.value = true;
+  designAnnouncement.value = '';
+  // Not leaving the editor — the content stays on this page — so the
+  // "unsaved changes" guard (meant for leaving) is not asked; the design
+  // watcher marks the invitation unsaved again right after.
+  const wasDirty = dirty.value;
+  clearDirty();
+  try {
+    await router.replace({
+      name: route.name,
+      params: { ...route.params, design: target.presetId },
+      query: { ...route.query },
+    });
+  } catch (e) {
+    console.error('Design switch navigation failed:', e);
+  } finally {
+    designSwitching.value = false;
+  }
+  if (designId.value !== target.presetId) {
+    if (wasDirty) markDirty();
+    return;
+  }
+  // A new invitation: the other steps (stepper, resume) open this design now.
+  if (isNewUnsaved.value) {
+    setInvitationName(target.templateId);
+    setInvitationPath(`invitations/${target.presetId}`);
+  }
+  designAnnouncement.value = t('editSection.designSwitch.switched', { name: target.name });
+}
+
+// What the person added that the current look does not draw (kept, and said).
+const hiddenContent = computed(() => hiddenContentFor(
+  { storyFamily: storyFamily.value, entryType: entryType.value, entryVisible: isSectionVisible('entry') },
+  {
+    storyPhotos: ownPhotoCount('story', 4),
+    collagePhotos: ownPhotoCount('collage', COLLAGE_MAX),
+    ...ownStoryCounts(ourStory.items.value),
+  },
+));
 
 // Lock scroll while entry overlay is active
 watch(entryActive, (active) => {
@@ -568,136 +1103,60 @@ watch(entryActive, (active) => {
 const STORY_IMAGE_LIMITS = { parisian: 1, coastal: 0, persian: 4, collage: 4, chateau: 0 };
 const storyImageMax = computed(() => STORY_IMAGE_LIMITS[storyFamily.value] || 4);
 
-// Single story image upload (Parisian family)
-const storyImagePreview = ref('');
-
-function onSingleStoryImage(e) {
-  const file = e.target.files?.[0];
-  if (!file) return;
-  storyImagePreview.value = URL.createObjectURL(file);
-  config.storyImageUrl = storyImagePreview.value;
-  // Replace (not append) the single story image
-  ourStoryFiles.value = [file];
-}
-
-// Multi-image story management — slot-based, always shows all slots
-// customSlots tracks per-index overrides: { [index]: blobUrl }
-const customSlotImages = ref({});
-const activeSlotIndex = ref(0);
+/* ---- Photo slots (INV-403) ---------------------------------------- */
+// Each slot shows what its photo is in (useInvitationPhotos): the editor's
+// state, not a guess. The design's demo photo fills a slot nobody chose a
+// photo for, marked as an example.
 
 // Default placeholder images from config (set on init)
 const defaultStoryPhotos = config.storyPhotos.map(p => p.url);
-
-// Build fixed-size slot array: custom > uploaded > default > empty
-const storyImageSlots = computed(() => {
-  const max = storyImageMax.value;
-  const uploaded = ourStory.images?.value || [];
-  const slots = [];
-  for (let i = 0; i < max; i++) {
-    const custom = customSlotImages.value[i];
-    const fromApi = uploaded[i];
-    const fallback = defaultStoryPhotos[i];
-    slots.push({
-      url: custom || fromApi || fallback || '',
-      isCustom: !!custom,
-      isUploaded: !!fromApi && !custom,
-    });
-  }
-  return slots;
-});
-
-// Sync slots to preview config live
-watch(storyImageSlots, (slots) => {
-  const urls = slots.map(s => s.url).filter(Boolean);
-  if (urls.length) {
-    config.storyPhotos = urls.map((url, i) => ({ url, alt: `Photo ${i + 1}` }));
-    if (!storyImagePreview.value) {
-      config.storyImageUrl = urls[0];
-    }
-  }
-}, { immediate: true, deep: true });
-
-const slotFileInput = ref(null);
-
-function triggerSlotUpload(idx) {
-  activeSlotIndex.value = idx;
-  if (slotFileInput.value) { slotFileInput.value.value = ''; slotFileInput.value.click(); }
-}
-
-// Track files by slot index so replacing a slot doesn't duplicate
-const storyFilesBySlot = {};
-
-function onSlotFileSelected(e) {
-  const file = e.target.files?.[0];
-  if (!file) return;
-  const idx = activeSlotIndex.value;
-  const url = URL.createObjectURL(file);
-  customSlotImages.value = { ...customSlotImages.value, [idx]: url };
-  storyFilesBySlot[idx] = file;
-  // Rebuild ourStoryFiles from slots in order
-  ourStoryFiles.value = Object.keys(storyFilesBySlot)
-    .sort((a, b) => a - b)
-    .map(k => storyFilesBySlot[k]);
-  markDirty();
-  if (e.target) e.target.value = '';
-}
-
-// Collage slot-based management (same approach as story images)
 const COLLAGE_MAX = 6;
 const defaultCollagePhotos = config.galleryPhotos.map(p => p.url);
-const customCollageImages = ref({});
-const activeCollageIndex = ref(0);
-const collageFileInput = ref(null);
+const EXAMPLES = { story: defaultStoryPhotos, collage: defaultCollagePhotos, hero: [] };
 
-const collageSlotImages = computed(() => {
-  const uploaded = []; // from API after save — populated by loadGalleryImages
-  const slots = [];
-  for (let i = 0; i < COLLAGE_MAX; i++) {
-    slots.push(customCollageImages.value[i] || uploaded[i] || defaultCollagePhotos[i] || '');
-  }
-  return slots.filter(Boolean);
-});
-
-const collageSlots = computed(() => {
-  const slots = [];
-  for (let i = 0; i < COLLAGE_MAX; i++) {
-    const custom = customCollageImages.value[i];
-    const fallback = defaultCollagePhotos[i];
-    const url = custom || fallback || '';
-    slots.push({ url, isCustom: !!custom });
-  }
-  return slots;
-});
-
-// Sync collage slots to preview config live
-watch(collageSlots, (slots) => {
-  const urls = slots.map(s => s.url).filter(Boolean);
-  if (urls.length) {
-    config.galleryPhotos = urls.map((url, i) => ({ url, alt: `Photo ${i + 1}` }));
-  }
-}, { deep: true });
-
-function triggerCollageUpload(idx) {
-  activeCollageIndex.value = idx;
-  if (collageFileInput.value) { collageFileInput.value.value = ''; collageFileInput.value.click(); }
+/** A slot as the editor shows it (reactive: read in the template). */
+function photoSlot(name, index) {
+  return photos.slot(name, index, EXAMPLES[name]?.[index] || '');
 }
 
-const collageFilesBySlot = {};
-
-function onCollageSlotSelected(e) {
-  const file = e.target.files?.[0];
-  if (!file) return;
-  const idx = activeCollageIndex.value;
-  const url = URL.createObjectURL(file);
-  customCollageImages.value = { ...customCollageImages.value, [idx]: url };
-  collageFilesBySlot[idx] = file;
-  // Rebuild collageFiles from slots in order
-  collageFiles.value = Object.keys(collageFilesBySlot)
-    .sort((a, b) => a - b)
-    .map(k => collageFilesBySlot[k]);
-  markDirty();
-  if (e.target) e.target.value = '';
+function ownPhotoCount(name, size) {
+  let n = 0;
+  for (let i = 0; i < size; i++) if (photos.slot(name, i).own) n++;
+  return n;
 }
+
+const collageOwnCount = computed(() => ownPhotoCount('collage', COLLAGE_MAX));
+
+// What the preview draws: the picked photo, the saved one, or the example.
+// Only in the editor — guests see the event's own photos (applyBackendData).
+const storyPreviewUrls = computed(() => {
+  const urls = [];
+  for (let i = 0; i < storyImageMax.value; i++) {
+    const url = photos.previewUrl('story', i, defaultStoryPhotos[i] || '');
+    if (url) urls.push(url);
+  }
+  return urls;
+});
+
+watch(storyPreviewUrls, (urls) => {
+  if (!isEditMode.value || !urls.length) return;
+  config.storyPhotos = urls.map((url, i) => ({ url, alt: `Photo ${i + 1}` }));
+  config.storyImageUrl = urls[0];
+}, { immediate: true });
+
+const collagePreviewUrls = computed(() => {
+  const urls = [];
+  for (let i = 0; i < COLLAGE_MAX; i++) {
+    const url = photos.previewUrl('collage', i, defaultCollagePhotos[i] || '');
+    if (url) urls.push(url);
+  }
+  return urls;
+});
+
+watch(collagePreviewUrls, (urls) => {
+  if (!isEditMode.value || !urls.length) return;
+  config.galleryPhotos = urls.map((url, i) => ({ url, alt: `Photo ${i + 1}` }));
+});
 
 // Dynamic section components - reactive to user selection
 const heroComponent = computed(() => HERO_COMPONENTS[heroFamily.value] || null);
@@ -728,7 +1187,7 @@ watch(preset, (p) => {
     cardBg: p.cardStyle.cardBg,
     sectionBg: p.cardStyle.sectionBg,
   });
-  activePaletteName.value = 'Original';
+  // Which palette is marked chosen is set with the design (watch on designId).
 });
 
 const THEME_PALETTES = [
@@ -748,9 +1207,15 @@ const THEME_PALETTES = [
 ];
 
 const activePaletteName = ref('Original');
+// INV-503: a typed hex code not applied yet, and whether it was wrong.
+const hexDrafts = reactive({});
+const hexErrors = reactive({});
 
 function applyThemePalette(p) {
   activePaletteName.value = p.name;
+  // A typed code that was never applied does not outlive the theme.
+  for (const k of Object.keys(hexDrafts)) delete hexDrafts[k];
+  for (const k of Object.keys(hexErrors)) hexErrors[k] = false;
   rootBg.value = p.rootBg;
   Object.assign(palette, { accent: p.accent, secondary: p.secondary, text: p.text });
   Object.assign(cardStyle, { sectionBg: p.sectionBg, cardBg: p.cardBg });
@@ -761,6 +1226,37 @@ function applyThemePalette(p) {
   }
   markDirty();
 }
+
+/* ---- Undo / redo (INV-801) ----------------------------------------- */
+// After undo / redo the colours on screen may be another theme's (or none):
+// the theme marked chosen follows them, and a typed code not applied goes.
+function paletteNameFor() {
+  const same = (a, b) => (a || '').toLowerCase() === (b || '').toLowerCase();
+  const match = THEME_PALETTES.find((p) => same(p.rootBg, rootBg.value) && same(p.accent, palette.accent)
+    && same(p.secondary, palette.secondary) && same(p.text, palette.text));
+  return match ? match.name : '';
+}
+
+onHistoryRestored((step) => {
+  if (!step.keys.includes('colors')) return;
+  activePaletteName.value = paletteNameFor();
+  for (const k of Object.keys(hexDrafts)) delete hexDrafts[k];
+  for (const k of Object.keys(hexErrors)) hexErrors[k] = false;
+});
+
+// Ctrl/⌘+Z and Ctrl/⌘+Shift+Z (Ctrl+Y). Not while typing in a field — that
+// field's own undo is the browser's — and not while a dialog asks something.
+function onHistoryKeydown(e) {
+  if (!isEditMode.value || e.defaultPrevented || isTextEditingTarget(e.target)) return;
+  if (leavePrompt.open || authGateOpen.value || resumeMode.value === 'choose') return;
+  const action = historyShortcut(e);
+  if (!action) return;
+  e.preventDefault();
+  if (action === 'undo') undoEdit();
+  else redoEdit();
+}
+onMounted(() => window.addEventListener('keydown', onHistoryKeydown));
+onBeforeUnmount(() => window.removeEventListener('keydown', onHistoryKeydown));
 
 function resetToOriginal() {
   applyThemePalette(ORIGINAL_PALETTE);
@@ -793,8 +1289,35 @@ function isDarkColor(hex) {
   return hex && hex.startsWith('#') && hex.length >= 7 && hexLuminance(hex) < 0.2;
 }
 
+// INV-503: a typed hex is checked and, when wrong, said so next to the field.
+const colorInputId = (key) => `color-field-${key}`;
+const paletteHeadingId = 'palette-heading';
+
+function onHexChange(key, raw) {
+  const value = (raw || '').trim();
+  if (!parseHex(value)) {
+    hexErrors[key] = true;
+    return;
+  }
+  hexErrors[key] = false;
+  delete hexDrafts[key];
+  onIndividualColorChange(key, value);
+}
+
+// What guests read on the colours as they are now (the cards as drawn).
+const colorContrastChecks = computed(() => readabilityChecks({
+  text: palette.text,
+  rootBg: rootBg.value,
+  sectionBg: cardStyle.sectionBg,
+  cardBg: contrastCardBg.value,
+  buttonText: buttonStyle.text,
+  buttonBg: buttonStyle.bg,
+}).map((c) => ({ ...c, label: t('editSection.a11y.pairs.' + c.key) })));
+
 function onIndividualColorChange(key, value) {
   if (!value || !value.startsWith('#')) return;
+  delete hexDrafts[key];
+  hexErrors[key] = false;
   activePaletteName.value = '';
   if (key === 'rootBg') {
     rootBg.value = value;
@@ -897,8 +1420,42 @@ const STORY_FAMILY_OPTIONS = [
 </script>
 
 <style scoped>
+/* INV-202: the catalogue's preview — sample content is labelled as such */
+.sample-preview-badge {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3000;
+  max-width: calc(100% - 24px);
+  margin: 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #fef0c7;
+  color: #93370d;
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.15);
+  pointer-events: none;
+}
+
+.sample-preview-rsvp {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #fef0c7;
+  color: #93370d;
+  font-size: 13px;
+  text-align: center;
+}
+
 .unified-invitation {
   container-type: inline-size;
+  /* INV-602: a long name, title or word wraps inside its card instead of
+     pushing the invitation wider than a phone (checked in the guest preview). */
+  overflow-wrap: anywhere;
   font-family: var(--font-body);
   background: var(--root-bg, #fff);
   color: var(--theme-text, var(--ink-2));
@@ -938,6 +1495,19 @@ const STORY_FAMILY_OPTIONS = [
 .unified-invitation.edit-active [data-reveal] { opacity: 1; transform: none; }
 
 .family-picker-wrap { padding: 0; }
+
+/* INV-402: an empty section in the editor preview — guests never see it. */
+.section-empty-hint {
+  margin: 0 auto;
+  max-width: 420px;
+  padding: 16px;
+  border: 1px dashed currentColor;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 14px;
+  font-style: italic;
+  opacity: 0.8;
+}
 .family-picker-label { font-size: 13px; font-weight: 600; color: var(--ink-2); margin: 0 0 8px; }
 
 /* Story image upload (Parisian single image) */
@@ -961,7 +1531,8 @@ const STORY_FAMILY_OPTIONS = [
 .story-images-add-btn { display: flex; align-items: center; gap: 4px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; font-size: 12px; font-weight: 600; color: var(--ink-2); cursor: pointer; font-family: inherit; transition: all 0.15s; }
 .story-images-add-btn:hover { background: var(--sunken); border-color: var(--line-2); }
 .story-images-add-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.story-images-grid-edit { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; }
+.story-images-grid-edit { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
+.photo-limits { font-size: 12px; color: var(--ink-3); line-height: 1.45; margin: 0 0 10px; }
 .story-img-thumb { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); }
 .story-img-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .story-img-remove { position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; border-radius: 50%; border: none; background: rgba(0,0,0,0.55); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.15s; }
@@ -1013,6 +1584,19 @@ const STORY_FAMILY_OPTIONS = [
 .color-input::-webkit-color-swatch-wrapper { padding: 2px; }
 .color-input::-webkit-color-swatch { border-radius: 4px; border: none; }
 .hex-input { width: 72px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; font-size: 11px; font-family: monospace; color: var(--ink-2); text-align: center; }
+
+/* INV-503: chosen in words, wrong hex in words, readability in words */
+.color-field { flex-wrap: wrap; }
+.palette-selected { margin-left: auto; padding: 1px 8px; border-radius: 999px; background: #fff; color: #1f2937; border: 1px solid #1f2937; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.hex-input[aria-invalid="true"] { border-color: #b91c1c; border-width: 2px; }
+.hex-error { flex-basis: 100%; margin: 4px 0 0; font-size: 12px; color: #b91c1c; }
+.color-contrast { margin-top: 16px; }
+.color-contrast__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.color-contrast__row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-2); }
+.color-contrast__label { flex: 1; min-width: 0; }
+.color-contrast__ratio { font-variant-numeric: tabular-nums; color: var(--ink-3); }
+.color-contrast__hint { margin: 8px 0 0; font-size: 12px; line-height: 1.4; color: var(--ink-2); }
+.palette-card:focus-visible, .color-input:focus-visible, .hex-input:focus-visible { outline: 3px solid var(--moss, #5e7f58); outline-offset: 2px; }
 
 @container (min-width: 1024px) { .section-title { font-size: 48px; } }
 </style>

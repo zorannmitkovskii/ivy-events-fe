@@ -18,8 +18,10 @@ export function useOurStory() {
       if (!eventId) return;
 
       const data = await ourStoryApi.listWithImages(eventId);
-      items.value = Array.isArray(data.stories) ? data.stories : [];
-      images.value = Array.isArray(data.images) ? data.images : [];
+      // A successful answer without a body is "no stories", not a failed
+      // load — a failed load stops the editor's saves (INV-402).
+      items.value = Array.isArray(data?.stories) ? data.stories : [];
+      images.value = Array.isArray(data?.images) ? data.images : [];
     } catch (e) {
       error.value = getErrorMessage(e);
     } finally {

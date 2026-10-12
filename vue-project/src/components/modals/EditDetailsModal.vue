@@ -1,22 +1,50 @@
 <template>
   <BaseModal :open="open" :title="t('editDetails.title')" @close="emit('close')">
+    <!-- INV-402: not read yet / could not be read — nothing to edit, no save. -->
+    <SectionStateNotice
+      v-if="!loaded"
+      kind="details"
+      :state="loadState === 'failed' ? 'failed' : 'loading'"
+      :busy="busy"
+      @retry="emit('retry-load')"
+    />
+    <template v-else>
+    <SectionStateNotice v-if="hidden" ref="hiddenNotice" kind="details" state="hidden" @show="onShow" />
+    <SectionStateNotice v-if="!hasOwnItems" ref="emptyNotice" kind="details" state="empty" :can-skip="!hidden" @add="emit('add')" @skip="onSkip" />
+    <p v-if="hasExamples" class="examples-note" data-testid="examples-note">{{ t('editSection.guide.examples.note') }}</p>
     <div class="items-list" v-if="items.length">
-      <div v-for="item in items" :key="item.id" class="item-card">
+      <div
+        v-for="(item, idx) in items"
+        :key="item.id || 'example-' + idx"
+        class="item-card"
+        :class="{ 'item-card--example': isUnsavedExample(item, 'eventDetails') }"
+        :data-example="isUnsavedExample(item, 'eventDetails') ? 'true' : undefined"
+      >
         <!-- Header row -->
-        <div class="item-card-header" @click="toggleExpand(item.id)">
-          <div class="item-info">
-            <span class="item-type">{{ t(`detailTypes.${item.type}`) }}</span>
-            <span class="item-time" v-if="!isExpanded(item.id)">{{ item.time || '' }}</span>
-          </div>
+        <div class="item-card-header" @click="toggleExpand(item.id || 'example-' + idx)">
+          <button
+            type="button"
+            class="item-info item-toggle"
+            :aria-expanded="isExpanded(item.id || 'example-' + idx) ? 'true' : 'false'"
+            :aria-controls="itemBodyId(idx)"
+            @click.stop="toggleExpand(item.id || 'example-' + idx)"
+          >
+            <span class="item-type">
+              {{ t(`detailTypes.${item.type}`) }}
+              <span v-if="isUnsavedExample(item, 'eventDetails')" class="example-badge" data-testid="example-badge">{{ t('editSection.guide.examples.badge') }}</span>
+            </span>
+            <span class="item-time" v-if="!isExpanded(item.id || 'example-' + idx)">{{ item.time || '' }}</span>
+          </button>
           <div class="item-actions">
-            <button v-if="!noAdd" class="icon-btn icon-btn--danger" type="button" @click.stop="emit('delete', item.id)">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <button v-if="!noAdd" class="icon-btn icon-btn--danger" type="button" :aria-label="t('editSection.a11y.deleteItem', { item: t(`detailTypes.${item.type}`) })" @click.stop="emit('delete', item.id, item)">
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
               </svg>
             </button>
             <svg
               class="expand-chevron"
-              :class="{ 'expand-chevron--open': isExpanded(item.id) }"
+              aria-hidden="true"
+              :class="{ 'expand-chevron--open': isExpanded(item.id || 'example-' + idx) }"
               width="16" height="16" viewBox="0 0 24 24"
               fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round"
@@ -27,10 +55,10 @@
         </div>
 
         <!-- Expandable inline form -->
-        <div v-if="isExpanded(item.id)" class="item-card-body">
+        <div v-if="isExpanded(item.id || 'example-' + idx)" :id="itemBodyId(idx)" class="item-card-body">
           <div class="field">
-            <label>{{ t('eventDetail.form.type') }}</label>
-            <select class="input" :value="item.type" @change="onFieldChange(item, 'type', $event.target.value)">
+            <label :for="fieldId(idx, 'type')">{{ t('eventDetail.form.type') }}</label>
+            <select :id="fieldId(idx, 'type')" class="input" :value="item.type" @change="onFieldChange(item, 'type', $event.target.value)">
               <option v-for="val in availableTypes" :key="val" :value="val">
                 {{ t(`detailTypes.${val}`) }}
               </option>
@@ -38,19 +66,19 @@
           </div>
           <div class="two">
             <div class="field">
-              <label>{{ t('eventDetail.form.eventDate') }}</label>
-              <DateInput input-class="input" :model-value="item.eventDate || ''" @update:model-value="onFieldChange(item, 'eventDate', $event)" />
+              <label :for="fieldId(idx, 'date')">{{ t('eventDetail.form.eventDate') }}</label>
+              <DateInput :input-id="fieldId(idx, 'date')" input-class="input" :model-value="item.eventDate || ''" @update:model-value="onFieldChange(item, 'eventDate', $event)" />
             </div>
             <div class="field">
-              <label>{{ t('eventDetail.form.time') }}</label>
-              <div class="time-selects">
-                <select class="input" :value="getHour(item.time)" @change="onTimeChange(item, $event.target.value, getMinute(item.time))">
+              <label :id="fieldId(idx, 'time')">{{ t('eventDetail.form.time') }}</label>
+              <div class="time-selects" role="group" :aria-labelledby="fieldId(idx, 'time')">
+                <select class="input" :aria-label="t('editSection.a11y.hours')" :value="getHour(item.time)" @change="onTimeChange(item, $event.target.value, getMinute(item.time))">
                   <option v-for="h in 24" :key="h-1" :value="String(h-1).padStart(2,'0')">
                     {{ String(h-1).padStart(2,'0') }}
                   </option>
                 </select>
                 <span class="time-sep">:</span>
-                <select class="input" :value="getMinute(item.time)" @change="onTimeChange(item, getHour(item.time), $event.target.value)">
+                <select class="input" :aria-label="t('editSection.a11y.minutes')" :value="getMinute(item.time)" @change="onTimeChange(item, getHour(item.time), $event.target.value)">
                   <option v-for="m in [0,5,10,15,20,25,30,35,40,45,50,55]" :key="m" :value="String(m).padStart(2,'0')">
                     {{ String(m).padStart(2,'0') }}
                   </option>
@@ -72,19 +100,26 @@
             :locatingLabelLoading="t('common.locating')"
             :selectedLabel="t('common.selected')"
             :loadingAddressLabel="t('common.loadingAddress')"
+            :described-by="`${guideId}-loc-${idx}`"
           >
             <template #icon>📍</template>
           </AuthLocationInput>
+          <!-- INV-401: what guests see, an example (static text). -->
+          <FieldGuide
+            :id="`${guideId}-loc-${idx}`"
+            :guests="t('editSection.guide.location.guests')"
+            :example="t('editSection.guide.location.example')"
+          />
         </div>
       </div>
     </div>
-    <p v-else class="empty-msg">{{ t('editDetails.empty') }}</p>
+    </template>
 
     <template #footer>
       <ButtonMain variant="outline" type="button" @click="emit('close')">
         {{ t('common.close') }}
       </ButtonMain>
-      <ButtonMain v-if="!props.noAdd && (!props.maxItems || items.length < props.maxItems)" variant="main" type="button" @click="emit('add')">
+      <ButtonMain v-if="loaded && hasOwnItems && !props.noAdd && (!props.maxItems || items.length < props.maxItems)" variant="main" type="button" @click="emit('add')">
         {{ t('editDetails.addItem') }}
       </ButtonMain>
     </template>
@@ -92,13 +127,16 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, useId, watch, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import ButtonMain from "@/components/generic/ButtonMain.vue";
 import DateInput from "@/components/generic/DateInput.vue";
 import AuthLocationInput from "@/components/auth/AuthLocationInput.vue";
 import { EventDetailType } from "@/enums/EventDetailType";
+import FieldGuide from "@/components/invitations/shared/FieldGuide.vue";
+import SectionStateNotice from "@/components/invitations/shared/SectionStateNotice.vue";
+import { isUnsavedExample } from "@/utils/creationSteps";
 
 const { t } = useI18n();
 
@@ -107,15 +145,57 @@ const props = defineProps({
   items: { type: Array, default: () => [] },
   maxItems: { type: Number, default: 0 },
   noAdd: { type: Boolean, default: false },
+  // INV-402: the section is hidden from the invitation (its entries are kept).
+  hidden: { type: Boolean, default: false },
+  // INV-402: 'idle' | 'loading' | 'loaded' | 'failed' — whether the list was read.
+  loadState: { type: String, default: "loaded" },
+  busy: { type: Boolean, default: false },
 });
 
-const emit = defineEmits(["close", "add", "delete", "update"]);
+const guideId = `${useId()}-details-guide`;
+// INV-503: ids that tie each item's toggle, labels and fields together.
+const itemUid = useId();
+const itemBodyId = (idx) => `${itemUid}-item-${idx}`;
+const fieldId = (idx, name) => `${itemUid}-${idx}-${name}`;
+const hasExamples = computed(() => props.items.some((i) => isUnsavedExample(i, 'eventDetails')));
+
+const emit = defineEmits(["close", "add", "delete", "update", "skip", "show", "retry-load"]);
+
+const loaded = computed(() => props.loadState === "loaded");
+// Examples shown only on screen are not entries (INV-402).
+const hasOwnItems = computed(() => props.items.some((i) => !isUnsavedExample(i, "eventDetails")));
+
+const hiddenNotice = ref(null);
+const emptyNotice = ref(null);
+// After "Skip" / "Show it again" the button pressed is gone: the keyboard
+// goes to the action that undoes it (or adds the first entry).
+let focusAfter = null;
+function onSkip() {
+  focusAfter = "hidden";
+  emit("skip");
+}
+function onShow() {
+  focusAfter = "empty";
+  emit("show");
+}
+watch(() => props.hidden, () => {
+  const target = focusAfter;
+  focusAfter = null;
+  if (target) nextTick(() => (target === "hidden" ? hiddenNotice : emptyNotice).value?.focusAction());
+});
 
 const expandedId = ref(null);
 
 const availableTypes = computed(() => Object.values(EventDetailType));
 
 function isExpanded(id) { return expandedId.value === id; }
+
+// An example being edited becomes an entry with an id (INV-402): it stays open.
+watch(() => props.items, (items) => {
+  const m = /^example-(\d+)$/.exec(expandedId.value || "");
+  const now = m && items[Number(m[1])];
+  if (now?.id) expandedId.value = now.id;
+}, { deep: true });
 function toggleExpand(id) { expandedId.value = expandedId.value === id ? null : id; }
 
 function getHour(time) {
@@ -141,12 +221,12 @@ function getLocationModel(item) {
 
 function onFieldChange(item, field, value) {
   const updated = { ...item, [field]: value };
-  emitUpdate(updated);
+  emitUpdate(updated, item);
 }
 
 function onTimeChange(item, hour, minute) {
   const updated = { ...item, time: `${hour}:${minute}` };
-  emitUpdate(updated);
+  emitUpdate(updated, item);
 }
 
 function onLocationChange(item, loc) {
@@ -162,10 +242,10 @@ function onLocationChange(item, loc) {
       isActive: true,
     } : null,
   };
-  emitUpdate(updated);
+  emitUpdate(updated, item);
 }
 
-function emitUpdate(item) {
+function emitUpdate(item, original) {
   const payload = {
     id: item.id,
     type: item.type,
@@ -176,7 +256,7 @@ function emitUpdate(item) {
     icon: item.icon ?? null,
     location: item.location || null,
   };
-  emit('update', payload);
+  emit('update', payload, original);
 }
 </script>
 
@@ -319,16 +399,62 @@ function emitUpdate(item) {
   color: #dc2626;
 }
 
-.empty-msg {
-  text-align: center;
-  color: var(--neutral-500, var(--ink-3));
-  font-size: 14px;
-  padding: 24px 0;
+.section-guide {
+  margin: 0 0 10px;
 }
+
+.examples-note {
+  margin: 0 0 10px;
+  font-size: 12px;
+  color: var(--neutral-600, var(--ink-3));
+}
+
+/* An example entry: dashed edge and a worded badge, not only a colour. */
+.item-card--example {
+  border-style: dashed;
+}
+
+.example-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 6px;
+  border: 1px dashed currentColor;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--neutral-600, var(--ink-3));
+  vertical-align: middle;
+}
+
 
 @media (max-width: 600px) {
   .two {
     grid-template-columns: 1fr;
   }
+}
+
+/* INV-503: the row's toggle is a real button; focus is always visible */
+.item-toggle {
+  flex: 1;
+  min-width: 0;
+  align-items: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.item-toggle:focus-visible,
+.icon-btn:focus-visible,
+.input:focus-visible,
+.toggle-row:focus-visible,
+.image-upload-area:focus-visible,
+.image-action-btn:focus-visible {
+  outline: 3px solid var(--moss, #5e7f58);
+  outline-offset: 2px;
 }
 </style>

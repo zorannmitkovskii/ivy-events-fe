@@ -1,17 +1,24 @@
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted, watch, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 import { packageService } from "@/services/package.service";
 import { onboardingStore } from "@/store/onboarding.store";
 import { useAuthUser } from "@/composables/useAuthUser";
-import { getUserId, getPackages } from "@/services/auth.service";
+import { getPackages } from "@/services/auth.service";
 import { cpayService } from "@/services/cpay.service";
 import { redirectToCpay } from "@/utils/redirectToCpay";
 import { getErrorMessage } from "@/services/apiError";
 import publicApi from "@/services/backendApi";
 import PricingFeature from "@/components/cards/PricingFeature.vue";
+import { eventsService } from "@/services/events.service";
+import {
+  serverPublishProblems, fixTarget, editorFixLocation, publishFailureKind,
+  serverPrice, retryAfterTime,
+} from "@/utils/prePublishCheck";
 
 const { t, locale } = useI18n();
+const router = useRouter();
 const { user, eventId: authEventId } = useAuthUser();
 
 const packages = ref([]);
@@ -56,6 +63,9 @@ const TAB_CATEGORY_MAP = {
 const eventId = computed(() => onboardingStore.eventId);
 
 /* ---- Cart ---- */
+// CPay fix 1: an item keeps the package's base price (currentPrice ?? price)
+// and its shown price follows the coupon applied now — the server prices the
+// payment the same way and refuses (409) an amount it would not charge.
 const cart = ref([]);
 
 function addToCart(pkg) {
@@ -63,11 +73,16 @@ function addToCart(pkg) {
   cart.value.push({
     id: pkg.id,
     packageType: pkg.packageType,
+    category: TAB_CATEGORY_MAP[activeTab.value],
     name: localized(pkg.nameI18n, pkg.name),
-    price: getDisplayPrice(pkg),
+    basePrice: pkg.currentPrice ?? pkg.price,
     currency: pkg.currency || "MKD",
   });
 }
+
+const cartLines = computed(() =>
+  cart.value.map(item => ({ ...item, price: priceWithDiscount(item.basePrice) }))
+);
 
 function removeFromCart(id) {
   cart.value = cart.value.filter(c => c.id !== id);
@@ -78,7 +93,7 @@ function isInCart(id) {
 }
 
 const cartTotal = computed(() =>
-  cart.value.reduce((sum, item) => sum + Number(item.price || 0), 0)
+  cartLines.value.reduce((sum, item) => sum + Number(item.price || 0), 0)
 );
 
 const cartCurrency = computed(() =>
@@ -89,21 +104,82 @@ const cartCurrency = computed(() =>
 const checkoutLoading = ref(false);
 const checkoutError = ref(null);
 
+/* ---- INV-601: what the server says blocks publishing ---- */
+// Paying for the package is what publishes the invitation. The server checks
+// the invitation first (names or title by event type, date and time in the
+// event's timezone, place, RSVP deadline) and answers with what blocks it;
+// each problem leads to its own control in the editor. Advice never blocks.
+const publishBlockers = ref([]);
+const publishTimezone = ref("");
+const publishInvitationUrl = ref("");
+const blockersRef = ref(null);
+
+/* ---- INV-603: why the publish did not start ---- */
+// 'alreadyPublished' | 'forbidden' | 'failed' | null. Nothing is charged in any
+// of them; the cart stays and the invitation draft is never touched here, so
+// pressing checkout again is the retry (the server will not publish twice).
+const checkoutFailure = ref(null);
+const publishNotice = ref("");
+
+function blockerText(n) {
+  // missingField (INV-601) and publishProblem (INV-603) carry their own message key.
+  if (n.params?.messageKey) return t(n.params.messageKey, { timezone: publishTimezone.value });
+  return t("editSection.guestPreview.notes." + n.textKey, { timezone: publishTimezone.value });
+}
+
+function fixLocation(n) {
+  const fix = fixTarget(n);
+  // No control to open (the public link is made on save): no "Fix" button,
+  // rather than an editor link built from a URL that may be wrong.
+  if (!fix) return "";
+  return editorFixLocation(publishInvitationUrl.value, fix);
+}
+
+function openFix(n) {
+  const to = fixLocation(n);
+  if (to) router.push(to);
+}
+
+async function showPublishBlockers(err, eid) {
+  publishBlockers.value = serverPublishProblems(err.validationErrors);
+  if (!publishBlockers.value.length) {
+    // A reason this client does not know: say it as the server did.
+    checkoutError.value = getErrorMessage(err);
+    return;
+  }
+  try {
+    const res = eid ? await eventsService.getById(eid) : null;
+    const data = res?.data || res || {};
+    publishTimezone.value = data.timezone || "";
+    publishInvitationUrl.value = data.invitation?.invitationUrl || data.invitationUrl || "";
+  } catch {
+    // Without the address the problems are still listed, only without links.
+    publishInvitationUrl.value = "";
+  }
+  await nextTick();
+  blockersRef.value?.focus?.();
+}
+
 async function checkout() {
   if (!cart.value.length || checkoutLoading.value) return;
   checkoutLoading.value = true;
   checkoutError.value = null;
+  checkoutFailure.value = null;
+  publishNotice.value = "";
+  publishBlockers.value = [];
 
   try {
     const payload = {
       amount: cartTotal.value,
       currency: cartCurrency.value,
       description: "Payment",
-      email: user.value?.email || "",
+      // CPay round 2 (4): no userId and no e-mail — the server takes both from
+      // the token (there is no separate "invoice e-mail" field to send).
       telephone: user.value?.phone || "",
       eventId: eventId.value || authEventId.value,
-      userId: getUserId(),
       packageTypes: cart.value.map(c => c.packageType),
+      // CPay fix 1: the server validates the coupon again and prices with it.
+      ...(appliedDiscountCode.value ? { discountCode: appliedDiscountCode.value } : {}),
     };
     const res = await cpayService.initPayment(payload);
     const data = res?.data ?? res;
@@ -115,13 +191,39 @@ async function checkout() {
 
     redirectToCpay(paymentUrl, fields);
   } catch (e) {
-    checkoutError.value = getErrorMessage(e);
+    const kind = publishFailureKind(e);
+    if (kind === "notReady") {
+      await showPublishBlockers(e, eventId.value || authEventId.value);
+    } else if (kind === "alreadyPublished") {
+      publishNotice.value = t("editSection.prePublish.alreadyPublished");
+    } else if (kind === "forbidden") {
+      checkoutError.value = t("editSection.prePublish.forbidden");
+    } else if (kind === "priceChanged") {
+      const price = serverPrice(e);
+      checkoutError.value = price
+        ? t("packages.checkoutIssue.priceChanged", { amount: formatPrice(price.amount, price.currency) })
+        : getErrorMessage(e);
+      await refreshPrices();
+    } else if (kind === "paymentInProgress") {
+      const time = retryAfterTime(e, locale.value);
+      checkoutError.value = time
+        ? t("packages.checkoutIssue.inProgress", { time })
+        : t("packages.checkoutIssue.inProgressSoon");
+    } else if (kind === "discountInvalid") {
+      clearDiscount();
+      checkoutError.value = t("packages.checkoutIssue.discountInvalid");
+    } else {
+      checkoutError.value = getErrorMessage(e);
+    }
+    checkoutFailure.value = kind === "notReady" ? null : kind;
     checkoutLoading.value = false;
   }
 }
 
 // Discount code state
 const discountCode = ref("");
+// The code the shown prices use — only one the server said is valid.
+const appliedDiscountCode = ref("");
 const discountLoading = ref(false);
 const discountResult = ref(null);
 const discountError = ref(null);
@@ -138,10 +240,14 @@ function formatPrice(price, currency) {
   return `${formatted} ${currency || "MKD"}`;
 }
 
-function getDisplayPrice(pkg) {
-  const base = pkg.currentPrice ?? pkg.price;
+function priceWithDiscount(base) {
+  if (base == null) return base;
   if (!discountResult.value?.valid || !discountResult.value.discountPercent) return base;
   return Math.round(base * (1 - discountResult.value.discountPercent / 100));
+}
+
+function getDisplayPrice(pkg) {
+  return priceWithDiscount(pkg.currentPrice ?? pkg.price);
 }
 
 async function validateDiscount() {
@@ -149,9 +255,12 @@ async function validateDiscount() {
   discountLoading.value = true;
   discountError.value = null;
   discountResult.value = null;
+  appliedDiscountCode.value = "";
   try {
-    const res = await publicApi.post("/public/discounts/validate", { code: discountCode.value.trim() });
+    const code = discountCode.value.trim();
+    const res = await publicApi.post("/public/discounts/validate", { code });
     discountResult.value = res.data;
+    if (res.data?.valid) appliedDiscountCode.value = code;
     if (!res.data.valid) {
       discountError.value = res.data.message || t("packages.invalidCode");
     }
@@ -164,8 +273,38 @@ async function validateDiscount() {
 
 function clearDiscount() {
   discountCode.value = "";
+  appliedDiscountCode.value = "";
   discountResult.value = null;
   discountError.value = null;
+}
+
+/**
+ * CPay fix 1: after the server said the price changed — reload the packages
+ * and take the cart's base prices from them; an item whose package is gone
+ * leaves the cart (the server would refuse it).
+ */
+async function refreshPrices() {
+  await fetchPackages();
+  const categories = [...new Set(cart.value.map(c => c.category).filter(Boolean))];
+  const fresh = new Map();
+  for (const category of categories) {
+    try {
+      const res = await packageService.listByCategory(category);
+      const list = Array.isArray(res) ? res : (res?.data ?? []);
+      for (const pkg of list) fresh.set(pkg.id, pkg);
+    } catch {
+      // Keep what the cart has; the server still decides the price.
+      return;
+    }
+  }
+  cart.value = cart.value
+    .filter(item => !item.category || fresh.has(item.id))
+    .map(item => {
+      const pkg = fresh.get(item.id);
+      return pkg
+        ? { ...item, basePrice: pkg.currentPrice ?? pkg.price, currency: pkg.currency || "MKD" }
+        : item;
+    });
 }
 
 async function fetchPackages() {
@@ -238,7 +377,7 @@ onMounted(() => {
 
       <template v-else>
         <div class="cart-items">
-          <div v-for="item in cart" :key="item.id" class="cart-item">
+          <div v-for="item in cartLines" :key="item.id" class="cart-item">
             <div class="cart-item-info">
               <span class="cart-item-name">{{ item.name }}</span>
               <span class="cart-item-type">{{ item.packageType }}</span>
@@ -271,7 +410,38 @@ onMounted(() => {
             </svg>
             {{ checkoutLoading ? t("cpay.redirecting") : t("packages.checkout") }}
           </button>
-          <p v-if="checkoutError" class="cart-error">{{ checkoutError }}</p>
+          <p v-if="checkoutError" class="cart-error" role="alert">{{ checkoutError }}</p>
+          <p v-if="checkoutFailure === 'failed'" class="cart-error-hint" data-testid="checkout-retry-hint">
+            {{ t("editSection.prePublish.retryHint") }}
+          </p>
+          <p v-if="publishNotice" class="publish-notice" role="status" data-testid="publish-already">
+            <span aria-hidden="true">✓</span> {{ publishNotice }}
+          </p>
+          <div
+            v-if="publishBlockers.length"
+            ref="blockersRef"
+            class="publish-blockers"
+            role="alert"
+            tabindex="-1"
+            data-testid="publish-blockers"
+          >
+            <p class="publish-blockers__title">
+              {{ t("editSection.prePublish.serverBlocked", { count: publishBlockers.length }) }}
+            </p>
+            <ul class="publish-blockers__list">
+              <li v-for="n in publishBlockers" :key="n.id" class="publish-blockers__item" data-testid="publish-blocker" :data-field="n.field">
+                <span>{{ blockerText(n) }}</span>
+                <button
+                  v-if="fixLocation(n)"
+                  type="button"
+                  class="publish-blockers__fix"
+                  data-testid="publish-blocker-fix"
+                  @click="openFix(n)"
+                >{{ t("editSection.prePublish.fix") }}</button>
+              </li>
+            </ul>
+            <p class="publish-blockers__hint">{{ t("editSection.prePublish.serverHint") }}</p>
+          </div>
         </div>
       </template>
     </div>
@@ -597,6 +767,81 @@ onMounted(() => {
   font-size: 13px;
   color: #9a5e56;
   font-weight: 500;
+}
+
+/* INV-603: a failed start is safe to retry; an already published event is not an error */
+.cart-error-hint {
+  width: 100%;
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #475467;
+}
+
+.publish-notice {
+  width: 100%;
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border: 1px solid #abefc6;
+  border-left: 4px solid #067647;
+  border-radius: 8px;
+  background: #ecfdf3;
+  color: #101828;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+/* INV-601: what blocks publishing, each with the way to fix it */
+.publish-blockers {
+  width: 100%;
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border: 1px solid #f3c5bf;
+  border-left: 4px solid #b42318;
+  border-radius: 8px;
+  background: #fef3f2;
+  color: #101828;
+  font-size: 13px;
+}
+.publish-blockers:focus-visible {
+  outline: 3px solid var(--brand-gold, #c4956a);
+  outline-offset: 2px;
+}
+.publish-blockers__title {
+  margin: 0 0 6px;
+  font-weight: 700;
+}
+.publish-blockers__list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.publish-blockers__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 10px;
+  overflow-wrap: anywhere;
+}
+.publish-blockers__fix {
+  min-height: 36px;
+  padding: 4px 12px;
+  border: 1px solid rgba(16, 24, 40, 0.25);
+  border-radius: 8px;
+  background: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.publish-blockers__fix:focus-visible {
+  outline: 3px solid var(--brand-gold, #c4956a);
+  outline-offset: 2px;
+}
+.publish-blockers__hint {
+  margin: 8px 0 0;
+  color: #475467;
 }
 
 /* ---- Tabs ---- */

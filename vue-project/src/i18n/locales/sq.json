@@ -425,6 +425,10 @@
       "failedTitle": "Hyrja me Google dështoi",
       "failedText": "Nuk arritëm t’ju identifikojmë me Google. Provoni përsëri ose hyni me email dhe fjalëkalim.",
       "back": "Kthehu te hyrja"
+    },
+    "draftNotice": {
+      "text": "Ftesa juaj është ruajtur vetëm në këtë shfletues. Pasi të hyni, do të ruhet në llogarinë tuaj.",
+      "back": "Kthehu te ftesa"
     }
   },
   "onboarding": {
@@ -435,16 +439,29 @@
         "brideName": "Emri i Nusës",
         "groomName": "Emri i Dhëndërrit",
         "weddingDate": "Data e Dasmës (Opsionale)",
-        "location": "Vendndodhja (Opsionale)"
+        "location": "Vendndodhja (Opsionale)",
+        "title": "Titulli i eventit",
+        "date": "Data",
+        "time": "Ora e fillimit",
+        "timezone": "Zona kohore",
+        "venue": "Vendi",
+        "address": "Adresa ose qyteti (opsionale)",
+        "partnerOne": "Emri i partnerit të parë",
+        "partnerTwo": "Emri i partnerit të dytë"
       },
       "placeholders": {
         "brideName": "p.sh. Sara",
         "groomName": "p.sh. Mihaeli",
-        "location": "p.sh. Tiranë, Shqipëri"
+        "location": "p.sh. Tiranë, Shqipëri",
+        "title": "p.sh. Ditëlindja e 30-të e Milës",
+        "venue": "p.sh. Hotel Aleksandar Palace",
+        "partnerOne": "p.sh. Ana",
+        "partnerTwo": "p.sh. Marku"
       },
       "hints": {
         "weddingDate": "Nuk keni datë ende? S’ka problem.",
-        "location": "\"Pa përcaktuar\" është në rregull në këtë fazë."
+        "location": "\"Pa përcaktuar\" është në rregull në këtë fazë.",
+        "timezone": "Data, ora dhe afati për RSVP lexohen në këtë zonë — aty ku zhvillohet eventi, jo aty ku jeni ju."
       },
       "actions": {
         "continue": "Vazhdo",
@@ -453,7 +470,27 @@
       "protip": {
         "label": "Këshilla:",
         "text": "Mund të ftoni bashkëpunëtorë pasi të keni vendosur detajet bazë. Do t’ju kujtojmë më vonë."
-      }
+      },
+      "back": "Kthehu te lloji i eventit",
+      "lead": "Vetëm ato që i duhen ftesës për të treguar emrat, datën dhe vendin tuaj. Historia, programi, fotot dhe RSVP vijnë më vonë — dhe mund të kapërcehen.",
+      "namesLegend": "Kush feston",
+      "titleLegend": "Si quhet eventi",
+      "whenLegend": "Kur",
+      "whereLegend": "Ku",
+      "errors": {
+        "brideName": "Shkruani emrin e nuses.",
+        "groomName": "Shkruani emrin e dhëndrit.",
+        "title": "Shkruani një titull për eventin.",
+        "date": "Zgjidhni datën.",
+        "time": "Zgjidhni orën e fillimit.",
+        "timezone": "Zgjidhni një zonë kohore të vlefshme.",
+        "location": "Shkruani vendin.",
+        "past": "Kjo datë dhe orë kanë kaluar tashmë në {timezone}.",
+        "partnerOne": "Shkruani emrin e partnerit të parë.",
+        "partnerTwo": "Shkruani emrin e partnerit të dytë."
+      },
+      "noteGuest": "Nuk ju duhet ende llogari. Ajo që shkruani ruhet vetëm në këtë shfletues në këtë pajisje derisa ta ruani ftesën.",
+      "noteSignedIn": "Asgjë nuk krijohet në llogarinë tuaj derisa ta ruani ftesën."
     },
     "invitations": {
       "title": "Zgjidhni Ftesën Tuaj",
@@ -467,7 +504,86 @@
       "buildYourOwn": "Ndërto tënden",
       "buildDesc": "Kombino seksionet lirisht",
       "editCurrent": "Redakto ftesën aktuale",
-      "editDesc": "Ndrysho ngjyrat, shkronjat, përmbajtjen"
+      "editDesc": "Ndrysho ngjyrat, shkronjat, përmbajtjen",
+      "basicsMissing": "Shtoni emrat, datën dhe vendin për t’i parë në çdo dizajn.",
+      "editBasics": "Ndrysho detajet",
+      "addBasics": "Shto detajet",
+      "forCategory": "Dizajne për: {category}",
+      "noCategory": "Zgjidhni fillimisht llojin e eventit — çdo lloj ka dizajnet e veta.",
+      "chooseCategory": "Zgjidh llojin e eventit",
+      "loadError": "Dizajnet nuk u ngarkuan. Kontrolloni lidhjen dhe provoni përsëri.",
+      "retry": "Provo përsëri",
+      "emptyCategory": "Ende nuk ka dizajne për “{category}”. Zgjidhni një lloj tjetër eventi.",
+      "chooseOtherCategory": "Zgjidh një lloj tjetër",
+      "card": {
+        "preview": "Shiko paraprakisht",
+        "use": "Përdor këtë dizajn",
+        "selectedStatus": "Dizajni i zgjedhur: {name}. Shtypni “Vazhdo” kur të jeni gati.",
+        "traitsLabel": "Çfarë ka ky dizajn",
+        "sharedSections": "Çdo dizajn këtu ka detajet e eventit, programin, historinë tuaj dhe një formular RSVP. Kartat tregojnë si i rregullon secili.",
+        "traits": {
+          "layout": {
+            "label": "Rregullimi",
+            "split": "foto pranë emrave",
+            "fullPhoto": "foto në gjithë gjerësinë me emrat sipër",
+            "glassPanel": "foto me panel xhami",
+            "editorial": "ndarje si në revistë"
+          },
+          "story": {
+            "label": "Historia",
+            "photoPerChapter": "një foto për çdo kapitull",
+            "onePhoto": "një foto me tekst",
+            "textAndPhotos": "kapituj me tekst dhe deri në 4 foto"
+          },
+          "programme": {
+            "label": "Programi",
+            "cards": "listë me karta",
+            "alternating": "vijë kohore e alternuar",
+            "vertical": "vijë kohore vertikale",
+            "horizontal": "vijë kohore horizontale",
+            "table": "tabelë"
+          },
+          "opening": {
+            "label": "Hapja",
+            "envelope": "animacion me zarf",
+            "doors": "animacion me dyer që hapen",
+            "curtain": "animacion me perde",
+            "heart": "animacion me zemër",
+            "gallery": "galeri fotosh",
+            "wax": "animacion me vulë dylli"
+          }
+        },
+        "designs": {
+          "coastal-breeze": "Blu e butë deti dhe koral, tituj klasikë serif, hapet nga një zarf me vulë të artë.",
+          "parisian-wedding": "Tone ari dhe rozë të çelur me shkronja elegante serif, hapet përmes dyerve franceze.",
+          "persian-wedding": "Rozë dhe livando me tekst rozë të errët, zbulohet pas një perdeje të kuqe.",
+          "elegant-chateau": "Tone të ngrohta gri-kafe dhe rëre, hapet përmes dyerve baroke.",
+          "modern-collage": "E kuqe-rozë e fortë mbi gur të butë, hapet nga një zarf me vulë blu dhe të kuqe.",
+          "editorial": "Gri plumbi dhe gri me qoshe të mprehta, si faqe reviste, hapet përmes dyerve të bardha."
+        }
+      },
+      "previewDialog": {
+        "title": "Parashikim: {name}",
+        "device": "Shfaq në",
+        "mobile": "Telefon",
+        "desktop": "Kompjuter",
+        "close": "Mbyll parashikimin",
+        "back": "Kthehu te dizajnet",
+        "loading": "Parashikimi po ngarkohet…",
+        "yours": "Tuajat",
+        "sample": "Përmbajtje shembull",
+        "items": {
+          "basics": "emrat, data dhe vendi",
+          "details": "detajet, programi dhe historia",
+          "photos": "fotografitë",
+          "rsvp": "formulari RSVP (përgjigjet nuk dërgohen)"
+        },
+        "eventContent": "Përmbajtja e eventit tuaj në këtë dizajn. Përgjigjet RSVP nga parashikimi nuk dërgohen.",
+        "frame": {
+          "mobile": "{name} siç e shohin të ftuarit në telefon",
+          "desktop": "{name} siç e shohin të ftuarit në kompjuter"
+        }
+      }
     },
     "footer": {
       "help": "Qendra e Ndihmës",
@@ -483,6 +599,67 @@
       "types": {
         "BIRTHDAY_ADULT": "E një të rrituri",
         "BIRTHDAY_CHILD": "E një fëmije"
+      },
+      "start": {
+        "title": "Si dëshironi të filloni?",
+        "resumeTitle": "Vazhdo me draftin",
+        "resumeAction": "Vazhdo draftin",
+        "newTitle": "Fillo një ftesë të re",
+        "newDesc": "Zgjidhni llojin e eventit, pastaj një dizajn për të.",
+        "newAction": "Fillo një ftesë të re",
+        "newNote": "Draftet e ruajtura në llogarinë tuaj mbeten — i gjeni te Eventet e mia.",
+        "summary": {
+          "category": "Lloji",
+          "name": "Emri",
+          "date": "Data",
+          "updatedAt": "Ndryshimi i fundit"
+        },
+        "newDescLocal": "Drafti në këtë pajisje do të fshihet — do t’ju pyesim më parë dhe do t’ju tregojmë saktësisht çfarë fshihet.",
+        "discardAction": "Hidhe draftin",
+        "localWhere": "Ruajtur vetëm në këtë shfletues",
+        "expiresAt": "Ruhet deri më",
+        "expiresHint": "Një draft i pandryshuar për {days} ditë fshihet automatikisht nga kjo pajisje.",
+        "partial": "Një pjesë e draftit nuk mund të lexohej dhe u la jashtë. Kontrolloni ftesën para se ta ruani.",
+        "serverTitle": "Draft në llogarinë tuaj",
+        "serverListLabel": "Draftet e ruajtura në llogarinë tuaj",
+        "serverAction": "Vazhdo",
+        "serverActionLabel": "Vazhdo draftin {name}",
+        "serverUnsynced": "Ka ndryshime të ruajtura vetëm në këtë pajisje — zgjidhni “Sinkronizo tani” në redaktues.",
+        "checking": "Po kontrollojmë për drafte të ruajtura në llogarinë tuaj…",
+        "serverFailed": "Nuk arritëm të kontrollojmë draftet në llogarinë tuaj. Mund të filloni një ftesë të re ose të provoni përsëri.",
+        "discarded": "Drafti u fshi nga kjo pajisje."
+      },
+      "loadError": "Llojet e eventeve nuk u ngarkuan. Kontrolloni lidhjen dhe provoni përsëri.",
+      "retry": "Provo përsëri",
+      "empty": "Për momentin nuk ka lloj eventi që mund të krijohet. Shfletoni dizajnet ndërkohë që i përgatisim.",
+      "emptyAction": "Shfleto dizajnet",
+      "unavailable": "“{category}” nuk është i disponueshëm tani. Zgjidhni një lloj tjetër eventi.",
+      "draft": {
+        "discard": {
+          "title": "Të fshihet drafti?",
+          "lead": "Kjo do të fshihet përgjithmonë nga ky shfletues:",
+          "event": "Lloji dhe të dhënat bazë të eventit: {summary}",
+          "eventPlain": "Lloji dhe të dhënat bazë të eventit",
+          "design": "Dizajni i zgjedhur: {design}",
+          "details": "{count} detaj juaj | {count} detaje tuajat",
+          "agenda": "{count} pikë e programit | {count} pika të programit",
+          "story": "{count} kapitull i historisë | {count} kapituj të historisë",
+          "settings": "Cilësimet e ftesës (ngjyrat, dukshmëria e seksioneve, RSVP)",
+          "generic": "Drafti i ftesës i ruajtur në këtë pajisje",
+          "keepLead": "Nuk fshihen:",
+          "keepAccount": "Eventet e ruajtura në llogarinë tuaj dhe ndryshimet e tyre të pasinkronizuara në këtë pajisje.",
+          "keepGuest": "Asgjë tjetër — drafti ekziston vetëm në këtë shfletues.",
+          "irreversible": "Një draft i fshirë nuk mund të rikthehet.",
+          "confirm": "Fshije draftin",
+          "confirmStartNew": "Fshije dhe fillo të re",
+          "cancel": "Anulo"
+        },
+        "notice": {
+          "expired": "Drafti në këtë pajisje (ndryshimi i fundit: {date}) u fshi automatikisht sepse nuk ishte ndryshuar për {days} ditë. Nuk mund të rikthehet.",
+          "expiredNoDate": "Drafti në këtë pajisje u fshi automatikisht sepse nuk ishte ndryshuar për {days} ditë. Nuk mund të rikthehet.",
+          "unreadable": "Drafti i ruajtur në këtë pajisje ishte i dëmtuar dhe nuk mund të lexohej, prandaj u hoq. Nuk mund të rikthehet — filloni një ftesë të re.",
+          "dismiss": "Në rregull"
+        }
       }
     },
     "builder": {
@@ -993,7 +1170,15 @@
     "children": "Fëmijë",
     "note": "Shënim",
     "notePh": "Shënim opsional...",
-    "totalGuests": "Totali i Mysafirëve"
+    "totalGuests": "Totali i Mysafirëve",
+    "rsvpEmpty": {
+      "title": "Ende nuk ka përgjigje RSVP",
+      "message": "Kur mysafirët përgjigjen përmes ftesës, ata shfaqen këtu si \"Konfirmuar\" ose \"Refuzuar\", me numrin e mysafirëve dhe ushqimin. Ndani lidhjen e ftesës ose shtoni mysafirë manualisht.",
+      "share": "Lidhjet e ftesës",
+      "noMatch": "Asnjë mysafir nuk përputhet me filtrat e zgjedhur.",
+      "noReplies": "Askush nuk është përgjigjur ende përmes ftesës. Mysafirët e shtuar manualisht mbeten \"Në pritje\" derisa të përgjigjen.",
+      "who": "Të dhënat e mysafirëve i shihni vetëm ju, anëtarët e ekipit të cilëve u keni dhënë qasje te mysafirët dhe, nëse ngjarjen e drejton një agjenci, administratorët e saj (dhe administratorët e Ivy Events gjatë mbështetjes). Mysafirët nuk e shohin listën — secili dërgon vetëm përgjigjen e vet."
+    }
   },
   "notifications": {
     "subtitle": "Dërgoni përditësime dhe RSVP mysafirëve tuaj",
@@ -1727,7 +1912,66 @@
     "expiredDesc": "Sesioni i pagesës ka skaduar. Ju lutem provoni përsëri.",
     "pendingTitle": "Duke Konfirmuar Pagesën",
     "pendingDesc": "Po konfirmojmë pagesën tuaj. Ju lutem prisni...",
-    "unknownTitle": "Status i Panjohur"
+    "unknownTitle": "Status i Panjohur",
+    "publish": {
+      "loadingTitle": "Po kontrollojmë pagesën…",
+      "confirmingTitle": "Po konfirmohet publikimi",
+      "confirmingDesc": "Banka ju ktheu mbrapa. Po presim që serveri ynë ta konfirmojë pagesën para se ftesa të bëhet publike — zakonisht zgjat disa sekonda.",
+      "slowTitle": "Ende po presim konfirmimin",
+      "slowDesc": "Konfirmimi i bankës ende nuk ka arritur, prandaj ftesa nuk shfaqet si e publikuar. Është ruajtur — asgjë nuk ka humbur. Kontrolloni përsëri pas pak; paneli e tregon statusin sapo të konfirmohet.",
+      "checkAgain": "Kontrollo përsëri",
+      "checking": "Po kontrollohet…",
+      "status": "Statusi",
+      "live": "E publikuar",
+      "publishedTitle": "Ftesa juaj është publikuar",
+      "publishedDesc": "Të ftuarit e hapin me lidhjen më poshtë — nuk u nevojitet llogari.",
+      "linkLabel": "Lidhja publike e ftesës",
+      "linkHint": "Kjo është lidhja për të ftuarit. Nuk e hap kurrë redaktuesin.",
+      "openInvitation": "Hap ftesën",
+      "newTab": "(hapet në skedë të re)",
+      "continueEditing": "Vazhdo redaktimin",
+      "linkMissing": "Ftesa është publikuar, por lidhja publike nuk mund të shfaqet këtu. Do ta gjeni te „Lidhjet e ftesës“ në panel.",
+      "invitationLinks": "Lidhjet e ftesës",
+      "paidTitle": "Pagesa e suksesshme",
+      "paidDesc": "Pagesa juaj është përpunuar.",
+      "failedTitle": "Ftesa nuk është publikuar",
+      "failedReason": {
+        "FAILED": "Pagesa nuk kaloi.",
+        "CANCELED": "Pagesa u anulua.",
+        "EXPIRED": "Sesioni i pagesës skadoi."
+      },
+      "failedDesc": "Ftesa është ruajtur pikërisht siç e latë. Mund të provoni të paguani përsëri ose të vazhdoni redaktimin.",
+      "retryPayment": "Provo të paguash përsëri",
+      "errorTitle": "Nuk arritëm ta kontrollojmë pagesën",
+      "errorDesc": "Kjo nuk do të thotë se pagesa dështoi. Kontrolloni lidhjen dhe provoni përsëri.",
+      "retry": "Provo përsëri",
+      "forbiddenTitle": "Kjo pagesë i përket një llogarie tjetër",
+      "forbiddenDesc": "Hyni me llogarinë me të cilën është paguar për të parë ftesën.",
+      "notFoundTitle": "Pagesa nuk u gjet",
+      "notFoundDesc": "Nuk e gjetëm këtë pagesë. Statusi i ngjarjeve tuaja është në panel.",
+      "signedOutTitle": "Hyni për të parë ftesën",
+      "signedOutDesc": "Keni dalë nga llogaria. Hyni përsëri dhe do t'ju tregojmë nëse ftesa u publikua.",
+      "signIn": "Hyr",
+      "share": {
+        "title": "Ndajeni ftesën",
+        "copy": "Kopjo lidhjen",
+        "copied": "Lidhja u kopjua",
+        "copyFailed": "Nuk mundëm ta kopjojmë automatikisht. Lidhja është e përzgjedhur në fushën më lart — kopjojeni me Ctrl+C (ose ⌘+C), ose me shtypje të gjatë në telefon.",
+        "share": "Ndaj…",
+        "shareTitle": "Ftesë",
+        "shareFailed": "Ndarja nuk funksionoi në këtë shfletues. Kopjoni lidhjen në vend të saj.",
+        "qrAlt": "Kodi QR i lidhjes publike të ftesës",
+        "qrHint": "Skanimi hap të njëjtën lidhje publike. Shkarkojeni për ftesa të shtypura.",
+        "qrDownload": "Shkarko kodin QR (PNG)",
+        "qrFailed": "Kodi QR nuk mund të krijohej. Lidhja më lart funksionon ende."
+      },
+      "rsvp": {
+        "title": "Ku do t'i shihni përgjigjet e mysafirëve",
+        "where": "Kur mysafirët i përgjigjen formularit RSVP në ftesë, përgjigjet e tyre (vijnë apo jo, numri i mysafirëve, ushqimi) shfaqen në listën e mysafirëve të kësaj ngjarjeje — Paneli → Mysafirët.",
+        "empty": "Derisa askush të mos jetë përgjigjur, lista është bosh. Kjo është e pritshme dhe nuk është gabim.",
+        "openGuests": "Hap listën e mysafirëve"
+      }
+    }
   },
   "packages": {
     "title": "Çmime të qarta, një herë, për një ngjarje",
@@ -1753,6 +1997,12 @@
     "cartTotal": "Totali",
     "checkout": "Vazhdo te pagesa",
     "removeFromCart": "Hiq",
+    "checkoutIssue": {
+      "priceChanged": "Çmimi ka ndryshuar. Shuma e re është {amount}. Paketat dhe shporta u rifreskuan — nuk u tarifua asgjë. Kontrolloni dhe vazhdoni përsëri.",
+      "inProgress": "Pagesa është në vazhdim — nëse e mbyllët faqen e bankës, provoni përsëri pas {time}.",
+      "inProgressSoon": "Pagesa është në vazhdim — nëse e mbyllët faqen e bankës, provoni përsëri pas disa minutash.",
+      "discountInvalid": "Kodi i zbritjes nuk është më i vlefshëm dhe u hoq. Nuk u tarifua asgjë — kontrolloni çmimin dhe vazhdoni përsëri."
+    },
     "heroTitle": "Çmime të qarta, një herë, për një ngjarje",
     "heroLead": "Krijimi dhe redaktimi i ftesës është falas. Paketën e paguani vetëm para se ta publikoni dhe ta dërgoni. Pa abonim mujor.",
     "gallery": {
@@ -2152,11 +2402,11 @@
   },
   "editSection": {
     "collage": "Ndrysho kolazhin",
-    "hero": "Ndrysho hero",
-    "details": "Ndrysho detajet",
-    "agenda": "Ndrysho agendën",
-    "ourStory": "Ndrysho historinë",
-    "entry": "Ndrysho hyrjen",
+    "hero": "Ndrysho foton kryesore",
+    "details": "Ndrysho detajet e ngjarjes",
+    "agenda": "Ndrysho programin",
+    "ourStory": "Ndrysho “Historia jonë”",
+    "entry": "Ndrysho animacionin hyrës",
     "colors": "Ngjyrat",
     "fonts": "Fontet",
     "headingFont": "Fonti i titullit",
@@ -2257,7 +2507,343 @@
     "readabilityPass": "kalon",
     "readabilityFail": "kontrast i ulët",
     "readabilityHint": "Nën 4.5:1 është e vështirë të lexohet në telefon dhe në diell. Errëso tekstin ose ndriço sfondin.",
-    "chooseTheme": "Zgjidh temën"
+    "chooseTheme": "Zgjidh temën",
+    "saveStatus": {
+      "label": "Statusi i ruajtjes",
+      "saving": "Duke u ruajtur…",
+      "localGuest": "U ruajt në këtë pajisje. Regjistrohuni që të ruhet në llogarinë tuaj.",
+      "localNotCreated": "U ruajt në këtë pajisje. Shtypni „Ruaj“ për ta krijuar ngjarjen në llogarinë tuaj.",
+      "localPrevious": "Ndryshimet nga vizita e fundit janë ruajtur vetëm në këtë pajisje dhe ende jo në llogarinë tuaj.",
+      "synced": "U ruajt në llogari",
+      "syncedAt": "U ruajt në llogari në {time}",
+      "offline": "Jeni jashtë linje. Ndryshimet janë ruajtur në këtë pajisje dhe do të sinkronizohen kur të riktheheni në linjë.",
+      "error": "Ruajtja në llogari dështoi. Ndryshimet mbahen në këtë pajisje.",
+      "retry": "Provo përsëri",
+      "sync": "Sinkronizo tani",
+      "sectionsNotLoaded": "Nuk u ruajt: një pjesë e ftesës nuk u ngarkua. Ruajtja është ndalur që të mos fshihet përmbajtja e ruajtur.",
+      "reload": "Ngarko përsëri"
+    },
+    "leaveGuard": {
+      "title": "Ndryshime të paruajtura",
+      "bodyEvent": "Disa nga ndryshimet tuaja ende nuk janë ruajtur në llogarinë tuaj.",
+      "bodyDraft": "Ndryshimet e fundit nuk mund të ruheshin në këtë pajisje.",
+      "discardHintEvent": "Hidh poshtë ndryshimet: ndryshimet që nuk janë ruajtur në llogari do të humbasin, bashkë me kopjen në këtë pajisje. Kjo nuk mund të kthehet.",
+      "discardHintDraft": "Hidh poshtë ndryshimet: ndryshimet e fundit do të humbasin. Drafti mban versionin e ruajtur së fundi në këtë pajisje.",
+      "save": "Ruaj dhe dil",
+      "discard": "Hidh poshtë ndryshimet",
+      "stay": "Vazhdo redaktimin",
+      "saving": "Po ruhet…",
+      "saveFailed": "Ruajtja dështoi. Ndryshimet janë ende këtu — provoni përsëri, hidhini poshtë ose vazhdoni redaktimin."
+    },
+    "previewAsGuest": "Shiko si mysafir",
+    "authGate": {
+      "title": "Ruani ftesën",
+      "body": "Ftesa juaj është ruajtur vetëm në këtë shfletues në këtë pajisje. Krijoni llogari ose hyni për ta ruajtur në llogarinë tuaj dhe për ta publikuar — do të ktheheni te e njëjta ftesë.",
+      "photos": "{count} foto që shtuat nuk mund të bartet dhe do t’ju duhet ta shtoni sërish pasi të hyni. | {count} foto që shtuat nuk mund të barten dhe do t’ju duhet t’i shtoni sërish pasi të hyni.",
+      "signup": "Krijo llogari",
+      "login": "Kam tashmë llogari",
+      "keepEditing": "Vazhdo redaktimin"
+    },
+    "resume": {
+      "title": "Keni tashmë një event",
+      "body": "Llogaria juaj ka tashmë një event. Ky draft i ftesës nuk i është shtuar. Çfarë dëshironi të bëni me të?",
+      "saveNew": "Ruaje si event të ri",
+      "keep": "Mbaje në këtë pajisje për momentin",
+      "discard": "Hidhe këtë draft",
+      "failed": "Nuk arritëm ta ruajmë ftesën në llogarinë tuaj. Është ende e ruajtur në këtë shfletues — provoni përsëri.",
+      "photos": "{count} foto e shtuar para hyrjes nuk u ruajt. Ju lutemi shtojeni sërish. | {count} foto të shtuara para hyrjes nuk u ruajtën. Ju lutemi shtojini sërish.",
+      "photosOk": "Në rregull",
+      "titleUnchecked": "Nuk arritëm ta kontrollojmë llogarinë",
+      "bodyUnchecked": "Nuk arritëm të kontrollojmë nëse llogaria juaj ka tashmë një event, prandaj ky draft i ftesës nuk i është shtuar. Çfarë dëshironi të bëni me të?",
+      "titleClaimed": "Ky draft është ruajtur tashmë në një llogari tjetër",
+      "bodyClaimed": "Ky draft i ftesës është ruajtur tashmë në një llogari tjetër që është identifikuar në këtë pajisje. Asgjë nuk i është shtuar llogarisë suaj. Mund ta ruani si eventin tuaj të ri, ta mbani në këtë pajisje ose ta hidhni.",
+      "existingTitle": "Draftet që keni tashmë në llogari",
+      "existingLoading": "Po kontrollojmë draftet në llogarinë tuaj…",
+      "existingFailed": "Nuk arritëm të ngarkojmë draftet në llogarinë tuaj.",
+      "existingUpdated": "ndryshuar së fundi më {date}",
+      "existingStay": "Asgjë në llogarinë tuaj nuk do të ndryshohet ose bashkohet — eventet ekzistuese i gjeni te “Eventet e mia”."
+    },
+    "previewBar": {
+      "text": "Kështu do ta shohin mysafirët ftesën tuaj.",
+      "back": "Kthehu te redaktimi"
+    },
+    "rsvpDeadlineProblem": {
+      "past": "Ky afat ka kaluar tashmë në {timezone}.",
+      "afterEvent": "Afati për RSVP është pas fillimit të eventit."
+    },
+    "editorMode": {
+      "label": "Mënyra e redaktimit",
+      "quick": "Fillim i shpejtë",
+      "advanced": "Cilësime të avancuara",
+      "quickHint": "Info, Përmbajtja dhe Shiko si mysafir. Stili është te Cilësimet e avancuara; të dhënat mbeten.",
+      "advancedHint": "Shton skedën Stili: animacion, ngjyra, fonte, paraqitje.",
+      "openedAdvanced": "U aktivizuan cilësimet e avancuara: {section}.",
+      "back": "Kthehu te lista"
+    },
+    "samplePreview": {
+      "badge": "Parashikim · përmbajtje shembull",
+      "rsvpNote": "Formular RSVP shembull: përgjigjet në parashikim nuk dërgohen."
+    },
+    "guestPreview": {
+      "label": "Pamje si i ftuar",
+      "device": "Pamja",
+      "mobile": "Telefon",
+      "desktop": "Kompjuter",
+      "link": "Lidhja",
+      "publicLink": "Lidhja publike",
+      "privateLink": "Lidhja private",
+      "linkHint": "Programi shfaqet vetëm në lidhjen private.",
+      "notesToggle": "Shënime ({count})",
+      "notesTitle": "Para se ta dërgoni",
+      "noNotes": "Asnjë shënim: çdo pjesë që shohin të ftuarit ka përmbajtjen tuaj.",
+      "edit": "Ndrysho",
+      "openIn": "Hap „{section}“ në redaktues",
+      "showPrivate": "Shiko lidhjen private",
+      "rsvpNote": "Pamje paraprake: një përgjigje e dërguar këtu nuk ruhet.",
+      "kinds": {
+        "missing": "Kontrollo",
+        "hidden": "E fshehur",
+        "empty": "Bosh",
+        "example": "Shembull",
+        "info": "Info"
+      },
+      "notes": {
+        "demoBasics": "Emrat, data dhe vendi janë ende shembulli i dizajnit.",
+        "hidden": "„{section}“ është e fshehur — të ftuarit nuk do ta shohin. Ajo që keni futur ruhet.",
+        "hiddenEntry": "Animacioni hyrës është i fikur — të ftuarit e shohin ftesën menjëherë.",
+        "heroPhoto": "Fotografia kryesore është fotografi shembull e dizajnit.",
+        "detailsDefault": "„{section}“ shfaq oraret shembull të dizajnit derisa të shtoni tuajat.",
+        "empty": "„{section}“ është bosh, prandaj nuk shfaqet në ftesë.",
+        "exampleItems": "„{section}“ ka ende zëra shembull të dizajnit ({count}).",
+        "privateOnly": "Programin e shohin vetëm të ftuarit me lidhjen private.",
+        "storyPhotos": "Fotografitë e historisë janë fotografi shembull të dizajnit.",
+        "collagePhotos": "Kolazhi hyrës shfaq fotografi shembull të dizajnit.",
+        "rsvpHidden": "Formulari RSVP është i fikur — të ftuarit nuk mund të përgjigjen përmes ftesës.",
+        "deadlinePast": "Afati për RSVP ka kaluar tashmë në {timezone}.",
+        "deadlineAfterEvent": "Afati për RSVP është pas fillimit të ngjarjes.",
+        "rsvpNotOpen": "Të ftuarit mund të përgjigjen pasi ftesa të publikohet; deri atëherë formulari është joaktiv për ta.",
+        "designHidden": "Ruhet, por nuk shfaqet në këtë dizajn: {item}"
+      }
+    },
+    "prePublish": {
+      "ready": "Asgjë nuk e pengon publikimin",
+      "blocked": "Për t'u rregulluar para publikimit: {count}",
+      "groups": {
+        "blockers": "Duhet rregulluar para publikimit ({count})",
+        "recommendations": "Rekomandime — nuk e pengojnë publikimin ({count})",
+        "info": "Mirë ta dini ({count})"
+      },
+      "serverBlocked": "Ftesa nuk mund të publikohet ende. Rregulloni sa vijon ({count}):",
+      "serverHint": "Nuk është tarifuar asgjë. Pasi ta rregulloni, provoni përsëri.",
+      "fix": "Rregullo",
+      "problems": {
+        "invitationUrlMissing": "Ftesa nuk ka ende lidhje publike për të ftuarit. Hapeni në redaktues dhe ruajeni përsëri.",
+        "invitationUrlInvalid": "Lidhja publike e ftesës nuk është lidhja për të ftuarit e këtij eventi. Hapeni në redaktues dhe ruajeni përsëri.",
+        "rsvpDeadlineInvalid": "Afati i RSVP nuk mund të lexohet. Zgjidheni datën përsëri."
+      },
+      "alreadyPublished": "Kjo ftesë është publikuar tashmë dhe i ka këto paketa. Nuk është tarifuar asgjë.",
+      "forbidden": "Nuk mund të paguani për këtë event — hyni me llogarinë që e menaxhon. Nuk është tarifuar asgjë.",
+      "retryHint": "Nuk është tarifuar asgjë dhe shporta e ftesa janë ruajtur. Mund të provoni përsëri."
+    },
+    "designSwitch": {
+      "title": "Dizajni",
+      "builderName": "Dizajni juaj",
+      "change": "Ndrysho dizajnin",
+      "close": "Mbyll dizajnet",
+      "keepsContent": "Emrat, data, vendi, detajet, programi, historia, fotot dhe cilësimet e RSVP mbeten siç janë. Ndryshon vetëm pamja, dhe parapamja e tregon menjëherë.",
+      "styleNote": "Çdo dizajn hapet me ngjyrat dhe shkronjat e veta. Nëse ktheheni te një dizajn gjatë kësaj vizite, ndryshimet që i bëtë stilit të tij kthehen.",
+      "linkNote": "Ky event ka tashmë një lidhje për ftesën. Me dizajn të ri lidhja ndryshon; lidhjet që i keni dërguar tashmë vazhdojnë të hapin dizajnin e mëparshëm.",
+      "loading": "Po ngarkohen dizajnet…",
+      "loadError": "Dizajnet nuk mund të ngarkoheshin.",
+      "retry": "Provo përsëri",
+      "empty": "Nuk ka dizajne të tjera për këtë lloj eventi.",
+      "listLabel": "Dizajnet për këtë event",
+      "currentBadge": "Aktual",
+      "confirmTitle": "Të zëvendësohet dizajni juaj?",
+      "confirmBody": "Ngjyrat, shkronjat, paraqitjet dhe hapja që vendosët në dizajnin tuaj do të zëvendësohen me ato të {name}. Pasi të ruhet, nuk mund të kthehen. Përmbajtja mbetet.",
+      "confirmYes": "Përdor {name}",
+      "confirmNo": "Mbaj dizajnin tim",
+      "switched": "Dizajni u ndryshua në {name}. E gjithë përmbajtja juaj u ruajt.",
+      "hiddenTitle": "E ruajtur, por nuk shfaqet në këtë dizajn",
+      "hiddenNote": "Asgjë nuk është fshirë. Shfaqet përsëri në një dizajn që ka vend për të.",
+      "hidden": {
+        "storyPhotos": "Fotot e historisë ({count})",
+        "storyPhotosSome": "Fotot e historisë: ky dizajn shfaq {shown} nga {count}",
+        "chapterPhotos": "Fotot e kapitujve të historisë ({count})",
+        "storyDates": "Datat e kapitujve të historisë ({count})",
+        "collagePhotos": "Fotot për hapjen me galeri ({count})"
+      }
+    },
+    "guide": {
+      "required": "E detyrueshme",
+      "optional": "Opsionale",
+      "optionalSection": "Pjesë opsionale",
+      "exampleLabel": "Shembull:",
+      "location": {
+        "guests": "Të ftuarit e shohin emrin e vendit në ftesë, me një buton harte kur vendi është zgjedhur nga kërkimi.",
+        "example": "Restorant Liqeni, Keji Maqedonia 12, Ohër"
+      },
+      "programme": {
+        "guests": "Të ftuarit i shohin pikat sipas orës në pjesën e programit. Pjesën mund ta fshihni.",
+        "example": "14:00 Nisja e dhëndrit · 16:00 Kurorëzimi · 18:00 Pritja"
+      },
+      "story": {
+        "guests": "Të ftuarit e lexojnë këtë tekst në pjesën e historisë suaj. Mjaftojnë një deri në tri fjali të shkurtra.",
+        "example": "U njohëm në bregun e Liqenit të Ohrit në vitin 2016 dhe që atëherë kthehemi atje çdo verë."
+      },
+      "rsvp": {
+        "guests": "Mbi formularin të ftuarit e shohin mesazhin me afatin; në formular shkruajnë emrin, nëse vijnë dhe një mesazh opsional për ju.",
+        "messageLabel": "Të ftuarit do të shohin:",
+        "noMessage": "Shkruani datën e ngjarjes ose afatin e përgjigjes dhe mesazhi për të ftuarit do të shfaqet këtu.",
+        "deadlineDefault": "Pa afat, mesazhi tregon datën 14 ditë para ngjarjes."
+      },
+      "examples": {
+        "badge": "Shembull",
+        "note": "Pikat e shënuara me “Shembull” janë vetëm për shfaqje dhe nuk ruhen. Shtoni pikat tuaja që të shfaqen në ftesë."
+      }
+    },
+    "sectionStates": {
+      "empty": {
+        "agenda": {
+          "title": "Ende nuk ka program",
+          "body": "Shtoni pjesët e ditës — p.sh. ceremoninë dhe pritjen — me oraret e tyre.",
+          "add": "Shto zërin e parë të programit"
+        },
+        "details": {
+          "title": "Ende nuk ka detaje të ngjarjes",
+          "body": "Shtoni ku dhe kur mbahet ceremonia ose pritja.",
+          "add": "Shto detajin e parë"
+        },
+        "story": {
+          "title": "Ende nuk ka histori",
+          "body": "Tregojuni të ftuarve me pak fjali si u njohët.",
+          "add": "Shto kapitullin e parë"
+        },
+        "guestsNote": "Ky seksion është opsional. Sa kohë që është bosh, të ftuarit nuk do ta shohin në ftesë.",
+        "skip": "Kapërce — fshihe seksionin"
+      },
+      "hidden": {
+        "title": "Ky seksion është i fshehur",
+        "body": "Të ftuarit nuk e shohin. Gjithçka që keni futur ruhet dhe kthehet kur ta shfaqni përsëri seksionin.",
+        "show": "Shfaqe përsëri seksionin"
+      },
+      "loadFailed": {
+        "title": "Nuk mundëm të ngarkojmë: {section}",
+        "body": "Ruajtja është ndalur që të mos fshihet përmbajtja e ruajtur. Kontrolloni lidhjen dhe provoni përsëri.",
+        "retry": "Provo përsëri",
+        "loading": "Po ngarkohet…",
+        "saveBlocked": "Nuk u ruajt: disa seksione nuk u ngarkuan. Ngarkojini përsëri fillimisht."
+      },
+      "names": {
+        "eventDetails": "Detajet e ngjarjes",
+        "agenda": "Programi",
+        "ourStory": "Historia jonë",
+        "event": "Të dhënat e eventit"
+      },
+      "previewEmpty": "Bosh — të ftuarit nuk do ta shohin këtë seksion.",
+      "hiddenBadge": "I fshehur",
+      "toggleShow": "Shfaq „{section}“ në ftesë"
+    },
+    "photos": {
+      "limits": "Çdo foto deri në 50 MB; deri në 100 MB foto të reja në një ruajtje. Fotot ngarkohen kur ruhet ftesa.",
+      "hero": "Foto kryesore",
+      "storySingle": "Foto e historisë",
+      "storySlot": "Foto {n} e historisë",
+      "collageSlot": "Foto {n} e kolazhit",
+      "choose": "Zgjidhni një foto",
+      "chooseFor": "{slot}: zgjidhni një foto",
+      "replaceFor": "{slot}: zëvendësoni foton",
+      "remove": "Hiqe",
+      "removeFor": "Hiqe — {slot}",
+      "restore": "Ktheje",
+      "restoreFor": "Ktheje — {slot}",
+      "retry": "Provo përsëri",
+      "retryFor": "Provo përsëri — {slot}",
+      "progressLabel": "Po ngarkohet: {slot}",
+      "status": {
+        "empty": "Ende pa foto.",
+        "example": "Foto shembull e dizajnit — zgjidhni tuajën.",
+        "saved": "U ruajt.",
+        "removed": "Do të hiqet kur të ruhet ftesa.",
+        "checking": "Po kontrollohet fotoja…",
+        "local": "Për momentin vetëm në këtë pajisje — ngarkohet kur ta ruani ftesën në llogarinë tuaj.",
+        "pending": "Në pritje të ruajtjes…",
+        "uploading": "Po ngarkohet… {percent}%",
+        "failed": "Nuk u ruajt.",
+        "unavailable": "U ruajt, por kjo foto nuk mund të shfaqet tani."
+      },
+      "errors": {
+        "type": "Ky skedar nuk është imazh. Zgjidhni një foto.",
+        "tooLarge": "Kjo foto është më e madhe se 50 MB. Zgjidhni një më të vogël.",
+        "unreadable": "Kjo foto nuk mund të hapet në shfletues, kështu që as të ftuarit nuk do ta shihnin. Zgjidhni një tjetër.",
+        "uploadTooLarge": "Fotot ishin shumë të mëdha për t’u dërguar. Zgjidhni një foto më të vogël ose hiqni një, pastaj provoni përsëri.",
+        "offline": "Nuk ka lidhje — do të dërgohet kur të jeni sërish në linjë. Ndryshimet e tjera janë ruajtur.",
+        "failed": "Ngarkimi dështoi. Ndryshimet e tjera janë ruajtur — provoni përsëri."
+      }
+    },
+    "controls": {
+      "entry": "Animacioni hyrës",
+      "hero": "Foto kryesore",
+      "details": "Detajet e ngjarjes",
+      "agendaList": "Programi",
+      "ourStoryList": "Historia jonë",
+      "ourStoryImages": "Fotot e historisë",
+      "collage": "Fotot e kolazhit",
+      "rsvp": "RSVP",
+      "colors": "Ngjyrat",
+      "fonts": "Fontet"
+    },
+    "editorGroups": {
+      "tabs": {
+        "info": "Info",
+        "sections": "Përmbajtja",
+        "style": "Stili"
+      },
+      "content": "Pjesët e ftesës",
+      "rsvp": "Përgjigjet e mysafirëve",
+      "animation": "Animacioni",
+      "look": "Ngjyrat dhe fontet",
+      "advancedBadge": "E avancuar"
+    },
+    "a11y": {
+      "editorTabs": "Skedat e redaktorit",
+      "previewWidth": "Gjerësia e pamjes paraprake",
+      "selected": "E zgjedhur",
+      "hexLabel": "{color}: kodi hex",
+      "hexInvalid": "Shkruani # dhe gjashtë shenja (0–9, A–F), p.sh. #1F2937.",
+      "pairs": {
+        "textOnBackground": "Teksti mbi sfondin",
+        "textOnSections": "Teksti mbi seksionet",
+        "textOnCards": "Teksti mbi kartelat",
+        "buttonText": "Teksti mbi butonin"
+      },
+      "decrease": "Më pak: {label}",
+      "increase": "Më shumë: {label}",
+      "radius": "Këndet: {value}",
+      "deleteItem": "Fshi: {item}",
+      "hours": "Orët",
+      "minutes": "Minutat"
+    },
+    "history": {
+      "label": "Zhbëj dhe ribëj",
+      "undo": "Zhbëj",
+      "redo": "Ribëj",
+      "undoWhat": "Zhbëj: {what}",
+      "redoWhat": "Ribëj: {what}",
+      "nothingToUndo": "Nuk ka asgjë për të zhbërë",
+      "nothingToRedo": "Nuk ka asgjë për të ribërë",
+      "sessionNote": "Vetëm ndryshimet nga kjo vizitë. Zhbërja nuk është version i ruajtur — rezultati ruhet si çdo ndryshim tjetër.",
+      "undone": "U zhbë: {what}. Po ruhet si çdo ndryshim tjetër.",
+      "redone": "U ribë: {what}. Po ruhet si çdo ndryshim tjetër.",
+      "what": {
+        "names": "Emrat",
+        "when": "Data dhe ora",
+        "timezone": "Zona kohore",
+        "place": "Vendi",
+        "layout": "Struktura",
+        "visibility": "Pjesët e shfaqura"
+      }
+    }
   },
   "vendorPortal": {
     "logout": "Dil",
@@ -3540,6 +4126,10 @@
       "events": "Ngjarjet",
       "content": "Përmbajtja",
       "messages": "Mesazhet"
+    },
+    "eventLink": {
+      "refused": "Nuk keni qasje te ngjarja në atë lidhje, ose ajo nuk ekziston më. Shfaqet ngjarja që ishte zgjedhur tashmë.",
+      "dismiss": "Në rregull"
     }
   },
   "agencyCalendar": {
@@ -3691,7 +4281,81 @@
       "FAILED": "E dështuar",
       "CANCELED": "E anuluar",
       "EXPIRED": "E skaduar"
-    }
+    },
+    "awaitingFilter": "Në pritje të konfirmimit",
+    "awaiting": {
+      "intro": "Pagesat CPay që banka nuk na i ka konfirmuar. Kontrollojeni secilën në portalin e tregtarit CPay para se të vendosni.",
+      "count": "{n} në pritje të konfirmimit",
+      "empty": "Asnjë pagesë CPay nuk pret konfirmim.",
+      "reference": "Referenca",
+      "amount": "Shuma",
+      "packages": "Paketat",
+      "event": "Ngjarja",
+      "customer": "Klienti",
+      "created": "Krijuar",
+      "age": "Në pritje",
+      "reason": "Arsyeja",
+      "actions": "Veprimet",
+      "noEvent": "Pa ngjarje",
+      "openEvent": "Hap ngjarjen {name} në listën e ngjarjeve",
+      "ageMinutes": "{n} min",
+      "ageHours": "{n} orë",
+      "ageDays": "{n} ditë",
+      "markPaid": "Shëno si të paguar dhe aktivizo",
+      "markFailed": "Shëno si të dështuar",
+      "markPaidFor": "Shëno pagesën {ref} si të paguar dhe aktivizo",
+      "markFailedFor": "Shëno pagesën {ref} si të dështuar",
+      "reasons": {
+        "NO_BANK_RESPONSE": "Asnjë përgjigje nga banka",
+        "NEEDS_CONFIRMATION": "/ok pa konfirmim të transaksionit",
+        "CPAY_MISMATCH": "Përgjigjja e bankës nuk përputhet me pagesën ({detail})",
+        "PROCESSING_FAILED": "Përgjigjja e bankës nuk mund të përpunohej",
+        "UNSIGNED_FIELDS": "Përgjigjja e bankës nuk i nënshkroi fushat e detyrueshme ({detail})",
+        "INVALID_SIGNATURE": "Përgjigjja e bankës kishte nënshkrim të pavlefshëm",
+        "EXPIRED": "Skaduar — zëvendësuar nga një pagesë më e re, pa përgjigje nga banka",
+        "CPAY_REF_REUSED": "Referenca CPay është përdorur tashmë për një pagesë tjetër ({detail}) — nuk u shënua si e paguar"
+      },
+      "dialog": {
+        "paidTitle": "Shëno si të paguar dhe aktivizo",
+        "failedTitle": "Shëno si të dështuar",
+        "summary": "Pagesa {ref} — {amount}",
+        "paidWarning": "Bëjeni këtë vetëm pasi ta keni gjetur pagesën si të suksesshme në portalin e tregtarit CPay. Paketat aktivizohen, ngjarja publikohet dhe klienti merr faturën — kjo nuk mund të zhbëhet këtu.",
+        "failedWarning": "Pagesa mbyllet si e dështuar dhe klienti merr një e-mail „pagesa dështoi“. Një përgjigje e mëvonshme nga banka nuk do ta ndryshojë.",
+        "providerReference": "Referenca CPay / numri i transaksionit nga portali i tregtarit",
+        "providerReferenceHint": "Kopjojeni saktësisht siç e shfaq portali i tregtarit.",
+        "note": "Shënim",
+        "noteHint": "Pse po vendosni kështu — ruhet në historikun e pagesës dhe në regjistrin e auditimit.",
+        "required": "E detyrueshme.",
+        "confirmPaid": "Shëno si të paguar",
+        "confirmFailed": "Shëno si të dështuar",
+        "cancel": "Anulo",
+        "saving": "Po ruhet…"
+      },
+      "done": {
+        "paid": "Pagesa {ref} u shënua si e paguar; paketat po aktivizohen.",
+        "failed": "Pagesa {ref} u shënua si e dështuar."
+      },
+      "conflict": "Kjo pagesë nuk pret më — dikush (ose banka) e ka mbyllur tashmë. Lista u rifreskua.",
+      "refReused": "Kjo referencë CPay i përket tashmë një pagese tjetër ({id}). Pagesa nuk u shënua si e paguar; kontrolloni referencën në portalin CPay."
+    },
+    "cpayRef": "Referenca CPay",
+    "orderRef": "Referenca (Details2)",
+    "paidAt": "Paguar",
+    "period": "Periudha e pagesës",
+    "from": "Nga",
+    "to": "Deri",
+    "periodHint": "Data e pagesës (ose e krijimit, nëse nuk është paguar), të dyja ditët të përfshira.",
+    "clearPeriod": "Pastro periudhën",
+    "periodInvalid": "Data e fillimit është pas datës së mbarimit.",
+    "reconcileIntro": "Barazim me portalin CPay: zgjidhni „E suksesshme“ dhe një periudhë, pastaj kopjoni listën ose shkarkoni CSV dhe krahasoni referencat CPay.",
+    "copyList": "Kopjo listën",
+    "exportCsv": "Shkarko CSV",
+    "exporting": "Po përgatitet…",
+    "copied": "U kopjuan {n} pagesa (referenca, referenca CPay, shuma, valuta, paguar).",
+    "exported": "U shkarkua një CSV me {n} pagesa.",
+    "exportFailed": "Lista nuk mund të përgatitej. Provoni përsëri.",
+    "copyFailed": "Shfletuesi nuk lejoi kopjimin. Përdorni „Shkarko CSV“.",
+    "reconcileActions": "Eksport për barazim"
   },
   "tasks": {
     "assignee": {
@@ -5308,5 +5972,32 @@
     "tooLarge": "Fotoja është shumë e madhe për t'u ngarkuar. Zgjidhni një foto më të vogël.",
     "failed": "Fotoja nuk mund të ngarkohej. Provoni përsëri.",
     "noEvent": "Krijoni fillimisht eventin, pastaj ngarkoni fotot."
+  },
+  "creationSteps": {
+    "label": "Hapat e krijimit të ftesës",
+    "steps": {
+      "event": "Eventi",
+      "design": "Dizajni",
+      "details": "Detajet",
+      "rsvp": "RSVP",
+      "preview": "Pamja paraprake"
+    },
+    "status": {
+      "complete": "Përfunduar",
+      "error": "Ka gabim",
+      "incomplete": "Ende i papërfunduar",
+      "optional": "Opsional",
+      "skipped": "Anashkaluar"
+    },
+    "current": "hapi aktual",
+    "position": "Hapi {n} nga {total}",
+    "progress": "Hapi {n} nga {total}: {step}",
+    "fix": "Plotëso ose korrigjo: {fields}",
+    "fields": {
+      "category": "Lloji i eventit",
+      "type": "Nënlloji i eventit",
+      "design": "Dizajni",
+      "rsvpDeadline": "Afati për RSVP"
+    }
   }
 }

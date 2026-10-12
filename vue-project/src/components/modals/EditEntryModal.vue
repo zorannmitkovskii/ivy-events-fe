@@ -2,27 +2,29 @@
   <BaseModal :open="open" :title="$t('editEntry.title')" @close="emit('close')">
     <div class="entry-modal">
       <!-- Type selector -->
-      <label class="field-label">{{ $t('editEntry.type') }}</label>
-      <select v-model="selectedType" class="field-select">
+      <label class="field-label" :for="ids.type">{{ $t('editEntry.type') }}</label>
+      <select :id="ids.type" v-model="selectedType" class="field-select">
         <option v-for="(info, key) in ENTRY_TYPES" :key="key" :value="key">
           {{ info.label }}
         </option>
       </select>
 
       <!-- Design selector -->
-      <label class="field-label">{{ $t('editEntry.design') }}</label>
+      <p :id="ids.design" class="field-label">{{ $t('editEntry.design') }}</p>
       <template v-for="(group, gi) in designGroups" :key="gi">
-        <p v-if="group.label" class="group-label">{{ group.label }}</p>
-        <div class="design-grid">
+        <p v-if="group.label" :id="ids.design + '-' + gi" class="group-label">{{ group.label }}</p>
+        <!-- INV-503: the chosen design is pressed and ticked, not only outlined -->
+        <div class="design-grid" role="group" :aria-labelledby="group.label ? ids.design + ' ' + ids.design + '-' + gi : ids.design">
           <button
             v-for="d in group.items"
             :key="d.key"
             type="button"
             class="design-card"
             :class="{ 'design-card--active': selectedDesign === d.key }"
+            :aria-pressed="selectedDesign === d.key ? 'true' : 'false'"
             @click="selectedDesign = d.key"
           >
-            {{ d.label }}
+            <span v-if="selectedDesign === d.key" aria-hidden="true">✓ </span>{{ d.label }}
           </button>
         </div>
       </template>
@@ -40,9 +42,12 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, useId } from 'vue';
 import BaseModal from '@/components/ui/BaseModal.vue';
 import ButtonMain from '@/components/generic/ButtonMain.vue';
+
+const entryUid = useId();
+const ids = { type: `${entryUid}-type`, design: `${entryUid}-design` };
 
 const ENTRY_TYPES = {
   envelop: {
@@ -123,9 +128,10 @@ const designGroups = computed(() => {
   return groups;
 });
 
-// Reset design when type changes (pick first available)
+// Reset design when type changes (pick first available) — not when the
+// invitation's own type is shown again (INV-801: undo / redo from outside).
 watch(selectedType, (newType, oldType) => {
-  if (newType !== oldType) {
+  if (newType !== oldType && newType !== props.currentType) {
     const designs = ENTRY_TYPES[newType]?.designs;
     if (designs?.length) {
       selectedDesign.value = designs[0].key;
@@ -141,9 +147,16 @@ watch(() => props.open, (v) => {
   }
 }, { immediate: true });
 
-// Emit change in live-edit mode
+// INV-801: the opening changed from outside while open (undo / redo).
+watch(() => [props.currentType, props.currentDesign], ([type, design]) => {
+  selectedType.value = type;
+  selectedDesign.value = design;
+});
+
+// Emit change in live-edit mode — only a choice that differs from what the
+// invitation has (an update from outside is not a new change).
 watch([selectedType, selectedDesign], () => {
-  if (props.liveEdit) {
+  if (props.liveEdit && (selectedType.value !== props.currentType || selectedDesign.value !== props.currentDesign)) {
     emit('change', { type: selectedType.value, design: selectedDesign.value });
   }
 });
@@ -161,6 +174,7 @@ function onSave() {
 }
 
 .field-label {
+  margin: 0;
   font-size: 13px;
   font-weight: 600;
   color: var(--ink-2);

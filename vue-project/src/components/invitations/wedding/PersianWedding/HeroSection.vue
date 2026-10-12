@@ -5,7 +5,7 @@
       <img
         v-if="photoUrl"
         :src="photoUrl"
-        :alt="brideName + ' & ' + groomName"
+        :alt="groomName ? brideName + ' & ' + groomName : brideName"
         class="hero-img"
       />
     </div>
@@ -13,7 +13,7 @@
     <!-- Right: Gradient + Glass Panel -->
     <div class="hero-panel" :style="panelBg">
       <div class="glass-card">
-        <h1 class="couple-names">{{ brideName }} <span class="amp">&amp;</span> {{ groomName }}</h1>
+        <h1 class="couple-names">{{ brideName }}<template v-if="groomName"> <span class="amp">&amp;</span> {{ groomName }}</template></h1>
         <div class="divider" :style="{ background: accentColor }"></div>
         <p class="subtitle">{{ subtitle }}</p>
         <p class="wedding-date">{{ weddingDate }}</p>

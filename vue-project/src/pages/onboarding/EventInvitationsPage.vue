@@ -22,12 +22,31 @@
           @click="onContinue"
         />
       </div>
+      <div v-if="!fromDashboard" class="header-steps">
+        <CreationStepper :steps="steps" @go="goToStep" />
+      </div>
     </header>
 
     <!-- Scrollable content -->
     <div class="content">
+      <!-- INV-104: the designs are shown with the user's own basics -->
+      <section v-if="!fromDashboard && categoryChosen" class="basics-summary" data-testid="basics-summary">
+        <div v-if="personalization" class="basics-summary__text">
+          <p class="basics-summary__category" data-testid="designs-category">{{ $t('onboarding.invitations.forCategory', { category: categoryLabel }) }}</p>
+          <p class="basics-summary__names">{{ personalization.names }}</p>
+          <p class="basics-summary__meta">{{ [personalization.date, personalization.place].filter(Boolean).join(' · ') }}</p>
+        </div>
+        <div v-else class="basics-summary__text">
+          <p class="basics-summary__category" data-testid="designs-category">{{ $t('onboarding.invitations.forCategory', { category: categoryLabel }) }}</p>
+          <p class="basics-summary__missing">{{ $t('onboarding.invitations.basicsMissing') }}</p>
+        </div>
+        <RouterLink class="basics-summary__edit" :to="{ name: 'EventBasicsPage', params: { lang } }">
+          {{ personalization ? $t('onboarding.invitations.editBasics') : $t('onboarding.invitations.addBasics') }}
+        </RouterLink>
+      </section>
+
       <!-- Quick actions row -->
-      <div class="quick-actions">
+      <div v-if="categoryChosen" class="quick-actions">
         <button v-if="fromDashboard && currentInvitationPath" class="action-card action-card--edit" @click="onEditCurrent">
           <div class="action-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -55,23 +74,62 @@
         </button>
       </div>
 
-      <div v-if="fetchLoading" class="loading-state">
+      <!-- INV-101: never a wedding catalogue standing in for a missing choice -->
+      <div v-if="!categoryChosen" class="list-state" role="status" data-testid="designs-no-category">
+        <p>{{ $t('onboarding.invitations.noCategory') }}</p>
+        <RouterLink class="list-state__action" :to="{ name: 'EventCategoryPage', params: { lang } }">
+          {{ $t('onboarding.invitations.chooseCategory') }}
+        </RouterLink>
+      </div>
+
+      <div v-else-if="fetchLoading" class="loading-state">
         <span class="spinner" />
         <p>{{ $t('onboarding.invitations.loading') }}</p>
       </div>
 
+      <div v-else-if="loadFailed" class="list-state list-state--error" role="alert" data-testid="designs-error">
+        <p>{{ $t('onboarding.invitations.loadError') }}</p>
+        <button type="button" class="list-state__action" @click="loadTemplates">{{ $t('onboarding.invitations.retry') }}</button>
+      </div>
+
+      <div v-else-if="!filteredInvitations.length" class="list-state" role="status" data-testid="designs-empty">
+        <p>{{ $t('onboarding.invitations.emptyCategory', { category: categoryLabel }) }}</p>
+        <RouterLink v-if="!fromDashboard" class="list-state__action" :to="{ name: 'EventCategoryPage', params: { lang } }">
+          {{ $t('onboarding.invitations.chooseOtherCategory') }}
+        </RouterLink>
+      </div>
+
+      <template v-else>
+      <p v-if="sharedSectionsNote" class="shared-sections" data-testid="designs-shared-sections">
+        {{ $t('onboarding.invitations.card.sharedSections') }}
+      </p>
       <InvitationGrid
-        v-else
         class="grid-section"
         :invitations="filteredInvitations"
         :selected-id="onboardingStore.invitationName"
         :empty-message="$t('onboarding.invitations.emptyState')"
+        :personalization="fromDashboard ? null : personalization"
         @select="onSelectInvitation"
         @preview="onPreview"
       />
+      </template>
 
       <p v-if="error" class="error">{{ error }}</p>
     </div>
+
+    <!-- INV-202: a design looked at on a phone or a desktop, in this page -->
+    <TemplatePreviewDialog
+      v-model:device="previewDevice"
+      :open="!!previewTemplate"
+      :name="previewTemplate?.name || ''"
+      :src="previewSrc"
+      :selected="!!previewTemplate && onboardingStore.invitationName === previewTemplate.id"
+      :for-event="!!previewEventId"
+      :own-basics="previewOwnBasics"
+      :own-details="previewOwnDetails"
+      @close="closePreview"
+      @use="onUseFromPreview"
+    />
 
     <OnboardingFooterLinks />
   </main>
@@ -79,16 +137,24 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 import CategoryFilterBar from '@/components/onboarding/CategoryFilterBar.vue';
 import InvitationGrid from '@/components/onboarding/InvitationGrid.vue';
 import ButtonMain from '@/components/generic/ButtonMain.vue';
 import OnboardingFooterLinks from '@/components/onboarding/OnboardingFooterLinks.vue';
-import { onboardingStore, setInvitationName, setEventId } from '@/store/onboarding.store';
+import CreationStepper from '@/components/onboarding/CreationStepper.vue';
+import { useCreationSteps } from '@/composables/useCreationSteps';
+import { onboardingStore, setInvitationName, setInvitationPath, setEventId } from '@/store/onboarding.store';
 import { eventsService } from '@/services/events.service';
 import { isAuthenticated, getUsername } from '@/services/auth.service';
 import { EventCategoryEnum } from '@/enums/EventCategory';
+import { categoryLabelKey } from '@/helper/CategoryMapping.helper.js';
 import { invitationTemplateService } from '@/services/invitationTemplate.service';
+import { basicsDisplayName, hasBasics, normalizeBasics } from '@/utils/eventBasics';
+import { templateTraits, allShareRendererSections } from '@/utils/templateCatalog';
+import { hasOwnDetails } from '@/utils/creationSteps';
+import { draftStore } from '@/store/invitationDraft.store';
+import TemplatePreviewDialog from '@/components/onboarding/TemplatePreviewDialog.vue';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -98,11 +164,24 @@ const lang = computed(() => route.params.lang || 'mk');
 
 const loading = ref(false);
 const error = ref('');
-const fromDashboard = computed(() => route.query.from === 'dashboard');
+// Inside the dashboard shell it is always the current event's design (INV-104
+// keeps that path as it was); elsewhere it is a new invitation.
+const fromDashboard = computed(() => route.query.from === 'dashboard' || route.name === 'dashboard.invitations');
 
+/*
+ * The category the designs are listed for. A new invitation without one is
+ * sent back to choose it (INV-101) — showing the wedding designs instead would
+ * quietly make it a wedding. The dashboard keeps its old default: the current
+ * event's designs are opened from there with no onboarding category.
+ */
 const displayCategory = computed(() =>
-  onboardingStore.selectedCategory || EventCategoryEnum.WEDDING
+  onboardingStore.selectedCategory || (fromDashboard.value ? EventCategoryEnum.WEDDING : '')
 );
+const categoryChosen = computed(() => !!displayCategory.value);
+const categoryLabel = computed(() => {
+  const key = categoryLabelKey(displayCategory.value);
+  return key ? t(key) : displayCategory.value;
+});
 
 const CATEGORY_LABEL_MAP = {
   [EventCategoryEnum.WEDDING]: 'eventCategories.items.weddings.title',
@@ -126,15 +205,54 @@ const categoryOptions = computed(() => {
   return items;
 });
 
+/**
+ * The names, date and place entered before the design (INV-104), formatted
+ * for the cards. Null until there are basics to show.
+ */
+const personalization = computed(() => {
+  const basics = onboardingStore.eventDetails;
+  const category = onboardingStore.selectedCategory;
+  if (!hasBasics(basics, category)) return null;
+  const b = normalizeBasics(basics);
+  let date = b.date;
+  try {
+    // A calendar date, not an instant: formatted as is, in no zone.
+    date = new Intl.DateTimeFormat(lang.value, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+      .format(new Date(`${b.date}T00:00:00Z`));
+  } catch { /* unsupported locale — the ISO date */ }
+  return {
+    names: basicsDisplayName(b, category),
+    date: b.time ? `${date}, ${b.time}` : date,
+    place: b.location.name,
+  };
+});
+
+/** The editor for a design, as a new event — never the dashboard's current one. */
+function editorPath(path, extra) {
+  const clean = path.startsWith('invitations/') ? path : 'invitations/' + path;
+  return { path: `/${lang.value}/${clean}`, query: { new: '1', ...extra } };
+}
+
 const templates = ref([]);
 const fetchLoading = ref(false);
+const loadFailed = ref(false);
 
+/*
+ * INV-201: each card says what the design has — only what the code draws
+ * (utils/templateCatalog). The description is the localized one for a design
+ * the code knows, else the server's as typed, else none.
+ */
 const filteredInvitations = computed(() => {
-  const mapped = templates.value.map(t => ({
-    id: t.id,
-    name: t.name,
-    thumbnailUrl: t.thumbnailImage || (t.path ? `/thumbnails/${t.path.split('/').pop()}.svg` : ''),
-  })).reverse();
+  const mapped = templates.value.map(tpl => {
+    const known = templateTraits(tpl.path);
+    return {
+      id: tpl.id,
+      name: tpl.name,
+      subtitle: known ? t(known.descriptionKey) : (tpl.description || ''),
+      traits: known ? known.traits : [],
+      thumbnailUrl: tpl.thumbnailImage || (tpl.path ? `/thumbnails/${tpl.path.split('/').pop()}.svg` : ''),
+    };
+  }).reverse();
   // Put the selected invitation first
   const sel = onboardingStore.invitationName;
   if (sel) {
@@ -147,8 +265,16 @@ const filteredInvitations = computed(() => {
   return mapped;
 });
 
-onMounted(async () => {
+// Said once above the cards, not repeated on each: every design the shared
+// renderer opens has these sections.
+const sharedSectionsNote = computed(() =>
+  allShareRendererSections(templates.value.map(tpl => tpl.path))
+);
+
+async function loadTemplates() {
+  if (!categoryChosen.value) return;
   fetchLoading.value = true;
+  loadFailed.value = false;
   try {
     const data = await invitationTemplateService.listByCategory(displayCategory.value);
     templates.value = (data || []).filter(t => t.active !== false);
@@ -156,14 +282,26 @@ onMounted(async () => {
     // Preselect invitation: resolve stored name (path/slug from BE) to template id
     if (onboardingStore.invitationName) {
       const match = resolveTemplate(onboardingStore.invitationName);
-      if (match) setInvitationName(match.id);
+      if (match) {
+        setInvitationName(match.id);
+        if (!fromDashboard.value && match.path) setInvitationPath(match.path);
+      } else if (!fromDashboard.value) {
+        // A design of another category (INV-101): not a choice for this one.
+        setInvitationName('');
+        setInvitationPath('');
+      }
     }
   } catch (e) {
+    // Said on the page, with a retry — not an empty list that reads as
+    // "no designs for this category".
     console.error('Failed to load invitation templates:', e);
+    loadFailed.value = true;
   } finally {
     fetchLoading.value = false;
   }
-});
+}
+
+onMounted(loadTemplates);
 
 // Match an invitationName (could be id, path, or slug) to a template
 function resolveTemplate(name) {
@@ -176,13 +314,68 @@ function resolveTemplate(name) {
 
 function onSelectInvitation(id) {
   setInvitationName(id);
+  // Where the editor opens it, for the stepper's later steps (INV-102).
+  const path = templates.value.find(t => t.id === id)?.path;
+  if (!fromDashboard.value && path) setInvitationPath(path);
 }
 
+// The stepper (INV-102) — only when making a new invitation.
+const { steps, go: goToStep } = useCreationSteps({
+  current: 'design',
+  handlers: {
+    open: (step) => step === 'design',
+    // No design yet: to the first card.
+    fix: (step) => {
+      if (step !== 'design') return false;
+      document.querySelector('[data-testid="invitation-card-use"]')?.focus();
+      return true;
+    },
+  },
+});
+
+/*
+ * "Preview" on a card (INV-202): the design inside this page, on a phone or a
+ * desktop, drawn by the page guests open (`preview=1&embed=1`). It only looks:
+ * the choice, the draft and the place in the catalogue stay as they were
+ * (the renderer does not record a previewed design, INV-201); "Use this design"
+ * in the preview is the one explicit way to pick it from there.
+ *
+ * A new invitation shows what was entered so far, with sample content where
+ * nothing is yet; the dashboard shows the current event's content.
+ */
+const previewId = ref('');
+const previewDevice = ref(
+  typeof window !== 'undefined' && window.matchMedia?.('(max-width: 767px)')?.matches ? 'mobile' : 'desktop'
+);
+const previewTemplate = computed(() => templates.value.find(tpl => tpl.id === previewId.value) || null);
+const previewEventId = computed(() => (fromDashboard.value ? onboardingStore.eventId || route.query.eventId || '' : ''));
+const previewSrc = computed(() => {
+  const inv = previewTemplate.value;
+  if (!inv?.path) return '';
+  const clean = inv.path.startsWith('invitations/') ? inv.path : 'invitations/' + inv.path;
+  const query = previewEventId.value
+    ? { preview: '1', embed: '1', eventId: previewEventId.value }
+    : { new: '1', preview: '1', embed: '1' };
+  return router.resolve({ path: `/${lang.value}/${clean}`, query }).href;
+});
+// What in the preview is the person's own, for its legend.
+const previewOwnBasics = computed(() => !!personalization.value || !!draftStore.theme?.info);
+const previewOwnDetails = computed(() => hasOwnDetails(draftStore));
+
 function onPreview(id) {
-  const inv = templates.value.find(t => t.id === id);
+  const inv = templates.value.find(tpl => tpl.id === id);
   if (!inv?.path) return;
-  const resolved = router.resolve(`/${lang.value}/${inv.path}?edit=true`);
-  window.open(resolved.href, '_blank');
+  previewId.value = id;
+}
+
+function closePreview() {
+  previewId.value = '';
+}
+
+function onUseFromPreview() {
+  if (!previewId.value) return;
+  onSelectInvitation(previewId.value);
+  closePreview();
 }
 
 const currentInvitationPath = computed(() => {
@@ -204,12 +397,19 @@ function onEditCurrent() {
 }
 
 function onOpenBuilder() {
-  router.push({ name: 'InvitationBuilderPage', params: { lang: lang.value } });
+  if (fromDashboard.value) {
+    router.push({ name: 'InvitationBuilderPage', params: { lang: lang.value } });
+    return;
+  }
+  router.push(editorPath('invitations/my-wedding', { edit: 'true' }));
 }
 
 function onBack() {
   if (fromDashboard.value) {
     router.push({ name: 'dashboard.overview', params: { lang: lang.value } });
+  } else if (onboardingStore.selectedCategory) {
+    // Back one step: the basics (INV-104).
+    router.push({ name: 'EventBasicsPage', params: { lang: lang.value } });
   } else if (!isAuthenticated()) {
     router.push({ name: 'home', params: { lang: lang.value } });
   } else {
@@ -220,9 +420,14 @@ function onBack() {
 async function onContinue() {
   if (!onboardingStore.invitationName) return;
 
-  // Guest flow: save selection and redirect to signup
-  if (!isAuthenticated()) {
-    await router.push({ name: 'signup', params: { lang: lang.value } });
+  // Making a new invitation (INV-104): no account and no event yet. The
+  // chosen design opens with the basics in it; details, programme, story,
+  // photos and RSVP are added (or skipped) there, and the account is asked
+  // for only when it is saved.
+  if (!fromDashboard.value) {
+    const selected = templates.value.find(t => t.id === onboardingStore.invitationName);
+    const path = selected?.path || onboardingStore.invitationName;
+    await router.push(editorPath(path, { edit: 'true' }));
     return;
   }
 
@@ -340,6 +545,116 @@ async function onContinue() {
 }
 
 /* ===== Quick actions ===== */
+.basics-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.basics-summary__text {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+.basics-summary__names {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.basics-summary__meta {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.basics-summary__category {
+  margin: 0 0 2px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.list-state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.list-state p {
+  margin: 0;
+  flex: 1 1 240px;
+}
+
+.list-state--error {
+  color: #b42318;
+  background: rgba(180, 35, 24, 0.06);
+  border-color: rgba(180, 35, 24, 0.18);
+}
+
+.list-state__action {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line-2);
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.list-state__action:focus-visible {
+  outline: 3px solid var(--brand-gold, #c4956a);
+  outline-offset: 2px;
+}
+
+.basics-summary__missing {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.basics-summary__edit {
+  flex-shrink: 0;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line-2);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.basics-summary__edit:focus-visible {
+  outline: 3px solid var(--brand-gold, #c4956a);
+  outline-offset: 2px;
+}
+
 .quick-actions {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -397,6 +712,16 @@ async function onContinue() {
   margin-top: 20px;
 }
 
+.shared-sections {
+  margin: 20px 0 0;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.shared-sections + .grid-section {
+  margin-top: 12px;
+}
+
 .loading-state {
   display: flex;
   flex-direction: column;
@@ -430,10 +755,21 @@ async function onContinue() {
   border-radius: 12px;
 }
 
+/* Stepper (INV-102) */
+.header-steps {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px 10px;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 640px) {
   .header-inner {
     padding: 10px 16px;
+  }
+
+  .header-steps {
+    padding: 0 16px 10px;
   }
 
   .header-subtitle {

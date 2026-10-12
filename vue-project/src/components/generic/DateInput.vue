@@ -3,6 +3,9 @@
     <input
       ref="textRef"
       type="text"
+      :id="inputId || undefined"
+      :aria-describedby="describedBy || undefined"
+      :aria-invalid="invalid ? 'true' : undefined"
       :class="inputClass"
       :value="displayValue"
       :placeholder="placeholder"
@@ -14,6 +17,8 @@
       ref="pickerRef"
       type="date"
       class="date-input-hidden"
+      tabindex="-1"
+      aria-hidden="true"
       :value="modelValue"
       @input="onPickerChange"
     />
@@ -35,6 +40,10 @@ const props = defineProps({
   modelValue: { type: String, default: '' },
   inputClass: { type: [String, Array, Object], default: 'input' },
   placeholder: { type: String, default: 'dd/mm/yyyy' },
+  // INV-503 (additive): tie the visible text field to its label and messages.
+  inputId: { type: String, default: '' },
+  describedBy: { type: String, default: '' },
+  invalid: { type: Boolean, default: false },
 });
 
 const emit = defineEmits(['update:modelValue', 'input']);

@@ -28,7 +28,7 @@ const push = vi.hoisted(() => vi.fn())
 
 vi.mock('@/services/auth.service', () => auth)
 vi.mock('@/router/landing', () => landing)
-vi.mock('@/composables/useDraftSync', () => ({ syncDraftToBackend: vi.fn(async () => null) }))
+vi.mock('@/composables/useDraftSync', () => ({ syncDraftToBackend: vi.fn(async () => null), resumeDraftAfterAuth: vi.fn(async () => null), hasPendingDraft: () => false, pendingDraftDesign: () => 'my-wedding' }))
 vi.mock('@/services/googleOAuth', () => ({
   resumePendingGoogleSignIn: vi.fn(),
   startGoogleSignIn: vi.fn(),

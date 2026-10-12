@@ -1,14 +1,14 @@
 <template>
   <section class="hero">
     <div class="hero-bg">
-      <img v-if="photoUrl" :src="photoUrl" :alt="brideName + ' & ' + groomName" class="hero-img" />
+      <img v-if="photoUrl" :src="photoUrl" :alt="groomName ? brideName + ' & ' + groomName : brideName" class="hero-img" />
       <div class="hero-overlay"></div>
     </div>
 
     <div class="hero-content">
       <p class="hero-invite">{{ inviteText }}</p>
       <h1 class="hero-names">
-        {{ brideName }} <span class="hero-amp">&amp;</span> {{ groomName }}
+        {{ brideName }}<template v-if="groomName"> <span class="hero-amp">&amp;</span> {{ groomName }}</template>
       </h1>
       <div class="hero-location-row">
         <div class="hero-line"></div>

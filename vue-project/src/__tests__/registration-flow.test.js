@@ -369,7 +369,8 @@ describe('Step 6: Draft Sync → Event Creation', () => {
 
     const result = await syncDraftToBackend();
 
-    expect(eventFullService.createFull).toHaveBeenCalledWith(draftPayload);
+    // IVY-INV-301: the draft also carries its idempotency key.
+    expect(eventFullService.createFull).toHaveBeenCalledWith({ ...draftPayload, clientRequestId: expect.any(String) });
     expect(result.event.id).toBe('event-999');
     expect(onboardingStore.eventId).toBe('event-999');
   });
@@ -504,7 +505,7 @@ describe('Full Registration Flow (end-to-end sequence)', () => {
     const createdEvent = await syncDraftToBackend();
 
     // Event created from the draft saved in step 3
-    expect(eventFullService.createFull).toHaveBeenCalledWith(fullPayload);
+    expect(eventFullService.createFull).toHaveBeenCalledWith({ ...fullPayload, clientRequestId: expect.any(String) });
     expect(createdEvent.event.id).toBe('event-final-123');
     expect(onboardingStore.eventId).toBe('event-final-123');
 

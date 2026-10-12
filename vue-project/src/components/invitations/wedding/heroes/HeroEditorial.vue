@@ -4,7 +4,7 @@
       <!-- Left: image with grain -->
       <div class="hero-image-side">
         <div class="image-frame">
-          <img v-if="photoUrl" :src="photoUrl" :alt="brideName + ' & ' + groomName" class="hero-img" />
+          <img v-if="photoUrl" :src="photoUrl" :alt="groomName ? brideName + ' & ' + groomName : brideName" class="hero-img" />
           <div class="grain-overlay"></div>
         </div>
       </div>
@@ -14,7 +14,7 @@
       <div class="hero-text-side">
         <div class="hero-content">
           <p class="hero-invite">{{ labelText || inviteText }}</p>
-          <h1 class="hero-names">{{ brideName }} &amp; {{ groomName }}</h1>
+          <h1 class="hero-names">{{ brideName }}<template v-if="groomName"> &amp; {{ groomName }}</template></h1>
           <p class="hero-subtitle">{{ subtitle }}</p>
           <div class="hero-date-block">
             <span class="date-day">{{ dateDay }}</span>
