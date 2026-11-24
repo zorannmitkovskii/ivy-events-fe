@@ -33,7 +33,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+          tags: |
+            ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+            ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-22.04
@@ -48,7 +50,7 @@ jobs:
           script: |
             set -e
   
-            docker pull ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+            docker pull ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
   
             docker stop ivy-events-fe || true
             docker rm ivy-events-fe || true
@@ -58,7 +60,8 @@ jobs:
             docker run -d \
               --name ivy-events-fe \
               --network ivy-net \
+              --restart unless-stopped \
               --env-file /opt/ivy-events/env/fe.env \
-              ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+              ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
   
             echo "✅ Frontend PROD deployed"
